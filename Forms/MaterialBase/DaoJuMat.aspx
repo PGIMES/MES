@@ -701,6 +701,41 @@
                                 <div>
                                     <asp:Table Style="width: 100%" border="0" runat="server" ID="tblWLShuXing">
                                     </asp:Table>
+                                    <asp:GridView ID="gv_AttachList" runat="server" AutoGenerateColumns="False" DataKeyNames="id" 
+                                         CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="gv_AttachList_RowDeleting" 
+                                        OnPageIndexChanging="gv_AttachList_PageIndexChanging" PageSize="100" Width="50%">
+                                        <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                        <Columns>
+                                            <asp:BoundField ApplyFormatInEditMode="True" DataField="id" HeaderText="id" ShowHeader="False" Visible="False"  />
+                                            <asp:TemplateField HeaderText="文件名称" ShowHeader="False">
+                                                <ItemTemplate>
+                                                    <asp:HyperLink ID="HyperLink1" runat="server" Target="_blank"
+                                                         NavigateUrl='<%#DataBinder.Eval(Container.DataItem, "FilePath")%>' 
+                                                         Text='<%#DataBinder.Eval(Container.DataItem,"OriginalFile")%>'></asp:HyperLink>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="80%" />
+                                            </asp:TemplateField>                                              
+                                            <asp:BoundField ApplyFormatInEditMode="True" DataField="fileversion" HeaderText="版本号" ShowHeader="False" >              
+                                                <HeaderStyle Width="10%" />
+                                            </asp:BoundField>
+                                            <asp:TemplateField ShowHeader="False" HeaderText="">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="false" CommandName="Delete" Text="刪除"></asp:LinkButton>
+                                                </ItemTemplate>
+                                                <HeaderStyle Width="10%" />
+                                            </asp:TemplateField>
+                                        </Columns>
+                                        <EditRowStyle BackColor="#999999" />
+                                        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                        <HeaderStyle BackColor="#d9edf7" Font-Bold="True" ForeColor="#31708f" />
+                                        <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                                        <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                        <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                        <SortedAscendingCellStyle BackColor="#E9E7E2" />
+                                        <SortedAscendingHeaderStyle BackColor="#506C8C" />
+                                        <SortedDescendingCellStyle BackColor="#FFFDF8" />
+                                        <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
+                                    </asp:GridView>
                                 </div>
                             </div>
                         </div>

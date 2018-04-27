@@ -22,6 +22,9 @@ public partial class DaoJuMat : PGIBasePage
     public string DisplayModel;
     public string ValidScript="";
     public StringBuilder Edsm=new StringBuilder();
+    public string formid = @"/Forms/MaterialBase/DaoJuMat.aspx"; public string stepid = "";
+    AttachUpload AttachUpload = new AttachUpload();
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
@@ -219,6 +222,8 @@ public partial class DaoJuMat : PGIBasePage
         DisplayModel = Request.QueryString["display"] ?? "0"; 
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+
+        BindData();
 
     }
     public void setCheckBoxListSelectValue(CheckBoxList checkboxlist,string checkedValue,char splitChar,bool enabled)
@@ -420,18 +425,24 @@ public partial class DaoJuMat : PGIBasePage
         }
         //Save file
         var fileup = (FileUpload)this.FindControl("UPLOAD");
-        var filepath = "";
+        var filepath = ""; var originalname = "";
         if (fileup != null)
         {   if (fileup.HasFile)
             {
                 //wlh = ((TextBox)this.FindControl("wlh")).Text.Trim();
-                SaveFile(fileup, newwlh + "_" + getDomain(), out filepath,oldwlh,newwlh);
+                SaveFile(fileup, newwlh + "_" + getDomain(), out filepath,oldwlh,newwlh, out originalname);
                 //更新文件目录
                 string sqlupdatefilecolum = string.Format("update PGI_BASE_PART_DATA_FORM set upload='{0}' where id='{1}'", filepath, instanceid.ToString());
                 DbHelperSQL.ExecuteSql(sqlupdatefilecolum);
+
+                AttachUpload.AttachUpload_Edit("insert", formid, stepid
+                                    , newwlh, originalname, filepath
+                                    , originalname.Substring(originalname.LastIndexOf('.') + 1)
+                                    , "fileupload", Session["UserId"].ToString());
                 flag = true;
             }
         }
+        BindData();
         //执行流程相关事宜
         if (instanceid > 0)
         {
@@ -527,7 +538,7 @@ public partial class DaoJuMat : PGIBasePage
 
     //保存上传文件路径
     public static string savepath = "UploadFile\\MaterialBase";
-    public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldWlh,string newWlh )
+    public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldWlh,string newWlh,out string originalname)
     {
         var path = MapPath("~") +  savepath + "\\" + subpath;
         //Create directory
@@ -545,6 +556,7 @@ public partial class DaoJuMat : PGIBasePage
         }
         //return save path
         filepath ="\\"+ savepath + "\\" + subpath+ "\\"+filename.Replace("&", "_").TrimStart(' ');
+        originalname = filename.Replace("&", "_").TrimStart(' ');
     }
     #endregion
 
@@ -557,6 +569,58 @@ public partial class DaoJuMat : PGIBasePage
         var tbl = DbHelperSQL.Query("select '' as value ,'-请选择-' as text union all  select value, name as text from PGI_BASE_PART_ddl where type = '"+ddlclass.SelectedItem.Text+"'").Tables[0];
         fun.initDropDownList(type, tbl, "value", "text");
     }
+
+    #region gv_attachfile
+
+    public void BindData()
+    {
+        string wlh_str = "";
+        var wlh = (TextBox)this.FindControl("wlh");
+        if (wlh != null)
+        {
+            wlh_str = wlh.Text;
+        }
+
+        DataSet ds = AttachUpload.AttachUpload_List("select", formid, stepid, wlh_str);
+        gv_AttachList.DataSource = ds;
+        gv_AttachList.Columns[0].Visible = true;
+        gv_AttachList.DataBind();
+        gv_AttachList.Columns[0].Visible = false;
+
+        if (Request["instanceid"] != null && Request["instanceid"] != "")
+        {
+            gv_AttachList.Columns[3].Visible = false;
+        }
+        else
+        {
+            gv_AttachList.Columns[3].Visible = true;
+        }
+    }
+
+    protected void gv_AttachList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        string id = e.Keys[0].ToString();
+        string file_attach = ((HyperLink)gv_AttachList.Rows[e.RowIndex].FindControl("HyperLink1")).NavigateUrl;
+        string filepath = MapPath("~") + file_attach;
+
+        AttachUpload.AttachUpload_delete("delete", id);
+
+        if (System.IO.File.Exists(filepath))
+        {
+            System.IO.File.Delete(filepath);
+        }
+        BindData();
+    }
+
+    protected void gv_AttachList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gv_AttachList.SelectedIndex = -1;
+        gv_AttachList.PageIndex = e.NewPageIndex;
+
+        BindData();
+    }
+    #endregion
+
 }
 
 
