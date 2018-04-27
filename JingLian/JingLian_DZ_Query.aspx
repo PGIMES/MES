@@ -1,0 +1,196 @@
+﻿<%@ Page Title="MES【熔炼炉精炼打渣记录查询】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="JingLian_DZ_Query.aspx.cs" Inherits="JingLian_JingLian_DZ_Query" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
+<script src="../Content/js/jquery.min.js" type="text/javascript"></script>
+    <script src="../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
+ <script type="text/javascript" language="javascript">
+     $(document).ready(function () {
+
+         $("#tst").click(function () {
+
+         });
+
+     });
+     // $("div[class='h3']").text($("div[class='h3']").text() + "【转运包清理记录查询】");
+     $("#mestitle").text("【熔炼炉精炼打渣记录查询】");
+        </script>
+    <div class="row row-container">
+        <div class="col-sm-12 ">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <strong>查询</strong>
+                    <asp:ScriptManager ID="ScriptManager1" runat="server">
+                    </asp:ScriptManager>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                       
+                                <table>
+                                    
+                                    <tr>
+                                        <td>
+                                            年度:
+                                        </td>
+                                        <td>
+                                            <asp:DropDownList ID="txt_year" runat="server" class="form-control input-s-sm " Width="100px">
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td>
+                                            月:
+                                        </td>
+                                        <td>
+                                           <asp:DropDownList ID="txt_month" runat="server" class="form-control input-s-sm ">
+                                           </asp:DropDownList>
+                                        </td>
+                                        <td>
+                                            日期:
+                                        </td>
+                                        <td>
+                                           <asp:TextBox ID="txt_startdate" runat="server" Width="100" />
+             <ajaxtoolkit:calendarextender ID="txt_startdate_CalendarExtender" 
+                 runat="server" PopupButtonID="Image2"  Format="yyyy/MM/dd"
+                 TargetControlID="txt_startdate" />
+             ~&nbsp;<asp:TextBox ID="txt_enddate" runat="server" 
+                 Width="100" />
+             <ajaxtoolkit:calendarextender ID="txt_enddate_CalendarExtender" 
+                 runat="server" PopupButtonID="Image2"  Format="yyyy/MM/dd"
+                 TargetControlID="txt_enddate" />
+                                        </td>
+                                      
+                                    </tr>
+                                    <tr><td>熔炼炉号:</td>
+                                        <td>
+                                            <asp:DropDownList ID="ddl_luhao" runat="server" class="form-control input-s-sm ">
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td>
+                                            操作人：</td>
+                                        <td>
+                                            <asp:TextBox ID="txt_czr" runat="server" class="form-control input-s-sm "></asp:TextBox>
+                                        </td>
+                                        <td>
+                                            班别:</td>
+                                        
+                                       
+                                        
+                                        <td>
+
+                                          <asp:DropDownList ID="txt_banbie" runat="server"  class="form-control input-s-sm ">
+                                              <asp:ListItem></asp:ListItem>
+                                              <asp:ListItem>白班</asp:ListItem>
+                                              <asp:ListItem>晚班</asp:ListItem>
+                                         </asp:DropDownList>
+                                           
+                                        </td>
+                                       
+                                    </tr>
+                                     
+                                    <tr>
+                                        
+                                        <td colspan=2 align="right">
+                                            <asp:Button ID="Button1" runat="server" Text="查询"  
+                                              class="btn btn-large btn-primary" 
+                                              onclick="Button1_Click" Width="100px" />
+                                        </td>
+                                        <td colspan="2">
+                                            &nbsp;
+                                            <asp:Button ID="Button2" runat="server" Text="返回"  
+                                              class="btn btn-large btn-primary" 
+                                               Width="100px" onclick="Button2_Click" />
+                                        </td>
+                                    </tr>
+                                   
+                                     
+                                </table>
+                                </div>
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+         <div id="DIV2" runat="server"><span style="color: #FF0000; font-weight: bold; font-size: large;">
+            *精炼时长：25-60分钟</span><br />
+            </div>
+         <div  runat="server" id="DIV1" style=" margin:10px"  >
+        
+                       
+                                <asp:Panel ID="Panel2" runat="server" Height="100%" >
+                                    <table style=" background-color: #FFFFFF;" 
+                                      >
+                                      
+                                        <tr>
+                                            <td valign="top">
+                                                <asp:GridView ID="GridView1" runat="server" 
+                                                    AllowPaging="True" AllowSorting="True" 
+                                                    AutoGenerateColumns="False" 
+                                                    onpageindexchanging="GridView1_PageIndexChanging" 
+                                                    onrowdatabound="GridView1_RowDataBound" 
+                                                    onsorting="GridView1_Sorting" PageSize="100" 
+                                                     Width="100%" >
+                                                    <Columns>
+                                                        <asp:BoundField DataField="begin_date" 
+                                                            DataFormatString="{0:yyyy-MM-dd}" HeaderText="日期" 
+                                                            SortExpression="Checkdate">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="emp_banbie" 
+                                                            HeaderText="班别">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="equip_name" 
+                                                            HeaderText="设备简称" HtmlEncode="False">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="begin_date" 
+                                                            HeaderText="精炼打渣开始时间" SortExpression="begin_date">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="end_date" HeaderText="精炼打渣完成时间">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="timer" 
+                                                            HeaderText="精炼打渣时长&lt;br&gt;(Min)" HtmlEncode="False">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="temperture1" 
+                                                            HeaderText="精炼前铝液温度&lt;br&gt;(℃)" HtmlEncode="False">
+                                                            <HeaderStyle BackColor="#C1E2EB" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="jinglianji_use" 
+                                                            HeaderText="精炼剂使用量">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="chuzhaji_us" HeaderText="除渣剂使用量">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="check1" HeaderText="残渣检查">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="temperture2" 
+                                                            HeaderText="精炼后炉膛温度&lt;br&gt;(℃)" HtmlEncode="False">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="emp_name" HeaderText="操作人">
+                                                        <HeaderStyle BackColor="#C1E2EB" />
+                                                        </asp:BoundField>
+                                                    </Columns>
+                                                    <PagerSettings FirstPageText="首页" LastPageText="尾页" 
+                                                        Mode="NextPreviousFirstLast" NextPageText="下页" 
+                                                        PreviousPageText="上页" />
+                                                    <PagerStyle ForeColor="Red" />
+                                                </asp:GridView>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                </div>
+</asp:Content>
+

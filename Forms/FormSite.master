@@ -1,0 +1,107 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="FormSite.master.cs" Inherits="FormSiteMaster" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MES生产管理系统</title>    
+    
+    <style type="text/css">        
+        .row-container
+        {
+            padding-left: 5px;
+            padding-right: 5px;
+        }        
+        .form-input 
+        {
+            display: float;
+            width: 50%;
+        }         
+        .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle)
+        {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .btn-group > .btn:first-child
+        {
+            margin-left: 0;
+        }
+        .btn-group-vertical > .btn, .btn-group > .btn
+        {
+            position: relative;
+            float: left;
+        }
+        .btn-primary
+        {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+        .btn-padding-s
+        {
+            display: inline-block;
+            padding: 3px 3px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }       
+        .head
+        {   font-size:25px;
+            text-align:left;
+            vertical-align:bottom;
+        }
+        .input-edit
+        {
+            background-color:Yellow;            
+        }
+    </style>
+   
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <script>
+        function closeOpen() {
+            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引                       
+            parent.layer.close(index);
+        }
+     function load() 
+     { Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler); }
+
+     function EndRequestHandler(){
+
+     }
+    </script>
+   
+</head>
+<body  onload="load()" >
+    <form runat="server">
+        <div id="divImg"></div>
+        <div class="h3" style="margin-left: 10px" id="headTitle">
+            >>MES生产管理系统
+            <span id="mestitle"></span>
+            <div style="float: right; margin-right: 10px; font-size: 10px">
+                <label id="logUser"><%=Session["UserAD"].ToString() %></label>
+                <label id="logUser">(<%=Session["UserId"].ToString() %>)</label>
+                
+            </div>
+        </div>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        <div class="footer">
+        </div>
+    </form>
+</body>
+</html>

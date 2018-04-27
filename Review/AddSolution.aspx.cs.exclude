@@ -1,0 +1,425 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.Sql;
+using Maticsoft.Common;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.Web.Services;
+using Maticsoft.DBUtility;
+
+public partial class Review_AddSolution : System.Web.UI.Page
+{
+    public static string savepath = "\\UploadFile\\Review";
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!Page.IsPostBack)
+        {
+            if(Session["LogUser"]== null|| Session["LogUser"].ToString() =="")
+            {                
+                ClientScript.RegisterStartupScript(this.GetType(), "reset", "$('#content').html('登入账号失效，请关闭重新登入.').addClass('label label-warning').css('font-size','15px').css('text-align','center').css('display','block');", true);
+                return;
+            }
+
+            string reqeustid = Request["requestid"];
+
+            initProbDuty(reqeustid);
+
+            if (Request["slnid"] == null)
+            { init(reqeustid); }
+            else
+            { initEdit(reqeustid, Request["slnid"].ToString()); }
+
+            //否决按钮可见性
+            btnReject.Visible = !(Request["slnid"] == null);
+            //load history record
+            if (Request["slnid"] != null)
+            { loadSolutionLog(Request["slnid"].ToString()); }
+
+            btnDelete.Enabled = btnSave.Enabled;
+            btnDelete.CssClass="btn btn-danger";
+            if (txtSlnId.Value == "")
+            {
+                btnDelete.Enabled = false;                               
+
+            }
+
+        }
+    }
+    public void initProbDuty(string requestid)
+    {
+        LoginUser logUser = (LoginUser)Session["LogUser"];
+        txtLogUserName.Value = logUser.UserName;
+        MES.DAL.Q_Review_ProbDuty dutyDal = new MES.DAL.Q_Review_ProbDuty();        
+        DataView dt = dutyDal.GetList("requestid='" + requestid+"'").Tables[0].DefaultView;         
+        dt.RowFilter = "DutyDept='"+ logUser .DepartName+ "'";//
+        dataDuty.DataSource = dt;
+        dataDuty.DataBind();
+        //如果属于本部门问题个数为0 则不可保存
+        if (dataDuty.Rows.Count == 0)
+        {
+            btnSave.Enabled = false;
+            btnSave.CssClass="btn btn-primary";
+        }
+        
+    }
+    public void init(string requestid)
+    {        
+        txtRequestId.Text = requestid;
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        MES.Model.Q_Review_Prob model = dal.GetModel(Convert.ToInt16(requestid));
+        LoginUser logUser = (LoginUser)Session["LogUser"];
+        txtDH.Text = model.DH;
+        lblProbDesc.Text = model.ProdDesc;
+        txtActionEmp.Text = (logUser).UserId;
+        txtActionEmpName.Text = logUser.UserName;
+        txtSlnEmp.Text = logUser.UserId; ;
+        txtSlnEmpName.Text = logUser.UserName;
+        txtPropEmp.Value = model.EmpId; //应该用 PropEmp对应工号更恰当 待改善
+
+        txtSlnDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+
+        //【否决】按钮不可编辑条件：1.登入人不是问题提交人 
+        if (logUser.UserName != model.ProbEmp)
+        {
+            btnReject.Disabled = true;
+        }
+    }
+
+    public void initEdit(string requestid,string slnid)
+    {
+
+        txtRequestId.Text = requestid;
+        txtSlnId.Value = slnid;
+        
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        MES.Model.Q_Review_Prob model = dal.GetModel(Convert.ToInt16(requestid));
+
+        MES.DAL.Q_Review_Solution dalSln = new MES.DAL.Q_Review_Solution();
+        MES.Model.Q_Review_Solution modelSln = dalSln.GetModel(Convert.ToInt16(slnid));
+
+        LoginUser logUser = (LoginUser)Session["LogUser"];
+
+        txtDH.Text = model.DH;
+        lblProbDesc.Text = model.ProdDesc;
+        txtPropEmp.Value = model.EmpId; //应该用 PropEmp对应工号更恰当 待改善
+        txtSlnEmp.Text = logUser.UserId;
+        txtSlnEmpName.Text = logUser.UserName;
+        if (modelSln != null)
+        {
+            txtActionEmp.Text = modelSln.ActionEmp;
+            txtActionEmpName.Text = BaseFun.getEmpNameByEmpId(modelSln.ActionEmp);
+
+            txtSlnEmp.Text = modelSln.SlnEmp==""?logUser.UserId:modelSln.SlnEmp; 
+            txtSlnEmpName.Text = BaseFun.getEmpNameByEmpId(txtSlnEmp.Text);
+
+            txtActionPlan.Text = modelSln.ActionPlan;
+            txtCause.Text = modelSln.Cause;
+            txtPlanDate.Text = string.Format("{0:yyyy-MM-dd}", modelSln.PlanDate);
+            txtSlnDate.Text = string.Format("{0:yyyy-MM-dd}",modelSln.SlnDate);
+            txtHidden.Value = modelSln.DutyId.ToString();//dutyid
+            lblConfirmDesc.Text =modelSln.DisagreeDesc == ""?"": "<span class='label label-warning'>措施评价:" + modelSln.DisagreeDesc + "</span>";
+            txtSlnDate.Text = DateTime.Now.ToString("yyyy-MM-dd");//gai
+
+
+
+            for (int i = 0; i < dataDuty.Rows.Count; i++)
+            {
+                HtmlInputRadioButton radio = (System.Web.UI.HtmlControls.HtmlInputRadioButton)dataDuty.Rows[i].FindControl("radioSelect");
+                
+                radio.Disabled = true;
+                if(radio.Value== modelSln.DutyId.ToString())
+                {
+                    radio.Checked=true;                   
+                   // break;
+                }
+                
+            }
+            
+        }
+        //【否决】按钮不可编辑条件：1.登入人不是问题提交人 
+        if (logUser.UserName != model.ProbEmp)
+        {
+            btnReject.Disabled = true;
+        }
+        //【提交措施】按钮不可编辑条件：1.登入人不是行动人或提交人 
+        if (logUser.UserName != txtActionEmpName.Text&&logUser.UserName !=txtSlnEmpName.Text )
+        {
+            btnSave.Enabled = false;
+           btnSave.CssClass="btn btn-primary";
+        }
+    }
+    public void loadSolutionLog(string slnid)
+    {
+        string sqlwhere = " a.slnId='"+slnid+"' order by AutoID desc";
+        DataSet ds = MES.DAL.Q_Review_Solution.GetLogList(sqlwhere);
+        this.gridSolution.DataSource = ds;
+        this.gridSolution.DataBind();
+    }
+    public void FileUpload(string SubPath, System.Web.UI.WebControls.FileUpload FileUpLoader, out string FilePath, out string filname)//System.Web.UI.HtmlControls.HtmlInputFile
+    {
+        string filename = "";
+        string path = "";
+        if (FileUpLoader.PostedFile.FileName.Length != 0)
+        {
+            filename = FileUpLoader.PostedFile.FileName.Replace(" ","");
+            if (filename.Contains("\\") == true)
+            {
+                filename =DateTime.Now.ToString("yyMMddHHmmss")+ filename.Substring(filename.LastIndexOf("\\") + 1);
+            }
+
+            string MapDir = MapPath("~");
+            path = MapDir + savepath + "\\" + SubPath;
+             
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);//不存在就创建目录 
+            }
+            FileUpLoader.PostedFile.SaveAs(path + "\\" + filename);
+           
+        }
+
+        FilePath = filename == "" ? "" : (savepath + "\\" + SubPath + "\\" + filename);//输出相对路径
+        filname = filename;//文件名称
+        // Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.msg('文件保存成功！')", true);
+
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        string strErr = "";
+        #region  "Validation"
+
+        bool isDataSelect = false;
+        for (int i = 0; i < dataDuty.Rows.Count; i++)
+        {
+            if (((HtmlInputRadioButton)dataDuty.Rows[i].FindControl("radioSelect")).Checked == true)
+            {
+                isDataSelect = true;
+                break;
+            }
+        }
+        if (isDataSelect == false)
+        {
+            strErr += @"请选择改善目标及要求！\r\n";
+        }
+        //if (this.txtCause.Text.Trim().Length == 0)
+        //{
+        //    strErr += "发生根本原因不能为空！\\n";
+        //}
+        if (this.txtActionPlan.Text.Trim().Length == 0)
+        {
+            strErr += "计划采取的行动不能为空！\\n";
+        }
+        if (!PageValidate.IsDateTime(txtPlanDate.Text))
+        {
+            strErr += "计划完成日期不可为空或格式错误！\\n";
+        }
+        if (this.txtActionEmp.Text.Trim().Length == 0)
+        {
+            strErr += "行动责任人不能为空！\\n";
+        }
+         
+        if (!PageValidate.IsDateTime(txtSlnDate.Text))
+        {
+            strErr += "措施提交日期不可为空或格式错误！\\n";
+        }
+        if (this.txtSlnEmp.Text.Trim().Length == 0)
+        {
+            strErr += @"措施提交人不能为空！\r\n";
+        }        
+         
+        #endregion
+        if (strErr != "")
+        {
+            MessageBox.Show(this, strErr);
+            return;
+        }
+        int RequestId = int.Parse(this.txtRequestId.Text);
+        string ActionPlan = this.txtActionPlan.Text.Trim();
+        DateTime PlanDate = DateTime.Parse(this.txtPlanDate.Text);
+        string ActionEmp = this.txtActionEmp.Text;
+       // string ActionFile = this.txtActionFile.Text;
+        DateTime SlnDate = DateTime.Parse(this.txtSlnDate.Text);
+        string SlnEmp = this.txtSlnEmp.Text;
+        int DutyId = Convert.ToInt16(txtHidden.Value);
+        string cause = txtCause.Text.Trim(); 
+
+        MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+        MES.Model.Q_Review_Solution model = new MES.Model.Q_Review_Solution();
+       
+        if (Request["state"] == "edit")
+        {
+            model = dal.GetModel(Convert.ToInt16(Request["slnid"]));
+        }
+        model.RequestId = RequestId;
+        model.ActionPlan = ActionPlan;
+        model.PlanDate = PlanDate;
+        model.ActionEmp = ActionEmp;
+       // model.ActionFile = ActionFile;
+        model.SlnDate = SlnDate;
+        model.SlnEmp = SlnEmp;
+        model.DutyId = DutyId;
+        model.Cause = cause;
+        model.DisagreeState = "已提交";
+        model.DisagreeDesc = "";//重新提交清空评价
+        model.DisagreeEmp = "";//重新提交清空评价
+        model.DisagreeDate = null;
+        if (model.SlnState != "提交结果" && model.SlnState != "确认结果")
+        { model.SlnState = "提交措施"; }
+
+        string ActionFile = "";
+        string filename = "";
+        FileUpload("", this.txtActionFile,out ActionFile, out filename);
+        
+        model.ActionFile = ActionFile;
+        
+        if (Request["state"] != "edit")
+        {            
+            dal.Add(model);
+            //发通知邮件：给问题提出人 初步看看改善措施                    
+            if (txtPropEmp.Value != "")
+            {
+                StringBuilder body = new StringBuilder();
+                string recipient = BaseFun.getMailByEmpId(txtPropEmp.Value);
+                string cc = "";// BaseFun.getDirManagerMailByEmpId(txtSlnEmp.Text);//Cc到措施提供人主管
+
+                string recipiantName = BaseFun.getEmpNameByEmpId(txtPropEmp.Value);
+                string improvetarget = DbHelperSQL.GetSingle("select ImproveTarget from Q_Review_probDuty where id='" + txtHidden.Value + "'").ToString();
+                body.Append("Hi," + recipiantName + ":<br>您有新的改善措施需确认.");
+                body.Append("<br>   请点击链接进入查看并确认：");
+                body.Append("<table border=1><tr><td>单号</td><td>问题描述</td><td>改善目标</td><td>发生原因</td><td>采取的行动</td><td>改善措施提交人</td></tr><Tr>");
+                body.Append("<td><a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + txtRequestId.Text + "' target='_blank'>" + txtDH.Text + "</a></Td>");
+                body.Append("<td>" + lblProbDesc.Text + "</td>");
+                body.Append("<td>" + improvetarget + "</td>");
+                body.Append("<td>" + txtCause.Text + "</td>");
+                body.Append("<td>" + txtActionPlan.Text + "</td>");
+                body.Append("<td>" + txtActionEmpName.Text + "</td>");
+                body.Append("</tr></table>");
+                Maticsoft.Common.MailSender.SendCC(recipient, cc, "您有改善措施需确认" + "" + "[问题系统]", body.ToString());
+            }
+
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = Convert.ToInt16(Page.Request["requestid"]),
+                Update_content = "改善措施提交",
+                Update_Engineer = ((LoginUser)Session["LogUser"]).JobTitleName,
+                Update_LB = "新增",
+                Update_user = txtSlnEmp.Text,
+                Update_username = txtSlnEmpName.Text
+            });
+        }
+        else  
+        {   //插入history record 
+            dal.AddLog(Request["slnid"].ToString());
+            //更新      
+            dal.Update(model);
+            //发通知邮件：给问题提出人 初步看看改善措施                    
+            if (txtPropEmp.Value != "")
+            {
+                StringBuilder body = new StringBuilder();
+                string recipient = BaseFun.getMailByEmpId(txtPropEmp.Value);
+                string cc = "";// BaseFun.getDirManagerMailByEmpId(txtSlnEmp.Text);//Cc到措施提供人主管
+
+                string recipiantName = BaseFun.getEmpNameByEmpId(txtPropEmp.Value);
+                string improvetarget = DbHelperSQL.GetSingle("select ImproveTarget from Q_Review_probDuty where id='" + txtHidden.Value + "'").ToString();
+                body.Append("Hi," + recipiantName + ":<br>您有新的改善措施需确认.");
+                body.Append("<br>   请点击链接进入查看并确认：");
+                body.Append("<table border=1><tr><td>单号</td><td>问题描述</td><td>改善目标</td><td>发生原因</td><td>采取的行动</td><td>改善措施提交人</td></tr><Tr>");
+                body.Append("<td><a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + txtRequestId.Text + "' target='_blank'>" + txtDH.Text + "</a></Td>");
+                body.Append("<td>" + lblProbDesc.Text + "</td>");
+                body.Append("<td>" + improvetarget + "</td>");
+                body.Append("<td>" + txtCause.Text + "</td>");
+                body.Append("<td>" + txtActionPlan.Text + "</td>");
+                body.Append("<td>" + txtActionEmpName.Text + "</td>");
+                body.Append("</tr></table>");
+                Maticsoft.Common.MailSender.SendCC(recipient, cc, "您有改善措施需确认" + "" + "[问题系统]", body.ToString());
+            }
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = Convert.ToInt16(Page.Request["requestid"]),
+                Update_content = "改善措施修改",
+                Update_Engineer = ((LoginUser)Session["LogUser"]).JobTitleName,
+                Update_LB = "修改",
+                Update_user = txtSlnEmp.Text,
+                Update_username = txtSlnEmpName.Text
+            });
+        }
+        
+        
+        Maticsoft.Common.MessageBox.Show(this, "提交措施成功！");
+        
+    }
+
+    // 否决措施  
+    [WebMethod(true)]
+    public static string RejectSln(string requestid, string slnid, string desc, string rejectman)
+    {
+        System.Text.StringBuilder result = new StringBuilder();
+        result.Append(string.Format("update [dbo].[Q_Review_Solution] set [DisagreeState]='{0}',[DisagreeDesc]='{1}',DisagreeEmp='{2}',DisagreeDate=getdate() where [SlnId]='{3}' ", "NG", desc, rejectman, slnid));
+
+        int rows = DbHelperSQL.ExecuteSql(result.ToString());
+        result.Clear();
+        if (rows == 0)
+        {
+            result.Append("0");//失败
+        }
+        else
+        {
+            result.Append("1"); //成功
+        }
+        ////插入log
+        //var user = InitUser.GetLoginUserInfo(rejectman, "");
+        //MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+        //{
+        //    RequestId = Convert.ToInt16(requestid),
+        //    Update_content = "否决措施",
+        //    Update_Engineer = user.JobTitleName,
+        //    Update_LB = "否决",
+        //    Update_user = user.UserId,
+        //    Update_username = user.UserName
+        //});
+
+        //发否决通知邮件：给措施改善人重新提交措施             
+
+        //MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+        //MES.Model.Q_Review_Solution M = new MES.Model.Q_Review_Solution();
+        //MES.DAL.Q_Review_Prob dalP = new MES.DAL.Q_Review_Prob();
+        //MES.Model.Q_Review_Prob MP = new MES.Model.Q_Review_Prob();
+        //M = dal.GetModel(Convert.ToInt16(slnid));
+        //MP = dalP.GetModel(M.RequestId);
+        //if (M.ActionEmp != "")
+        //{
+        //    StringBuilder body = new StringBuilder();
+        //    body.Append("Hi:<br>您提交的改善措施已被【否决】,请重新提交改善措施.");
+        //    body.Append("<br>请点击链接进入查看详细结果：");
+        //    body.Append("<br>单号：<a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + Convert.ToString(M.RequestId) + "' target='_blank'>" + MP.DH + "</a>");
+        //    body.Append("<br>改善措施：");
+        //    body.Append("<br>   " + M.ActionPlan);
+        //    body.Append("<br>否决原因：");
+        //    body.Append("<br>   " + desc);
+        //    // body.Append("<br>改善结果确认人：" + txtProbEmp.Value);
+
+        //    string recipient = BaseFun.getMailByEmpId(M.ActionEmp);
+
+        //  //  Maticsoft.Common.MailSender.Send(recipient, "您提交的改善结果已被【否决】[问题系统]", body.ToString());
+        //}
+
+        return result.ToString();
+    }
+
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {              
+        
+            MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+            dal.Delete(Convert.ToInt16(txtSlnId.Value));
+             
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "", "layer.alert('删除成功！');$(\"#btnCancel\").click();", true);
+        
+    }
+}

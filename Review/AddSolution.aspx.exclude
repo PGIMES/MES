@@ -1,0 +1,275 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddSolution.aspx.cs" Inherits="Review_AddSolution" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="../Content/css/bootstrap.min.css" rel="stylesheet" />   
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <%--<script src="../Content/js/plugins/layer/layer.min.js"></script>--%>
+    <script src="../Content/js/plugins/layer/laydate/laydate.js"></script>
+    <script src="../Content/js/layer/layer.js"></script>
+    <link href="../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <style>
+        td{
+            padding:4px 2px 4px 2px
+            ;border:0px solid red
+      }
+        .form-control {
+        display:inline}
+ </style>
+    <script src="../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mestitle").text("【问题及解决跟踪】");
+            //$('.selectpicker').change(function () {
+            //    $("input[id*='txt_wl_tk']").val($(".selectpicker").val());
+            //});
+
+            $("#btnCancel").bind("click", function (e) {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引                
+                parent.layer.close(index);
+            });
+
+            $("input[type=radio]").click(function () {
+                var id = this.id
+                var value = this.value;
+                $("#txtHidden").val(value);
+
+                $.each($("input[type=radio]"), function (i, item) {
+                    if (item.value != value)
+                    { item.checked = false; }
+                })
+
+            })
+            //措施否决
+            $("input[id*='btnReject']").click(function () {
+                var slnid = $("input[id *=txtSlnId]").val();
+                var requestid = $("input[id*=txtRequestId]").val();
+                var rejectman = $("input[id*=txtLogUserName]").val();
+                layer.prompt({ title: '输入措施否决原因，并确认', formType: 2 }, function (desc, index) {
+                    $.ajax({
+                        type: "Post",
+                        url: "AddSolution.aspx/RejectSln",//?desc=+ desc+"&slnid="+slnid
+                        //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                        data: "{'desc':'" + desc + "','slnid':'" + slnid + "','requestid':'" + requestid + "','rejectman':'" + rejectman + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {//返回的数据用data.d获取内容//                       
+
+                                if (data.d == "0") {
+                                    layer.msg("措施否决失败");
+                                }
+                                else {
+                                    layer.msg("措施否决成功");
+                                    layer.close(index);                                  
+
+                                }
+                           // })
+
+                        },
+                        error: function (err) {
+                            layer.alert(err);
+                        }
+                    });
+
+
+                });
+            })
+            
+        })
+            function GetEmp() {
+
+                popupwindow = window.open('../Select/select_Emp.aspx?ctrl0=txtActionEmp&ctrl1=txtActionEmpName', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
+            }
+            function setvalue(ctrl0, keyValue0, ctrl1, keyValue1, ctrl2, keyValue2) {
+
+                $("input[id*='" + ctrl0 + "']").val(keyValue0);
+                $("input[id*='" + ctrl1 + "']").val(keyValue1);
+                $("input[id*='" + ctrl2 + "']").val(keyValue2);
+                popupwindow.close();
+            }
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table style="width: 100%;" cellpadding="2" cellspacing="1"  border="0">
+                <tr>
+                    <td   >
+                        <div id="content" style="width:100%">
+                            <table  width="100%" border="0">
+                            <tr style="display:none">
+                                <td  align="right" >RequestId	：</td>
+                                <td  align="left">
+                                    <asp:TextBox ID="txtRequestId" runat="server" Width="200px"></asp:TextBox>
+                                    <asp:HiddenField  ID="txtPropEmp" runat="server"/>
+                                    <asp:HiddenField  ID="txtSlnId" runat="server"/>
+                                    <asp:HiddenField  ID="txtLogUserName" runat="server"/>
+                                    <asp:HiddenField  ID="txtImproveTarget" runat="server"/>
+                                </td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td  align="right">单号	：</td>
+                                <td  align="left">
+                                    <asp:TextBox ID="txtDH" runat="server" Width="200px" CssClass="disabled form-control" ReadOnly="true"></asp:TextBox>
+                                </td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td  align="right">问题描述	：</td>
+                                <td  align="left" colspan="3"  >
+                                    <asp:textbox ID="lblProbDesc" runat="server"  CssClass="form-control " enabled="false" TextMode="MultiLine" ></asp:textbox>
+                                </td> 
+                            </tr>
+                            <tr>
+                                <td  align="right">选择改善目标及要求：</td>
+                                <td  align="left" colspan="3">
+                                    <asp:GridView ID="dataDuty" runat="server" ShowHeader="true" Font-Size="9px" AutoGenerateColumns="false" ForeColor="#333333" GridLines="None" Width="100%">
+                                        <Columns>
+                                            <asp:TemplateField HeaderText="">
+                                                <ItemTemplate> 
+                                                    <input type="radio" id="radioSelect" value='<%# Eval("Id") %>' runat="server" />
+                                                    <label id="lblId"  visible="false"  runat="server" title='' > </label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="改善目标及要求">
+                                                <ItemTemplate>                                                      
+                                                    <span id="lblImproveTarget"  title='<%# Eval("ImproveTarget") %>' runat="server" ><%# Eval("ImproveTarget").ToString().Substring(0,Eval("ImproveTarget").ToString().Length>30?30:Eval("ImproveTarget").ToString().Length) %>...</span>
+                                                     
+                                                </ItemTemplate>
+                                            </asp:TemplateField>                                            
+                                            <asp:BoundField  DataField="DutyDept" HeaderText="责任部门" />
+                                            <asp:BoundField  DataField="DutyEmpName" HeaderText="责任人"/>
+                                        </Columns>
+                                        <EmptyDataTemplate><h4><span class="label label-info">没发现您单位问题，无需提交改善措施。点击【关闭】退出</span></h4></EmptyDataTemplate>
+                                        <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                        <RowStyle BackColor="#EFF3FB" />
+                                        <AlternatingRowStyle BackColor="White" />
+                                    </asp:GridView>                                   
+                                    <input type="hidden" id="txtHidden" runat="server"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  align="right" >发生根本原因：</td>
+                                <td  align="left" colspan="3">
+                                    <asp:TextBox ID="txtCause" runat="server"   CssClass="form-control" TextMode="MultiLine"  Height="80px" ></asp:TextBox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  align="right" >计划采取的行动：</td>
+                                <td  align="left" colspan="3">
+                                    <asp:TextBox ID="txtActionPlan" runat="server"   CssClass="form-control" TextMode="MultiLine" Height="80px" ></asp:TextBox>
+                                     
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  align="right" ></td>
+                                <td  align="left" colspan="3">
+                                    <asp:Label ID="lblConfirmDesc" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td  align="right">计划完成日期：</td>
+                                <td  align="left">
+                                    <asp:TextBox ID="txtPlanDate" runat="server" Width="200px" CssClass="form-control"  onfocus="laydate()"></asp:TextBox>
+                                </td><td  align="right">行动责任人：</td>
+                                <td align="left" >
+                                    <div class="form-inline">
+                                    <asp:TextBox ID="txtActionEmp" runat="server" CssClass="form-control "  placeholder="工号"  onclick="GetEmp()" Width="80px"></asp:TextBox>
+                                    <asp:TextBox ID="txtActionEmpName" runat="server" CssClass="form-control" ReadOnly="true"   Width="80px"></asp:TextBox>
+                                    </div>
+                                </td>
+                            </tr>                           
+                            <tr style="display:none">
+                                <td  align="right">行动计划文件：</td>
+                                <td  align="left"  CssClass="form-control">
+                                    <asp:FileUpload ID="txtActionFile" runat="server" />                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  align="right">措施提交日期：</td>
+                                <td  align="left">
+                                    <asp:TextBox ID="txtSlnDate" runat="server" Width="200px" CssClass="form-control" readonly="true" onfocus="laydate(this)"></asp:TextBox>
+                                </td>
+                           
+                                <td  align="right">措施提交人：</td>
+                                <td  align="left">
+                                    <div class="form-inline">
+                                        <asp:TextBox ID="txtSlnEmp" runat="server" CssClass="form-control" placeholder="工号" ReadOnly="true"   Width="80px"></asp:TextBox>
+                                        <asp:TextBox ID="txtSlnEmpName" runat="server" CssClass="form-control" ReadOnly="true"  Width="80px"></asp:TextBox>
+                                    </div>
+                                </td>
+                            </tr>                           
+                            
+                        </table>                    
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdbg" align="center" valign="bottom">
+                        <asp:Button ID="btnSave" runat="server" Text="提交措施"  OnClick="btnSave_Click" class="btn btn-primary"></asp:Button>
+                        <asp:Button ID="btnDelete" runat="server" Text="删除措施"  OnClick="btnDelete_Click" class="btn btn-danger"></asp:Button>
+                        <input id="btnReject"  type="button" value="否决" runat="server"   class="btn btn-warning" />
+                        <input id="btnCancel"  type="button" value="关闭"  class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+            <%--措施历史记录--%>
+            <asp:GridView ID="gridSolution" runat="server" AutoGenerateColumns="False" CellPadding="2" BorderColor="Silver" ShowHeaderWhenEmpty="true"
+                ForeColor="#333333" GridLines="both" ShowFooter="false"  Caption="措施修改历史记录" Font-Size="10px">
+                <RowStyle BackColor="#EFF3FB" />
+                <Columns>
+                    <asp:TemplateField HeaderText="提交日期" ItemStyle-Width="60px">
+                        <ItemTemplate>
+                            <asp:Label ID="txt_SlnDate" runat="server" Text='<%#string.Format("{0:yy/MM/dd}",DataBinder.Eval(Container,"DataItem.SlnDate")) %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="改善目标及要求" ItemStyle-CssClass="wrap" ItemStyle-Width="120px">
+                        <ItemTemplate>
+                            <asp:Label ID="lblImproveTarget" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ImproveTarget") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="发生原因" ItemStyle-CssClass="wrap" ItemStyle-Width="20%">
+                        <ItemTemplate>
+                            <asp:Label ID="lblCause" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.Cause") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="计划采取的行动" ItemStyle-CssClass="wrap" ItemStyle-Width="20%">
+                        <ItemTemplate>
+                            <%#DataBinder.Eval(Container,"DataItem.ActionPlan") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="责任人"  ItemStyle-Width="50px">
+                        <ItemTemplate>
+                            <asp:Label ID="txt_ActionEmp" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmp") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="预计完成日" HeaderStyle-Width="80px">
+                        <ItemTemplate>
+                            <%#string.Format("{0:yy/MM/dd}",DataBinder.Eval(Container,"DataItem.PlanDate")) %>
+                        </ItemTemplate>
+                    </asp:TemplateField>                    
+                    <asp:BoundField DataField="DisagreeDesc" HeaderText="措施评价" ItemStyle-CssClass="wrap" ItemStyle-Width="10%"  HeaderStyle-CssClass="text-nowrap"/>
+                    <asp:BoundField DataField="DisagreeEmp"  HeaderText="评价人" HeaderStyle-CssClass="text-nowrap"  ItemStyle-Width="50px"/>
+                    <asp:BoundField DataField="DisagreeDate"  HeaderText="评价时间" DataFormatString="{0:yy-MM-dd HH:mm}"  HeaderStyle-CssClass="text-nowrap"  ItemStyle-Width="60px"/>
+
+                </Columns>
+                <EmptyDataTemplate>no history data found！</EmptyDataTemplate>
+                <FooterStyle BackColor="White" Font-Bold="True" ForeColor="Black" />
+                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                <EditRowStyle BackColor="#2461BF" />
+                <AlternatingRowStyle BackColor="White" />
+            </asp:GridView>
+                 
+
+        </div>
+    </form>
+</body>
+</html>

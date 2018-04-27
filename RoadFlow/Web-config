@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  有关如何配置 ASP.NET 应用程序的详细信息，请访问
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+
+<configuration>
+  <appSettings>
+    <!--系统初始密码-->
+    <add key="InitPassword" value="111"/>
+    <!--数据库类型-->
+    <add key="DatabaseType" value="MSSQL"/>
+    <!--文件及附件路径-->
+    <add key="FilePath" value="D:\Projects1\RoadFlow\Files"/>
+    <!--允许上传的文件类型-->
+    <add key="UploadFileType" value="jpg,jpeg,png,gif,bmp,zip,rar,7z,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,wmv,mp4"/>
+    <!--系统数据表-->
+    <add key="SystemTables" value="AppLibrary,AppLibraryButtons,AppLibraryButtons1,AppLibrarySubPages,DBConnection,Dictionary,DocumentDirectory,Documents,DocumentsReadUsers,HastenLog,HomeItems,Log,Menu,MenuUser,Organize,ProgramBuilder,ProgramBuilderButtons,ProgramBuilderExport,ProgramBuilderFields,ProgramBuilderQuerys,ProgramBuilderValidates,ShortMessage,SMSLog,Users,UserShortcut,UsersInfo,UsersRelation,WorkCalendar,WorkFlow,WorkFlowArchives,WorkFlowButtons,WorkFlowComment,WorkFlowDelegation,WorkFlowForm,WorkFlowInstanceID,WorkFlowTask,WorkGroup,WorkTime,WeiXinMessage,ShortMessage1"/>
+    
+    <!--微信企业号相关配置-->
+    <add key="wxqy_IsUse" value="1"/>
+    <add key="wxqy_CorpID" value="wx70130fb3a83ef14e"/>
+    <!--企业号Secret,如果是使用企业微信这里为空-->
+    <add key="wxqy_Secret" value=""/>
+    <!--外网地址-->
+    <add key="WebUrl" value="http://demo.cqroad.cn"/>
+    <!--微信企业号相关配置-->
+  </appSettings>
+  <connectionStrings>
+    <add name="PlatformConnection" providerName="System.Data.SqlClient" connectionString="Data Source=.;Initial Catalog=RoadFlowWebForm;UID=sa;PWD=Bb12345"/>
+    <add name="PlatformConnectionOracle" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=xe)));User Id=SYSTEM;Password=111"/>
+    <add name="PlatformConnectionMySql" connectionString="Server=127.0.0.1;Database=roadflow;Uid=root;Pwd=1111;Charset=utf8"/>
+  </connectionStrings>
+  <system.web>
+    <compilation debug="true" targetFramework="4.0" />
+    <pages validateRequest="false" enableViewState="false" enableEventValidation="false" enableViewStateMac="false"></pages>
+    <httpRuntime requestValidationMode="2.0" maxQueryStringLength="2097151" maxUrlLength="2097151" maxRequestLength="4194304" executionTimeout="600" />
+    <sessionState mode="InProc" stateConnectionString="tcpip=127.0.0.1:42424" stateNetworkTimeout="40" timeout="20"/>
+    <customErrors mode="Off"></customErrors>
+  </system.web>
+  <system.webServer>
+	<security>
+		<requestFiltering>
+      <requestLimits maxAllowedContentLength="1048576000" maxQueryString="2097151" maxUrl="2097151"></requestLimits>
+		</requestFiltering>
+	</security>
+  </system.webServer>
+</configuration>

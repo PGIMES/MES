@@ -1,0 +1,1199 @@
+<%@ Page Title="MES生产管理系统" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
+    CodeFile="Review.aspx.cs" Inherits="Review" MaintainScrollPositionOnPostback="True" ValidateRequest="true" %>
+
+<asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+    <link href="../Content/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
+    <%--<script src="../Content/js/plugins/layer/layer.min.js"></script>--%>
+     <script src="../Content/js/layer/layer.js"></script>
+    <script src="../Content/js/plugins/layer/laydate/laydate.js"></script>
+    <link href="../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mestitle").html("【问题及解决跟踪】<a href='/userguide/reviewGuide.pptx' target='_blank' class='h4'>使用说明</a>");
+           
+            //新增改善措施,不同意关闭btnDisClose调用,input[id*='btnDisClose']           
+            $("input[id*='btnAddSolution']").click(function () {
+                AddSolution()
+            })
+            //如有选择等级值，直接显示
+            $("#spanRankDesc").text($("select[id*='ddlRank']").find("option:selected").val());
+            //选择等级改变
+            $("select[id*='ddlRank']").change(function () {
+                $("#spanRankDesc").text($("select[id*='ddlRank']").find("option:selected").val());
+            })
+            //信息更新
+            $("[param]").click(function () {
+                param = $(this).attr('param');
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-demo', //样式类名
+                    closeBtn: 1, //显示关闭按钮
+                    anim: 2,
+                    title: ['改善结果跟踪记录', false],
+                    area: ['900px', '650px'],
+                    shadeClose: true, //开启遮罩关闭
+                    content: 'Review_Remark.aspx' + param,
+                    end: function () {
+                        $("input[id*=btnFreshSln]").click();
+                    }
+                });
+
+            });
+            //措施评价
+            $("[id*='btnEvaluate']").click(function () {
+                var slnid = $(this).attr("slnid");
+                var requestid = $("input[id*=txtRequestId]").val();
+                var rejectman=$("input[id*=txt_update_user_name]").val();
+                layer.prompt({ title: '输入措施评价，并确认', formType: 2 }, function (desc, index) {
+                    $.ajax({
+                        type: "Post",
+                        url: "Review.aspx/EvaluateSln",//?desc=+ desc+"&slnid="+slnid
+                        //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                        data: "{'desc':'" + desc + "','slnid':'"+slnid+"','requestid':'"+requestid+"','rejectman':'"+rejectman+"'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {//返回的数据用data.d获取内容//                        
+                           // alert(data.d)
+                            $.each(eval(data.d), function (i, item) {
+                               
+                                if (data.d == "0") {
+                                    layer.alert("措施评价失败");
+                                }
+                                else {
+                                    layer.alert("措施评价成功");
+                                    layer.close(index);
+                                    $("input[id*=btnFreshSln]").click();
+
+                                }
+                            })
+
+                        },
+                        error: function (err) {
+                            layer.alert(err);
+                        }
+                    });
+                                        
+                });
+            })
+            
+
+            //修改日期
+            var preIndex="" ;//记录下前一个容器
+            var preBtn = "";//记录下前一个按钮
+            var date; var target;
+            var index;
+
+            $("span[id*='editDate']").click(function () {
+                newindex=$(this).attr("index");
+                if (preIndex != newindex) {
+                     $("#divEditDate" + preIndex).html(date);
+                     $("[name*=lblImproveTarget" + preIndex+"]").html(target);
+                     $("#" + preBtn).text("Edit");
+                }
+
+                date =$(this).attr("val");
+                target = $("[name*=lblImproveTarget" + newindex+"]").text();
+                var state=$(this).text();
+                var dutyid=$(this).attr("dutyid");
+                index = newindex;
+                preIndex =  newindex;
+                preBtn=$(this).attr("id");
+
+                if (state == "Edit") {
+                    $("#divEditDate" + index).html("<input type=\"text\" style='width:100%' id=\"txtEditDate\" value='"+date+"'  onclick=\"laydate()\"  />");//<span class='label label-info' >C</span>
+                    $("[name*=lblImproveTarget" + index+"]").html("<input type=\"text\" style='width:100%' id=\"txtEditTarget\" value='" + target + "'    />");
+                    $(this).text("Save");//onblur=\"CancelEdit('"+date+"','divEditDate" + index+"')\"
+                }
+                else if (state == "Save"){
+                    date = $("#txtEditDate").val();
+                    target = $("#txtEditTarget").val();
+                    var requestid = $("input[id*=txtRequestId]").val();
+                    var updatedby = $("input[id*=txt_update_user]").val();
+                    $("#divEditDate" + index).html(date);
+                    $("[name*=lblImproveTarget" + index + "]").html(target);
+                    $.ajax({
+                        type: "Post",
+                        url: "Review.aspx/EditDate" , 
+                        //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                        data: "{'requestid':'" + requestid + "','date':'" + date + "','target':'" + target + "','dutyid':'" + dutyid + "','updatedby':'" + updatedby + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {//返回的数据用data.d获取内容//                        
+                           // alert(data.d)
+                            $.each(eval(data.d), function (i, item) {
+                               
+                                if (data.d == "0") {
+                                    layer.alert("失败");
+                                }
+                                else {
+                                    layer.alert("成功");
+                                    layer.close(index);
+                                    $("input[id*=ReqCloseDate]").val(data.d);
+
+                                }
+                            })
+
+                        },
+                        error: function (err) {
+                            layer.alert(err);
+                        }
+                    });
+                    $(this).text("Edit");
+                }
+                 
+               
+            })
+           
+
+        })
+                 
+        function confirm() {
+            layer.confirm('提交成功. 是否下一问题？', {
+                btn: ['下一问题','新建问题', '关闭'] //按钮
+            }, function (index) {//下一问题
+                $("input[id*=txtRequestId]").val("");
+                $("input[id*=txtDH]").val("系统自动产生");
+                $("textarea[id*=txtProbDesc]").val("");
+                //$("input[id*=lbtnRefreshDuty]").click();
+                __doPostBack('ctl00$MainContent$lbtnRefreshDuty', '');
+                layer.close(index);
+            }, function (index) {//新建问题
+                window.location = "Review.aspx";
+                layer.close(index);
+            }, function (index) {//关闭
+                layer.close(index);
+            });
+        }
+        //添加改善措施
+        function AddSolution() {          
+                
+                var RequestId = $("input[id*=txtRequestId]").val();
+                var title = "新增改善措施";
+
+                layer.open({
+                    shade: [0.5, '#000', false],
+                    type: 2,
+                    //offset: '20px',
+                    area: ['950px', '750px'],
+                    fix: false, //不固定
+                    maxmin: false,
+                    title: ['<i class="fa fa-dedent-"></i> ' + title, false],
+                    closeBtn: 1,
+                    content: 'AddSolution.aspx?requestid=' + RequestId,
+                    end: function () {
+                        $("input[id*=btnFreshSln]").click();
+                    }
+                });
+            
+        }
+        //修改改善措施
+        function EditSolution(slnid) {
+
+            var RequestId = $("input[id*=txtRequestId]").val();
+            
+            var title = "修改改善措施";
+
+            layer.open({
+                shade: [0.5, '#000', false],
+                type: 2,
+                //offset: '20px',
+                area: ['950px', '750px'],
+                fix: false, //不固定
+                maxmin: false,
+                title: ['<i class="fa fa-dedent-"></i> ' + title, false],
+                closeBtn: 1,
+                content: 'AddSolution.aspx?state=edit&requestid=' + RequestId+'&slnid=' + slnid,
+                end: function () {
+                    $("input[id*=btnFreshSln]").click();
+                }
+            });
+
+        }
+        //不同意关闭原因
+        function DisClose(){                             
+                var requestid = $("input[id*=txtRequestId]").val();
+                layer.prompt({ title: '输入不同意关闭原因 ', formType: 2 }, function (desc, index) {
+                    $.ajax({
+                        type: "Post",
+                        url: "Review.aspx/DisClose" ,//?desc=+ desc+"&slnid="+slnid
+                        //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                        data: "{'desc':'" + desc + "','requestid':'"+requestid+"'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {//返回的数据用data.d获取内容//                        
+                           // alert(data.d)
+                            $.each(eval(data.d), function (i, item) {
+                               
+                                if (data.d == "0") {
+                                    layer.alert("失败");
+                                }
+                                else {
+                                    layer.alert("成功");
+                                    layer.close(index);
+                                    $("input[id*=btnFreshSln]").click();
+
+                                }
+                            })
+
+                        },
+                        error: function (err) {
+                            layer.alert(err);
+                        }
+                    });
+                                        
+                });
+            }
+    </script>
+    <script type="text/javascript">
+        //$().ready(function () {            
+        //        $.ajax({
+        //            type: "Post",
+        //            url: "Product.aspx/ShowNumByYearXMH?id=" + ID + "&year=" + year,
+        //            //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+        //            data: "{'id':'" + ID + "','year':'" + year + "'}",
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json",
+        //            success: function (data) {
+        //                //返回的数据用data.d获取内容
+        //                alert(data.d);
+        //            },
+        //            error: function (err) {
+        //                alert(err);
+        //            }
+        //        });
+        //        //$.post("Product.aspx?id="+ID+"&year="+year, { id: ID,year:year }, function (result) {
+        //        //    if (result != "") {                          
+        //        //      //  $("div[id*='ShowNumHeader']").html(year+"年每月平均量：" ); 
+        //        //        $("div[id*='divShowNumByMonth']").html(year+"年每月产量："+ result); 
+        //        //    }
+        //        //});
+        //    })
+             
+        var popupwindow = null;
+
+        function GetXMH() {
+
+            popupwindow = window.open('../Select/select_XMLJ.aspx', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
+        }
+        function GetEmp() {
+
+            popupwindow = window.open('../Select/select_Emp.aspx?ctrl1=txtProbEmp', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
+        }
+        function setvalue(ctrl0, keyValue0, ctrl1, keyValue1, ctrl2, keyValue2) {
+
+            $("input[id*='" + ctrl0 + "']").val(keyValue0);
+            $("input[id*='" + ctrl1 + "']").val(keyValue1);
+            $("input[id*='" + ctrl2 + "']").val(keyValue2);
+            popupwindow.close();
+            $("input[id*='" + ctrl0 + "']").change();
+        }
+
+        function setDefaultValue(value) {
+            
+            $.ajax({
+                type: "Post",
+                url: "Review.aspx/setDefaultValue",//?desc=+ desc+"&slnid="+slnid
+                //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                data: "{'id':'"+value   + "','requestid':'" + "" + "','d':'" + "" + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {//返回的数据用data.d获取内容//                        
+                     //alert(data.d)
+                    var jsondata =eval("("+data.d+")") ;
+                    //$("select[id*='ddlDomain']").val(jsondata.domain);
+                    $("select[id*=ddlDomain] option").each(function () {
+                        if ($(this).text() == jsondata.domain) {
+                            $(this).attr("selected", "selected");
+                        }
+                    });
+                    $("select[id*='ddlCustClass']").val(jsondata.cust)                     
+
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+
+            //$.getJSON("Review.aspx/setDefaultValue?id="+value,  function (jsonData) {
+            //    alert(jsonData.cust);}//无需设置，直接获取的数据类型为json，所以调用时需要使用jsonData.id方式  
+  
+
+        }
+
+    </script>
+
+    <style type="text/css">
+        .row {
+            margin-right: 2px;
+            margin-left: 2px;
+        }
+
+        .textalign {
+            text-align: right;
+        }
+
+        .alignRight {
+            padding-right: 4px;
+            text-align: right;
+        }
+
+        .row-container {
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        fieldset {
+            background: rgba(255,255,255,.3);
+            border-color: lightblue;
+            border-style: solid;
+            border-width: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            border-radius: 5px;
+            /*line-height: 30px;*/
+            list-style: none;
+            padding: 5px 10px;
+            margin-bottom: 2px;
+        }
+
+        legend {
+            color: #302A2A;
+            font: bold 16px/2 Verdana, Geneva, sans-serif;
+            font-weight: bold;
+            text-align: left;
+            /*text-shadow: 2px 2px 2px rgb(88, 126, 156);*/
+        }
+
+        fieldset {
+            padding: .35em .625em .75em;
+            margin: 0 2px;
+            border: 1px solid lightblue;
+        }
+
+        legend {
+            padding: 5px;
+            border: 0;
+            width: auto;
+            margin-bottom: 2px;
+        }
+
+        .panel {
+            margin-bottom: 5px;
+        }
+
+        .panel-heading {
+            padding: 5px 5px 5px 5px;
+        }
+
+        .panel-body {
+            padding: 5px 5px 5px 5px;
+        }
+
+        body {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 1px;
+            padding-left: 1px;
+            margin-top: 0px;
+            top: 0px;
+            left: 0px;
+        }
+
+        td {
+            /* vertical-align: top;
+            font-weight: 600;*/
+            font-size: 12px;
+            padding-bottom: 5px;
+            padding-left:3px;
+            white-space: nowrap;
+        }
+
+        p.MsoListParagraph {
+            margin-bottom: .0001pt;
+            text-align: justify;
+            text-justify: inter-ideograph;
+            text-indent: 21.0pt;
+            font-size: 10.5pt;
+            font-family: "Calibri","sans-serif";
+            margin-left: 0cm;
+            margin-right: 0cm;
+            margin-top: 0cm;
+        }
+
+        .his {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .auto-style1 {
+            height: 49px;
+        }
+
+        .auto-style2 {
+            height: 54px;
+        }
+
+        .tbl td {
+            border: 1px solid black;
+            padding-left: 3px;
+            padding-right: 3px;
+            padding-top: 3px;
+        }
+        .wrap{
+            word-break: break-all;
+            white-space:normal;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+    <div class="col-md-10">
+
+        <div class="row row-container">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
+                        <strong>申请人信息</strong>
+                    </div>
+
+                    <div class="panel-body <% =ViewState["lv"].ToString() == "SQXX" ? "" : "collapse" %>" id="SQXX">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <div class="">
+                                <asp:UpdatePanel ID="UpdatePanel_request" runat="server">
+                                    <ContentTemplate>
+                                        <table style="height: 35px; width: 100%">
+                                            <tr>
+                                                <td >申请人：
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_create_by_empid"  class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                        /
+                                                    <input id="txt_create_by_name" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+
+                                                        <input id="txt_create_by_ad" class="form-control input-s-sm" style="height: 35px; width: 100px; display: none" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                <td>部门：
+                                                </td>
+                                                <td>
+                                                    <input id="txt_create_by_dept" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                </td>
+                                                <td style="display: none">部门经理：
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline" style="display: none">
+                                                        <input id="txt_managerid" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                        /<input id="txt_manager" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                        /<input id="txt_manager_AD" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>当前登陆人员</td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_update_user" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                        /<input id="txt_update_user_name" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />/
+                                                        <input id="txt_update_user_job" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                        /<input id="txt_update_user_dept" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                <td>申请日期：</td>
+                                                <td>
+                                                    <input id="txt_CreateDate" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input id="txt_Code" class="form-control input-s-sm" style="height: 35px; width: 200px; display: none" runat="server" readonly="True" />
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row  row-container">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#CPXX">
+                        <strong>问题描述</strong>
+                    </div>
+                    <div class="panel-body " id="XSGCS">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <div>
+                                <table style="width: 100%" border="0">
+                                    <tr>
+                                        <td>单号:</td>
+                                        <td>
+                                            <input id="txtRequestId" runat="server" style="display:none" />
+                                            <%--<img id="select_ljh" runat="server" name="selectljh" style="border: 0px;" src="../images/fdj.gif" alt="select" onclick="GetLJH()" />--%>
+                                            <asp:TextBox ID="txtDH" class="form-control input-s-sm" runat="server" Text="系统自动产生" ReadOnly="true"></asp:TextBox>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>提出人:</td>
+                                        <td>
+                                            <input id="txtProbEmp" class="form-control input-s-sm form-inline" style="height: 35px;width:100%;float:left" runat="server" readonly="true" onclick="GetEmp()" />
+                                            
+                                        </td>
+                                        <td>问题提出日期：</td>
+                                        <td>
+                                            <input id="txtProbDate" class="form-control input-s-sm" style="height: 35px;" onclick="laydate()" runat="server"  readonly="true"/>
+
+                                        </td>
+                                        <td>状态：</td>
+                                        <td>
+                                            <asp:TextBox ID="txtProbStatus" class="form-control input-s-sm " ReadOnly="true" runat="server"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>产品项目：</td>
+                                        <td>
+                                            <div>
+                                                <input id="txtProdProject" class="form-control input-s-sm" style="height: 35px;" runat="server" onclick="GetXMH();"  onchange="setDefaultValue(this.value);"/>
+                                            </div>
+                                        </td>
+                                        <td>零件号：</td>
+                                        <td>
+                                            <input id="txtLJH" class="form-control input-s-sm" style="height: 35px;" runat="server" readonly="true" /></td>
+                                        <td>零件名称：</td>
+                                        <td>
+                                            <input id="txtLJName" class="form-control input-s-sm" style="height: 35px;" runat="server" readonly="true"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 20px; vertical-align: top">问题描述:</td>
+                                        <td colspan="4">
+                                            
+                                            <textarea id="txtProbDesc" class="form-control input-s-sm" style="width: 100%" runat="server" />
+                                            <asp:RequiredFieldValidator ID="yz48" runat="server" ControlToValidate="txtProbDesc" ErrorMessage="不能为空" ValidationGroup="request" ForeColor="Red"></asp:RequiredFieldValidator>
+                                           <div class="form-inline"  style="display:none" >
+                                                <div>
+                                                    <asp:FileUpload ID="txtupload" Width="100%" runat="server" /></div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <%-- 附件：<asp:TextBox ID="txtProbFile" runat="server" ></asp:TextBox>--%>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 20px; vertical-align: top">问题级别:</td>
+                                        <td colspan="5">
+                                            <div style="float:left">
+                                                <asp:DropDownList ID="ddlRank" class="form-control input-s-sm" Style="height: 35px; width: 150px" runat="server">
+                                                </asp:DropDownList>
+                                            </div>
+                                            <div  style="float:left;margin-top:10px" class="h4">
+                                                <span id="spanRankDesc" class="label label-info" style="white-space:normal"></span>
+                                            </div>
+                                        </td>
+
+                                         
+                                    </tr>
+                                    <tr>
+                                        <td>问题来源：</td>
+                                        <td>
+                                            <asp:DropDownList ID="ddlProbFrom" class="form-control input-s-sm" Style="height: 35px; width: 150px" runat="server">
+                                                <asp:ListItem Value="" Selected="True">-请选择-</asp:ListItem>
+                                                <asp:ListItem Value="01">客户投诉</asp:ListItem>
+                                                <asp:ListItem Value="02">产品审核</asp:ListItem>
+                                                <asp:ListItem Value="03">过程审核</asp:ListItem>
+                                                <asp:ListItem Value="04">内审</asp:ListItem>
+                                                <asp:ListItem Value="05">管理评审</asp:ListItem>
+                                                <asp:ListItem Value="06">客户审核</asp:ListItem>
+                                                <asp:ListItem Value="07">第三方审核</asp:ListItem>
+                                                <asp:ListItem Value="08">5S检查</asp:ListItem>
+                                                <asp:ListItem Value="09">EHS检查</asp:ListItem>
+                                                <asp:ListItem Value="10">持续改进</asp:ListItem>
+                                                <asp:ListItem Value="11">月会问题跟踪</asp:ListItem>
+                                                <asp:ListItem Value="12">周会问题跟踪</asp:ListItem>
+                                                <asp:ListItem Value="13">早会</asp:ListItem>
+                                                <asp:ListItem Value="14">LPA审核</asp:ListItem>
+                                            </asp:DropDownList></td>
+                                        <td>所在公司：</td>
+                                        <td>
+                                            <div class="form-inline">
+                                                <asp:DropDownList ID="ddlDomain" class="form-control input-s-sm" Style="height: 35px; width: 150px" runat="server">
+                                                    <asp:ListItem Value="" Selected="True">-请选择-</asp:ListItem>
+                                                    <asp:ListItem Value="200">昆山工厂</asp:ListItem>
+                                                    <asp:ListItem Value="100">上海工厂</asp:ListItem>
+                                                </asp:DropDownList>
+                                                <asp:RequiredFieldValidator ID="yz50" runat="server" ControlToValidate="ddlDomain" ErrorMessage="不能为空" ValidationGroup="request" ForeColor="Red"></asp:RequiredFieldValidator>
+                                            </div>
+                                        </td>
+                                        <td>客户大类：</td>
+                                        <td>
+                                            <div class="form-inline">
+                                                <asp:DropDownList ID="ddlCustClass" class="form-control input-s-sm" Style="height: 35px; width: 150px" runat="server">
+                                                </asp:DropDownList>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>要求措施提交日期：</td>
+                                        <td>
+                                            <div class="form-inline">
+                                                <input id="txtReqSlnDate" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server" onclick="laydate()" />
+                                                <asp:RequiredFieldValidator ID="yz52" runat="server" ControlToValidate="txtReqSlnDate" ErrorMessage="不能为空" ValidationGroup="request" ForeColor="Red"></asp:RequiredFieldValidator>
+                                            </div>
+                                        </td>
+                                        <td>要求问题关闭日期：</td>
+                                        <td>
+                                            <div class="form-inline">
+                                                <input id="txtReqCloseDate" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server" onclick="laydate()" readonly="true" />
+                                                <asp:RequiredFieldValidator ID="yz53" runat="server" ControlToValidate="txtReqCloseDate" ErrorMessage="不能为空" ValidationGroup="request" ForeColor="Red"></asp:RequiredFieldValidator>
+                                            </div>
+                                        </td>
+                                        <td>实际关闭日期：</td>
+                                        <td>
+                                            <input id="txtActualCloseDate" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server" readonly="True" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                                
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td>
+                                            <asp:Panel ID="Panel1" runat="server" GroupingText="问题负责人" Width="100%">
+                                                <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional"><ContentTemplate >
+                                                    <asp:GridView ID="gridDutyDept" runat="server" AutoGenerateColumns="False" CellPadding="4" BorderColor="Silver" Width="100%"
+                                                    ForeColor="#333333" GridLines="both" ShowFooter="True" OnRowCommand="gridDutyDept_RowCommand" OnRowDataBound="gridDutyDept_RowDataBound"
+                                                   >
+                                                    <RowStyle BackColor="#EFF3FB" />
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="序号" Visible="false">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.Id") %>'></asp:Label>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="改善目标及要求"  ItemStyle-Width="500px"  ItemStyle-CssClass="wrap">
+                                                            <ItemTemplate  >
+                                                                <asp:label ID="lblImproveTarget"  name='<%#"lblImproveTarget"+Container.DataItemIndex.ToString() %>'  runat="server" text='<%#DataBinder.Eval(Container,"DataItem.ImproveTarget") %>'></asp:label>
+                                                            </ItemTemplate>
+                                                            <FooterTemplate>
+                                                                <asp:TextBox ID="txtImproveTarget" Width="495px" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>
+                                                            </FooterTemplate>
+                                                        </asp:TemplateField>
+                                                       
+                                                        <asp:TemplateField HeaderText="责任部门"  ItemStyle-Width="140px" >
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="txt_DutyDept" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.DutyDept") %>'></asp:Label>
+                                                            </ItemTemplate>
+                                                            <FooterTemplate>
+                                                                <asp:DropDownList ID="ddlDutyDept" class="form-control "  Width="140px" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlDutyDept_SelectedIndexChanged"></asp:DropDownList>
+                                                            </FooterTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="责任人"  ItemStyle-Width="100px">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="txt_DutyEmp" runat="server"  Text='<%#DataBinder.Eval(Container,"DataItem.DutyEmpName") %>'></asp:Label>
+                                                                <asp:Label ID="lblDutyEmpID" runat="server"  Text='<%#DataBinder.Eval(Container,"DataItem.DutyEmp") %>' Visible="false"></asp:Label>
+                                                            </ItemTemplate>
+                                                            <FooterTemplate>
+                                                                <asp:DropDownList ID="ddlDutyEmp" runat="server" Width="100px" class="form-control" ></asp:DropDownList></FooterTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="要求完成日期" ItemStyle-Width="100px">
+                                                            <ItemTemplate>
+                                                                <div style="width:60%;text-align:left; display:inline-block"  id='<%#"divEditDate"+Container.DataItemIndex.ToString() %>'><%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.ReqFinishDate")) %></div>
+                                                                <div style="width:25%;text-align:right;display:inline">
+                                                                    <asp:label  runat="server" cssclass="label label-info" ID="editDate" index='<%#Container.DataItemIndex %>' val='<%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.ReqFinishDate")) %>' 
+                                                                        dutyid='<%#DataBinder.Eval(Container,"DataItem.Id") %>' >Edit</asp:label>
+                                                                </div>                                                                
+                                                            </ItemTemplate>
+                                                            <FooterTemplate>
+                                                                <asp:TextBox ID="txtReqDate" runat="server" class="form-control" onclick="laydate()"></asp:TextBox></FooterTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField ItemStyle-Width="100px">
+                                                            <ItemTemplate>
+                                                                
+                                                                <asp:Button ID="btnDelete" runat="server" Text="删除" class="btn btn-primary btn-xs" CommandName="Del" CommandArgument='<%#Container.DataItemIndex %>'  />
+                                                            </ItemTemplate>
+                                                            <FooterTemplate >
+                                                                <asp:Button ID="btnAdd" runat="server" CommandName="Add" class="btn btn-primary "  Text="添加" />
+                                                            </FooterTemplate>
+                                                            <FooterStyle HorizontalAlign="Right" />
+                                                            <ItemStyle HorizontalAlign="Right" />
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                    <EmptyDataTemplate>尚未设定问题负责单位及人员.请添加！</EmptyDataTemplate>
+                                                    <FooterStyle BackColor="White" Font-Bold="True" ForeColor="Black" />
+                                                    <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                                    <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                                    <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                                    <EditRowStyle BackColor="#2461BF" />
+                                                    <AlternatingRowStyle BackColor="White" />
+                                                </asp:GridView><asp:linkbutton ID="lbtnRefreshDuty" runat="server" OnClick="lbtnRefreshDuty_Click"></asp:linkbutton>
+                                                </ContentTemplate></asp:UpdatePanel>
+                                            </asp:Panel>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right"></td>
+                                    </tr>
+                                </table>
+
+                                <div class="col-lg-10" style="text-align: right;">
+                                    <asp:Button ID="btnSaveProb" runat="server" Text="问题提交" OnClick="btnSaveProb_Click" CssClass="btn btn-primary" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row  row-container">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#gscs">
+                        <strong style="padding-right:100px">改善措施提交</strong><label class="btn-danger" style="width:18px;height:18px;display:none">&nbsp;</label><label hidden>改善措施被否,需重新修改措施</label>
+                    </div>
+                    <div class="panel-body  collapse in" id="gscs"><%--<% =ViewState["lv"].ToString() == "gscs" ? "" : "collapse" %>--%>
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            
+                            <asp:GridView ID="gridSolution" runat="server" AutoGenerateColumns="False" CellPadding="4" BorderColor="Silver"
+                                ForeColor="#333333" GridLines="both" ShowFooter="false" OnRowCommand="gridSolution_RowCommand" OnRowDataBound="gridSolution_RowDataBound"
+                                Width="100%">
+                                <RowStyle BackColor="#EFF3FB" />
+                                <Columns>
+                                    <asp:BoundField DataField="RequestId"  HeaderText="RequestId" Visible="false"/>
+                                    <asp:TemplateField HeaderText="No" Visible="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblSlnId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.SlnId") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="改善目标及要求"       ItemStyle-CssClass="wrap" ItemStyle-Width="15%">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblImproveTarget" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ImproveTarget") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>                                     
+                                    <asp:TemplateField HeaderText="发生原因"       ItemStyle-CssClass="wrap" ItemStyle-Width="20%">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblCause" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.Cause") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="计划采取的行动" ItemStyle-CssClass="wrap" ItemStyle-Width="20%">
+                                        <ItemTemplate>
+                                            <i class="fa fa-search fa-lg" aria-hidden="true" title="点此修改措施，否决措施，查看历史" style="cursor: pointer"  onclick="EditSolution('<%# Eval("slnid")%>')" params='<%# "?slnid="+Eval("slnid")%>'></i>
+                                            <%#DataBinder.Eval(Container,"DataItem.ActionPlan") %>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                            <asp:TextBox ID="txtActionPlan" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="行动责任人"  >
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_ActionEmp" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmp") %>'></asp:Label>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                            <asp:DropDownList ID="ddlActionEmp" runat="server"></asp:DropDownList>
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="预计完成日">
+                                        <ItemTemplate>
+                                            <%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.PlanDate")) %>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                            <asp:TextBox ID="txtPlanDate" runat="server" CssClass="form-static" onclick="laydate()"></asp:TextBox></FooterTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="提交日期" ItemStyle-Width="80px">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_SlnDate" runat="server" Text='<%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.SlnDate")) %>'></asp:Label>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                            <asp:DropDownList ID="ddlDutyEmp" runat="server"></asp:DropDownList></FooterTemplate>
+                                    </asp:TemplateField>                     
+                                    <asp:TemplateField HeaderText="措施评价" ItemStyle-CssClass="wrap" ItemStyle-Width="10%" >
+                                        <ItemTemplate>
+                                            <%#DataBinder.Eval(Container,"DataItem.DisagreeDesc") %>
+                                            <i class="fa fa-comments-o fa-lg" aria-hidden="true" style="cursor: pointer" id="btnEvaluate"  slnid='<%# Eval("slnid")%>'></i>
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="DisagreeEmp"  HeaderText="评价人" ItemStyle-Width="60px"/>
+                                    <asp:BoundField DataField="DisagreeDate"  HeaderText="评价时间" DataFormatString="{0:yy-MM-dd}" ItemStyle-Width="80px"/>
+                                    <asp:BoundField DataField="DisagreeState"  HeaderText="措施<br>状态" ItemStyle-Width="60px" HtmlEncode="false"/>
+                                    
+                                </Columns>
+                                <EmptyDataTemplate>尚未提交任何问题改善措施.请点击【新增措施】按钮添加！</EmptyDataTemplate>
+                                <FooterStyle BackColor="White" Font-Bold="True" ForeColor="Black" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#2461BF" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>                             
+                            <div style="text-align:right;padding-bottom:5px">
+                                <asp:label ID="lblUnDoCount" runat="server"></asp:label>
+                                <input id="btnAddSolution" type="button" value="新增措施" runat="server"  class="btn btn-primary" />
+                                <asp:Button ID="btnFreshSln" OnClick="btnFreshSln_Click" runat="server" Text="刷新"  CssClass="hidden"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row  row-container">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#gsjg">
+                        <strong style="padding-right:100px">改善结果提交</strong><label style="background-color:#ffd4aa;width:18px;height:18px">&nbsp;</label><label>改善结果不符合要求,根据确认结果重新评估措施或提交结果</label>
+                    </div>
+                    <div class="panel-body   collapse in" id="gsjg"><%--<% =ViewState["lv"].ToString() == "gsjg" ? "" : "collapse" %>--%>
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                             
+                             <asp:GridView ID="gridResult" runat="server" AutoGenerateColumns="False" CellPadding="4" BorderColor="Silver"
+                                ForeColor="#333333" GridLines="both" ShowFooter="false"  OnRowCommand="gridResult_RowCommand" OnRowDataBound="gridResult_RowDataBound"
+                                Width="100%">
+                                <RowStyle BackColor="#EFF3FB" />
+                                <Columns>
+                                    <asp:BoundField DataField="RequestId"  HeaderText="RequestId" Visible="false"/>
+                                    <asp:TemplateField HeaderText="No" Visible="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblSlnId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.SlnId") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="改善目标及要求"       ItemStyle-CssClass="wrap" ItemStyle-Width="15%">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblImproveTarget" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ImproveTarget") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField> 
+                                    <asp:TemplateField HeaderText="计划采取的行动"  ItemStyle-Width="35%">
+                                        <ItemStyle   CssClass="wrap"/>
+                                        <ItemTemplate >
+                                            <%#DataBinder.Eval(Container,"DataItem.ActionPlan") %>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="责任人">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_ActionEmp" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmp") %>'></asp:Label>
+                                             <asp:Label ID="lblActionEmpId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmpId")  %>' Visible="false"></asp:Label>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>                                    
+                                    <asp:TemplateField HeaderText="预计完成日">
+                                        <ItemTemplate>
+                                            <%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.PlanDate")) %>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="改善证据及说明" ItemStyle-CssClass="wrap" ItemStyle-Width="10%">
+                                        <ItemTemplate>
+                                            <asp:label ID="lblResultDesc" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ResultDesc") %>'></asp:label>
+                                            <i class="fa fa-comments-o fa-lg" aria-hidden="true" style="cursor: pointer" param='<%# "?slnid="+Eval("slnid")%>'></i>
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    
+                                    <asp:TemplateField HeaderText="结果提交日期">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_ResultDate" runat="server" Text='<%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.ResultDate")) %>'></asp:Label>
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="ResultEmp"  HeaderText="提交人"/>                                     
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:Button ID="btnResultSubmit" runat="server" Text="提交结果" CommandName="Sub" CssClass="btn btn-primary btn-xs" CommandArgument='<%#Container.DataItemIndex %>'  />
+                                            
+                                        </ItemTemplate>                                        
+                                        <FooterStyle HorizontalAlign="Right" />
+                                        <ItemStyle HorizontalAlign="Right" />
+                                    </asp:TemplateField>
+                                </Columns>
+                                <EmptyDataTemplate>尚未提交任何问题改善措施.请点击【新增措施】按钮添加！</EmptyDataTemplate>
+                                <FooterStyle BackColor="White" Font-Bold="True" ForeColor="Black" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#2461BF" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row  row-container">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#jgqr">
+                        <strong>改善结果确认及问题关闭</strong>
+                    </div>
+                    <div class="panel-body  collapse in" id="jgqr"><%--<% =ViewState["lv"].ToString() == "jgqr" ? "" : "collapse" %>--%>
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <asp:GridView ID="gridConfirm" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                                ForeColor="#333333" GridLines="both" ShowFooter="false"  OnRowCommand="gridConfirm_RowCommand" OnRowDataBound="gridConfirm_RowDataBound"
+                                Width="100%">
+                                <RowStyle BackColor="#EFF3FB" />
+                                <Columns>
+                                    <asp:BoundField DataField="RequestId"  HeaderText="RequestId" Visible="false"/>
+                                    <asp:TemplateField HeaderText="No" Visible="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblSlnId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.SlnId") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="改善目标及要求"       ItemStyle-CssClass="wrap" ItemStyle-Width="15%">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblImproveTarget" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ImproveTarget") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField> 
+                                    <asp:TemplateField HeaderText="发生原因"       ItemStyle-CssClass="wrap" ItemStyle-Width="20%">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblCause" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.Cause") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="计划采取的行动">
+                                        <ItemStyle  Width="20%" CssClass="wrap"  />
+                                        <ItemTemplate >
+                                            <%#DataBinder.Eval(Container,"DataItem.ActionPlan") %>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="责任人">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_ActionEmp" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmp") %>'></asp:Label>
+                                            <asp:Label ID="lblActionEmpId" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.ActionEmpId")  %>' Visible="false"></asp:Label>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="预计完成日">
+                                        <ItemTemplate>
+                                            <%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.PlanDate")) %>
+                                        </ItemTemplate>                                        
+                                    </asp:TemplateField>
+                                    
+                                    <asp:TemplateField HeaderText="改善证据及说明" ItemStyle-CssClass="wrap" ItemStyle-Width="10%">
+                                        <ItemTemplate>
+                                            <%#DataBinder.Eval(Container,"DataItem.ResultDesc") %>
+                                            <i class="fa fa-comments-o fa-lg" aria-hidden="true" style="cursor: pointer" param='<%# "?slnid="+Eval("slnid")%>'></i>
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="结果评价" ItemStyle-Width="15%" Visible="false">
+                                        <ItemTemplate>
+                                            <asp:textbox ID="txtConfirmDesc" runat="server"  ReadOnly="true" CssClass="form-control input-sm" Text ='<%#DataBinder.Eval(Container,"DataItem.ConfirmDesc") %> '   ToolTip='<%#DataBinder.Eval(Container,"DataItem.ConfirmDesc") %>'></asp:textbox>                                           
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="确认日期" ItemStyle-Width="80px"  HeaderStyle-CssClass="text-nowrap" >
+                                        <ItemTemplate>
+                                            <asp:Label ID="txt_ResultDate" runat="server" Text='<%#string.Format("{0:yyyy-MM-dd}",DataBinder.Eval(Container,"DataItem.ConfirmDate")) %>' ></asp:Label>
+                                        </ItemTemplate>                                       
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="ConfirmEmpName"  HeaderText="确认人" ItemStyle-Width="60px"   HeaderStyle-CssClass="text-nowrap"/> 
+                                                                        
+                                    <asp:TemplateField HeaderText="结果确认" ItemStyle-Width="90px">
+                                        <ItemTemplate ><asp:Label ID="lblConfirmStatus" runat="server" Visible="false" Text='DataBinder.Eval(Container,"DataItem.ConfirmStatus")'></asp:Label>
+                                            <asp:DropDownList ID="dropConfirmStatus" runat="server" Height="25px" Width="90px" Font-Size="8px">
+                                                <asp:ListItem ></asp:ListItem>
+                                                <asp:ListItem Value="通过" >改善有效</asp:ListItem>
+                                                <asp:ListItem Value="不通过">改善不符合要求</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <asp:Button ID="btnResultSubmit" runat="server" Text="确认" CommandName="Confirm" CssClass="btn btn-primary btn-xs" CommandArgument='<%#Container.DataItemIndex %>'  />
+                                        </ItemTemplate>                                        
+                                        <FooterStyle HorizontalAlign="Right" />
+                                        <ItemStyle HorizontalAlign="Right"  />
+                                    </asp:TemplateField>
+
+                                </Columns>
+                                <EmptyDataTemplate>尚未提交任何问题改善措施.请点击【新增措施】按钮添加！</EmptyDataTemplate>
+                                <FooterStyle BackColor="White" Font-Bold="True" ForeColor="Black" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#2461BF" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>
+                            <hr />
+                            <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional"><ContentTemplate >
+                                <script type="text/javascript">
+                                   //// function load() {
+                                   // Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+                                   // //}
+
+                                   // function EndRequestHandler() {
+                                   //     AddSolution();
+                                   // }
+                                 </script>
+                                <div>
+                                    <div class="col-md-5  " style="text-align:center">
+                                        <asp:RadioButtonList ID="rblActualState" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" TextAlign="Right" AutoPostBack="true" OnSelectedIndexChanged="rblActualState_SelectedIndexChanged">
+                                            <asp:ListItem Value="已解决">问题已解决&nbsp;&nbsp;  </asp:ListItem>
+                                            <asp:ListItem Value="未解决">问题未解决，需提交新的措施</asp:ListItem>
+                                        </asp:RadioButtonList>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <asp:Button ID="btnClose" runat="server" Text="同意关闭"  OnClick="btnClose_Click"  CssClass="btn btn-primary"  Enabled="false"/>
+                                        <asp:Button ID="btnDisClose2" runat="server"  Text="不同意关闭"   CssClass="btn btn-warning" Visible="false" />
+                                        <input type="button" id="btnDisClose" runat="server"  value="不同意关闭"  onclick="DisClose()" class="btn btn-warning" disabled="disabled"  />
+                                    </div>
+                                </div>
+                            </ContentTemplate></asp:UpdatePanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row  row-container" >
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ">
+                        <strong>操作日志  <span class="caret"></span></strong>
+                    </div>
+
+                    <div class="panel-body <% =ViewState["lv"].ToString() == "CZRZ" ? "" : "collapse" %>" id="CZRZ">
+
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <table style="height: 35px; width: 100%">
+                                <tr>
+                                    <td>一.操作人员记录</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <asp:GridView ID="gv_rz1" Width="100%"
+                                            AllowMultiColumnSorting="True" AllowPaging="True"
+                                            AllowSorting="True" AutoGenerateColumns="False"
+                                            runat="server" Font-Size="Small">
+                                            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                            <PagerSettings FirstPageText="首页" LastPageText="尾页"
+                                                Mode="NextPreviousFirstLast" NextPageText="下页" PreviousPageText="上页" />
+                                            <PagerStyle ForeColor="Red" />
+                                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                            <EditRowStyle BackColor="#999999" />
+                                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" HorizontalAlign="Center" />
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+
+                                            <Columns>
+                                                <asp:BoundField DataField="Update_Engineer" HeaderText="操作角色"
+                                                    ReadOnly="True">
+                                                    <HeaderStyle Wrap="True" />
+                                                    <ItemStyle Width="80px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Update_user" HeaderText="操作工号"
+                                                    ReadOnly="True">
+                                                    <HeaderStyle Wrap="True" />
+                                                    <ItemStyle Width="80px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Update_username" HeaderText="姓名"
+                                                    ReadOnly="True">
+                                                    <HeaderStyle Wrap="True" />
+                                                    <ItemStyle Width="80px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Update_LB" HeaderText="操作类别"
+                                                    ReadOnly="True">
+                                                    <HeaderStyle Wrap="True" />
+                                                    <ItemStyle Width="80px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Commit_time" HeaderText="处理时间"
+                                                    ReadOnly="True">
+                                                    <HeaderStyle Wrap="True" />
+                                                    <ItemStyle Width="120px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Update_content" HeaderText="操作事项">
+                                                    <HeaderStyle Wrap="False" />
+                                                </asp:BoundField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 " >
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <strong>日志:</strong>
+            </div>
+            <div class="panel-body  " id="DDXX">
+                <div>
+                    <div class="">
+                        <asp:GridView ID="gv_rz2" Width="100%"
+                                        AllowMultiColumnSorting="True" AllowPaging="True"
+                                        AllowSorting="True" AutoGenerateColumns="False"
+                                        runat="server" Font-Size="Small">
+                                        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                        <PagerSettings FirstPageText="首页" LastPageText="尾页"
+                                            Mode="NextPreviousFirstLast" NextPageText="下页" PreviousPageText="上页" />
+                                        <PagerStyle ForeColor="Red" />
+                                        <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                        <EditRowStyle BackColor="#999999" />
+                                        <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" HorizontalAlign="Center" />
+                                        <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+
+                                        <Columns>
+                                            <asp:BoundField DataField="Update_username" HeaderText="姓名">
+                                                <HeaderStyle Wrap="False" />
+                                                <ItemStyle Width="10%" />
+                                            </asp:BoundField>
+                                            <asp:BoundField DataField="Update_content" HeaderText="操作事项">
+                                                <HeaderStyle Wrap="False" />
+                                                <ItemStyle Width="10%" />
+                                            </asp:BoundField>
+                                            <asp:BoundField DataField="Commit_time" HeaderText="操作时间" DataFormatString="{0:yy/MM/dd}">
+                                                <HeaderStyle Wrap="False" />
+                                                <ItemStyle Width="30%"  />
+                                            </asp:BoundField>
+                                        </Columns>
+                                    </asp:GridView>
+                        <table border="1" width="100%" hidden="hidden">
+
+                            <tr>
+                                <td colspan="2" style="background-color: lightblue">
+                                    <asp:Label ID="Lab_htzt" runat="server" Font-Size="Large" Font-Underline="False" ForeColor="#6600CC" Visible="False"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+
+                                    
+                                </td>
+
+                            </tr>
+                        </table>
+
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</asp:Content>

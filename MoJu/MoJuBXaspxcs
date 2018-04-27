@@ -1,0 +1,171 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Maticsoft.DBUtility;
+using System.Data;
+using System.Data.SqlClient;
+public partial class MoJuBX : System.Web.UI.Page
+{
+    Function_Change_MoJu moju = new Function_Change_MoJu();
+    Moju Mj = new Moju();
+    protected void Page_Load(object sender, EventArgs e)
+    {      
+
+        if (!Page.IsPostBack)
+        {
+            BaseFun fun = new BaseFun();
+            this.txtRiQi.Value = System.DateTime.Now.ToString("yyyy-MM-dd");
+            
+            this.txtShiJian.Value = DateTime.Now.ToString("HH:mm:ss");
+            //初始话下拉登入此台设备人员
+            string strSQL = "select * from MES_EmpLogin where  emp_shebei='"+Request["deviceid"]+"' and status=1 ";
+            DataTable tbl = DbHelperSQL.Query(strSQL).Tables[0];
+            fun.initDropDownList(dropGongHao, tbl, "emp_no", "emp_no");
+            txtXingMing.Value = tbl.Rows[0]["emp_name"].ToString();
+            txtBanBie.Value= tbl.Rows[0]["emp_banbie"].ToString();
+            txtBanZu.Value = tbl.Rows[0]["emp_banzhu"].ToString();
+            string sql = "select base_value from MES_Base_code where base_code='MOJU_BX_TYPE'";
+            DataTable dt_type = SQLHelper.reDs(sql).Tables[0];
+            this.ddl_gz.DataSource = dt_type;
+            this.ddl_gz.DataTextField = "base_value";
+            this.ddl_gz.DataValueField = "base_value";
+            this.ddl_gz.DataBind();
+            this.ddl_gz.Items.Insert(0, new ListItem("", ""));
+            DataTable dt = Mj.MoJu_no_query(Request["deviceid"], "");
+            ddlMoJuHao.DataSource = dt;
+            ddlMoJuHao.DataValueField = "moju_no";
+            ddlMoJuHao.DataTextField = "moju_no";
+            ddlMoJuHao.DataBind();
+            this.ddlMoJuHao.Items.Insert(0, new ListItem("", ""));
+            string strSQL2 = "select * from MES_Equipment where equip_no='" + Request["deviceid"] + "'";
+            DataTable tbl2 = DbHelperSQL.Query(strSQL2).Tables[0];
+            if (tbl2.Rows.Count > 0)
+            {
+                foreach (DataRow dr in tbl2.Rows)
+                {
+                 
+                    txtSbname.Text = dr["equip_name"].ToString();
+                }
+            }
+            GetGrid();
+                    
+           
+        }
+
+
+      
+    }
+    protected void GetGrid()
+    {
+        DataTable dt = Mj.Moju_BX_Query(2, "", "", "", "", "", "", "", "", "", "", "", "");
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+        if (dt == null || dt.Rows.Count <= 0)
+        {
+            Div_Undo.Style.Add("display", "none");
+        }
+        else
+        {
+            Div_Undo.Style.Add("display", "block");
+
+        }
+    }
+    
+
+
+    protected void dropGongHao_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Function_Jinglian jl = new Function_Jinglian();
+
+        txtXingMing.Value = jl.Emplogin_query(5, dropGongHao.SelectedValue,"" ).Rows[0]["emp_name"].ToString();
+        txtBanBie.Value = jl.Emplogin_query(5, dropGongHao.SelectedValue,"").Rows[0]["emp_banbie"].ToString();
+        txtBanZu.Value = jl.Emplogin_query(5, dropGongHao.SelectedValue,"").Rows[0]["emp_banzhu"].ToString();
+
+        DataTable dtpihao = new DataTable();
+       
+
+    }
+
+    protected void btnReturn_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/Default.aspx");
+    }
+   
+    protected void btn_Start_Click(object sender, EventArgs e)
+    {
+        if (ddlMoJuHao.Text == "")
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('模具号不能为空！')", true);
+            return;
+        }
+     
+        if (ddlstop.SelectedValue == "")
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请选择是否停机！')", true);
+            return;
+        }
+        if (ddl_gz.Text == "" || ddl_gz_ms.Text=="")
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('故障类型和故障描述必须填写！')", true);
+            return;
+        }
+        lblStart_time.Text = DateTime.Now.ToString("yyyy/MM/dd") + " " + DateTime.Now.ToString("HH:mm:ss");
+        int result = Mj.Moju_BX_Insert(1, dropGongHao.Text.Trim(), txtXingMing.Value.Trim().Trim(), txtBanBie.Value.Trim(), txtBanZu.Value.Trim(), ddlMoJuHao.Text.Trim(), Request["deviceid"], txtSbname.Text.Trim(), txtMoJutype.Text.Trim(), txtMoJuljh.Text.Trim(), txtMono.Text.Trim(), ddl_gz.Text.Trim(), ddl_gz_ms.Text.Trim(), lblStart_time.Text.Trim(),ddlstop.SelectedValue);
+        if (result >= 1)
+       {
+           Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('报修成功！')", true);
+           GetGrid();
+           lblStart_time.Text = "";
+           txtMoJutype.Text = "";
+         
+           txtMoJuljh.Text = "";
+           txtMono.Text = "";
+           ddl_gz.Text = "";
+           ddl_gz_ms.Text = "";
+           ddlMoJuHao.Text = "";
+       }
+    }
+    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        this.GridView1.PageIndex = e.NewPageIndex;
+        GetGrid();
+    }
+    protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+
+            if (e.Row.RowIndex != -1)
+            {
+                int indexID = this.GridView1.PageIndex * this.GridView1.PageSize + e.Row.RowIndex + 1;
+                e.Row.Cells[0].Text = indexID.ToString();
+            }
+
+            if (Convert.ToDecimal(e.Row.Cells[10].Text) > 1)
+            {
+                e.Row.BackColor = System.Drawing.Color.Yellow;
+            }
+          
+        }
+    }
+    
+    protected void ddlMoJuHao_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DataTable dt =Mj.MoJu_no_query(Request["deviceid"], ddlMoJuHao.Text);
+        //ddlMoJuHao.DataSource = dt;
+        //ddlMoJuHao.DataValueField = "moju_no";
+        //ddlMoJuHao.DataTextField = "moju_no";
+        //ddlMoJuHao.DataBind();
+
+        if (dt.Rows.Count > 0)
+        {
+            txtMono.Text = dt.Rows[0]["mo_no"].ToString();
+            txtMoJuljh.Text = dt.Rows[0]["part"].ToString();
+            txtMoJutype.Text = dt.Rows[0]["moju_type"].ToString();
+
+        }
+    }
+}

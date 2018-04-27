@@ -1,0 +1,89 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
+    CodeFile="TouLiaoTongJi.aspx.cs" Inherits="TouLiaoTongJi" %>
+
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
+    
+    <style type="text/css">
+        td
+        {
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 5px;
+        }
+    </style>
+    <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("a[name='mon']").click(function () {
+               
+                $("input[id*='txtmonth']").val(this.textContent);
+            })
+
+            $("#mestitle").text("【投料统计】");
+
+
+
+        })//endready
+        function getMonth() {
+            $("#txtmonth").val(this.textContent);
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="Server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+    <div class="panel panel-info" style="padding-left: 5px; padding-right: 5px">
+        <table>
+            <tr>
+                <td>
+                    年度
+                </td>
+                <td>
+                    <asp:DropDownList ID="dropYear" runat="server" class="form-control input-s-sm">
+                    </asp:DropDownList>
+                </td>
+                <td>
+                    月份
+                </td>
+                <td>
+                    <asp:DropDownList ID="dropMonth" runat="server" class="form-control input-s-sm">
+                    </asp:DropDownList>
+                </td>
+                <td>
+                    合金
+                </td>
+                <td>
+                    <asp:DropDownList ID="selHeJin" runat="server" class="form-control input-s-sm">
+                    </asp:DropDownList>
+                </td>
+                <td>
+                    <asp:Button ID="btnQuery" runat="server" Text="查询" class="btn btn-lg btn-primary"
+                        OnClick="btnQuery_Click" Width="92px" Height="45px" />
+                    <asp:Button ID="Button1" runat="server"
+                            Text="Button"  /><asp:LinkButton ID="LinkBtn" 
+                        runat="server" onclick="LinkBtn_Click">LinkButton</asp:LinkButton>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="Default.aspx" class="btn btn-lg btn-primary" style="color: white">返回</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel panel-info" style="padding-left: 5px; padding-right: 5px">
+        2016年 tu -----
+        <asp:GridView ID="GridViewYear" runat="server" 
+            onrowcreated="GridViewYear_RowCreated">
+        </asp:GridView><asp:textbox   id="txtmonth" runat="server"/>
+       
+    </div>
+    <div class="panel panel-info" style="padding-left: 5px; padding-right: 5px">
+        10月份<asp:GridView ID="GridViewMonth" runat="server">
+        </asp:GridView>
+    </div>
+    <div class="panel panel-info" style="padding-left: 5px; padding-right: 5px">
+        10月2日<asp:GridView ID="GridViewDay" runat="server">
+        </asp:GridView>
+    </div>
+</asp:Content>

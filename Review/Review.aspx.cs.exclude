@@ -1,0 +1,1150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using Maticsoft.DBUtility;
+using System.Text;
+using IBatisNet.Common.Transaction;
+using System.Web.Script.Services;
+using System.Web.Services;
+using MES.Model;
+using MES.DAL;
+using Maticsoft.Common;
+using System.Collections;
+using System.Reflection;
+using System.Linq;
+
+public partial class Review : System.Web.UI.Page
+{
+   
+   
+    public static string ctl = "ctl00$MainContent$";
+    
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        Page.MaintainScrollPositionOnPostBack = true;
+        ViewState["lv"] = "";
+        this.gv_rz1.PageSize = 200;
+        this.gv_rz2.PageSize = 100;
+        this.gridDutyDept.PageSize = 100;
+        //                                              02128  00404  02069    00076  01968  
+        LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        Session["LogUser"] = LogUserModel;
+        
+        if (!IsPostBack)
+        { 
+            if (LogUserModel != null)
+            {
+                //当前登陆人员
+                txt_update_user.Value = LogUserModel.UserId;                                                             
+                txt_update_user_name.Value = LogUserModel.UserName; 
+                txt_update_user_job.Value = LogUserModel.JobTitleName; 
+                txt_update_user_dept.Value = LogUserModel.DepartName;
+                 
+
+                //Load客户大类
+                BaseFun.loadCustClass(this.ddlCustClass,"","");
+                BaseFun fun = new BaseFun();
+                var dtrank = DbHelperSQL.Query("select '' Rank,'' RankDesc union select Rank,Rank+':'+RankDesc RankDesc from Q_Review_baseRank ").Tables[0];
+                fun.initDropDownList(ddlRank, dtrank, "RankDesc", "Rank");
+                if (Request["requestid"] != null)//页面加载
+                {
+                    string requestid = Request["requestid"];
+                    //初始化已选客户大类                    
+                    BaseFun.setDropSelectValue(this.ddlCustClass, "", "");
+                    //load Prob
+                    loadProbByRequestId(Convert.ToInt16(Request["requestid"]));
+                    //加载gridDutyDept
+                    loadDutyDept(requestid);
+                    //
+                    loadSolution(requestid);
+                    //显示待提交措施条数提醒
+                    SetUnDoCount(txt_update_user.Value);
+                    //如果当前登入登入人员不是问题提出人或是问题建立人的话就不可以修改问题,不可否决方案
+                    if (this.txt_update_user_name.Value != this.txtProbEmp.Value || txt_update_user_name.Value != this.txt_create_by_name.Value)
+                    {
+                        Session["IsOwner"] = false;
+                        this.btnSaveProb.Enabled = false;
+                        for (int i = 0; i < gridDutyDept.Rows.Count; i++)
+                        {   var btn = (Button)gridDutyDept.Rows[i].FindControl("btnDelete");
+                            var editdate = (Label)gridDutyDept.Rows[i].FindControl("editDate"); 
+                            if (btn != null)
+                            {
+                                btn.Attributes.Add("disabled", "disabled");
+                                editdate.Visible = false;
+                                txtProbEmp.Attributes.Remove("onclick");
+                                txtProbDate.Attributes.Remove("onclick");
+                                txtReqCloseDate.Attributes.Remove("onclick");
+                                rblActualState.Enabled = false;
+                            }
+                            gridDutyDept.FooterRow.Visible= false;
+                        }   
+                    }
+                    else
+                    {
+                        this.btnSaveProb.Enabled = true;
+                        Session["IsOwner"] = true;//是否本单提出人
+                    }
+                    //否决按钮可用性
+                    enableBtndisAgree(txt_update_user_name.Value, txt_create_by_name.Value, txtProbEmp.Value);
+                    //如果是关闭单
+                    if (txtProbStatus.Text == "已关闭")
+                    {
+                        enableBtn(true);
+                        rblActualState.Enabled = false;
+                        btnDisClose.Disabled = true;
+                    }
+                    //实际关闭日期超要求关闭日期红色
+                    if (TimeParser.ConvertDateTime(this.txtActualCloseDate.Value) > TimeParser.ConvertDateTime(this.txtReqCloseDate.Value))
+                    {
+                        this.txtActualCloseDate.Style.Add("background-color", "red");
+                        this.txtActualCloseDate.Style.Add("color", "white");
+                    }
+
+                    //日志加载
+                    bindrz_log(requestid, gv_rz1);
+                    bindrz2_log(requestid, gv_rz2);
+                }
+                else//新建
+                {
+                             
+                    this.txt_CreateDate.Value = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    txt_create_by_empid.Value = LogUserModel.UserId;                    
+                    txt_create_by_name.Value = LogUserModel.UserName;
+                    txt_create_by_ad.Value = LogUserModel.ADAccount;
+                    txt_create_by_dept.Value = LogUserModel.DepartName; 
+                    txt_managerid.Value = LogUserModel.ManagerId; 
+                    txt_manager.Value = LogUserModel.ManagerName; 
+                    txt_manager_AD.Value = LogUserModel.ManagerADAccount; 
+                    txt_update_user.Value = LogUserModel.UserId; 
+                    txt_update_user_name.Value = LogUserModel.UserName; 
+
+                    this.txtProbEmp.Value = this.txt_create_by_name.Value;
+                    this.txtProbDate.Value = DateTime.Now.ToString("yyyy-MM-dd");
+
+                    this.txtReqSlnDate.Value= addDaysExceptHoliday(DateTime.Now,3).ToString("yyyy-MM-dd");
+
+                    this.txtProbStatus.Attributes.Add("disabled","disabled");
+                    this.txtProbStatus.Text = "问题录入";
+
+                    rblActualState.Enabled = false;
+                    btnClose.Enabled = false;
+                    btnDisClose.Disabled = true;
+                    btnAddSolution.Disabled = true;
+                    //加载无记录gridDutyDept
+                    loadDutyDept("-1");
+                    
+                }
+            }
+        }
+    }
+
+    //set default value of cust and domain by 产品
+    [System.Web.Services.WebMethod()]//或[WebMethod(true)]
+    public static string setDefaultValue(string id)
+    {
+        string result = "";
+        // DataSet ds = DbHelperSQL.Query(string.Format("SELECT distinct   DebtorCode,sqgc,cp_domain FROM [MES].[dbo].[V_form1_ljh] where pt_part='{0}' and DebtorCode<>'19999'" , id)  );
+        DataSet ds = DbHelperSQL.Query(string.Format("SELECT  [pgino] ,[productcode] ,[productname] ,[make_factory] ,[customer_name] ,[end_customer_name] FROM [form3_Sale_Product_MainTable]  where pgino='{0}'", id.Substring(0,5)));
+        string value1="";
+        string value2="";
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+             value1 = ds.Tables[0].Rows[0]["make_factory"].ToString();
+             value2 = ds.Tables[0].Rows[0]["customer_name"].ToString();
+        }
+        ////DataSet ds2= DbHelperSQL.Query(string.Format("SELECT [Customer_DL] ,[Customer_DM] ,[Customer_MC] FROM [MES].[dbo].[Sale_CustID] where Customer_DM='{0}' ", value2));
+        //DataSet ds2 = DbHelperSQL.Query(string.Format("SELECT [Customer_DL] ,[Customer_DM] ,[Customer_MC] FROM [MES].[dbo].[Sale_CustID] where Customer_DM='{0}' ", value2));
+        //if (ds.Tables[0].Rows.Count > 0)
+        //{
+        //    value2 = ds2.Tables[0].Rows[0]["Customer_DL"].ToString();
+        //}
+         
+        result = "{\'domain\':\'" + value1 + "\',\'cust\':\'" + value2 + "\'}";
+        
+        return result;
+    }
+    public void enableBtn( bool isNew)
+    {
+        btnAddSolution.Visible = !isNew;
+        btnClose.Enabled = !isNew;
+        btnDisClose.Disabled = !isNew;
+    }
+    //显示待提交措施条数提醒:         待修改SQL
+    public void SetUnDoCount(string EmpId)
+    {
+        int cnt = MES.DAL.Q_Review_ProbDuty.GetUnDoCount(EmpId);
+       // lblUnDoCount.Text = cnt>0 ? "<span class='label label-warning'>您有【" + cnt+ "】条问题待提交改善措施</span>":"<span class='label label-default' >您暂无待处理问题</span>";
+    }
+
+    public DateTime addDaysExceptHoliday(DateTime startDate,int days)
+    {
+        DateTime dt=startDate;
+        string sql = "select date from (SELECT top " + days + "  [DATE]  FROM [MES].[dbo].[WORK_HOLIDAYS_LIST] where   IS_HOLIDAY>1 and date>cast('"+ startDate + "' as date)  order by date asc)t order by date desc";
+        dt = Convert.ToDateTime(DbHelperSQL.GetSingle(sql));
+        return dt;
+    }
+    //设定否决按钮可用性（非问题提出人不可否决）
+    public void enableBtndisAgree(string loginuser,string createuser,string probemp)
+    {
+        if (loginuser != probemp&&loginuser !=createuser)
+        {
+            for(int i = 0; i < gridSolution.Rows.Count; i++)
+            {
+                System.Web.UI.HtmlControls.HtmlInputButton btn = (System.Web.UI.HtmlControls.HtmlInputButton)gridSolution.Rows[i].FindControl("btnReject");
+                if (btn != null)
+                { 
+                    btn.Attributes.Add("disabled","disabled");
+                }
+            }
+        }
+    }
+
+   //加载问题主档
+    public void loadProbByRequestId(int requestid)
+    {
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        MES.Model.Q_Review_Prob m = dal.GetModel(requestid);
+        txt_create_by_empid.Value = m.EmpId;
+        txt_create_by_name.Value = m.EmpName;
+        txt_create_by_dept.Value = m.Dept;
+        txt_CreateDate.Value = string.Format("{0:yyyy-MM-dd}", m.CreateDate); 
+        this.txtRequestId.Value = m.RequestId.ToString();
+        this.txtDH.Text = m.DH;
+        txtProbStatus.Text = m.ProbStatus;
+        txtProbDate.Value = string.Format("{0:d}", m.ProbDate);
+        txtProbEmp.Value = m.ProbEmp;
+        BaseFun.setDropSelectValue(ddlProbFrom, "", m.ProbFrom);
+        BaseFun.setDropSelectValue(ddlDomain, "", m.Domain);
+        BaseFun.setDropSelectValue(ddlCustClass, "", m.CustClass);
+        txtProdProject.Value = m.ProdProject;
+        txtLJH.Value = m.LJH;
+        txtLJName.Value = m.LJName;
+        txtProbDesc.Value = m.ProdDesc;
+        txtReqSlnDate.Value = string.Format("{0:yyyy-MM-dd}",m.ReqSlnDate);//
+        txtReqCloseDate.Value = string.Format("{0:yyyy-MM-dd}", m.ReqCloseDate);
+        txtActualCloseDate.Value = string.Format("{0:yyyy-MM-dd}", m.ActualCloseDate);
+        ListItem item = rblActualState.Items.FindByValue(m.ActualState);
+        if ( item!= null)
+        {
+            item.Selected = true;
+        }
+        ListItem itemRank = ddlRank.Items.FindByText(m.Rank);
+        if (itemRank != null)
+        {
+            itemRank.Selected = true;
+        }
+    }
+   
+    //获取负责单位及人员信息Grid 
+    public void loadDutyDept(string requestid)
+    {
+        MES.DAL.Q_Review_ProbDuty dal = new MES.DAL.Q_Review_ProbDuty();
+        DataTable dt=dal.GetList(" requestid='"+requestid+"' order by id").Tables[0];
+
+        var List = ModelConvertHelper<MES.Model.Q_Review_ProbDuty>.ConvertToModel(dt);
+
+        ViewState["DutyDept"] = List;
+        //显示gridDutyDept
+        BindGrid(gridDutyDept, dt);
+    }
+   
+    public void BindGrid(GridView grid,DataTable dt)
+    {
+        //处理查无资料结果显示效果：添加一行显示友好一点
+        bool isEmpty = false;
+        if (dt.Rows.Count == 0)
+        {
+            isEmpty = true;
+            dt.Rows.Add(dt.NewRow());
+        }
+
+        grid.DataSource = dt;
+        grid.DataBind();
+        if (isEmpty == true)
+        {
+            int columnCount = dt.Columns.Count;
+            grid.Rows[0].Cells.Clear();
+            for(int i = 0; i < grid.Rows[0].Controls.Count; i++)
+            {
+                grid.Rows[0].Controls[i].Visible=false;
+            }
+            
+            grid.Rows[0].Cells.Add(new TableCell());
+            grid.Rows[0].Cells[0].ColumnSpan = columnCount;
+            grid.Rows[0].Cells[0].Text = "没有记录";
+            grid.Rows[0].Cells[0].Style.Add("text-align", "center");
+
+            dt.Rows.RemoveAt(0);//删除，归0
+        };
+        
+    }
+   
+
+    private void gridDutyDept_InitTable(GridView grid,List<MES.Model.Q_Review_ProbDuty> list)
+    {         
+
+       // List<MES.Model.Q_Review_ProbDuty> list = new List<MES.Model.Q_Review_ProbDuty>() ;
+        
+        ViewState["DutyDept"] = list;
+        list.Clear();
+        int ln = grid.Rows.Count;
+        for (int i = 0; i < ln; i++)
+        {
+            MES.Model.Q_Review_ProbDuty model = new MES.Model.Q_Review_ProbDuty();
+            model.RequestId = Convert.ToInt16(txtRequestId.Value);
+            model.Id = Convert.ToInt16(grid.Rows[i].Cells[0].Text);
+            
+            list.Add(model);
+            
+      
+        }
+        
+        grid.DataSource = list;
+        grid.DataBind();
+         
+    }
+
+    #region "日志"
+    
+    public void bindrz_log(string requestid, GridView gv_rz1)
+    {
+        StringBuilder sql = new StringBuilder();//--baojia_no as 报价号, turns as 轮次,
+        sql.Append("  SELECT * FROM  [Q_ReView_LOG] ");
+        sql.Append("    where requestid = '" + requestid + "'  order by id asc");
+        DataTable dt = DbHelperSQL.Query(sql.ToString()).Tables[0];
+        gv_rz1.DataSource = dt;
+        gv_rz1.DataBind();
+        gv_rz1.PageSize = 100;
+    }
+    public void bindrz2_log(string requestid, GridView gv_rz2)
+    {
+        StringBuilder sql = new StringBuilder();//--baojia_no as 报价号, turns as 轮次,
+        sql.Append("  SELECT * FROM Q_ReView_LOG ");
+        sql.Append("    where requestid = '" + requestid + "'  order by id asc");
+        DataTable dt = DbHelperSQL.Query(sql.ToString()).Tables[0];
+        gv_rz2.DataSource = dt;
+        gv_rz2.DataBind();
+        gv_rz2.PageSize = 100;
+    }
+  
+    
+   #endregion
+    
+
+    protected void gridDutyDept_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        MES.DAL.Q_Review_ProbDuty dal = new MES.DAL.Q_Review_ProbDuty();
+        List<MES.Model.Q_Review_ProbDuty> list=(List<MES.Model.Q_Review_ProbDuty>)ViewState["DutyDept"];
+        GridViewRow row = ((GridViewRow)((Control)e.CommandSource).Parent.Parent);
+        if (e.CommandName == "Add")
+        {           
+            //Begin Validation
+            var improveTarget = ((TextBox)row.FindControl("txtImproveTarget")).Text;
+            var dutyDept = ((DropDownList)row.FindControl("ddlDutyDept")).SelectedValue;
+            var dutyEmp =((DropDownList)row.FindControl("ddlDutyEmp")).SelectedValue;
+            var reqFinishDate = TimeParser.ConvertDateTime(((TextBox)row.FindControl("txtReqDate")).Text);
+            var msg = "";
+            if (ddlProbFrom.SelectedValue.Trim() == "") { msg = msg + "[问题来源], "; }
+            if (improveTarget.Trim() == "") { msg = msg + "[改善目标及要求], "; }
+            if (dutyDept.Trim() == "") { msg = msg + "[责任部门], "; }
+            if (dutyEmp.Trim() == "") { msg = msg + "[责任人], "; }
+            //如果来源选择不是：产品审核，过程审核，内审，管理评审，客户审核则时间不要求必填
+            var probfrom = ddlProbFrom.SelectedItem.Text;
+            if(probfrom.IndexOf("产品审核") <0&& probfrom.IndexOf("过程审核") < 0&& probfrom.IndexOf("内审") < 0&& probfrom.IndexOf("管理评审") < 0&& probfrom.IndexOf("客户审核") < 0)
+            {
+                if (reqFinishDate == null) { msg = msg + "[要求完成日期] "; }
+            }            
+
+            if (msg.TrimEnd(',') != "") { msg ="请填写 "+ msg ;
+                ScriptManager.RegisterStartupScript(Page, this.GetType(), "alert", "layer.alert('"+msg+"');", true);
+                return;
+            }
+            //End Validation
+            if (Server.HtmlDecode(gridDutyDept.Rows[0].Cells[0].Text).Trim() == "没有记录")
+            {
+                list.Clear();//如果现实没有记录表示确实无记录，删除格式化进去的记录
+            }
+            if (txtRequestId.Value.Trim() == "")//新建一笔
+            {   
+                MES.Model.Q_Review_ProbDuty model = new MES.Model.Q_Review_ProbDuty() {
+                    Id = 0,
+                    RequestId = 0,
+                    ImproveTarget = improveTarget,
+                    DutyDept = dutyDept,
+                    DutyEmp = dutyEmp,
+                    DutyEmpName = ((DropDownList)row.FindControl("ddlDutyEmp")).SelectedItem.Text,
+                    ReqFinishDate = reqFinishDate
+                };
+                list.Add(model);
+                 
+            }
+            else//修改添加一笔
+            {
+                list.Add(new MES.Model.Q_Review_ProbDuty
+                {
+                    ImproveTarget = ((TextBox)row.FindControl("txtImproveTarget")).Text,
+                    DutyDept = ((DropDownList)row.FindControl("ddlDutyDept")).SelectedValue,
+                    DutyEmp = ((DropDownList)row.FindControl("ddlDutyEmp")).SelectedValue,
+                    DutyEmpName = ((DropDownList)row.FindControl("ddlDutyEmp")).SelectedItem.Text,
+                    ReqFinishDate = TimeParser.ConvertDateTime(((TextBox)row.FindControl("txtReqDate")).Text)
+                });
+            }
+            //显示grid
+            ModelConvertHelper<MES.Model.Q_Review_ProbDuty>.BindGrid(gridDutyDept,list);           
+            
+            
+        }
+        else if (e.CommandName == "Del")
+        {
+            string id = ((Label)row.FindControl("lblId")).Text;
+            string sql = " select count(1) from[Q_Review_Solution] where DutyId = '"+id+ "' and  isnull(ActionPlan,'')<>''";//判断是否已有措施给出，若给出则不可删除
+            if (Convert.ToInt16(DbHelperSQL.GetSingle(sql)) > 0)
+            {
+                // ClientScriptManager cs = new ClientScriptManager();
+                ScriptManager.RegisterStartupScript(Page,this.GetType(), "message", "layer.msg('此改善要求已有措施提交，不可删除')",true);                
+                return;
+            }
+
+            int index= Convert.ToInt32(e.CommandArgument);
+            list.RemoveAt(index);
+            
+            if (txtRequestId.Value != ""&&id!="")//非新建
+            {
+                dal.Delete(Convert.ToInt16(id));      //删除DB记录    
+            }
+            ModelConvertHelper<MES.Model.Q_Review_ProbDuty>.BindGrid(gridDutyDept, list);
+        }
+
+        //日期取最晚日期
+        List<MES.Model.Q_Review_ProbDuty> closedate = list.OrderByDescending(t => t.ReqFinishDate).ToList();
+        if (closedate.Count > 0)
+        {
+            this.txtReqCloseDate.Value = string.Format("{0:yyyy-MM-dd}", closedate[0].ReqFinishDate);
+            ScriptManager.RegisterStartupScript((Control)sender, sender.GetType(), "setdtime", "$('input[id*=txtReqCloseDate]').val('"+ this.txtReqCloseDate.Value + "')", true);//因为不刷新通过此行更新最晚时间
+            
+        }
+
+    }
+    
+    //问题提交
+    protected void btnSaveProb_Click(object sender, EventArgs e)
+    {
+        #region "检查"
+        string strErr = "";
+        if (this.txt_create_by_empid.Value.Trim().Length == 0)
+        {
+            strErr += "登入人工号不能为空！\\n";
+        }
+        if (this.txt_create_by_name.Value.Trim().Length == 0)
+        {
+            strErr += "姓名不能为空！\\n";
+        }
+        if (this.txt_create_by_dept.Value.Trim().Length == 0)
+        {
+            strErr += "部门不能为空！\\n";
+        }
+        if (!PageValidate.IsDateTime(txtProbDate.Value))
+        {
+            strErr += "问题提出日期格式错误！\\n";
+        }
+        if (this.txtProbEmp.Value.Trim().Length == 0)
+        {
+            strErr += "问题提出人不能为空！\\n";
+        }
+
+        if (this.ddlProbFrom.SelectedValue.Trim().Length == 0)
+        {
+            strErr += "问题来源不能为空！\\n";
+        }
+        if (this.ddlDomain.SelectedValue.Trim().Length == 0)
+        {
+            strErr += "所在公司不能为空！\\n";
+        }
+        //if (this.ddlCustClass.SelectedValue.Trim().Length == 0)
+        //{
+        //    strErr += "客户大类不能为空！\\n";
+        //}               
+        if (this.txtProbDesc.Value.Trim().Length == 0)
+        {
+            strErr += "问题描述不能为空！\\n";
+        }
+
+        if (!PageValidate.IsDateTime(txtReqSlnDate.Value))
+        {
+            strErr += "要求措施提交日期格式错误！\\n";
+        }
+        //if (!PageValidate.IsDateTime(txtReqCloseDate.Value))
+        //{
+        //    strErr += "要求问题关闭日期格式错误！\\n";
+        //}
+        #endregion
+
+        if (strErr != "")
+        {
+            MessageBox.Show(this, strErr);
+            return;
+        }
+        //  int RequestId = int.Parse(this.txtRequestId.Value);
+        string DH = this.txtDH.Text;
+        string EmpId = this.txt_create_by_empid.Value;
+        string EmpName = this.txt_create_by_name.Value;
+        string Dept = this.txt_create_by_dept.Value;
+        DateTime? ProbDate = TimeParser.ConvertDateTime(this.txtProbDate.Value);
+        string ProbEmp = this.txtProbEmp.Value;
+        string ProbStatus = "未关闭"; //this.txtProbStatus.Text;
+        string ProbFrom = this.ddlProbFrom.SelectedItem.Text;
+        string Domain = this.ddlDomain.SelectedItem.Text;
+        string CustClass = this.ddlCustClass.SelectedItem.Text;
+        string ProdProject = this.txtProdProject.Value;
+        string LJH = this.txtLJH.Value;
+        string LJName = this.txtLJName.Value;
+        string ProdDesc = this.txtProbDesc.Value;
+        //string ProbFile = this.txtProbFile.Text;
+        DateTime? ReqSlnDate = TimeParser.ConvertDateTime(this.txtReqSlnDate.Value);
+        DateTime? ReqCloseDate = TimeParser.ConvertDateTime(this.txtReqCloseDate.Value);
+        DateTime? ActualCloseDate = TimeParser.ConvertDateTime(this.txtActualCloseDate.Value);
+        string Rank = ddlRank.SelectedItem.Text;
+        MES.Model.Q_Review_Prob model = new MES.Model.Q_Review_Prob();
+        // model.RequestId = RequestId;
+        model.DH = DH;
+        model.EmpId = EmpId;
+        model.EmpName = EmpName;
+        model.Dept = Dept;
+        model.ProbDate = ProbDate;
+        model.ProbEmp = ProbEmp;
+        model.ProbStatus = ProbStatus;
+        model.ProbFrom = ProbFrom;
+        model.Domain = Domain;
+        model.CustClass = CustClass;
+        model.ProdProject = ProdProject;
+        model.LJH = LJH;
+        model.LJName = LJName;
+        model.ProdDesc = ProdDesc;
+        // model.ProbFile = ProbFile;
+        model.ReqSlnDate = ReqSlnDate;
+        model.ReqCloseDate = ReqCloseDate;
+        // model.ActualCloseDate = ActualCloseDate;
+        model.Rank = Rank;
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        int requestid = -1;
+        if (txtRequestId.Value == "" )
+        {   //插入问题
+            var m = dal.Add(model);          
+            if (m != null)
+            {   //返回值赋值
+                this.txtRequestId.Value = m.RequestId.ToString();
+                requestid = Convert.ToInt16(txtRequestId.Value);
+                this.txtDH.Text = m.DH;
+            }
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = requestid,
+                Update_content = "问题提出",
+                Update_Engineer = txt_update_user_job.Value,
+                Update_LB = "新增",
+                Update_user = txt_update_user.Value,
+                Update_username = txt_update_user_name.Value
+            });
+            
+        }
+        else
+        {//更新
+            requestid = Convert.ToInt16(txtRequestId.Value);
+            model.RequestId = requestid;
+            dal.Update(model);
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = requestid,
+                Update_content = "问题修改",
+                Update_Engineer = txt_update_user_job.Value,
+                Update_LB = "修改",
+                Update_user = txt_update_user.Value,
+                Update_username = txt_update_user_name.Value
+            });
+        }
+
+        if (requestid < 0)
+        {
+            Maticsoft.Common.MessageBox.Show(this.Page, "保存失败,请重新提交！");
+            return;
+        }
+        else
+        {
+            //插入 负责人及单位记录
+            var list = (List<MES.Model.Q_Review_ProbDuty>)ViewState["DutyDept"];
+            MES.DAL.Q_Review_ProbDuty dalDuty = new MES.DAL.Q_Review_ProbDuty();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Id == 0 && (list[i].RequestId == 0))//新记录插入DB
+                {
+                    list[i].RequestId = requestid;
+                    dalDuty.Add(list[i]);
+                    //发问题提醒邮件：请负责人提供改善措施                    
+                    string lbl = list[i].DutyEmp;//("lblDutyEmpID");
+                    string lblId = list[i].Id.ToString(); //(Label)gridDutyDept.Rows[i].FindControl("lblId");
+                    if (lbl != "" && lblId == "0")//必须工号有且为新添加进去的才发邮件
+                    {
+                        StringBuilder body = new StringBuilder();
+                        string recipient = BaseFun.getMailByEmpId(lbl);
+                        string recipiantName = list[i].DutyEmpName;
+                        string cc =  BaseFun.getDirManagerMailByEmpId(lbl);//Cc责任直属主管
+                        body.Append("Hi,"+ recipiantName + ":<br>您有新的问题需要处理.");
+                        body.Append("<br>   请点击链接进入处理【提交改善措施及原因分析】：");
+                        body.Append("<table border=1><tr><td>单号</td><td>问题描述</td><td>问题提出人</td><td>改善目标及要求</td><td>要求措施提交日</td></tr><Tr>");
+                        body.Append("<td><a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + txtRequestId.Value + "' target='_blank'>" + txtDH.Text + "</a></Td>");
+                        body.Append("<td>" + txtProbDesc.Value + "</td>");
+                        body.Append("<td>" + txtProbEmp.Value + "</td>");
+                        body.Append("<td>" + list[i].ImproveTarget + "</td>");//((DataBoundLiteralControl)gridDutyDept.Rows[i].Cells[1].Controls[0]).Text
+                        body.Append("<td>" + txtReqSlnDate.Value+"</td>");
+                        body.Append("</tr></table>");
+                        body.Append("<br> ");
+                        body.Append("如有系统使用上的问题，1.可点击链接进入系统参考<a href='http://172.16.5.26:8010/UserGuide/ReviewGuide.pptx' target='_blank'>使用说明书</a>；2.请咨询质量部：来亚楠 （分机5125）  IT部:余夺魁（分机 2305 ）");
+
+                        Maticsoft.Common.MailSender.SendCC(recipient, cc, "您有新的问题需要处理[问题系统]", body.ToString());
+                    }
+                    
+                }
+            }
+        }
+        //自动插入Solution
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "confirm", "confirm()", true);
+        //Maticsoft.Common.MessageBox.Show(this.Page, "保存成功！");
+       
+    }
+    #region  "措施相关"
+    public void loadSolution(string requestid)
+    {
+        MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+
+        DataTable dt = dal.GetList(" requestid='"+requestid+ "' order by dutyid,cause,slnid").Tables[0];
+        //显示gridDutyDept
+        BindGrid(gridSolution, dt);         
+        MergeRows(gridSolution, 2, "lblImproveTarget");
+        MergeRows(gridSolution, 3, "lblCause");
+        //只显示提价了措施的条目
+        dt = dal.GetList(" requestid='" + requestid + "' and (DisagreeState is null or DisagreeState<>'NG') and slnstate<>'未提交措施' order by dutyid,cause,slnid").Tables[0];
+        BindGrid(gridResult, dt);
+        MergeRows(gridResult, 2, "lblImproveTarget");
+         
+        //
+        dt = dal.GetList(" requestid='" + requestid + "' and (DisagreeState is null or DisagreeState<>'NG') and slnstate<>'未提交措施' order by dutyid,cause,slnid").Tables[0];
+        BindGrid(gridConfirm, dt);
+        MergeRows(gridConfirm, 2, "lblImproveTarget");
+        MergeRows(gridConfirm, 3, "lblCause");
+    }
+    //刷新纪录
+    protected void btnFreshSln_Click(object sender, EventArgs e)
+    {
+        string requestid = Request["requestid"];
+        loadSolution(requestid);
+    }
+    #endregion
+    public  void MergeRows(GridView gvw, int col, string controlNameo)
+    {
+        //for (int col = 0; col < colnum; col++) // 遍历每一列
+        //{}
+        string controlName = controlNameo;// + col.ToString(); // 获取当前列需要改变的Lable控件ID
+            for (int rowIndex = gvw.Rows.Count - 2; rowIndex >= 0; rowIndex--) //GridView中获取行数 并遍历每一行
+            {
+                GridViewRow row = gvw.Rows[rowIndex]; // 获取当前行
+                GridViewRow previousRow = gvw.Rows[rowIndex + 1]; // 获取当前行 的上一行
+                Label row_lbl = row.Cells[col].FindControl(controlName) as Label; //// 获取当前列当前行 的 Lable 控件ID 的文本
+                Label previousRow_lbl = previousRow.Cells[col].FindControl(controlName) as Label; //// 获取当前列当前行 的上一行 的 Lable控件ID 的文本
+                if (row_lbl != null && previousRow_lbl != null) // 如果当前行 和 上一行 要改动的 Lable 的ID 的文本不为空
+                {
+                    if (row_lbl.Text.Replace(" ","") == previousRow_lbl.Text.Replace(" ", "")) // 如果当前行 和 上一行 要改动的 Lable 的ID 的文本不为空 且相同
+                    {
+                        // 当前行的当前单元格（单元格跨越的行数。 默认值为 0 ） 与下一行的当前单元格的跨越行数相等且小于一 则 返回2 否则让上一行行的当前单元格的跨越行数+1
+                        row.Cells[col].RowSpan = previousRow.Cells[col].RowSpan < 1 ? 2 : previousRow.Cells[col].RowSpan + 1;
+                        //并让上一行的当前单元格不显示
+                        previousRow.Cells[col].Visible = false;
+                    }
+                }
+            }
+        
+    }
+
+    //结果提交
+    protected void gridResult_RowCommand(object sender, GridViewCommandEventArgs e)
+    {        
+        MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+        MES.Model.Q_Review_Solution model = new MES.Model.Q_Review_Solution();
+        GridViewRow row = ((GridViewRow)((Control)e.CommandSource).Parent.Parent);
+         
+        if (e.CommandName == "Sub")//提交结果
+        {
+            if (((Label)row.FindControl("lblResultDesc")).Text == "")
+            {
+                Maticsoft.Common.MessageBox.Show(this, "请填写改善结果说明。");
+                return;
+            }
+            string SlnId = ((Label)row.FindControl("lblSlnId")).Text;
+            model = dal.GetModel(Convert.ToInt16(SlnId));
+            model.ResultDate = DateTime.Now;
+            model.ResultEmp = txt_update_user.Value;
+            model.SlnState = "提交结果";
+            model.ConfirmStatus = "";
+            model.ConfirmDesc = "";   
+            dal.Update(model);
+            DataTable dt = dal.GetList( " requestid="+Request["requestid"]+ " and (Disagreestate is null or disagreestate<>'NG') and slnstate<>'未提交措施' order by dutyid,cause,slnid").Tables[0];
+            BindGrid(gridResult, dt);
+            Maticsoft.Common.MessageBox.Show(this, "提交结果成功");
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = Convert.ToInt16(Request["requestid"]),
+                Update_content = "改善结果提交",
+                Update_Engineer = txt_update_user_job.Value,
+                Update_LB = "修改",
+                Update_user = txt_update_user.Value,
+                Update_username = txt_update_user_name.Value
+            });
+            //发提交结果邮件：提醒问题提出者确认改善结果            
+            //Label lbl = (Label)row.FindControl("lblActionEmpID");
+            if (txt_create_by_empid.Value != "")
+            {
+                StringBuilder body = new StringBuilder();
+                string recipiantName = txtProbEmp.Value;
+                body.Append("Hi," + recipiantName + ":<br>有新的改善结果待确认.");
+                body.Append("<br>   请点击链接进入处理【改善结果确认】：");
+                body.Append("<table border=1><tr><td>单号</td><td>问题描述</td><td>改善目标</td><td>采取的行动</td><td>结果提交人</td></tr><Tr>");
+                body.Append("<td><a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + txtRequestId.Value + "' target='_blank'>" + txtDH.Text + "</a></Td>");
+                body.Append("<td>" + txtProbDesc.Value + "</td>");
+                body.Append("<td>" + ((Label)row.FindControl("lblImproveTarget")).Text + "</td>");                
+                body.Append("<td>" + ((DataBoundLiteralControl)row.Cells[3].Controls[0]).Text + "</td>");
+                body.Append("<td>" + ((Label)row.FindControl("txt_ActionEmp")).Text + " </td>");
+                body.Append("</tr></table>");
+
+                
+
+                string recipient = BaseFun.getMailByEmpId(txt_create_by_empid.Value);
+                Maticsoft.Common.MailSender.Send(recipient, "有新的改善结果需要您确认[问题系统]", body.ToString());
+            }
+            
+        }
+
+    }
+    //否决
+    protected void gridSolution_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        //MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+        //MES.Model.Q_Review_Solution model = new MES.Model.Q_Review_Solution();
+        //GridViewRow row = ((GridViewRow)((Control)e.CommandSource).Parent.Parent);
+        //if (e.CommandName == "Reject")
+        //{  // 
+        //    string SlnId = ((TextBox)row.FindControl("lblSlnId")).Text;
+        //   // string disagreedesc=
+        //    model = dal.GetModel(Convert.ToInt16(SlnId));
+            
+            
+        //}
+    }
+
+
+    protected void gridConfirm_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        MES.DAL.Q_Review_Solution dal = new MES.DAL.Q_Review_Solution();
+        MES.Model.Q_Review_Solution model = new MES.Model.Q_Review_Solution();
+        GridViewRow row = ((GridViewRow)((Control)e.CommandSource).Parent.Parent);
+        if (e.CommandName== "Confirm")
+        {
+            string confirmstatus = ((DropDownList)row.FindControl("dropConfirmStatus")).SelectedValue;    
+            
+            if (confirmstatus == "") {
+                Maticsoft.Common.MessageBox.Show(this, "请选择是否通过.");
+                return;
+            }
+            string confirmdesc= ((TextBox)row.FindControl("txtConfirmDesc")).Text;
+            //if ( confirmdesc == "")
+            //{
+            //    Maticsoft.Common.MessageBox.Show(this, "请输入确认意见.");
+            //    return;
+            //}
+            model.ConfirmDate = DateTime.Now;
+            model.ConfirmDesc = confirmdesc;
+            model.ConfirmEmpId = txt_update_user.Value;// ViewState["empid"].ToString();
+            model.ConfirmEmpName = txt_update_user_name.Value;// ViewState["empname"].ToString();
+            model.ConfirmStatus = confirmstatus;
+            model.SlnId= Convert.ToInt16(((Label)row.FindControl("lblSlnId")).Text);
+            if (confirmstatus == "不通过")
+            {
+                //更新回需提交改善结果状态；
+                model.SlnState = "提交措施";                                
+            }
+            else
+                model.SlnState = "确认结果";
+
+            dal.UpdateConfirm(model);
+            
+           // dal.UpdateReject(model);
+            
+            Maticsoft.Common.MessageBox.Show(this, "确认["+ confirmstatus + "]完成.");
+            DataTable dt = dal.GetList(" requestid=" + Request["requestid"].ToString()+ " and (DisagreeState is null or DisagreeState<>'NG') and slnstate<>'未提交措施' order by dutyid,cause,slnid").Tables[0];
+            BindGrid(gridConfirm, dt);
+            //插入log
+            MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+            {
+                RequestId = Convert.ToInt16(Request["requestid"]),
+                Update_content = "改善结果确认",
+                Update_Engineer = txt_update_user_job.Value,
+                Update_LB = "修改",
+                Update_user = txt_update_user.Value,
+                Update_username = txt_update_user_name.Value
+            });
+            //发确认邮件：给措施改善人             
+            Label lbl = (Label)row.FindControl("lblActionEmpID");
+            if (lbl.Text != "")
+            {
+                StringBuilder body = new StringBuilder();
+                string recipiantName = ((Label)row.FindControl("txt_ActionEmp")).Text;
+               body.Append("Hi," + recipiantName + ":<br>您提交的改善结果已被确认为【" + confirmstatus + "】.");
+                body.Append("<br>   请点击链接进入处理【提交改善措施及原因分析】：");
+                body.Append("<table border=1><tr><td>单号</td><td>问题描述</td><td>问题提出人</td><td>改善目标及要求</td><td>采取的行动</td></tr><Tr>");
+                body.Append("<td><a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + txtRequestId.Value + "' target='_blank'>" + txtDH.Text + "</a></Td>");
+                body.Append("<td>" + txtProbDesc.Value + "</td>");
+                body.Append("<td>" + txtProbEmp.Value + "</td>");
+                body.Append("<td>" + ((Label)row.FindControl("lblImproveTarget")).Text + "</td>");//((DataBoundLiteralControl)gridDutyDept.Rows[i].Cells[1].Controls[0]).Text
+                body.Append("<td>" + ((DataBoundLiteralControl)row.Cells[4].Controls[0]).Text  + "</td>");
+                body.Append("</tr></table>");
+
+                
+                body.Append("<br>   " + ((LiteralControl)row.Cells[3].Controls[0]).Text);
+                // body.Append("<br>改善结果确认人：" + txtProbEmp.Value);
+
+                string recipient = BaseFun.getMailByEmpId(lbl.Text);
+
+                Maticsoft.Common.MailSender.Send(recipient, "您提交的改善结果已被确认【"+ confirmstatus + "】[问题系统]", body.ToString());
+            }
+            
+        }
+
+    }
+    //同意关闭
+    protected void btnClose_Click(object sender, EventArgs e)
+    {
+        string actualstate = "";
+        if (rblActualState.SelectedValue == "")
+        {
+            ScriptManager.RegisterStartupScript(btnClose, sender.GetType(), "alert", "layer.alert('请选择问题是否已解决.')", true);
+            //Maticsoft.Common.MessageBox.Show(this, "请选择问题是否已解决.");
+            return;
+        }
+        else
+        {
+            actualstate = rblActualState.SelectedValue;
+        }
+        //确认是否还有未确认通过的措施
+        if(Convert.ToInt16(DbHelperSQL.GetSingle("SELECT COUNT(1)CNT FROM [dbo].[Q_Review_Solution] where requestid='"+Request["requestId"].ToString()+ "' and ConfirmStatus!='通过' and isnull(DisagreeState,'')<>'NG'")) > 0)
+        {
+            ScriptManager.RegisterStartupScript(btnClose, sender.GetType(), "alert", "layer.alert('还有改善措施未确认，请确认完毕再关闭.')", true);
+            //Maticsoft.Common.MessageBox.Show(this, "还有改善措施未确认，请确认完毕再关闭.");
+            return;
+        }
+        
+        
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        MES.Model.Q_Review_Prob model = new MES.Model.Q_Review_Prob();
+        model.ProbStatus = "已关闭";
+        model.ActualState = actualstate;
+        model.ActualCloseDate = DateTime.Now;
+        model.RequestId = Convert.ToInt16(Request["requestid"]);
+        dal.UpdateActualState(model);
+
+        ScriptManager.RegisterStartupScript(btnClose, sender.GetType(), "alert", "layer.alert('问题关闭成功.')", true);
+        //Maticsoft.Common.MessageBox.Show(this, "问题关闭成功.");
+        //插入log
+        MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+        {
+            RequestId = Convert.ToInt16(Page.Request["requestid"]),
+            Update_content = "问题关闭",
+            Update_Engineer = txt_update_user_job.Value,
+            Update_LB = "修改",
+            Update_user = txt_update_user.Value,
+            Update_username = txt_update_user_name.Value
+        });
+    }
+    
+    //不同意关闭--暂时不使用此功能
+    [WebMethod(true)]
+    public static string DisClose(string requestid,string desc)
+    {
+        System.Text.StringBuilder result = new StringBuilder();
+        result.Append(string.Format("update [dbo].[Q_Review_Prob] set [ActualState]='{0}'  where [RequestId]='{1}' ", "未解决", requestid));
+
+        int rows = DbHelperSQL.ExecuteSql(result.ToString());
+        result.Clear();
+        if (rows == 0)
+        {
+            result.Append("0");//失败
+        }
+        else
+        {
+            result.Append("1"); //成功
+        }
+
+        //SendEmail To All
+        
+        DataTable dt = DbHelperSQL.Query("select distinct dutyEmp from Q_Review_ProbDuty where requestid='"+ requestid + "'").Tables[0];
+
+        var mailgroup = "";
+        var dutyemps = "";
+        for(int row = 0; row < dt.Rows.Count; row++)
+        {
+            mailgroup = mailgroup + BaseFun.getMailByEmpId(dt.Rows[row]["DutyEmp"].ToString())+",";
+            dutyemps = dutyemps + BaseFun.getEmpNameByEmpId(dt.Rows[row]["DutyEmp"].ToString()) + "，";
+        }
+        mailgroup = mailgroup.TrimEnd(',');
+        dutyemps = dutyemps.TrimEnd(',');
+        MES.DAL.Q_Review_Prob dal = new MES.DAL.Q_Review_Prob();
+        MES.Model.Q_Review_Prob M = new MES.Model.Q_Review_Prob();
+         
+        M = dal.GetModel(Convert.ToInt16(requestid));
+        if (mailgroup != "")
+        {
+            StringBuilder body = new StringBuilder();
+            body.Append("Hi :<br>总问题不同意关闭,请重新评估改善措施.");
+            body.Append("<br>请点击链接进入查看详细结果：");
+            body.Append("<br>单号：<a href='http://172.16.5.26:8010/Review/Review.aspx?requestid=" + Convert.ToString(M.RequestId) + "' target='_blank'>" + M.DH + "</a>");
+            body.Append("<br>问题：");
+            body.Append("<br>   " + M.ProdDesc);
+            body.Append("<br>问题相关责任人：");
+            body.Append("<br>" + dutyemps); 
+            body.Append("<br>不同意关闭原因：");
+            body.Append("<br>   " + desc);
+            body.Append("<br>   ");
+            body.Append("<br>问题提出人：" + M.ProbEmp);
+
+            string recipient = mailgroup;
+
+            Maticsoft.Common.MailSender.Send(recipient, "问题不同意关闭,请重新评估改善措施.[问题系统]", body.ToString());
+        }
+        return result.ToString();
+         
+    }
+    
+    //更新要求完成日
+    [WebMethod(true)]
+    public static string EditDate(string requestid, string target, string dutyid,string date,string updatedby)
+    {
+        System.Text.StringBuilder result = new StringBuilder();
+        result.Append(" declare @date date;");
+        result.Append(string.Format(" update[Q_Review_ProbDuty] set ReqFinishDate = (case when '{0}'='' then null else '{0}' end),ImproveTarget='{1}' where Id = '{2}';", date,target, dutyid) );
+        result.Append(string.Format(" select @date = max(ReqFinishDate)  from [Q_Review_ProbDuty] where RequestId = '{0}';", requestid) );
+        result.Append(string.Format(" update[Q_Review_Prob] set ReqCloseDate = @date  where RequestId = '{0}';", requestid));
+        result.Append(" select convert(varchar(10) ,@date,120) [date];");
+
+        string newDate = DbHelperSQL.GetSingle(result.ToString()).ToString();
+        result.Clear();
+        if (newDate == "")
+        {
+            result.Append("0");//失败
+        }
+        else
+        {
+            result.Append(newDate); //成功
+        }         
+        ////插入log
+        var user = InitUser.GetLoginUserInfo(updatedby, "");
+        MES.DAL.Q_Review_Log.Add(new MES.Model.Q_Review_Log()
+        {
+            RequestId = Convert.ToInt16(requestid),
+            Update_content = "修改要求完成日",
+            Update_Engineer = user.JobTitleName,
+            Update_LB = "修改",
+            Update_user = user.UserId,
+            Update_username = user.UserName
+        });
+        return result.ToString();
+         
+    }
+    
+    // 评价措施  
+    [WebMethod(true)]
+    public static string EvaluateSln(string requestid,string slnid, string desc,string rejectman)
+    {
+        System.Text.StringBuilder result = new StringBuilder();
+       
+        result.Append(string.Format("update [dbo].[Q_Review_Solution] set [DisagreeDesc]='{0}',DisagreeEmp='{1}',DisagreeDate=getdate() where [SlnId]='{2}' ",  desc, rejectman, slnid));
+        int rows = DbHelperSQL.ExecuteSql(result.ToString());
+        result.Clear();
+        if (rows == 0)
+        {                   
+            result.Append("0");//失败
+        }
+        else
+        {
+            result.Append("1"); //成功
+        }
+
+        return result.ToString();
+    }
+
+    protected void gridDutyDept_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            string mark = "";           
+            if( e.Row.DataItem.GetType().Name == "Q_Review_ProbDuty" )
+            {
+                var m = (MES.Model.Q_Review_ProbDuty)e.Row.DataItem;
+                mark = Convert.ToString(m.Mark);
+            }
+            else
+            {
+                var drv = (DataRowView)e.Row.DataItem;
+                mark = drv["Mark"].ToString();
+            }
+
+            if ( mark== "0" )
+            {
+                Label lbl = (Label)e.Row.FindControl("lblImproveTarget");
+                lbl.Text =lbl.Text+ "<span class='label label-warning'>未提供措施</span>";
+            }
+            
+        }
+
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            var dropDept = (DropDownList)e.Row.FindControl("ddlDutyDept");
+            var dropEmp= (DropDownList)e.Row.FindControl("ddlDutyEmp");
+            BaseFun.loadDepartment(dropDept,this.ddlDomain.SelectedValue);
+            BaseFun.loadEmpByDepartId(this.ddlDomain.SelectedValue, "", dropEmp);
+        }
+    }
+    protected void gridConfirm_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        DataRowView drv = (DataRowView)e.Row.DataItem;
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            var drop = (DropDownList)e.Row.FindControl("dropConfirmStatus");
+            var lbl = (Label)e.Row.FindControl("lblConfirmStatus");
+            DataRowView row = (DataRowView)e.Row.DataItem;
+            string selectvalue = row["ConfirmStatus"].ToString();
+            ListItem item = drop.Items.FindByValue(selectvalue);
+            if (item != null)
+            {
+                item.Selected = true;
+
+            }
+            //如确认【不通过】，显示黄色字体
+            if (drv["ConfirmStatus"].ToString() == "不通过")
+            {
+                e.Row.Style.Add("background-color", "#ffd4aa");
+                //e.Row.Style.Add("color", "#ffd4aa");
+            }
+            //1.非登入者提出问题 不可确认  2.// 开放给提出人任何状态下都可确认  ||drv["ConfirmStatus"].ToString() == "不通过"|| drv["ConfirmStatus"].ToString() == "通过"
+            if (txt_update_user_name.Value!=txt_create_by_name.Value)
+            {                
+                ((Button)e.Row.FindControl("btnResultSubmit")).Enabled = false;                 
+            }
+            //var btn = (Button)e.Row.FindControl("btnResultSubmit");
+            //如果被否，显示红色字体
+            //if (drv["DisagreeState"].ToString() == "NG")
+            //{
+            //    e.Row.Style.Add("color", "red");
+            //    e.Row.Style.Add("text-decoration", "line-through");
+            //    btn.Enabled = false;
+            //}
+
+        }
+    }
+    protected void gridSolution_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        DataRowView drv = (DataRowView)e.Row.DataItem;
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            //如果被否，显示红色字体 
+            if (drv["DisagreeState"].ToString() == "NG")
+            {
+                //e.Row.Style.Add("color", "red");
+                e.Row.Cells[11].CssClass = "btn-danger";
+                e.Row.Cells[11].Text = "被否决"; //drv["DisagreeState"] = "被否决";
+                //e.Row.Style.Add("text-decoration", "line-through");                 
+            }
+            ////如确认【不通过】，显示黄色字体
+            //if (drv["ConfirmStatus"].ToString() == "不通过")
+            //{
+            //    e.Row.Style.Add("background-color", "#ffd4aa");
+            //    //e.Row.Style.Add("color", "#ffd4aa");
+            //}
+            
+            ////【修改】按钮不可编辑条件：1.登入人不是措施提交人 或 2.提交结果已确认ok
+            //if (drv["ActionEmpId"].ToString() != txt_update_user.Value|| drv["ConfirmStatus"].ToString() == "通过")
+            //{               
+            //    ((System.Web.UI.HtmlControls.HtmlInputButton)e.Row.FindControl("btnEdit")).Disabled = true;
+            //}
+            //如果计划完成日超要求问题关闭日期，显示红色字体
+            if (TimeParser.ConvertDateTime(drv["PlanDate"].ToString()) >TimeParser.ConvertDateTime(this.txtReqCloseDate.Value))
+            {
+                e.Row.Cells[6].Style.Add("color", "red");                
+            }
+            //如果计划提交日超要求提交日期，显示红色字体
+            if (TimeParser.ConvertDateTime(drv["SlnDate"].ToString()) > TimeParser.ConvertDateTime(this.txtReqSlnDate.Value))
+            {
+                e.Row.Cells[7].Style.Add("color", "red");
+            }
+
+        }
+    }
+    protected void gridResult_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        DataRowView drv = (DataRowView)e.Row.DataItem;
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {             
+            
+            //【提交结果】按钮不可用：1.登入人不是提交人 or 2.确认状态已通过 or 3.已提交结果（可斟酌必要性）
+            if (txt_update_user_name.Value!= drv["ActionEmp"].ToString() || drv["ConfirmStatus"].ToString() == "通过"|| drv["SlnState"].ToString() =="提交结果")
+            {
+                ((Button)e.Row.FindControl("btnResultSubmit")).Enabled = false;
+                    
+            }
+            //如确认【不通过】，显示黄色字体
+            if (drv["ConfirmStatus"].ToString() == "不通过")
+            {
+                e.Row.Style.Add("background-color", "#ffd4aa");
+               
+            }
+        }
+    }
+    protected void ddlDutyDept_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        var dropDept = (DropDownList)gridDutyDept.FooterRow.FindControl("ddlDutyDept");
+        var dropEmp = (DropDownList)gridDutyDept.FooterRow.FindControl("ddlDutyEmp");        
+        BaseFun.loadEmpByDepartId(this.ddlDomain.SelectedValue, dropDept.SelectedValue, dropEmp);
+    }
+
+
+    protected void rblActualState_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if(this.rblActualState.SelectedItem.Value== "已解决"  )
+        {
+            if (this.txt_update_user_name.Value == this.txtProbEmp.Value || this.txt_update_user_name.Value == this.txt_create_by_name.Value)
+            {
+                btnClose.Enabled = true;
+                btnDisClose.Disabled = true;
+            }
+        }
+        else if(this.rblActualState.SelectedItem.Value == "未解决")
+        {
+            btnClose.Enabled = false;
+            btnDisClose.Disabled = false;
+        }
+
+    }
+    /// <summary>
+    /// 刷新Duty
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lbtnRefreshDuty_Click(object sender, EventArgs e)
+    {
+        loadDutyDept("-1");
+    }
+}
+
+

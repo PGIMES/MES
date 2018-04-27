@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using Maticsoft.DBUtility;
+using System.IO;
+public partial class BaoJia_BaoJia_Remark_flow : System.Web.UI.Page
+{
+    public static string savepath = "\\UploadFile\\BaoJia";
+    protected void Page_Load(object sender, EventArgs e)
+    {
+       // Session["empid"]="02069";
+        
+        if (Session["empid"] == null )
+        {   // 给Session["empid"]  
+            InitUser.GetLoginUserInfo(Page, Request.ServerVariables["LOGON_USER"]);
+        }
+        if (!Page.IsPostBack)
+        { 
+            BaseFun fun = new BaseFun();
+            DataTable dt = fun.getEmpInfo(Session["empid"].ToString());
+            this.txtXingMing.Value = dt.Rows[0]["empname"].ToString();
+            this.txtEmpId.Value = dt.Rows[0]["EMPLOYEEID"].ToString();
+            this.txtRiQi.Value = DateTime.Now.ToShortDateString();
+            this.txtBaoJia_no.Value = Request.QueryString["Baojia_no"];
+            this.txtTurns.Value = Request.QueryString["turns"];
+
+            //历史记录
+            ShowFile();
+        }
+    }
+
+    protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if(e.Row.RowType==DataControlRowType.DataRow)
+        {   //显示行号
+            e.Row.Cells[0].Text = (e.Row.DataItemIndex + 1).ToString();
+        }
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (this.txtRemarks.Value == "")
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请输入状态描述！')", true);
+            return;
+        }
+        FileUpload(Request.QueryString["requestid"], this.txtFile);
+    }
+    public void FileUpload(string BJNo, System.Web.UI.WebControls.FileUpload  FileUpLoader)//System.Web.UI.HtmlControls.HtmlInputFile
+    {        
+        if (FileUpLoader.PostedFile.FileName.Length != 0)
+        {
+            string filename = FileUpLoader.PostedFile.FileName;
+            if (filename.Contains("\\") == true)
+            {
+                filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+            }
+
+            string MapDir = MapPath("~");
+            string yjpath = MapDir + savepath + "\\" + BJNo;
+            if (!System.IO.Directory.Exists(yjpath))
+            {
+                System.IO.Directory.CreateDirectory(yjpath);//不存在就创建目录 
+            }
+            FileUpLoader.PostedFile.SaveAs(yjpath + "\\" + filename);
+            FileSaveToDB(BJNo,  filename);
+        }
+        else
+        {
+            //Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('选择文件后再点击上传！')", true);
+            FileSaveToDB(BJNo, "");
+        }
+        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.msg('保存成功！')", true);
+
+    }
+    public void FileSaveToDB(string BJNo,  string filename)
+    {
+        string File_lj =filename ==""?"":( savepath + "\\" + BJNo + "\\" + filename);
+        string strSql = "insert into [dbo].[Baojia_remarks_flow]( baojia_no, requestid, turns, remarks, file_path, file_name, create_by_empid, create_by_name, create_date) values('"
+            + Request.QueryString["baojia_no"] + "','" + Request.QueryString["requestid"] + "','" + Request.QueryString["turns"] + "','"+txtRemarks.Value+"','" + File_lj + "','" + filename + "','"+this.txtEmpId.Value+"','" + this.txtXingMing.Value + "',getdate())";
+        DbHelperSQL.ExecuteSql(strSql);
+        ShowFile();
+    }
+    //显示历史记录
+    public void ShowFile()
+    { 
+       // string strSQL = "select * from [Baojia_remarks_flow] where requestid='" + Request.QueryString["requestid"] + "' order by  id desc";
+        string strSQL = "select * from [Baojia_remarks_flow] where baojia_no='" + Request.QueryString["baojia_no"] + "' order by  id desc";
+        DataTable  dt = DbHelperSQL.Query(strSQL).Tables[0];
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+    }
+
+
+    //public void FileDelete()
+    //{
+    //    string strSql = "delete from Baojia_remarks_flow where requestid=" + Request.QueryString["requestid"];
+    //    DbHelperSQL.ExecuteSql(strSql);
+    //  //  FileDirDelete(filepath);
+    //    ShowFile();
+    //}
+    //public void FileDirDelete(string filedir)
+    //{
+    //    if (System.IO.File.Exists(filedir))
+    //    {
+    //        System.IO.File.Delete(filedir);
+    //    }
+    //}
+
+   
+   
+
+
+}
