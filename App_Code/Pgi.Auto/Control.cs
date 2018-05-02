@@ -836,7 +836,7 @@ namespace Pgi.Auto
                         if (ldt.Rows[j]["list_fieldname"].ToString().Trim() == ldt_data.Columns[i].ColumnName.ToString().Trim())
                         {
 
-                            if (ldt.Rows[j]["list_link"].ToString() != "")
+                            if (ldt.Rows[j]["list_link"].ToString() != "" && ldt.Rows[j]["list_type"].ToString()=="")
                             {
 
                                 //DevExpress.Web.GridViewDataTextColumn lcolumn = new DevExpress.Web.GridViewDataTextColumn();
@@ -968,7 +968,11 @@ namespace Pgi.Auto
                                     lcolumn.HeaderStyle.CssClass = "hidden";
                                     lcolumn.CellStyle.CssClass = "hidden";
                                     lcolumn.FooterCellStyle.CssClass = "hidden";
-                                    lcolumn.Visible = false;
+                                    if (ldt.Rows[j]["list_type_ref"].ToString() != "HIDDEN")
+                                    {
+                                        lcolumn.Visible = false;
+                                    }
+
                                     // lcolumn.Width = 100;
                                 }
 
@@ -1001,6 +1005,15 @@ namespace Pgi.Auto
                 }
                 else
                 {
+
+
+                    if (ldt.Rows[j]["list_type"].ToString() == "HYPERLINK")
+                    {
+                        DevExpress.Web.GridViewDataTextColumn lcolumn = (DevExpress.Web.GridViewDataTextColumn)lgrid.Columns[j];
+                        //自定义显示grid列类型
+                        lcolumn.DataItemTemplate = new ColumnTemplate(ldt.Rows[j]);
+                        
+                    }
                     lnwidth += lnflag_width;
                 }
 
@@ -1013,250 +1026,332 @@ namespace Pgi.Auto
             lgrid.DataSource = ldt_data;
             lgrid.DataBind();
 
-            for (int i = 0; i < ldt_data.Rows.Count; i++)
+
+            //获取模版数据源
+            DataSet lds = new DataSet();
+            if (ldt_data.Rows.Count>0)
             {
-                if (ldt_data.Columns.IndexOf("flag")>0)
+
+                for (int i = 0; i < lgrid.DataColumns.Count; i++)
                 {
-                    if (ldt_data.Rows[i]["flag"].ToString() == "1")
+                    DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[i].FieldName + "'");
+                    if (ldrs.Length>0)
                     {
-                        lgrid.Selection.SetSelection(i, true);
+                        if (ldrs[0]["control_type_source"].ToString() != "" && ldrs[0]["control_type_sql"].ToString() != "")
+                        {
+                            if (lds.Tables.IndexOf(lgrid.DataColumns[i].FieldName)<1)
+                            {
+                                DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldrs[0]["control_type_source"].ToString(), CommandType.Text, ldrs[0]["control_type_sql"].ToString()
+                                   , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                                //  ldt_source.TableName = lgrid.DataColumns[i].FieldName;
+                                DataTable ldt_copay = ldt_source.Copy();
+                                lds.Tables.Add(ldt_copay);
+                               
+                                lds.Tables[lds.Tables.Count - 1].TableName= lgrid.DataColumns[i].FieldName;
+
+                            }
+                         
+                        }
                     }
                 }
-              
-                for (int j = 0; j < lgrid.DataColumns.Count; j++)
+
+                for (int i = 0; i < ldt_data.Rows.Count; i++)
                 {
-                    
-                   
-                    if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxTextBox)
+                    if (ldt_data.Columns.IndexOf("flag") > 0)
                     {
-                        DevExpress.Web.ASPxTextBox ltxt = ((DevExpress.Web.ASPxTextBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
+                        if (ldt_data.Rows[i]["flag"].ToString() == "1")
                         {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
-                        ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-                    }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is TextBox)
-                    {
-                        TextBox ltxt = ((TextBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
-                        {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
-
-                        ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-
-                    }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is CheckBox)
-                    {
-                        CheckBox ltxt = ((CheckBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
-                        {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
-
-                        if (ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString()=="1")
-                        {
-                           ltxt.Checked = true;
+                            lgrid.Selection.SetSelection(i, true);
                         }
                     }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxDateEdit)
-                    {
-                        DevExpress.Web.ASPxDateEdit ltxt = ((DevExpress.Web.ASPxDateEdit)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
-                        {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
 
-                            ltxt.Value = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-                    }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is HyperLink)
+                    for (int j = 0; j < lgrid.DataColumns.Count; j++)
                     {
-                        HyperLink ltxt = ((HyperLink)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
-                        {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
-                        if (ldrs[0]["list_link"].ToString()!="" && ldrs[0]["list_link_fields"].ToString() == "")
-                        {
-                            ltxt.NavigateUrl = ldrs[0]["list_link"].ToString();
-                        }
-                        else if (ldrs[0]["list_link"].ToString() != "" && ldrs[0]["list_link_fields"].ToString() != "")
-                        {
-                            string[] lstrs = ldrs[0]["list_link_fields"].ToString().Split(',');
-                            List<string> lsvalue = new List<string>();
-                            for (int ii = 0; ii < lstrs.Length; ii++)
-                            {
-                                lsvalue.Add(ldt_data.Rows[i][lstrs[ii]].ToString());
-                            }
-                            ltxt.NavigateUrl = string.Format(ldrs[0]["list_link"].ToString(), lsvalue);
-                        }
-                       
 
-                        ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-                    }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DropDownList)
-                    {
-                        DropDownList ltxt = ((DropDownList)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
-                        {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
-                            }
-                            else if (ldrs[0]["control_event"].ToString() != "")
-                            {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
-                            }
-                        }
-                        if (ldrs.Length > 0)
-                        {
 
-                            //赋值
-                            if (ldrs[0]["control_type_source"].ToString() == "")
+                        if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxTextBox)
+                        {
+                            DevExpress.Web.ASPxTextBox ltxt = ((DevExpress.Web.ASPxTextBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
                             {
-                                //直接给定值
-                                if (ldrs[0]["control_type_text"].ToString() != "" && ldrs[0]["control_type_value"].ToString() != "")
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
                                 {
-                                    string[] ls1 = ldrs[0]["control_type_text"].ToString().Split(',');
-                                    string[] ls2 = ldrs[0]["control_type_value"].ToString().Split(',');
-                                    if (ls1.Length == ls2.Length)
-                                    {
-                                        for (int k = 0; k < ls1.Length; k++)
-                                        {
-                                            ltxt.Items.Add(new ListItem(ls1[k], ls2[k]));
-                                        }
-                                    }
-
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
                                 }
-                            }
-                            else
-                            {
-                                //通过数据源获取
-                                DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldrs[0]["control_type_source"].ToString(), CommandType.Text, ldrs[0]["control_type_sql"].ToString()
-                                    , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
-                                for (int k = 0; k < ldt_source.Rows.Count; k++)
+                                else if (ldrs[0]["control_event"].ToString() != "")
                                 {
-                                    ltxt.Items.Add(new ListItem(ldt_source.Rows[k][ldrs[0]["control_type_text"].ToString()].ToString(), ldt_source.Rows[k][ldrs[0]["control_type_value"].ToString()].ToString()));
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
                                 }
                             }
                             ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
                         }
-                        ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-                    }
-                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxComboBox)
-                    {
-                        DevExpress.Web.ASPxComboBox ltxt = ((DevExpress.Web.ASPxComboBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
-                        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
-                        //增加属性
-                        if (ldrs.Length > 0)
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is Label)
                         {
-                            if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                            Label ltxt = ((Label)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            
+                            ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+
+                        }
+
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is TextBox)
+                        {
+                            TextBox ltxt = ((TextBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
                             {
-                                ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                }
+                                else if (ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
                             }
-                            else if (ldrs[0]["control_event"].ToString() != "")
+
+                            ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+
+                        }
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is CheckBox)
+                        {
+                            CheckBox ltxt = ((CheckBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
                             {
-                                ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                }
+                                else if (ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
+                            }
+
+                            if (ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString() == "1")
+                            {
+                                ltxt.Checked = true;
                             }
                         }
-                        if (ldrs.Length > 0)
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxDateEdit)
                         {
-
-                            //赋值
-                            if (ldrs[0]["control_type_source"].ToString() == "")
+                            DevExpress.Web.ASPxDateEdit ltxt = ((DevExpress.Web.ASPxDateEdit)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
                             {
-                                //直接给定值
-                               
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                }
+                                else if (ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
+                            }
+
+                            if (ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString()!="")
+                            {
+                                ltxt.Value =Convert.ToDateTime(ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString()).ToShortDateString();
+                            }
+                              
+                          
+                            
+                        }
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is HyperLink)
+                        {
+                            HyperLink ltxt = ((HyperLink)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
+                            {
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                }
+                                else if (ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
+                            }
+                            if (ldrs[0]["list_link"].ToString() != "" && ldrs[0]["list_link_fields"].ToString() == "")
+                            {
+                                ltxt.NavigateUrl = ldrs[0]["list_link"].ToString();
+                            }
+                            else if (ldrs[0]["list_link"].ToString() != "" && ldrs[0]["list_link_fields"].ToString() != "")
+                            {
+                                string[] lstrs = ldrs[0]["list_link_fields"].ToString().Split(',');
+                                string lsvalue = ldrs[0]["list_link"].ToString();
+                                for (int ii = 0; ii < lstrs.Length; ii++)
+                                {
+                                    lsvalue = lsvalue.Replace("{" + ii.ToString() + "}", ldt_data.Rows[i][lstrs[ii]].ToString());
+                                }
+                                ltxt.NavigateUrl = lsvalue;
                             }
                             else
                             {
-                                //通过数据源获取
-                                DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldrs[0]["control_type_source"].ToString(), CommandType.Text, ldrs[0]["control_type_sql"].ToString()
-                                    , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
-                                string lspara = "";
-                                for (int k = 0; k < ldt_source.Columns.Count; k++)
+                                ltxt.NavigateUrl = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+                            }
+
+                            
+                            ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+                        }
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DropDownList)
+                        {
+                            DropDownList ltxt = ((DropDownList)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
+                            {
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
                                 {
-                                    if (lspara != "")
-                                    {
-                                        lspara += " ";
-                                    }
-                                    lspara += "{" + k + "}";
-                                    DevExpress.Web.ListBoxColumn lcom = new DevExpress.Web.ListBoxColumn();
-                                    lcom.Name = ldt_source.Columns[k].ColumnName;
-                                    lcom.FieldName = ldt_source.Columns[k].ColumnName; ;
-                                    ltxt.Columns.Add(lcom);
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
                                 }
-
-
-                                if (ldrs[0]["control_type_text"].ToString() != "")
+                                else if (ldrs[0]["control_event"].ToString() != "")
                                 {
-                                    ltxt.TextFormatString = ldrs[0]["control_type_text"].ToString();
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
+                            }
+                            if (ldrs.Length > 0)
+                            {
+
+                                //赋值
+                                if (ldrs[0]["control_type_source"].ToString() == "")
+                                {
+                                    //直接给定值
+                                    if (ldrs[0]["control_type_text"].ToString() != "" && ldrs[0]["control_type_value"].ToString() != "")
+                                    {
+                                        string[] ls1 = ldrs[0]["control_type_text"].ToString().Split(',');
+                                        string[] ls2 = ldrs[0]["control_type_value"].ToString().Split(',');
+                                        if (ls1.Length == ls2.Length)
+                                        {
+                                            for (int k = 0; k < ls1.Length; k++)
+                                            {
+                                                ltxt.Items.Add(new ListItem(ls1[k], ls2[k]));
+                                            }
+                                        }
+
+                                    }
                                 }
                                 else
                                 {
-                                    ltxt.TextFormatString = lspara;
+                                    //通过数据源获取
+                                    //DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldrs[0]["control_type_source"].ToString(), CommandType.Text, ldrs[0]["control_type_sql"].ToString()
+                                    //    , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                                    if (lds.Tables[lgrid.DataColumns[j].FieldName]!=null)
+                                    {
+                                        for (int k = 0; k < lds.Tables[lgrid.DataColumns[j].FieldName].Rows.Count; k++)
+                                        {
+                                            ltxt.Items.Add(new ListItem(lds.Tables[lgrid.DataColumns[j].FieldName].Rows[k][ldrs[0]["control_type_text"].ToString()].ToString(), lds.Tables[lgrid.DataColumns[j].FieldName].Rows[k][ldrs[0]["control_type_value"].ToString()].ToString()));
+                                        }
+                                    }
+                                    
                                 }
-
-
-
-                                ltxt.DataSource = ldt_source;
-                                ltxt.DataBind();
+                                ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
                             }
                             ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
                         }
-                        ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
-                    }
+                        else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DevExpress.Web.ASPxComboBox)
+                        {
+                            DevExpress.Web.ASPxComboBox ltxt = ((DevExpress.Web.ASPxComboBox)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName));
+                            DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                            //增加属性
+                            if (ldrs.Length > 0)
+                            {
+                                if (ldrs[0]["control_event1"].ToString() != "" && ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add(ldrs[0]["control_event1"].ToString(), ldrs[0]["control_event"].ToString());
+                                }
+                                else if (ldrs[0]["control_event"].ToString() != "")
+                                {
+                                    ltxt.Attributes.Add("onchange", ldrs[0]["control_event"].ToString());
+                                }
+                            }
+                            if (ldrs.Length > 0)
+                            {
 
+                                //赋值
+                                if (ldrs[0]["control_type_source"].ToString() == "")
+                                {
+                                    //直接给定值
+
+                                }
+                                else
+                                {
+                                    //通过数据源获取
+                                    if (lds.Tables[lgrid.DataColumns[j].FieldName] != null)
+                                    {
+                                        string lspara = "";
+                                        for (int k = 0; k < lds.Tables[lgrid.DataColumns[j].FieldName.ToString()].Columns.Count; k++)
+                                        {
+                                            if (lspara != "")
+                                            {
+                                                lspara += " ";
+                                            }
+                                            lspara += "{" + k + "}";
+                                            DevExpress.Web.ListBoxColumn lcom = new DevExpress.Web.ListBoxColumn();
+                                            lcom.Name = lds.Tables[lgrid.DataColumns[j].FieldName.ToString()].Columns[k].ColumnName;
+                                            lcom.FieldName = lds.Tables[lgrid.DataColumns[j].FieldName.ToString()].Columns[k].ColumnName; ;
+                                            ltxt.Columns.Add(lcom);
+                                        }
+
+
+                                        if (ldrs[0]["control_type_text"].ToString() != "")
+                                        {
+                                            ltxt.TextFormatString = ldrs[0]["control_type_text"].ToString();
+                                        }
+                                        else
+                                        {
+                                            ltxt.TextFormatString = lspara;
+                                        }
+
+
+
+                                        ltxt.DataSource = lds.Tables[lgrid.DataColumns[j].FieldName.ToString()];
+                                        ltxt.DataBind();
+                                    }
+
+
+                                  
+                                }
+                                ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+                            }
+                            ltxt.Text = ldt_data.Rows[i][lgrid.DataColumns[j].FieldName].ToString();
+                        }
+
+                    }
                 }
+
+                //回收
+                lds = null;
+
+
+
+
+                ////第二种方式，解决排序后模板列消失问题
+                //for (int i = 0; i < ldt_data.Rows.Count; i++)
+                //{
+                //    for (int j = 0; j < lgrid.DataColumns.Count; j++)
+                //    {
+                //        DataRow[] ldrs = ldt.Select(" list_fieldname='" + lgrid.DataColumns[j].FieldName + "'");
+                //        if (ldrs.Length>0)
+                //        {
+                //            if (ldrs[0]["list_type"].ToString()== "HYPERLINK")
+                //            {
+                //                DevExpress.Web.GridViewDataTextColumn lcolumn = new DevExpress.Web.GridViewDataTextColumn();
+                //                    //自定义显示grid列类型
+                //                lcolumn.DataItemTemplate = new ColumnTemplate(ldrs[0]);
+                                
+                //            }
+                //        }
+                //    }
+                //}
             }
+            
         }
 
 
@@ -1471,7 +1566,8 @@ namespace Pgi.Auto
                     }
                     else if (ldt.Rows[i]["control_type"].ToString() == "ASPXCOMBOBOX")
                     {
-                        com.Value = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).Text;
+                        //com.Value = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).Text;
+                        com.Value = "";
                         if (com.Value == "")
                         {
                             if (p.Request.Form[lscontrol_id] != null)
@@ -2011,6 +2107,18 @@ namespace Pgi.Auto
                             ldr[lgrid.DataColumns[j].FieldName] = DBNull.Value;
                         }
                     }
+                    else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is Label)
+                    {
+                        Label tb1 = (Label)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName);
+                        if (tb1.Text != "")
+                        {
+                            ldr[lgrid.DataColumns[j].FieldName] = tb1.Text;
+                        }
+                        else
+                        {
+                            ldr[lgrid.DataColumns[j].FieldName] = DBNull.Value;
+                        }
+                    }
                     else if (lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName) is DropDownList)
                     {
                         DropDownList tb1 = (DropDownList)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName);
@@ -2028,7 +2136,7 @@ namespace Pgi.Auto
                         HyperLink tb1 = (HyperLink)lgrid.FindRowCellTemplateControl(i, lgrid.DataColumns[j], lgrid.DataColumns[j].FieldName);
                         if (tb1.Text != "")
                         {
-                            ldr[lgrid.DataColumns[j].FieldName] = tb1.NavigateUrl;
+                            ldr[lgrid.DataColumns[j].FieldName] = tb1.Text;
                         }
                         else
                         {

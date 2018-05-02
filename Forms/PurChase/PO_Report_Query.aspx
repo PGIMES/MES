@@ -193,7 +193,7 @@
                
             </Columns>
                               <TotalSummary>
-                                  <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="targetzj" 
+                                  <dx:ASPxSummaryItem DisplayFormat="{0:N4}" FieldName="TotalPrice" 
                                       SummaryType="Sum" />
                                        
                          </TotalSummary>

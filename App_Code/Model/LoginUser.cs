@@ -76,4 +76,5 @@ public class LoginUser
     public string ManagerADAccount { get; set; }
     public string Domain { get; set; }
     public string DomainName { get; set; }
+    public string Telephone { get; set; }
 }

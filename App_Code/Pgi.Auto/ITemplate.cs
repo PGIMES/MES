@@ -45,6 +45,11 @@ namespace Pgi.Auto
                 ltxt.ID = this.dr["list_fieldname"].ToString();
                 ltxt.Width = int.Parse(this.dr["list_width"].ToString());
                 ltxt.ForeColor = System.Drawing.Color.Black;
+                if (dr["list_type_ref"].ToString() == "BORDERSTYLE.NONE")
+                {
+                    ltxt.BorderStyle = BorderStyle.None;
+                }
+                
                 if (dr["list_type_ref"].ToString()== "AutoPostBack")
                 {
                     ltxt.AutoPostBack = true;
@@ -70,6 +75,8 @@ namespace Pgi.Auto
                 ltxt.Width = int.Parse(this.dr["list_width"].ToString());
                 ltxt.ForeColor = System.Drawing.Color.Black;
                 ltxt.Text = this.dr["list_caption"].ToString();
+               
+                ltxt.EditFormat = DevExpress.Web.EditFormat.Date;
                 container.Controls.Add(ltxt);
             }
             else if (this.dr["list_type"].ToString() == "ASPXCOMBOBOX")
@@ -79,11 +86,11 @@ namespace Pgi.Auto
                // ltxt.Width = int.Parse(this.dr["list_width"].ToString());
                 ltxt.ForeColor = System.Drawing.Color.Black;
                 ltxt.Text = this.dr["list_caption"].ToString();
-                container.Controls.Add(ltxt);
                 if (dr["list_type_ref"].ToString() == "DROPDOWN")
                 {
                     ltxt.DropDownStyle = DevExpress.Web.DropDownStyle.DropDown;
                 }
+                container.Controls.Add(ltxt);
             }
             else if (this.dr["list_type"].ToString() == "HYPERLINK")
             {
@@ -91,6 +98,16 @@ namespace Pgi.Auto
                 ltxt.ID = this.dr["list_fieldname"].ToString();
                 ltxt.ForeColor = System.Drawing.Color.Black;
                 ltxt.Text = this.dr["list_caption"].ToString();
+                ltxt.Target = "blank";
+                container.Controls.Add(ltxt);
+            }
+            else if (this.dr["list_type"].ToString() == "LABEL")
+            {
+                var ltxt = new Label();
+
+                ltxt.ID = this.dr["list_fieldname"].ToString();
+                ltxt.Width = int.Parse(this.dr["list_width"].ToString());
+                ltxt.ForeColor = System.Drawing.Color.Black;
                 container.Controls.Add(ltxt);
             }
 

@@ -200,7 +200,7 @@
                               <Styles>
                 <Header BackColor="#99CCFF">
                 </Header>
-                                  <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC">
+                                 <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC">
                                   </FocusedRow>
                                   <Footer HorizontalAlign="Right">
                                   </Footer>

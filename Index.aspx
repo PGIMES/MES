@@ -636,10 +636,13 @@
                                 <div class="btn-group">
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_bule2-1">
                                         采购管理</div>
-                                    <ul class="dropdown-menu" style="color: Black" role="menu">                                        
-                                        <li><a href="http://172.16.5.6:8080/dj/promptness.aspx" target="_blank">采购及时率</a></li>
-                                       <li><a href="/Forms/PurChase/PR_Report_Query.aspx"  target="_blank">请购单查询(test) </a></li>  
-                                       <li><a href="/Forms/PurChase/PO_Report_Query.aspx"  target="_blank">采购单查询(test) </a></li>                                      
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e" target="_blank">请购申请单(PR)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&appid=a4d66e5b-0456-47ce-b9aa-ef783f504583" target="_blank">采购申请单(PO)</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询(test) </a></li>
+                                        <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询(test) </a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">

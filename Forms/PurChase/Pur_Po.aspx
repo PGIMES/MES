@@ -42,7 +42,7 @@
             }
             if ($('#B8A7AF17-7AD5-4699-B679-D421691DD737', parent.document).length == 0) {
                 //alert("查看流程");
-                $("#btnshowProcess").hide();
+              //  $("#btnshowProcess").hide();
             }
             if ($('#347B811C-7568-4472-9A61-6C31F66980AE', parent.document).length == 0) {
                 //alert("转交");
@@ -261,7 +261,14 @@
 
         function openSelect()
         {
-            var url = "../../select/select_pr.aspx";
+            
+            if ( $("input[id*='povendorid']").val()=="") {
+                layer.alert("请先选择供应商！");
+               
+                return;
+            }
+            
+            var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"";
 
             layer.open({
                 type: 2,
@@ -277,7 +284,7 @@
         }
 
         function potype(){
-            if ($("[id*='potype']").val()=="刀具") {
+            if ($("[id*='potype']").val()=="存货") {
                
                 $("[id*='fqfk_div']").hide();
             }else {
@@ -562,18 +569,24 @@
                             <div> 
                                 <div style="padding: 2px 5px 5px 0px">
                 
-                                    <input id="btnadd" type="button" value="新增" class="btn btn-default" style="width:60px; height:32px;"  onclick="openSelect()"/>
-                                    <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;" OnClick="btndel_Click"  />
+                                     <input runat="server" id="btnadd" type="button" value="新增" class="btn btn-default" style="width:60px; height:32px;"  onclick="openSelect()"/>
+                                     <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;" OnClick="btndel_Click"  />
                                 </div>
                                
                               
                                 <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
-                                     ClientInstanceName="grid"  EnableTheming="True" >
+                                     ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" >
+                                   
             <SettingsPager PageSize="1000">
             </SettingsPager>
+                                    <Settings ShowFooter="True" />
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
             <Columns>
             </Columns>
+                                    <TotalSummary>
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                                         
+                                    </TotalSummary>
             <Styles>
                 <Header BackColor="#1E82CD" ForeColor="White" >
                 </Header>
@@ -581,7 +594,8 @@
             </Styles>
                      <Columns>
            <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>
-                         </Columns>            
+                         </Columns>   
+                                          
         </dx:aspxgridview>
                                 
                                     
@@ -655,7 +669,7 @@
             <div class="col-md-12" >
                 <div class="panel panel-info">
                     <div class="panel-heading" data-toggle="collapse" data-target="#FJSC">
-                         <strong>附件上传</strong>
+                         <strong>供应商报价单，报价分析，技术协议，合同</strong>
                     </div>
                     <div class="panel-body collapse in" id="FJSC">
                         <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
@@ -677,7 +691,9 @@
 
 
     </div>
-    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click" />
+    <asp:Button ID="Button2" runat="server" Text="test" class="btn btn-large btn-primary" Width="100px" OnClick="Button2_Click"  Visible="false" />
+    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click"  Visible="false" />
+       
        <div class="row  row-container" style="display: ">
             <div class="col-md-12">
                 <div class="panel panel-info">
@@ -691,6 +707,25 @@
                        </tr>
 
                     </table>
+                     <table>
+                         <tr>
+                             <td>
+                                  <%--<dx:aspxgridview ID="gv3" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="id"  Theme="MetropolisBlue" TabIndex="1000" >
+            <SettingsPager PageSize="1000">
+            </SettingsPager>
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+            <Columns>
+            </Columns>
+            <Styles>
+                <Header BackColor="#1E82CD" ForeColor="White" >
+                </Header>
+                <SelectedRow BackColor="Red">
+                </SelectedRow>
+            </Styles>
+        </dx:aspxgridview>--%>
+                             </td>
+                         </tr>
+                     </table>
                     </div>
                 </div>
             </div>
