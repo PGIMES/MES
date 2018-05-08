@@ -49,7 +49,7 @@
         <table>
             <tr>
                 <td>--%>
-                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1020px">
+                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1000px" OnHtmlRowPrepared="gv_pt_HtmlRowPrepared">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" />
                         <SettingsPager PageSize="1000" />
                         <SettingsSearchPanel Visible="True" />
@@ -64,6 +64,8 @@
                             <dx:GridViewDataTextColumn Caption="PPAP日期" FieldName="ppap_date2" VisibleIndex="6" Width="120px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="剩余天数" FieldName="sydays" VisibleIndex="7" Width="80px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="是否建立日程" FieldName="isSchedule" VisibleIndex="8" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="purchase_days" FieldName="purchase_days" VisibleIndex="8"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
