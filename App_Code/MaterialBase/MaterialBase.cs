@@ -96,5 +96,18 @@ public class MaterialBase_CLASS
         DataTable dt = new DataTable();
         return SQLHelper.GetDataTable("PGI_BASE_PART_QUERY", param);
     }
+
+    public DataTable ForproductsDay(string pt_part, string site,string isSchedule)
+    {
+        SqlParameter[] param = new SqlParameter[]
+       {
+               new SqlParameter("@pt_part",pt_part),
+               new SqlParameter("@site",site),
+               new SqlParameter("@isSchedule",isSchedule)
+       };
+        DataTable dt = new DataTable();
+        return SQLHelper.GetDataTable("PGI_BASE_PART_ForproductsDay", param);
+    }
+
 }
 
