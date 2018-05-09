@@ -29,6 +29,7 @@ public class Wuliu_tr_hist
     {
         SqlParameter[] param = new SqlParameter[]
       {
+            new SqlParameter("@flag","2"),
            new SqlParameter("@domain",domain),
            new SqlParameter("@part_no_start",part_no_start)//,
            //new SqlParameter("@part_no_end",part_no_end)

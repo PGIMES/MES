@@ -42,27 +42,39 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False">
+                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1650px" OnPageIndexChanged="gv_tr_list_PageIndexChanged">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" />
-                        <SettingsPager PageSize="1000">
-                        </SettingsPager>
-                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True"
-                            ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True"
-                            ShowFooter="True" />
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" />
                         <SettingsSearchPanel Visible="True" />
-
-                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True"
-                            ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True"
-                            ShowFooter="True" ShowGroupedColumns="True"></Settings>
-
-                        <SettingsBehavior ColumnResizeMode="Control" AllowFocusedRow="True"
-                            AllowSelectByRowClick="True" AutoExpandAllGroups="True"
-                            MergeGroupsMode="Always" SortMode="Value"></SettingsBehavior>
-
+                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" ShowGroupedColumns="True"></Settings>
+                        <SettingsBehavior ColumnResizeMode="Control" AllowFocusedRow="True" AllowSelectByRowClick="True" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value"></SettingsBehavior>
                         <SettingsSearchPanel Visible="True"></SettingsSearchPanel>
-
                         <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
-                        <Columns></Columns>
+                        <Columns>
+                            <dx:GridViewDataTextColumn Caption="物料编号" FieldName="tr_part" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="10数量" FieldName="qty1" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="10金额" FieldName="amount1" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="10-20数量" FieldName="qty2" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="10-20金额" FieldName="amount2" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="20-30数量" FieldName="qty3" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="20-30金额" FieldName="amount3" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="30-60数量" FieldName="qty4" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="30-60金额" FieldName="amount4" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="60-90数量" FieldName="qty5" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="60-90金额" FieldName="amount5" Width="70px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="90-180数量" FieldName="qty6" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="90-180金额" FieldName="amount6" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="180-360数量" FieldName="qty7" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="180-360金额" FieldName="amount7" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="360以上数量" FieldName="qty8" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="360以上金额" FieldName="amount8"  Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="库存" FieldName="ld_qty_oh" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="库存金额" FieldName="ld_qty_oh_amount" Width="80px"></dx:GridViewDataTextColumn>
+                        </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
