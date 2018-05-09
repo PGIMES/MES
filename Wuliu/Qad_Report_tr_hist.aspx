@@ -42,7 +42,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1650px" OnPageIndexChanged="gv_tr_list_PageIndexChanged">
+                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1700px" OnPageIndexChanged="gv_tr_list_PageIndexChanged">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" />
                         <SettingsPager PageSize="1000"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" />
@@ -56,6 +56,7 @@
                             <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_mtl_tl" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10数量" FieldName="qty1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10金额" FieldName="amount1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10-20数量" FieldName="qty2" Width="70px"></dx:GridViewDataTextColumn>
