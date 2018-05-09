@@ -54,4 +54,11 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
             ViewState["i"] = i;
         }
     }
+
+
+    protected void btnimport_Click(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+        ASPxGridViewExporter1.WriteXlsToResponse("库龄"+System.DateTime.Now.ToShortDateString());//导出到Excel
+    }
 }

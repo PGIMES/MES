@@ -32,6 +32,7 @@
                     </td>--%>
                     <td>
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" Width="100px" OnClick="Bt_select_Click" />
+                        <asp:Button ID="btnimport" runat="server" Text="导出Excel"  class="btn btn-primary" Font-Size="12px" OnClick="btnimport_Click" />
                     </td>
                 </tr>
             </table>
@@ -81,6 +82,8 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
+                    </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>
