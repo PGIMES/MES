@@ -15,10 +15,10 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
         {
             QueryASPxGridView();
         }
-        //if (this.gv_tr_list.IsCallback)
-        //{
-        //    QueryASPxGridView();
-        //}
+        if (this.gv_tr_list.IsCallback)//页面搜索条件使用
+        {
+            QueryASPxGridView();
+        }
     }
 
     protected void Bt_select_Click(object sender, EventArgs e)
