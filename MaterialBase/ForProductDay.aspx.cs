@@ -38,16 +38,45 @@ public partial class MaterialBase_ForProductDay : System.Web.UI.Page
     protected void gv_pt_HtmlRowPrepared(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
     {
         if (e.RowType != GridViewRowType.Data) return;
-        
-        string ppap_date2 = (string)e.GetValue("ppap_date2");
-        if (ppap_date2 != "")
+
+        string isSchedule = (string)e.GetValue("isSchedule");
+        if (isSchedule == "否")
         {
-            int pdays = Convert.ToInt32(e.GetValue("purchase_days").ToString())+7;
-            if (Convert.ToDateTime(ppap_date2).AddDays(-pdays) >= Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")))
+            int sydays = (int)e.GetValue("sydays");
+            if (sydays < 0)
             {
-                e.Row.Style.Add("background-color", "color");
+                e.Row.Style.Add("background-color", "red");
+            }
+
+            string ppap_date2 = (string)e.GetValue("ppap_date2");
+            if (ppap_date2 != "")
+            {
+                int pdays = Convert.ToInt32(e.GetValue("purchase_days").ToString()) + 7;
+                if (Convert.ToDateTime(ppap_date2).AddDays(-pdays) >= Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")))
+                {
+                    e.Row.Style.Add("background-color", "red");
+                }
             }
         }
-        
+    }
+
+    protected void gv_pt_HtmlDataCellPrepared(object sender, ASPxGridViewTableDataCellEventArgs e)
+    {
+        if (e.DataColumn.Caption == "序号")
+        {
+            if (Convert.ToInt16(ViewState["i"]) == 0)
+            {
+                ViewState["i"] = 1;
+            }
+            int i = Convert.ToInt16(ViewState["i"]);
+            e.Cell.Text = i.ToString();
+            i++;
+            ViewState["i"] = i;
+        }
+    }
+
+    protected void gv_pt_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
     }
 }

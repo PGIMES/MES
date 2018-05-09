@@ -49,12 +49,13 @@
         <table>
             <tr>
                 <td>--%>
-                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1000px" OnHtmlRowPrepared="gv_pt_HtmlRowPrepared">
+                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1000px" OnHtmlRowPrepared="gv_pt_HtmlRowPrepared" OnHtmlDataCellPrepared="gv_pt_HtmlDataCellPrepared" OnPageIndexChanged="gv_pt_PageIndexChanged">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" />
                         <SettingsPager PageSize="1000" />
                         <SettingsSearchPanel Visible="True" />
                         <SettingsFilterControl AllowHierarchicalColumns="True" />
                         <Columns>
+                            <dx:GridViewDataTextColumn Caption="序号" FieldName="" VisibleIndex="1" Width="40px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工厂" FieldName="domainname" VisibleIndex="1" Width="100px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" VisibleIndex="1" Width="100px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="物料名称" FieldName="wlmc" VisibleIndex="2" Width="120px"></dx:GridViewDataTextColumn>
