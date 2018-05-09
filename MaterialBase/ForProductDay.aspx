@@ -1,4 +1,4 @@
-﻿<%@ Page Title="【采购日程查询】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ForProductDay.aspx.cs" Inherits="MaterialBase_ForProductDay" %>
+﻿<%@ Page Title="【采购日程(刀具)查询】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ForProductDay.aspx.cs" Inherits="MaterialBase_ForProductDay" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
@@ -7,7 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $("#mestitle").text("【采购日程查询】");
+        $("#mestitle").text("【采购日程(刀具)查询】");
     </script>
      <div class="panel-body">
         <div class="col-sm-12">
