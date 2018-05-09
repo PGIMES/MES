@@ -39,4 +39,19 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
     {
         QueryASPxGridView();
     }
+
+    protected void gv_tr_list_HtmlDataCellPrepared(object sender, DevExpress.Web.ASPxGridViewTableDataCellEventArgs e)
+    {
+        if (e.DataColumn.Caption == "序号")
+        {
+            if (Convert.ToInt16(ViewState["i"]) == 0)
+            {
+                ViewState["i"] = 1;
+            }
+            int i = Convert.ToInt16(ViewState["i"]);
+            e.Cell.Text = i.ToString();
+            i++;
+            ViewState["i"] = i;
+        }
+    }
 }
