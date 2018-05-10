@@ -101,7 +101,7 @@ public partial class PUR_PR : PGIBasePage
             CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
             CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
             CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
-            applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
+           // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
         }
         else
         {
@@ -161,6 +161,8 @@ public partial class PUR_PR : PGIBasePage
                         ((DevExpress.Web.ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
                         ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
                         ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
+
+                        
                         //  ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$$recmdvendorname")).Enabled = false;
                         // ((DevExpress.Web.ASPxComboBox)this.FindControl("gvdtl$cell0_9$TC$usefor")).Enabled = false;
                         // ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
@@ -168,7 +170,15 @@ public partial class PUR_PR : PGIBasePage
 
 
                     }
+                    else
+                    {
+                        btnflowSend.Text = "提交";
+                    }
                 }        
+            }
+            else
+            {
+                btnflowSend.Text = "提交";
             }
         }
 
@@ -221,7 +231,7 @@ public partial class PUR_PR : PGIBasePage
         //==Detail
         if (ViewState["dtl"] == null)
         {   
-            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where prno='" + ViewState["PRNo"].ToString() + "'").Tables[0];
+            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where prno='" + ViewState["PRNo"].ToString() + "' order by rowid asc").Tables[0];
             ViewState["dtl"] = dtl;
         }
         gvdtl.Columns.Clear();
@@ -251,7 +261,8 @@ public partial class PUR_PR : PGIBasePage
     public static string GetHistoryPrice(string P1, string P2)
     {
         string result = "";
-        var sql= string.Format(" select top 1 [pc_amt[1]]] as amt from qad.dbo.qad_pc_mstr where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE()  and   pc_part='{0}'   order by [pc_amt[1]]] ", P1);
+         var sql= string.Format(" select top 1 [pc_amt[1]]] as amt from qad.dbo.qad_pc_mstr where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE()  and   pc_part='{0}'   order by [pc_amt[1]]] ", P1);
+       // var sql = string.Format("select top 1 hsdj as amt from [172.16.5.8].ecology.dbo.V_formtable_main_55_WL_JMB_min_dj where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE() and  pc_part='{0}' and pc_domain='{1}'", P1, P2);
         var value = DbHelperSQL.GetSingle(sql) ;        
         result = value==null?"":value.ToString();
         return result;
@@ -260,7 +271,21 @@ public partial class PUR_PR : PGIBasePage
     public static string GetDaoJuMatInfo(string P1, string P2)
     {
         string result = "";
-        var sql = string.Format(" select wlh,wlmc,ms,class,type,upload from dbo.PGI_BASE_PART_DATA where  wlh='{0}' ", P1);
+        StringBuilder sb = new StringBuilder();
+        sb.Append("  select wlh,wlmc,ms,class,type,upload, ");
+        sb.Append(" (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.domain and [pod_sched]=1 and [pod_part]=a.wlh  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched ");
+        sb.Append("  from dbo.PGI_BASE_PART_DATA a where  wlh='{0}' and domain='{1}' ");
+        //var sql = string.Format(" select wlh,wlmc,ms,class,type,upload from dbo.PGI_BASE_PART_DATA where  wlh='{0}' and domain='{1}' ", P1,P2);
+        var value = DbHelperSQL.Query(string.Format(sb.ToString(),P1,P2)).Tables[0];
+        if (value.Rows.Count > 0)
+        { result = value.ToJsonString(); }
+        return result;
+    }
+    [System.Web.Services.WebMethod()]
+    public static string GetDeptByDomain(string P1)
+    {
+        string result = "";
+        var sql = string.Format(" select distinct dept_name as value,dept_name as text from  HR_EMP_MES   where domain='{0}' or gc='{1}' ", P1,P1);
         var value = DbHelperSQL.Query(sql).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
@@ -339,12 +364,21 @@ public partial class PUR_PR : PGIBasePage
                     return;
                 }
             }
+
             //更新dtl中的prno
             var dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
-            foreach(DataRow  dr in dtl.Rows)
+            for (int i = dtl.Rows.Count - 1; i >= 0; i--)
             {
+                var dr = dtl.Rows[i];
                 dr["prno"] = strprno;
+                //if (dr["wlh"].ToString()=="")
+                //{
+                //    dr.Delete();
+                //}
             }
+            
+
+            List<Pgi.Auto.Common> lsdtl = Pgi.Auto.Control.GetList(dtl, "pur_pr_dtl_form", "id", "attachments_name,flag");
             //明细删除增加到list中
             if (Session["del"] != null)
             {
@@ -353,14 +387,15 @@ public partial class PUR_PR : PGIBasePage
                 {
                     Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
                     ls_del.Sql = "delete from PUR_Pr_Dtl_Form where id=" + ldt_del.Rows[i]["id"].ToString() + "";
-                    //ls_sum.Add(ls_del);
+                    lsdtl.Add(ls_del);
                 }
                 Session["del"] = null;
             }
-            List<Pgi.Auto.Common> lsdtl = Pgi.Auto.Control.GetList(dtl, "pur_pr_dtl_form", "id", "attachments_name,flag");
-            script += "if($('#txtInstanceID').val()==''){$('#txtInstanceID').val('" + strprno + "');$('#PRNo').val('" + strprno + "');};";
-            //add or update main_form
+            //CRUD main_form
             instanceid = Pgi.Auto.Control.UpdateValues(ls, "pur_pr_main_form").ToString();
+
+            script += "if($('#txtInstanceID').val()==''){$('#txtInstanceID').val('" + strprno + "');$('#PRNo').val('" + strprno + "');};"; 
+            
             
             //CRUD dtl_form
             Pgi.Auto.Control.UpdateListValues(lsdtl);
@@ -479,16 +514,27 @@ public partial class PUR_PR : PGIBasePage
         var dr= dtl.NewRow();
         dr["prno"] = PRNo.Text;
 
-        //object maxObject;
-        //maxObject = dtl.Compute("max(rowid)", "");
-        //if (maxObject.ToString() == "") { maxObject = 0; }
-        // dr["rowid"] =(Convert.ToInt16(maxObject)+1).ToString() ; 
-        dr["rowid"] = dtl.Rows.Count + 1;
+        object maxObject;
+        maxObject = dtl.Compute("max(rowid)", "");
+        if (maxObject.ToString() == "") { maxObject = 0; }
+        dr["rowid"] = (Convert.ToInt16(maxObject) + 1).ToString();
+        //dr["rowid"] = dtl.Rows.Count + 1;
         dr["attachments_name"] = "查看";
         dtl.Rows.Add(dr);
+        var sortrowid = 0;
         for(int  row=0;row<dtl.Rows.Count;row++)
         {
-            dtl.Rows[row]["rowid"] = (row+1).ToString();
+                        
+            if (dtl.Rows[row]["id"].ToString().Trim() != "")
+            {
+                sortrowid = Convert.ToInt16(dtl.Rows[row]["rowid"]);
+            }
+            else
+            {                
+                dtl.Rows[row]["rowid"] = (sortrowid + 1).ToString();
+                sortrowid = Convert.ToInt16(dtl.Rows[row]["rowid"]);
+            }
+            
         }
 
         ViewState["dtl"] = dtl;
@@ -538,6 +584,18 @@ public partial class PUR_PR : PGIBasePage
         Pgi.Auto.Public.MsgBox(this.Page, "alert", "删除成功!");
 
     }
+
+    //protected void domain_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    var P1 = domain.SelectedValue;
+    //    var sql = string.Format(" select distinct dept_name as value,dept_name as text from  HR_EMP_MES   where domain='{0}' or gc='{1}' ", P1, P1);
+    //    var value = DbHelperSQL.Query(sql).Tables[0];
+    //    this.applydept.DataSource = value;
+    //    applydept.DataValueField = "value";
+    //    applydept.DataTextField = "text";
+    //    applydept.DataBind();
+    //    applydept.Items.Insert(0, "");
+    //}
 }
 
 public class GridViewTemplate : ITemplate

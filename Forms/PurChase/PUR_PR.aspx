@@ -29,20 +29,10 @@
             getTotalPrice();                                                
             //绑定物料信息
             getMatInfo();
-            //工厂多选
-            $("input[id*='ddldomain']").click(function(){
-                $("#domaindomain").val("");
-                var val=""; 
-                $("input[id*='ddldomain']").each(function(i,item){
-                    if($(item).prop("checked")==true)
-                    {
-                        val=val+$(item).val()+";";                        
-                    }
-                })
-                if(val.length>0){
-                    val=val.substring(0,val.length-1);
-                }               
-                $("#domain").val(val);               
+            //工厂选择更改
+            $("select[id*='domain']").change(function(){
+                bindSelect("applydept");
+                $("#deptm").val("");
             })
             //申请部门
             $("select[id*='applydept']").change(function(){
@@ -87,7 +77,7 @@
                 }
             } 
         }
-       
+
         
         //设定表字段状态（可编辑性）
         var tabName="pur_pr_main_form";//表名
@@ -176,8 +166,7 @@
         $(window).load(function (){
 
             SetControlStatus(<%=fieldStatus%>);
-            SetControlStatus2(<%=fieldStatus%>);
-                      
+            SetControlStatus2(<%=fieldStatus%>);                      
                 
         });
 
@@ -188,10 +177,61 @@
                 return false;
             }
             if($("#deptm").val()==""){
-                layer.alert("部门主管(或分管副总)未设定，请联系IT设定.");
+                layer.alert("部门经理(或分管副总)未设定，请联系IT设定.");
                 return false;
             }
             <%=ValidScript%>
+            var flag=true;
+            var msg="";
+            if($("#gvdtl input[id*=wlh]").length==0){
+                layer.alert("请添加物料后再提交发送.");
+                return false;
+            }
+            //validate wlh
+            $("#gvdtl input[id*=wlh]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【物料号】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            })
+            //validate wlh
+            $("#gvdtl input[id*=usefor]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【用于产品/项目】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            })
+            //validate date
+            $("#gvdtl input[id*=targetprice]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【目标价】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            })
+            //validate qty
+            $("#gvdtl input[id*=qty]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【数量】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            })
+            //validate deliverydate
+            $("#gvdtl input[id*=deliverydate]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【要求到货日期】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            })
+
+            if(flag==false){  
+                layer.alert(msg);
+                return false;
+            }
             if($("#upload").val()==""&& $("#link_upload").text()==""){
                 layer.alert("请选择【附件】");
                 return false;
@@ -200,7 +240,8 @@
         }
         //GetHistroyPrice
         function getHisToryPrice(p1,ctrl){
-            var p2="";
+            var p2=$("#domain").val();
+            
             $.ajax({
                 type: "Post",async: false,
                 url: "PUR_PR.aspx/GetHistoryPrice" , 
@@ -226,14 +267,15 @@
                 }
             });
         }
-        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name){
-            var p2="";
+        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh){
+            var p2=$("#domain").val();
+            if(p2==""){layer.alert("请选择【申请工厂】");return false;}
             $.ajax({
                 type: "Post",
                 url: "PUR_PR.aspx/GetDaoJuMatInfo" , 
                 async: false,
                 //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
-                //P1:wlh P2： 
+                //P1:wlh P2： domaim
                 data: "{'P1':'"+p1+"','P2':'"+p2+"'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -247,13 +289,29 @@
                             layer.msg("未获取到该物料信息.");                            
                         }
                         else {
-                            $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
-                            $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
-                            $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
-                            $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
-                            $(attachments).val(item.upload);//$(attachments).attr("readonly","readonly");
+                            if(item.ispodsched=="1"){
+                                layer.alert(item.wlh+" 为日程物料号，无需提请购单.");
+                                $(wlh).val("");
+                                $(wlmc).val(""); 
+                                $(wlms).val("");
+                                return false;
+                            }
+                            else{
+                                if(item.wlmc==""||item.ms==""){
+                                    layer.alert(item.wlh+"请维护完整物料信息后再申请.");
+                                    $(wlh).val("");
+                                    $(wlmc).val(""); 
+                                    $(wlms).val("");
+                                    return false;
+                                }else{
+                                $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
+                                $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
+                                $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
+                                $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
+                                $(attachments).val(item.upload);//$(attachments).attr("readonly","readonly");
 
-                            $(attachments_name[0]).prop("href",item.upload); 
+                                $(attachments_name[0]).prop("href",item.upload); }
+                            }
                         } 
                     })                  
                 },
@@ -287,6 +345,37 @@
                 }
             });
         };
+                       
+        function bindSelect(sel){
+            var domain=$("#domain").val();
+            $.ajax({
+                type: "Post",async: false,
+                url: "PUR_PR.aspx/GetDeptByDomain" , 
+                //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                //P1:wlh P2： 
+                data: "{'P1':'"+domain+"','P2':'"+""+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {//返回的数据用data.d获取内容//                        
+                    //alert(data.d)
+                    $("#applydept").empty();  
+                    $("#applydept").append($("<option>").val("").text(""));
+                    $.each(eval(data.d), function (i, item) {                                
+                        if (data.d == "") {
+                            layer.msg("未获取到部门.");                            
+                        }
+                        else {                                                 
+                                var option = $("<option>").val(item.value).text(item.text); 
+                                $("#applydept").append(option); 
+                        } 
+                    })                    
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+            
+        }
     </script>
      
     <script type="text/javascript">
@@ -342,7 +431,7 @@
             });
         }
         function getTotalMoney(){
-            //计算所有明细总价
+            //计算所有明细总价            
             var totalMoney=0;
             $("#gvdtl").find("tr td input[id*=targettotal]").each(function (i) {
                 var rowval=$("tr td input[id*=targettotal_"+i+"]").val();
@@ -388,7 +477,7 @@
                     var wlms= $(this).parent().parent().find("input[id*=wlms]");
                     var attachments= $(this).parent().parent().find("input[id*=attachments]");
                     var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");
-                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name);                                                       
+                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this));                                                       
                 }); 
             });
         }
@@ -424,8 +513,8 @@
                                    
                                 });
                             </script>
-                            <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="" OnClick="btnSave_Click" ToolTip="临时保存此流程" />
-                            <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend" OnClientClick="return validate();" OnClick="btnflowSend_Click" />
+                            <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="" OnClick="btnSave_Click" ToolTip="临时保存此流程"  UseSubmitBehavior="false"   />
+                            <asp:Button ID="btnflowSend" runat="server" Text="批准" CssClass="btn btn-default btn-xs btnflowSend" OnClientClick="if(validate()==false)return false;" OnClick="btnflowSend_Click" UseSubmitBehavior="false"  />
                             <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                             <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                             <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
@@ -448,8 +537,18 @@
                         <div class="panel-body collapse in" id="SQXX">
                             <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
                                 <div class="">
-                                    <asp:UpdatePanel ID="UpdatePanel_request" runat="server">
+                                    <asp:UpdatePanel ID="UpdatePanel_request" runat="server" UpdateMode="Conditional">
                                         <ContentTemplate>
+                                            <script type="text/jscript">
+                                            var prm = Sys.WebForms.PageRequestManager.getInstance();
+                                            prm.add_endRequest(function () {
+                                                // 部门主管
+                                                var domain=$("#domain").val();
+                                                var dept=$("#applydept").val();
+                                                getDeptLeader(domain,dept);  
+                                                 
+                                            });
+                                        </script>
                                             <table style="height: 35px; width: 100%">
                                                 <tr>
                                                     <td>请购单号</td>
@@ -487,12 +586,14 @@
                                                     </td>                                                    
                                                     <td>申请公司</td>
                                                     <td>   
-                                                        <div style="float:left"><asp:DropDownList ID="domain" CssClass="form-control input-s-sm" runat="server" Width="100px" ToolTip="0|1" >
+                                                        <div style="float:left"><asp:DropDownList ID="domain" CssClass="form-control input-s-sm" runat="server" Width="100px" ToolTip="0|1"  >
+                                                            <asp:ListItem Value="" Text=""></asp:ListItem>
                                                             <asp:ListItem Value="200" Text="昆山工厂"></asp:ListItem>
                                                             <asp:ListItem Value="100" Text="上海工厂"></asp:ListItem>
                                                         </asp:DropDownList></div>  
                                                         <div style="float:left"><asp:DropDownList ID="applydept" CssClass="form-control input-s-sm" runat="server" Width="100px" ToolTip="0|1" >
                                                         </asp:DropDownList> </div>
+
                                                          <asp:TextBox id="deptm"  style=" width: 20px;display:none" runat="server"  />
                                                          <asp:TextBox id="deptmfg"  style=" width: 20px;display:none" runat="server"  />                                              
                                                      </td>
@@ -526,7 +627,7 @@
                                         <tr>
                                             <td>申请原因描述</td>
                                             <td style="width:800px">
-                                                <asp:TextBox ID="prreason" runat="server" CssClass="form-control input-s-sm" Width="100%" ToolTip="0|0"   />                                               
+                                                <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="form-control input-s-sm" Width="100%" ToolTip="0|0"   />                                               
                                             </td>
                                         </tr>
                                     </table>
@@ -555,7 +656,8 @@
                                                 
                                                 //绑定物料信息
                                                 getMatInfo();
-                                                
+                                                //
+                                                getTotalMoney();
                                                SetControlStatus2(<%=fieldStatus%>);
                                             });
                                         </script>
@@ -566,7 +668,7 @@
                                     
                                         <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue">
                                             <SettingsBehavior AllowDragDrop="false" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowSort="false"  />
-                                            <SettingsPager PageSize="20">
+                                            <SettingsPager PageSize="1000">
                                             </SettingsPager>
                                             <Settings ShowFilterRow="false" ShowFilterRowMenu="false" ShowFilterRowMenuLikeItem="false" ShowFooter="True" />
                                             <SettingsCommandButton>
