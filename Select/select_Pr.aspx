@@ -56,7 +56,7 @@
             
                             
                               <Styles>
-                <Header BackColor="#99CCFF">
+                  <Header BackColor="#1E82CD" ForeColor="White" >
                 </Header>
                                      <Footer HorizontalAlign="Right">
                                   </Footer>

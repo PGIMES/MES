@@ -14,7 +14,16 @@ public partial class Select_select_Pr : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            DataTable ldt = DbHelperSQL.Query("select *,17 as TaxRate from PUR_PR_Dtl_Form ").Tables[0];
+            string lsdomain = "200";
+            if (Request.QueryString["domain"]!=null)
+            {
+                lsdomain = Request.QueryString["domain"];
+            }
+            string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
+            lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
+            lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
+            lssql += " order by pr.prno,pr.rowid";
+            DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
             Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT", this.gv, ldt,2);
         }
         else
