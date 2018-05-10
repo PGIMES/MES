@@ -11,12 +11,72 @@
     <link href="../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <script src="../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
 
-<%--      <script src="../../../Content/js/jquery.min.js"></script>
-    <script src="../../../Content/js/bootstrap.min.js"></script>    
-    <script src="../../Content/js/layer/layer.js"></script>
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />        
-    <link href="../../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
-    <script src="../../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>--%>
+<%--       <div class="row row-container" >
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
+                         <strong>申请人信息</strong>
+                    </div>
+                    <div class="panel-body <% =ViewState["lv"].ToString() == "SQXX" ? "" : "collapse" %>" id="SQXX">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                            <div class="">
+                                <asp:UpdatePanel ID="UpdatePanel_request" runat="server">
+                                    <ContentTemplate>
+                                        <table style="height: 30px; width: 100%">
+                                            <tr>
+                                                <td>申请人
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_CreateById" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True"  />
+                                                        <input id="txt_CreateByName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_CreateByAd" class="form-control input-s-sm" style="height: 30px; width: 100px; font-size:12px;display: none;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                <td>部门
+                                                </td>
+                                                <td>
+                                                    <input id="txt_CreateByDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                               <td style="display: none">部门经理
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline" style="display: none">
+                                                        <input id="txt_managerid" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager_AD" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                              <td>当前登陆人员</td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_LogUserId" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />/
+                                                        <input id="txt_LogUserJob" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                 <td>申请日期：</td>
+                                                <td>
+                                                    <input id="txt_CreateDate" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input id="txt_Code" class="form-control input-s-sm" style="height: 30px; width: 200px; display: none; font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>--%>
 
     <script type="text/javascript">
       
@@ -262,11 +322,11 @@
         function openSelect()
         {
             
-            if ( $("input[id*='povendorid']").val()=="") {
-                layer.alert("请先选择供应商！");
+            //if ( $("input[id*='povendorid']").val()=="") {
+            //    layer.alert("请先选择供应商！");
                
-                return;
-            }
+            //    return;
+            //}
             
             var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"";
 
@@ -291,6 +351,12 @@
                 
                 $("[id*='fqfk_div']").show();
             }
+        }
+
+        function vendorid(s){
+        
+           // alert(s.GetValue());
+           grid.PerformCallback(s.GetValue());
         }
 
 
@@ -454,6 +520,18 @@
                   border:0
         }      
 
+          .auto-style1 {
+              position: relative;
+              min-height: 1px;
+              float: left;
+              width: 100%;
+              top: -5px;
+              left: 0px;
+              margin-top: 0px;
+              padding-left: 1px;
+              padding-right: 1px;
+          }
+
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent" enctype="multipart/form-data">
@@ -462,7 +540,7 @@
             <div class="col-md-10  ">
                 <div class="form-inline " style="text-align:right">
                    <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="return validate();" OnClick="btnSave_Click" />
-                    <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate();" OnClick="btnflowSend_Click" />
+                    <asp:Button ID="btnflowSend" runat="server" Text="申请" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate();" OnClick="btnflowSend_Click" />
                     <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                     <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                     <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
@@ -584,6 +662,8 @@
             <Columns>
             </Columns>
                                     <TotalSummary>
+                                        
+                                         <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="targetTotalPrice" ShowInColumn="targetTotalPrice" ShowInGroupFooterColumn="targetTotalPrice" SummaryType="Sum" />
                                         <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
                                          
                                     </TotalSummary>
@@ -666,7 +746,7 @@
              </div>
 
          <div class="row  row-container">
-            <div class="col-md-12" >
+            <div class="auto-style1" >
                 <div class="panel panel-info">
                     <div class="panel-heading" data-toggle="collapse" data-target="#FJSC">
                          <strong>供应商报价单，报价分析，技术协议，合同</strong>
@@ -674,25 +754,38 @@
                     <div class="panel-body collapse in" id="FJSC">
                         <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                             <div>
-                               <table style="width:100px;">
+                              <%-- <table style="width:100px;">
                                    <tr>
-                                       <td> <asp:FileUpload ID="FileUpload1" runat="server" /></td>
-                                       <td><asp:HyperLink ID="txtfile" runat="server" Visible="false" Target="_blank">文件浏览</asp:HyperLink></td>
+                                       <td> <asp:FileUpload ID="FileUpload1" runat="server" />
+                                       </td>
+                                       <td><asp:HyperLink ID="txtfile" runat="server" Visible="false" Target="_blank">文件浏览</asp:HyperLink>
+                                           
+                                       </td>
                                    </tr>
-                               </table>
-                               
+                               </table>--%>
+                                 <dx:ASPxUploadControl ID="uploadcontrol" runat="server" Width="500px" UploadMode="Auto" Visible="false" >
+                                     <AdvancedModeSettings EnableDragAndDrop="True" EnableFileList="True" EnableMultiSelect="True">
+                                     </AdvancedModeSettings>
+                                </dx:ASPxUploadControl>
+                                <asp:Table ID="tab1" runat="server">
+                                    <asp:TableRow ID="tab1_row" runat="server">
+                                        <asp:TableCell ID="tab1_col" runat="server"></asp:TableCell>
+                                    </asp:TableRow>
+                                </asp:Table>
                             </div>
                            
                             </div>
+                        <br />
                         </div>
                     </div>
                 </div>
+            
              </div>
 
 
     </div>
     <asp:Button ID="Button2" runat="server" Text="test" class="btn btn-large btn-primary" Width="100px" OnClick="Button2_Click"  Visible="false" />
-    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click"  Visible="false" />
+    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click" Visible="true" />
        
        <div class="row  row-container" style="display: ">
             <div class="col-md-12">
