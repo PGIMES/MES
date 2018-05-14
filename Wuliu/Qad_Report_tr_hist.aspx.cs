@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Web;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -19,6 +20,9 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
         {
             QueryASPxGridView();
         }
+        gv_tr_list.Settings.HorizontalScrollBarMode = (ScrollBarMode)Enum.Parse(typeof(ScrollBarMode), "Visible");
+        gv_tr_list.Settings.VerticalScrollBarMode = (ScrollBarMode)Enum.Parse(typeof(ScrollBarMode), "Visible");
+
     }
 
     protected void Bt_select_Click(object sender, EventArgs e)
