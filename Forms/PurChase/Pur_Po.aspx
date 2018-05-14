@@ -366,6 +366,36 @@
         }
     </script>
 
+    <script type="text/javascript">
+        var uploadedFiles = [];
+        function onFileUploadComplete(s, e) {
+            if(e.callbackData) {
+                var fileData = e.callbackData.split('|');uploadedFiles.push(fileData);$("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
+                var fileName = fileData[0],
+                    fileUrl = fileData[1],
+                    fileSize = fileData[2];                
+                var eqno=uploadedFiles.length-1;
+
+                var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                        +'<td Width="60px">'+fileSize+'</td>'
+                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="test11(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                        +'</tr>';
+
+               $('#tbl_filelist').append(tbody_tr);
+                //alert(fileName);
+                //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+            }
+        }
+
+
+        function test11(a,eno){
+            $(a).remove();
+            uploadedFiles[eno]=null;
+           $("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
+        }
+        
+    </script>
+
     <style type="text/css">
         .row {
             margin-right: 2px;
@@ -754,7 +784,7 @@
                     <div class="panel-body collapse in" id="FJSC">
                         <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                             <div>
-                              <%-- <table style="width:100px;">
+                               <%--<table style="width:100px;">
                                    <tr>
                                        <td> <asp:FileUpload ID="FileUpload1" runat="server" />
                                        </td>
@@ -763,15 +793,30 @@
                                        </td>
                                    </tr>
                                </table>--%>
-                                 <dx:ASPxUploadControl ID="uploadcontrol" runat="server" Width="500px" UploadMode="Auto" Visible="false" >
+                                 <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="500px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
+                                     ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced"   AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
+                                     onfileuploadcomplete="uploadcontrol_FileUploadComplete" >
                                      <AdvancedModeSettings EnableDragAndDrop="True" EnableFileList="True" EnableMultiSelect="True">
                                      </AdvancedModeSettings>
-                                </dx:ASPxUploadControl>
-                                <asp:Table ID="tab1" runat="server">
-                                    <asp:TableRow ID="tab1_row" runat="server">
-                                        <asp:TableCell ID="tab1_col" runat="server"></asp:TableCell>
-                                    </asp:TableRow>
-                                </asp:Table>
+                                     <ClientSideEvents FileUploadComplete="onFileUploadComplete" /> <%--FilesUploadStart="function(s, e) { DXUploadedFilesContainer.Clear(); }" --%>
+                                </dx:aspxuploadcontrol>
+                                <input type="hidden" id="ip_filelist" name="ip_filelist" runat="server" />                              
+                                <table id="tbl_filelist"  Width="500px">  
+                                </table>
+                                <%--<dx:UploadedFilesContainer ID="FileContainer" runat="server" Width="380" Height="180" 
+            NameColumnWidth="240" SizeColumnWidth="70" HeaderText="Uploaded files" />--%>
+
+                                <asp:UpdatePanel runat="server" ID="p11" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <textarea id="ip_filelist_db" name="ip_filelist" runat="server" cols="200" rows="2" visible="false"></textarea>
+                                        <asp:Table ID="tab1" Width="500px" runat="server">
+                                            <%--<asp:TableRow ID="tab1_row" runat="server">
+                                                <asp:TableCell ID="tab1_col" runat="server"></asp:TableCell>
+                                            </asp:TableRow>--%>
+                                        </asp:Table>
+                                    </ContentTemplate>
+                                    
+                                </asp:UpdatePanel>
                             </div>
                            
                             </div>
@@ -785,7 +830,7 @@
 
     </div>
     <asp:Button ID="Button2" runat="server" Text="test" class="btn btn-large btn-primary" Width="100px" OnClick="Button2_Click"  Visible="false" />
-    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click" Visible="true" />
+    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click" Visible="false" />
        
        <div class="row  row-container" style="display: ">
             <div class="col-md-12">
@@ -796,7 +841,9 @@
                     <div class="panel-body ">
                         <table border="0"  width="100%" class="bg-info" >
                         <tr><td width="100px" ><label>处理意见：</label></td>
-                        <td> <input id="comment" type="text" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" /></td>
+                        <td> <%--<input id="comment" type="text" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" />--%>
+                            <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+                        </td>
                        </tr>
 
                     </table>

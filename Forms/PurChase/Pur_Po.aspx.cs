@@ -15,6 +15,7 @@ using Maticsoft.Common;
 using System.Collections;
 using System.Reflection;
 using System.Linq;
+using System.IO;
 
 public partial class Pur_Po : System.Web.UI.Page
 {
@@ -126,17 +127,9 @@ public partial class Pur_Po : System.Web.UI.Page
                 {
                     //this.txtfile.NavigateUrl = ldt.Rows[0]["attachments"].ToString();
                     //this.txtfile.Visible = true;
-                    string[] ls_files = ldt.Rows[0]["attachments"].ToString().Split(';');
-                    for (int i = 0; i < ls_files.Length; i++)
-                    {
-                        HyperLink hl = new HyperLink();
-                        hl.Text = ls_files[i].ToString();
-                        hl.NavigateUrl = ls_files[i].ToString();
-                        this.tab1_col.Controls.Add(hl);
-                        Label lb = new Label();
-                        lb.Text = "  ";
-                        this.tab1_col.Controls.Add(lb);
-                    }
+
+                    this.ip_filelist_db.Value = ldt.Rows[0]["attachments"].ToString();
+                    bindtab();
                 }
 
 
@@ -247,10 +240,13 @@ public partial class Pur_Po : System.Web.UI.Page
                 ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["TaxPrice"], "TaxPrice")).TextChanged += new EventHandler(txt_TextChanged);
 
             }
+
+            bindtab();
         }
 
-       
 
+       
+        
 
         ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).AutoPostBack = true;
          ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).TextChanged += new EventHandler(PoDomain_TextChanged);
@@ -266,6 +262,89 @@ public partial class Pur_Po : System.Web.UI.Page
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+    }
+
+    void bindtab()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + Request.QueryString["stepid"] + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + Request.QueryString["flowid"] + "' as varchar(36)) and instanceid='" + this.m_sid + "' and stepname='采购负责人'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
+
+        tab1.Rows.Clear();
+        string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_2 = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            Label lb = new Label();
+
+            if (ls_files_2.Length == 3)
+            {                
+                hl.Text = ls_files_2[0].ToString();
+                hl.NavigateUrl = ls_files_2[1].ToString();
+                hl.Target = "_blank";
+              
+                lb.Text = ls_files_2[2].ToString();
+            }
+            else//之前的文件，只有一个路径
+            {
+               
+                hl.Text = "文件浏览";
+                hl.NavigateUrl = ls_files_2[0].ToString();
+                hl.Target = "_blank";
+
+                lb.Text = "";               
+            }
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                //Button Btn = new Button(); 
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1.Rows.Add(tempRow);
+        }
+    }
+
+
+    void Btn_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db.Value;
+        string[] ls_files = filedb.Split(';');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + ";"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db.Value = files;
+
+        bindtab();
     }
 
     private void PoDomain_TextChanged(object sender, EventArgs e)
@@ -455,9 +534,46 @@ public partial class Pur_Po : System.Web.UI.Page
         // ls.Add(lcfile);
 
         //}
-       string filepath=this.UploadFiles(this.uploadcontrol);
-       // 增加上传文件列
-         Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+        string filepath = "";//string filepath=this.UploadFiles(this.uploadcontrol);
+        string[] ls_files = ip_filelist.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files)
+        {
+            string[] ls_files_2 = item.Split(',');
+            if (ls_files_2.Length == 3)//挪动路径到po单号下面
+            {
+                FileInfo fi = new FileInfo(MapPath("~") + ls_files_2[1]);
+
+                var sorpath = @"\UploadFile\Purchase\";
+                var despath = MapPath("~") + sorpath + @"\" + m_sid + @"\";
+                if (!System.IO.Directory.Exists(despath))
+                {
+                    System.IO.Directory.CreateDirectory(despath);
+                }
+                string tmp = despath + ls_files_2[1].Replace(sorpath, "");
+                if (File.Exists(tmp))
+                {
+                    File.Delete(tmp);
+                }
+                fi.MoveTo(tmp);
+
+                filepath += item.Replace(@"\UploadFile\Purchase\", @"\UploadFile\Purchase\" + m_sid + @"\") + ";";
+            }
+            else
+            {
+                filepath += item + ";";
+            }
+        }
+
+        string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db)
+        {
+            filepath += item + ";";
+        }
+        if (filepath != "") { filepath = filepath.Substring(0, filepath.Length - 1); }
+
+
+        // 增加上传文件列
+        Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
         lcfile.Code = "attachments";
         lcfile.Key = "";
         lcfile.Value = filepath;
@@ -567,7 +683,7 @@ public partial class Pur_Po : System.Web.UI.Page
         bool bflag = this.SaveData();
         if (bflag == true)
         {
-            Pgi.Auto.Public.MsgBox(Page, "alert", "保存成功!" );
+            Pgi.Auto.Public.MsgBox(Page, "alert", "保存成功!");
 
         }
         else
@@ -795,7 +911,6 @@ public partial class Pur_Po : System.Web.UI.Page
 
     public string UploadFiles(DevExpress.Web.ASPxUploadControl uc)
     {
-
        DevExpress.Web.UploadedFile[] files = uc.UploadedFiles;//获得上传的所有文件  
         //string filenames = "";
         //string filename = "";
@@ -891,6 +1006,39 @@ public partial class Pur_Po : System.Web.UI.Page
             e.Row.Cells[lncindex + 1].Style.Add("color", "white");
             e.Row.Cells[lncindex+1].Style.Add("background-color", "red");
         }
+    }
+
+    protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
+    {
+        /*
+        string UploadDirectory = "~/UploadFile/Purchase/";
+
+        string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
+        string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
+        string resultFileUrl = UploadDirectory + resultFileName;
+        string resultFilePath = MapPath(resultFileUrl);
+        e.UploadedFile.SaveAs(resultFilePath);
+
+        //UploadingUtils.RemoveFileWithDelay(resultFileName, resultFilePath, 5);
+
+        string name = e.UploadedFile.FileName;
+        string url = ResolveClientUrl(resultFileUrl);
+        long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+        string sizeText = sizeInKilobytes.ToString() + " KB";
+        e.CallbackData = name + "|" + url + "|" + sizeText;
+        */
+
+        string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
+        string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
+        string resultFilePath = MapPath("~") + savepath + "\\" + resultFileName; 
+        e.UploadedFile.SaveAs(resultFilePath);
+
+        string name = e.UploadedFile.FileName;
+        long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+        string sizeText = sizeInKilobytes.ToString() + " KB";
+
+        e.CallbackData = name + "|" + "\\" + savepath + "\\" + resultFileName + "|" + sizeText;
+
     }
 }
 
