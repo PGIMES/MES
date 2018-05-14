@@ -43,20 +43,20 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1250px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
+                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1750px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="1000"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" ShowGroupedColumns="True" 
-                            AutoFilterCondition="Contains" VerticalScrollableHeight="500" />
+                            AutoFilterCondition="Contains" />
                         <SettingsSearchPanel Visible="True" />
                         <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
                         <Columns>
-                            <dx:GridViewDataTextColumn Caption="序号" FieldName="" Width="40px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="物料编号" FieldName="tr_part" Width="80px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_mtl_tl" Width="60px" FixedStyle="Left" ></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="序号" FieldName="" Width="40px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料编号" FieldName="tr_part" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_mtl_tl" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10数量" FieldName="qty1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10金额" FieldName="amount1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10-20数量" FieldName="qty2" Width="70px"></dx:GridViewDataTextColumn>
