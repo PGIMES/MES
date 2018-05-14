@@ -378,7 +378,7 @@
 
                 var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
                         +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="test11(tr_'+eqno+','+eqno+')" >É¾³ý</span></td>'
+                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="del_data(tr_'+eqno+','+eqno+')" >É¾³ý</span></td>'
                         +'</tr>';
 
                $('#tbl_filelist').append(tbody_tr);
@@ -388,7 +388,7 @@
         }
 
 
-        function test11(a,eno){
+        function del_data(a,eno){
             $(a).remove();
             uploadedFiles[eno]=null;
            $("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
