@@ -44,10 +44,24 @@
                 <div class="panel-body">
                     <div class="col-sm-12 ">
                         <div class="area_block">
-                            <div class="btn btn-large btn-success" name="frm_A">
+                            <div class="btn btn-large btn-gray" name="frm_B">
+                                <div class="btn-group">
+                                    <div class="btn btn-primary disabled" data-toggle="" name="btn_B">
+                                        一车间铁机加
+                                    </div>
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li class="divider"></li>
+                                    </ul>
+                                </div>
+                                <div class="area" id="div_B" name="B">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area_block">
+                            <div class="btn btn-large btn-gray" name="frm_A">
                                 <a href="Default.aspx" class="btn-group">
-                                    <div class="btn btn-primary " data-toggle="" name="btn_A">
-                                        铸造车间
+                                    <div class="btn btn-primary disabled" data-toggle="" name="btn_A">
+                                        二车间铁机加
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
                                         <li><a href=""></a></li>
@@ -59,29 +73,32 @@
                             </div>
                         </div>
                         <div class="area_block">
-                            <div class="btn btn-large btn-gray" name="frm_B">
-                                <div class="btn-group">
-                                    <div class="btn btn-primary disabled" data-toggle="" name="btn_B">
-                                        铁机加车间
+                            <div class="btn btn-large btn-success" name="frm_A">
+                                <a href="Default.aspx" target="_blank" class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="" name="btn_A">
+                                        三车间铝压铸
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href=""></a></li>
                                         <li class="divider"></li>
                                     </ul>
-                                </div>
-                                <div class="area" id="div_B" name="B">
+                                </a>
+                                <div class="area" id="div_A" name="A">
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="area_block">
-                            <div class="btn btn-large btn-gray " name="frm_C">
-                                <div class="btn-group">
-                                    <div class="btn btn-primary disabled" data-toggle="" name="btn_C">
-                                        铝机加车间
+                            <div class="btn btn-large btn-success " name="frm_C">
+                                <a href="DefaultAL.aspx" target="_blank" class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="" name="btn_C">
+                                        四车间铝机加
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href=""></a></li>
                                         <li class="divider"></li>
                                     </ul>
-                                </div>
+                                </a>
                                 <div class="area" id="div_C" name="C">
                                 </div>
                             </div>
@@ -530,9 +547,10 @@
                                          <li><a href="/wuliu/FH_OverMnth.aspx"  target="_blank">超一个月无交货报表</a></li>
                                          <li><a href="/wuliu/UnFH_Remind.aspx"  target="_blank">漏发货提醒</a></li> 
                                          <li><a href="/Product/ForcastByMnth_Forwuliu.aspx"  target="_blank">三个月滚动预测</a></li>   
-                                         <li><a href="/kanban/Qad_WorkOrder_List.aspx"  target="_blank">工单流转状态及父工单看板</a></li>   
-                                        <li><a href="javascript:void(0)"  target="_blank"></a></li>               
-                                        <li><a href="/wuliu/Qad_Report_tr_hist.aspx"  target="_blank">库龄报表</a></li>                              
+                                         <li><a href="/kanban/Qad_WorkOrder_List.aspx"  target="_blank">工单流转状态及父工单看板</a></li>  
+                                         <li><a href="/wuliu/Qad_Report_tr_hist.aspx"  target="_blank">库龄报表</a></li>
+                                         <li><a href="/Wuliu/Edi_BMW_Query.aspx"  target="_blank">BMW Edi对比</a></li>   
+                                        <li><a href="javascript:void(0)"  target="_blank"></a></li>                                       
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
@@ -642,8 +660,8 @@
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e" target="_blank">请购申请单(PR)</a></li>
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&appid=a4d66e5b-0456-47ce-b9aa-ef783f504583" target="_blank">采购申请单(PO)</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询</a></li>
-                                        <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询</a></li>
+                                        <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询 </a></li>
+                                        <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询 </a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
