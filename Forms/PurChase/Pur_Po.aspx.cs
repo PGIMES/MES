@@ -985,7 +985,7 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             return;
         }
-        int lncindex = 0; int prnoindex = 0;
+        int lncindex = 0; int prnoindex = 0;int RecmdVendorNameindex = 0;
         for (int i = 0; i < this.gv.DataColumns.Count; i++)
         {
             if (this.gv.DataColumns[i].FieldName== "TotalPrice")
@@ -995,6 +995,10 @@ public partial class Pur_Po : System.Web.UI.Page
             if (this.gv.DataColumns[i].FieldName == "PRNo")
             {
                 prnoindex = i;
+            }
+            if (this.gv.DataColumns[i].FieldName == "RecmdVendorName")
+            {
+                RecmdVendorNameindex = i;
             }
         }
         decimal lmbzj = Convert.ToDecimal(e.GetValue("targetTotalPrice"));
@@ -1011,9 +1015,25 @@ public partial class Pur_Po : System.Web.UI.Page
             e.Row.Cells[lncindex+1].Style.Add("background-color", "red");
         }
 
+        //add by heguiqin20180515 请购单号链接
         string PRNo = Convert.ToString(e.GetValue("PRNo"));
         e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
             + e.GetValue("PRNo") + "&mode=view' target='_blank'>" + PRNo.ToString() + "</a>";
+
+        //add by heguiqin20180515 采购供应商跟推荐供应商不一致，背景色黄色
+        DevExpress.Web.ASPxComboBox acb_pvi = (DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId");
+        string PoVendor = "";
+        if (acb_pvi != null)
+        {
+            string[] pvarr = acb_pvi.Text.Split('|');
+            if (pvarr.Length >= 2) { PoVendor = pvarr[0] + "_" + pvarr[1]; }
+        }
+
+        if (e.GetValue("RecmdVendorName").ToString() != PoVendor)
+        {
+            e.Row.Cells[RecmdVendorNameindex + 1].Style.Add("background-color", "yellow");
+        }
+
     }
 
     protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
