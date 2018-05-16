@@ -12,26 +12,34 @@ public partial class Select_select_Pr : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        string lsdomain = "200";
+        if (Request.QueryString["domain"] != null)
+        {
+            lsdomain = Request.QueryString["domain"];
+        }
         if (!IsPostBack)
         {
-            string lsdomain = "200";
-            if (Request.QueryString["domain"]!=null)
-            {
-                lsdomain = Request.QueryString["domain"];
-            }
-            string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
-            lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
-            lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
-            lssql += " order by pr.prno,pr.rowid";
-            DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+
+            //string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
+            //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
+            //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
+            //lssql += " order by pr.prno,pr.rowid";
+            DataTable ldt = GetData(lsdomain);
             Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT", this.gv, ldt,2);
         }
         else
         {
 
-            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+            //string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
+            //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
+            //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
+            //lssql += " order by pr.prno,pr.rowid";
+            DataTable ldt = GetData(lsdomain);
+            this.gv.DataSource = ldt;
+            this.gv.DataBind();
 
-            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT", this.gv, ldt,2);
+           // Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT", this.gv, ldt,2);
             //for (int i = 0; i < ldt.Rows.Count; i++)
             //{
             //    if (ldt.Rows[i]["SelectAll"].ToString() == "1")
@@ -40,6 +48,17 @@ public partial class Select_select_Pr : System.Web.UI.Page
             //    }
             //}
         }
+    }
+
+
+    private DataTable GetData(string lsdomain)
+    {
+        string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
+        lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
+        lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
+        lssql += " order by pr.prno,pr.rowid";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+        return ldt;
     }
 
     protected void btnselect_Click(object sender, EventArgs e)

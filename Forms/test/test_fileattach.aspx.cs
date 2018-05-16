@@ -54,8 +54,8 @@ public partial class Forms_test_test_fileattach : System.Web.UI.Page
                 {
                     
                     txt_CreateDate.Value = System.DateTime.Now.ToString();
-                    txt_LogUserId.Value = LogUserModel.UserId;
-                    txt_LogUserName.Value = LogUserModel.UserName;
+                    txt_AppById.Value = LogUserModel.UserId;
+                    txt_AppByName.Value = LogUserModel.UserName;
 
                     txt_CreateById.Value = LogUserModel.UserId;
                     txt_CreateByName.Value = LogUserModel.UserName;
