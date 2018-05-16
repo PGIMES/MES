@@ -676,6 +676,38 @@
             </div>
         </div>
     </div>
+
+    <%--≤‚ ‘--%>
+        <div class="row  row-container">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <strong>≤‚ ‘</strong>                   
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                        <div class="area_block">
+                            <div class="btn btn-padding-s btn-success " name="frm_bule2-1">
+                                <div class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="dropdown"  name="btn_bule2-1">
+                                        ≤‚ ‘π‹¿Ì</div>
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=12abcecc-4281-4676-a9d3-26954f1ef192&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e" target="_blank">≤‚ ‘…Í«Îµ•(test_fileattach)</a></li>
+                                        <li class="divider"></li>
+                                    </ul>
+                                </div>
+                                <div class="area" id="div_bule2-1">
+                                </div>
+                            </div>
+                        </div>                        
+                        
+                        
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <%-- ‘›≤ª”√“˛≤ÿ«¯”Ú=============================================================================================================================================================--%>
     <div style="display: none">
       
