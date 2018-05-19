@@ -15,11 +15,11 @@ public partial class Production_Emp_LoginLog_Query : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        LoginUser LogUserModel = null;
-        if (Session["empid"] == null)
-        {
-            LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
-        }
+        //LoginUser LogUserModel = null;
+        //if (Session["empid"] == null)
+        //{
+        //    LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        //}
 
         //Session["LogUser"] = LogUserModel;
 
@@ -38,7 +38,7 @@ public partial class Production_Emp_LoginLog_Query : System.Web.UI.Page
             this.txtdate1.Text = System.DateTime.Now.AddDays(1 - System.DateTime.Now.Day).ToShortDateString();
             this.txtdate2.Text = System.DateTime.Now.ToShortDateString();
             this.txt_order_id.Text = this.m_slocation;
-            this.txt_emp.Text = LogUserModel.UserId;
+            //this.txt_emp.Text = LogUserModel.UserId;
 
             QueryASPxGridView();
         }
@@ -104,7 +104,7 @@ public partial class Production_Emp_LoginLog_Query : System.Web.UI.Page
             }
         }
 
-        e.Row.Cells[remarkindex].Text= "登录留言:" + (string)e.GetValue("login_remark") + "<br />登出留言:" + (string)e.GetValue("logout_remark");
+        e.Row.Cells[remarkindex].Text= "登入留言:" + (string)e.GetValue("login_remark") + "<br />登出留言:" + (string)e.GetValue("logout_remark");
 
     }
 }
