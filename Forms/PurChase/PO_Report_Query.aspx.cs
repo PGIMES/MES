@@ -17,6 +17,9 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+       
+        LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        ViewState["empname"] = LogUserModel.UserName;
         if (Session["empid"] == null)
         {
             InitUser.GetLoginUserInfo(Page, Request.ServerVariables["LOGON_USER"]);
@@ -24,7 +27,7 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         if (!IsPostBack)
         {   //初始化日期
            
-            txtDateFrom.Text = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd");
+            txtDateFrom.Text = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
 
             txtDateTo.Text = DateTime.Now.ToString("yyyy-MM-dd");
            
@@ -46,7 +49,7 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         //
-        DataTable dt = DbHelperSQL.Query("exec Pur_PO_Query '" + drop_type.SelectedValue + "', '" + txtDateFrom.Text + "','" + txtDateTo.Text + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec Pur_PO_Query '" + drop_type.SelectedValue + "', '" + txtDateFrom.Text + "','" + txtDateTo.Text + "','" + (string)ViewState["empname"] + "'").Tables[0];
         this.GV_PART.Columns.Clear();
         Pgi.Auto.Control.SetGrid("PO_Query", "", this.GV_PART, dt);
        
@@ -70,12 +73,32 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
 
             }
         }
+       
     }
     protected void GV_PART_HtmlRowPrepared(object sender, ASPxGridViewTableRowEventArgs e)
     {
-
        
 
+        if (e.RowType != GridViewRowType.Data) return;
+
+        DateTime plan_date = Convert.ToDateTime(e.GetValue("PlanReceiveDate").ToString());
+        DateTime deliveryDate = Convert.ToDateTime(e.GetValue("deliveryDate").ToString());
+        string tr_effdate =e.GetValue("tr_effdate").ToString();
+        TimeSpan ts=plan_date-deliveryDate;
+
+        if (tr_effdate=="" && ts.Days > 3)
+        {
+            e.Row.Cells[20].Style.Add("background-color", "red");
+        }
+        if (tr_effdate != "")
+        {
+            DateTime tr_eff = Convert.ToDateTime(e.GetValue("tr_effdate").ToString());
+            TimeSpan tsday = tr_eff - plan_date;
+            if (tsday.Days > 3)
+            {
+                e.Row.Cells[23].Style.Add("background-color", "red");
+            }
+        }
 
     }
     protected void GV_PART_RowCommand(object sender, ASPxGridViewRowCommandEventArgs e)
@@ -101,5 +124,13 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
             i++;
             ViewState["i"] = i;
         }
+        
     }
+    protected void Bt_Export_Click(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+
+        ASPxGridViewExporter1.WriteXlsToResponse("采购单" + System.DateTime.Now.ToString("yyyyMMdd"));//导出到Excel
+    }
+   
 }

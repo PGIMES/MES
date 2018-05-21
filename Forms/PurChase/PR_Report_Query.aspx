@@ -134,6 +134,11 @@
                                         <td> 
                                             &nbsp;<td>
                                     <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <asp:Button ID="Bt_Export" runat="server" Text="导出" 
+                                                class="btn btn-large btn-primary" OnClick="Bt_Export_Click" 
+                                                Width="100px" />   
+                                                &nbsp;&nbsp;&nbsp;&nbsp;   
                                                 <asp:Button ID="btnNext" runat="server" 
                                                     OnClick="btnNext_Click" Style="display: none" Text="Next" />
                                             </td>
@@ -214,7 +219,10 @@
             </tr>
                <tr>
                 <td>
-                    &nbsp;</td>
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" 
+                        runat="server">
+                    </dx:ASPxGridViewExporter>
+                   </td>
             </tr>
         </table>
     

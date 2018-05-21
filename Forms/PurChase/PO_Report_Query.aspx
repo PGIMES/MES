@@ -97,8 +97,8 @@
             <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
      
-     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                    <ContentTemplate>
+<%--     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>--%>
                         <div class="panel-body">
                             <div class="col-sm-12">
 
@@ -135,6 +135,12 @@
                                             &nbsp;<td>
                                     <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   
                                                
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <asp:Button ID="Bt_Export" runat="server" 
+                                                    class="btn btn-large btn-primary" OnClick="Bt_Export_Click" 
+                                                    Text="导出" Width="100px" />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
+                                               
                                             </td>
                                     </tr>
 
@@ -147,12 +153,12 @@
                             </div>
 
                         </div>
-                    </ContentTemplate>
+                   <%-- </ContentTemplate>
                     <Triggers>
                         <asp:PostBackTrigger ControlID="Bt_select" />
 
                     </Triggers>
-                </asp:UpdatePanel>
+                </asp:UpdatePanel>--%>
 
     <div runat="server" id="DIV1" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px">
           <table>
@@ -210,7 +216,10 @@
             </tr>
                 <tr>
                 <td>
-                    &nbsp;</td>
+                     <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" 
+                        runat="server">
+                    </dx:ASPxGridViewExporter>
+                    </td>
             </tr>
                <tr>
                 <td>

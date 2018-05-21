@@ -22,10 +22,10 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
         if (!IsPostBack)
         {   //初始化日期
             ViewState["empname"] = LogUserModel.UserName;
-            txtDateFrom.Text = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd");
+            txtDateFrom.Text = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
 
             txtDateTo.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            QueryASPxGridView();
+           // QueryASPxGridView();
         }
         //else
         //{
@@ -120,5 +120,11 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
         result.Append(string.Format("update [dbo].[PUR_PR_Dtl_Form] set [Status]='1' where [PRNo]='{0}' and [rowid]={1}  ", (string)ViewState["prno"], (string)ViewState["rowid"]));
         int rows = DbHelperSQL.ExecuteSql(result.ToString());
         QueryASPxGridView();
+    }
+    protected void Bt_Export_Click(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+
+        ASPxGridViewExporter1.WriteXlsToResponse("请购单"+ System.DateTime.Now.ToString("yyyyMMdd"));//导出到Excel
     }
 }

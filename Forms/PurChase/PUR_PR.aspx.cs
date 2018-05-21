@@ -121,8 +121,9 @@ public partial class PUR_PR : PGIBasePage
                 prtype.ClearSelection();
                 item.Selected=true;
             }
-             
-           // formstate.Text = dtMst.Rows[0]["formstate"] == null ? "" : dtMst.Rows[0]["formstate"].ToString();
+            //显示文件
+            ShowFile(dtMst.Rows[0]["files"]==null? "": dtMst.Rows[0]["files"].ToString(),'|');
+            
         }
          
 
@@ -252,7 +253,7 @@ public partial class PUR_PR : PGIBasePage
 
     #region "WebMethod"
    /// <summary>
-    /// 获取指定物料1年最低历史单价
+    /// 获取指定物料最低历史单价
     /// </summary>
     /// <param name="P1">物料号</param>
     /// <param name="P2">暂不使用，空即可</param>
@@ -261,8 +262,15 @@ public partial class PUR_PR : PGIBasePage
     public static string GetHistoryPrice(string P1, string P2)
     {
         string result = "";
-         var sql= string.Format(" select top 1 [pc_amt[1]]] as amt from qad.dbo.qad_pc_mstr where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE()  and   pc_part='{0}'   order by [pc_amt[1]]] ", P1);
-       // var sql = string.Format("select top 1 hsdj as amt from [172.16.5.8].ecology.dbo.V_formtable_main_55_WL_JMB_min_dj where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE() and  pc_part='{0}' and pc_domain='{1}'", P1, P2);
+        var strB = new StringBuilder();//历史采购最低价
+        strB.Append(" SELECT top 1  (1+(CASE WHEN pod_taxc='17' AND ISNULL([pod_start_eff[1]]],pod_due_date)>='2018-05-01' THEN 16 ");
+        strB.Append("           WHEN pod_taxc = '17' AND ISNULL([pod_start_eff[1]]],pod_due_date)< '2018-05-01' THEN 17 ELSE pod_taxc END )/ 100.0) *[pod_pur_cost] ");
+        strB.Append(" FROM[qad].[dbo].[qad_pod_det]  where pod_nbr<> '11801'  and pod_type<> 'M'   ");//and ISNULL([pod_start_eff[1]]], pod_due_date)<= dateadd(year, -1, getdate())
+        strB.Append("   and pod_part = '{0}' and pod_domain = '{1}'   order by [pod_pur_cost] asc ");
+
+        var sql = string.Format(strB.ToString(), P1, P2);
+       //  var sql= string.Format(" select top 1 [pc_amt[1]]] as amt from qad.dbo.qad_pc_mstr where  pc_start between DATEADD(YEAR,-1,GETDATE()) and  GETDATE()  and   pc_part='{0}'   order by [pc_amt[1]]] ", P1); //取价格单
+              
         var value = DbHelperSQL.GetSingle(sql) ;        
         result = value==null?"":value.ToString();
         return result;
@@ -418,7 +426,7 @@ public partial class PUR_PR : PGIBasePage
             instanceid = Request.Form["txtInstanceID"]==""? (Request["instanceid"]): (txtInstanceID.Text);
         }
         //Save file
-        var fileup = (FileUpload)this.FindControl("files");
+        var fileup = (FileUpload)this.FindControl("file");
         var filepath = "";
         if (fileup != null)
         {   if (fileup.HasFile)
@@ -426,7 +434,7 @@ public partial class PUR_PR : PGIBasePage
                 var filename = fileup.FileName;
                 SaveFile(fileup,  strprno , out filepath, filename, filename);
                 //更新文件目录
-                string sqlupdatefilecolum = string.Format("update pur_pr_main_form set files='{0}' where id='{1}'", filepath, instanceid.ToString());
+                string sqlupdatefilecolum = string.Format("update pur_pr_main_form set files='{0}' where prno='{1}'", filepath, strprno);
                 DbHelperSQL.ExecuteSql(sqlupdatefilecolum);
                 flag = true;
             }
@@ -487,6 +495,7 @@ public partial class PUR_PR : PGIBasePage
     public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldName,string newName )
     {
         var path = MapPath("~") +  savepath + "\\" + subpath;
+        filepath = "";
         //Create directory
         if (!System.IO.Directory.Exists(path))
         {
@@ -496,12 +505,42 @@ public partial class PUR_PR : PGIBasePage
         var filename = "";
         if (fileupload.HasFile)
         {
-            filename = fileupload.FileName.Replace(oldName, newName);
-            path = path + "\\" + filename;            
-            fileupload.SaveAs(path.Replace("&", "_").TrimStart(' '));           
+            var list = fileupload.PostedFiles;
+            foreach (var item in list)
+            {
+                filename = item.FileName ;
+                 
+                var Svrpath = path  +"\\" + filename;            
+                item.SaveAs(Svrpath.Replace("&", "_").TrimStart(' '));
+
+                filepath  = filepath + "\\" + savepath + "\\" + subpath + "\\" + filename.Replace("&", "_").TrimStart(' ')+"|";
+            }
+                      
         }
         //return save path
-        filepath ="\\"+ savepath + "\\" + subpath+ "\\"+filename.Replace("&", "_").TrimStart(' ');
+        filepath = filepath.TrimEnd('|');
+        //filepath ="\\"+ savepath + "\\" + subpath+ "\\"+filename.Replace("&", "_").TrimStart(' ');
+    }
+
+    public void ShowFile(string filestring,char splitchar)
+    {
+        var arrFile = filestring.Split(splitchar);
+        foreach(string file in arrFile)
+        {
+            var filename = file.Substring(file.LastIndexOf(@"\")+1);
+            HyperLink link = new HyperLink() {
+                ID = "lnk_" + file,
+                NavigateUrl = file,
+                Text = filename,
+                Target = "_blank"
+                
+            };
+            link.Attributes.Add("style","padding-left:10px;");
+            filecontainer.Controls.AddAt(0,link);
+        }
+        if (arrFile.Length == 0) {
+            Label lbl = new Label() { Text = "无附件" };
+            filecontainer.Controls.AddAt(0,lbl ); }
     }
     #endregion
 

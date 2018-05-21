@@ -254,7 +254,8 @@
                     // alert(data.d)
                     //$.each(eval(data.d), function (i, item) {  })                              
                         if (data.d == "") {
-                            layer.alert("未获取到历史最低价.");                            
+                            layer.alert("未获取到历史最低价.");  
+                            $("#"+ctrl).val("");
                         }
                         else {
                             var reg = /([0-9]+\.[0-9]{4})[0-9]*/;
@@ -699,6 +700,16 @@
                                         </dx:ASPxGridView>
 
                                       </ContentTemplate></asp:UpdatePanel>
+
+                                </div>
+                                <div class="marks">
+                                    <asp:Panel id="filecontainer" runat="server" GroupingText="附件">
+                                        <div style="margin-top:10px">
+                                            <asp:FileUpload runat="server" ID="file" AllowMultiple="true"  />
+                                        </div>
+                                    </asp:Panel>
+                                    
+
                                 </div>
                             </div>
                         </div>
@@ -718,7 +729,10 @@
                                     <td width="100px">
                                         <label>处理意见：</label></td>
                                     <td>
-                                        <input id="comment" type="text" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" /></td>
+                                        <textarea id="comment"  placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+
+                                        
+                                    </td>
                                 </tr>
 
                             </table>
