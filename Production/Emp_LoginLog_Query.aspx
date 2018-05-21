@@ -7,7 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
      <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
      <script type="text/javascript">
-        $("#mestitle").text("【BMW/<%=this.location%>/<%=this.m_slocation%>/登录查询】");
+        $("#mestitle").text("【BMW/<%=this.location%>/<%=this.m_slocation%>/登入查询】");
     </script>
 
     
@@ -21,7 +21,7 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="font-size:13px;;">
                         <table class="tblCondition" style=" border-collapse: collapse;">
                             <tr>
-                                <td style="width:70px;">登录日期</td>
+                                <td style="width:70px;">登入日期</td>
                                 <td style="width:110px;">
                                     <dx:ASPxDateEdit ID="txtdate1" runat="server"  class="form-control input-s-sm" Width="100px"></dx:ASPxDateEdit>
                                 </td>
@@ -57,7 +57,7 @@
                 <div class="panel-heading" >
                     <table style="width:100%;">
                         <tr>
-                            <td><strong data-toggle="collapse" data-target="#gscs">登录清单</strong></td>
+                            <td><strong data-toggle="collapse" data-target="#gscs">登入清单</strong></td>
                             <td style=" text-align:right;"></td>
                         </tr>
                     </table>
