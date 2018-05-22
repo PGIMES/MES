@@ -106,7 +106,7 @@ public class MaterialBase_CLASS
                new SqlParameter("@isSchedule",isSchedule)
        };
         DataTable dt = new DataTable();
-        return SQLHelper.GetDataTable("PGI_BASE_PART_ForproductsDay", param);
+        return SQLHelper.GetDataTable("Pur_Schedule", param);
     }
 
 }
