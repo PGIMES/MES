@@ -68,7 +68,7 @@
                             <tr>
                                 <td valign="top"  >
                                     <dx:aspxgridview ID="gv1"  runat="server" EnableCallBacks="true"   KeyFieldName="id"  Theme="MetropolisBlue"
-                                         OnHtmlDataCellPrepared="gv1_HtmlDataCellPrepared" OnPageIndexChanged="gv1_PageIndexChanged" OnHtmlRowCreated="gv1_HtmlRowCreated">
+                                         OnHtmlDataCellPrepared="gv1_HtmlDataCellPrepared" OnPageIndexChanged="gv1_PageIndexChanged"> <%--OnHtmlRowCreated="gv1_HtmlRowCreated"--%>
                                     <SettingsPager PageSize="1000" ></SettingsPager>
                                     <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                                     <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />

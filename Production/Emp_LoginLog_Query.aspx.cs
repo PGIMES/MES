@@ -88,23 +88,23 @@ public partial class Production_Emp_LoginLog_Query : System.Web.UI.Page
 
 
 
-    protected void gv1_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
-    {
-        if (e.RowType != GridViewRowType.Data)
-        {
-            return;
-        }
+    //protected void gv1_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    //{
+    //    if (e.RowType != GridViewRowType.Data)
+    //    {
+    //        return;
+    //    }
 
-        int remarkindex = 0; 
-        for (int i = 0; i < this.gv1.DataColumns.Count; i++)
-        {
-            if (this.gv1.DataColumns[i].FieldName == "remark")
-            {
-                remarkindex = i;
-            }
-        }
+    //    int remarkindex = 0; 
+    //    for (int i = 0; i < this.gv1.DataColumns.Count; i++)
+    //    {
+    //        if (this.gv1.DataColumns[i].FieldName == "remark")
+    //        {
+    //            remarkindex = i;
+    //        }
+    //    }
 
-        e.Row.Cells[remarkindex].Text= "登入留言:" + (string)e.GetValue("login_remark") + "<br />登出留言:" + (string)e.GetValue("logout_remark");
+    //    e.Row.Cells[remarkindex].Text= "登入留言:" + (string)e.GetValue("login_remark") + "<br />登出留言:" + (string)e.GetValue("logout_remark");
 
-    }
+    //}
 }
