@@ -1,4 +1,4 @@
-﻿<%@ Page Title="采购单查询" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="PO_Report_Query.aspx.cs" Inherits="Forms_PurChase_PO_Report_Query" %>
+﻿<%@ Page Title="价格单查询" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="PUR_Report_price.aspx.cs" Inherits="Forms_PurChase_PUR_Report_price" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.Web" TagPrefix="dx" %>
@@ -67,7 +67,7 @@
     <script src="../../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
     <script type="text/javascript">
-        $("#mestitle").text("【采购单查询】");
+        $("#mestitle").text("【价格单查询】");
         jQuery.fn.rowspan = function (colIdx) {//封装jQuery小插件用于合并相同内容单元格(列)  
             return this.each(function () {
                 var that;
@@ -105,23 +105,32 @@
                                 <table>
 
                                     <tr>
-                                        <td>采购类别:
+                                        <td>工厂:
                                         </td>
                                         <td>
-                                            <asp:DropDownList ID="drop_type" runat="server" class="form-control input-s-sm ">
-                                                <asp:ListItem>存货</asp:ListItem>
-                                                <asp:ListItem>设备</asp:ListItem>
-                                                <asp:ListItem>设施</asp:ListItem>
-                                                <asp:ListItem>工夹模具</asp:ListItem>
-                                                <asp:ListItem>IT硬件/软件</asp:ListItem>
-                                                <asp:ListItem>服务及其他</asp:ListItem>
+                                            <asp:DropDownList ID="drop_gc" runat="server" class="form-control input-s-sm ">
+                                                <asp:ListItem>ALL</asp:ListItem>
+                                                <asp:ListItem>上海工厂</asp:ListItem>
+                                                <asp:ListItem>昆山工厂</asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         
 
                                       
 
-                                        <td>创建日期;</td>
+                                        <td>物料号</td>
+                                        
+
+                                      
+
+                                        <td>
+                                   <asp:TextBox ID="txtwlh" class="form-control" runat="server" Width="100px"></asp:TextBox>
+                                        </td>
+                                        
+
+                                      
+
+                                        <td>对接日期;</td>
                                         <td >
                                    <asp:TextBox ID="txtDateFrom" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
                                 </td>

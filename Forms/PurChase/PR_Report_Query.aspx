@@ -177,7 +177,11 @@
               <SettingsPager PageSize="1000">
                      
                 </SettingsPager>
-                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" 
+                <Styles>
+            <AlternatingRow Enabled="true" />
+           
+        </Styles>
+                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="VirtualSmooth" VerticalScrollableHeight="500"
                              ShowFilterRowMenuLikeItem="True"   ShowGroupPanel="True" 
                              ShowFooter="True"/>
             <SettingsSearchPanel Visible="True" />
