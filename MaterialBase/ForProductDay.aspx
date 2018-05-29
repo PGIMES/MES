@@ -45,27 +45,32 @@
         </div>
     </div>
 
-    <%--<div>
+    <div class="panel-body">
+    <div class="col-sm-12">
         <table>
             <tr>
-                <td>--%>
-                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1000px" OnHtmlRowPrepared="gv_pt_HtmlRowPrepared" OnHtmlDataCellPrepared="gv_pt_HtmlDataCellPrepared" OnPageIndexChanged="gv_pt_PageIndexChanged">
+                <td>
+                    <dx:ASPxGridView ID="gv_pt" runat="server" KeyFieldName="wlh" AutoGenerateColumns="False" Width="1230px" OnHtmlRowPrepared="gv_pt_HtmlRowPrepared" OnHtmlDataCellPrepared="gv_pt_HtmlDataCellPrepared" OnPageIndexChanged="gv_pt_PageIndexChanged">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" />
                         <SettingsPager PageSize="1000" />
                         <SettingsSearchPanel Visible="True" />
+                        <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                         <SettingsFilterControl AllowHierarchicalColumns="True" />
                         <Columns>
                             <dx:GridViewDataTextColumn Caption="序号" FieldName="" VisibleIndex="1" Width="40px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domainname" VisibleIndex="1" Width="100px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domainname" VisibleIndex="1" Width="80px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" VisibleIndex="1" Width="100px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="物料名称" FieldName="wlmc" VisibleIndex="2" Width="120px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料名称" FieldName="wlmc" VisibleIndex="2" Width="150px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="刀具类型" FieldName="djlx" VisibleIndex="2" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料状态" FieldName="pt_status" VisibleIndex="2" Width="70px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="安全库存" FieldName="aqkc" VisibleIndex="3" Width="80px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="用于产品" FieldName="pgi_no" VisibleIndex="4" Width="120px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="用于产品Sum" FieldName="pgi_no_sum" VisibleIndex="5" Width="200px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="PPAP日期" FieldName="ppap_date2" VisibleIndex="6" Width="120px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="PPAP日期" FieldName="ppap_date2" VisibleIndex="6" Width="100px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="剩余天数" FieldName="sydays" VisibleIndex="7" Width="80px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="是否建立日程" FieldName="isSchedule" VisibleIndex="8" Width="80px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="purchase_days" FieldName="purchase_days" VisibleIndex="8"
+                            <dx:GridViewDataTextColumn Caption="是否需要<br />建立日程" FieldName="isNeedSchedule" VisibleIndex="8" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="是否建立日程" FieldName="isSchedule" VisibleIndex="9" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="purchase_days" FieldName="purchase_days" VisibleIndex="10"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
@@ -74,10 +79,10 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-              <%--  </td>
+                </td>
             </tr>
         </table>
-    </div>--%>
-
+    </div>
+    </div>
 </asp:Content>
 
