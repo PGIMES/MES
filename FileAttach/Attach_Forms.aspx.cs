@@ -10,133 +10,12 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-#region 文件model
-public class attach_forms
-{
-    public attach_forms()
-    {
-        //
-        // TODO: 在此处添加构造函数逻辑
-        //       
-
-    }
-    /// <summary>
-    /// 序号，记载数据session中key
-    /// </summary>
-    public Int64 rownum { get; set; }
-
-    /// <summary>
-    /// id，数据库id字段
-    /// </summary>
-    public Int64 id { get; set; }
-
-    /// <summary>
-    /// 原本文件名称
-    /// </summary>
-    public string OriginalFile { get; set; }
-
-    /// <summary>
-    /// 文件在服务器上的相对路径\UploadFile\表单名称\表单编号\新文件名称
-    /// </summary>
-    public string FilePath { get; set; }
-
-    /// <summary>
-    // 文件后缀名
-    /// </summary>
-    public string FileExtension { get; set; }
-
-    /// <summary>
-    /// 上传文件人
-    /// </summary>
-    public string CreateUser { get; set; }
-
-    /// <summary>
-    /// 上传文件时间
-    /// </summary>
-    public DateTime CreateDate { get; set; }
-
-    /// <summary>
-    /// 标记,新增add,删除del,已存在 空
-    /// </summary>
-    public string flag { get; set; }
-
-}
-#endregion
-
-#region Datatable与list转换
-public static class Extensetion
-{
-    /// <summary>    
-    /// 将集合类转换成DataTable    
-    /// </summary>    
-    /// <param name="list">集合</param>    
-    /// <returns></returns>    
-    public static DataTable ToDataTableTow(IList list)
-    {
-        DataTable result = new DataTable();
-        if (list.Count > 0)
-        {
-            PropertyInfo[] propertys = list[0].GetType().GetProperties();
-
-            foreach (PropertyInfo pi in propertys)
-            {
-                result.Columns.Add(pi.Name, pi.PropertyType);
-            }
-            foreach (object t in list)
-            {
-                ArrayList tempList = new ArrayList();
-                foreach (PropertyInfo pi in propertys)
-                {
-                    object obj = pi.GetValue(t, null);
-                    tempList.Add(obj);
-                }
-                object[] array = tempList.ToArray();
-                result.LoadDataRow(array, true);
-            }
-        }
-        return result;
-    }
-
-    /// <summary>    
-    /// DataTable 转换为List 集合    
-    /// </summary>    
-    /// <typeparam name="TResult">类型</typeparam>    
-    /// <param name="dt">DataTable</param>    
-    /// <returns></returns>    
-    public static List<T> ToList<T>(this DataTable dt) where T : class, new()
-    {
-        //创建一个属性的列表    
-        List<PropertyInfo> prlist = new List<PropertyInfo>();
-        //获取TResult的类型实例  反射的入口    
-
-        Type t = typeof(T);
-
-        //获得TResult 的所有的Public 属性 并找出TResult属性和DataTable的列名称相同的属性(PropertyInfo) 并加入到属性列表     
-        Array.ForEach<PropertyInfo>(t.GetProperties(), p => { if (dt.Columns.IndexOf(p.Name) != -1) prlist.Add(p); });
-
-        //创建返回的集合    
-
-        List<T> oblist = new List<T>();
-
-        foreach (DataRow row in dt.Rows)
-        {
-            //创建TResult的实例    
-            T ob = new T();
-            //找到对应的数据  并赋值    
-            prlist.ForEach(p => { if (row[p.Name] != DBNull.Value) p.SetValue(ob, row[p.Name], null); });
-            //放入到返回的集合中.    
-            oblist.Add(ob);
-        }
-        return oblist;
-    }
-}
-#endregion
 
 public partial class FileAttach_Attach_Forms : System.Web.UI.Page
 {
     AttachUpload AttachUpload = new AttachUpload();
     //保存上传文件路径
-    public static string savepath = "", formid = "", stepid = "", formno = "", filesource = "fileupload";
+    public static string savepath = "", formid = "", stepid = "", formno = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -166,6 +45,7 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
 
             Session["LogUser"] = LogUserModel;
 
+            
             QueryASPxGridView(1);
         }
         if (gv_list.IsCallback)
@@ -174,25 +54,51 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
         }
     }
 
-    public void QueryASPxGridView(int flag=0)
+    public void QueryASPxGridView(int flag = 0)
     {
         if (flag == 1)
         {
-            DataSet ds = AttachUpload.AttachUpload_List("select_form", formid, stepid, formno);
-            List<attach_forms> Listw = Extensetion.ToList<attach_forms>(ds.Tables[0]);
-            Session["attach_forms"] = Listw;
-        }
-        List<attach_forms> List = (List<attach_forms>)Session["attach_forms"];
-        var List_tp = List.Where(item => item.flag != "del").ToList();
+            DataTable dt_o = (DataTable)Session["attach_forms"];
+            bool bf = false;//变量为true，需要查询数据库的数据出来
+            if (dt_o == null) { bf = true; }
+            else
+            {
+                DataRow[] drs_session = dt_o.Select("formid='" + formid + "' and stepid='" + stepid + "' and wlh='" + formno + "'");
+                if (drs_session.Length <= 0) { bf = true; }
+            }
 
-        gv_list.DataSource = List_tp;
+            if (bf)
+            {
+                DataSet ds = AttachUpload.AttachUpload_List("select_form", formid, stepid, formno);
+                if (dt_o == null)
+                {
+                    dt_o = ds.Tables[0].Clone();
+                }
+                foreach (DataRow item in ds.Tables[0].Rows)
+                {
+                    dt_o.Rows.Add(item.ItemArray);
+                }
+                Session["attach_forms"] = dt_o;
+            }
+           
+        }
+
+        DataTable dt_n = (DataTable)Session["attach_forms"];
+        DataRow[] drs = dt_n.Select("flag<>'del' and formid='" + formid + "'and stepid='" + stepid + "' and wlh='" + formno + "'");
+
+        DataTable dt = dt_n.Clone();
+        foreach (DataRow row in drs)  // 将查询的结果添加到dt中； 
+        {
+            dt.Rows.Add(row.ItemArray);
+        }
+
+        gv_list.DataSource = dt;
         gv_list.DataBind();
     }
 
     protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
     {
-        List<attach_forms> List = (List<attach_forms>)Session["attach_forms"];
-        attach_forms af = new attach_forms();
+        DataTable dt = (DataTable)Session["attach_forms"];
 
         string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
         string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
@@ -207,18 +113,21 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
         long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
         string sizeText = sizeInKilobytes.ToString() + " KB";
 
-        af.rownum = List.Count + 1;
-        af.id = 0;
-        af.OriginalFile = name;
-        af.FilePath = "\\" + savepath + "\\" + resultFileName;
-        af.FileExtension = resultExtension;
-        af.CreateUser= ((LoginUser)Session["LogUser"]).UserId;
-        af.CreateDate = DateTime.Now;
-        af.flag = "add";
+        DataRow dr = dt.NewRow();
+        dr["rownum"] = dt.Rows.Count <= 0 ? 1 : Convert.ToInt32(dt.Rows[dt.Rows.Count - 1]["rownum"]) + 1;
+        dr["id"] = 0;
+        dr["formid"] = formid;
+        dr["stepid"] = stepid;
+        dr["wlh"] = formno;
+        dr["OriginalFile"] = name;
+        dr["FilePath"] = "\\" + savepath + "\\" + resultFileName;
+        dr["FileType"] = resultExtension;
+        dr["CreateDate"] = DateTime.Now;
+        dr["CreateUser"] = ((LoginUser)Session["LogUser"]).UserId; ;
+        dr["flag"] = "add";
 
-
-        List.Add(af);
-        Session["attach_forms"] = List; 
+        dt.Rows.Add(dr);
+        Session["attach_forms"] = dt;
 
         e.CallbackData = name + "|" + "\\" + savepath + "\\" + resultFileName + "|" + sizeText;
 
@@ -247,7 +156,7 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
 
     protected void btn_del_Click(object sender, EventArgs e)
     {
-        List<attach_forms> List = (List<attach_forms>)Session["attach_forms"];
+        DataTable dt = (DataTable)Session["attach_forms"];
 
         List<object> lSelectValues = gv_list.GetSelectedFieldValues("rownum");
 
@@ -259,12 +168,17 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
 
         for (int i = 0; i < lSelectValues.Count; i++)
         {
-            var List_tp = List.Where(item => item.rownum == (Int64)lSelectValues[i]).ToList();
-            foreach (var tp in List_tp)
+            for (int j = 0; j < dt.Rows.Count; j++)
             {
-                tp.flag = "del";
+                if (dt.Rows[j]["rownum"].ToString()== lSelectValues[i].ToString())
+                {
+                    dt.Rows[j]["flag"] = "del";
+                }
             }
         }
+
+        Session["attach_forms"] = dt;
+
         QueryASPxGridView();
     }
 
@@ -282,49 +196,6 @@ public partial class FileAttach_Attach_Forms : System.Web.UI.Page
     //}
 
 
-    /// <summary>
-    /// 文件记录保存到数据库
-    /// </summary>
-
-    public void UpdateToDB(string formid_save, string stepid_save, string formno_save, bool is_movefileToFormno)
-    {
-        List<attach_forms> List = (List<attach_forms>)Session["attach_forms"];
-        foreach (attach_forms af in List)
-        {
-            if (af.flag == "") { continue; }
-
-            string rfp = MapPath("~") + af.FilePath;
-
-            if (af.flag == "del")//id=0只有文件，没有记录，而且文件没有移动到formno下面；id>0既有文件，又有记录，而且文件在formno下面
-            {
-                File.Delete(rfp);//删除文件
-                if (af.id > 0)
-                {
-                    AttachUpload.AttachUpload_delete("delete", af.id.ToString());
-                }
-            }
-            if (af.flag == "add")
-            {
-                if (is_movefileToFormno)
-                {
-                    string filepath = rfp.Substring(0, rfp.LastIndexOf(@"\")) + @"\" + formno + @"\";
-
-                    string despath = MapPath("~") + filepath;
-                    if (!System.IO.Directory.Exists(despath))
-                    {
-                        System.IO.Directory.CreateDirectory(despath);
-                    }
-                    File.Move(rfp, despath + Path.GetFileName(rfp));
-
-                    af.FilePath = filepath + Path.GetFileName(rfp);//移动成功之后修改路径
-                }
-                AttachUpload.AttachUpload_Edit("insert_form", formid, stepid
-                                   , formno, af.OriginalFile, af.FilePath
-                                   , af.FileExtension, filesource, af.CreateUser);
-            }
-        }
-        Session["attach_forms"] = null;//保存后置空
-    }
 
 
 }

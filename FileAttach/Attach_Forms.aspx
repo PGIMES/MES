@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title>文件上传，预览</title>
     <%--
         lpname:文件夹路径，存取路径为：UploadFile\lpname\formno\文件名称
         formid:表单网页名称路径
@@ -16,9 +16,9 @@
         option:view,edit
     --%>
 
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="../../Content/js/jquery.min.js"></script>
-    <script src="../../Content/js/bootstrap.min.js"></script>
+    <link href="../Content/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../Content/js/jquery.min.js"></script>
+    <script src="../Content/js/bootstrap.min.js"></script>
     <script src="../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -37,11 +37,11 @@
     <form id="form1" runat="server">
     <div>
         <div class="row row-container" style="margin:5px 15px 5px 15px;">
-            <div class="panel panel-info">
+            <%--<div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-target="#FJSC">
                     <strong>文件上传，预览</strong>
                 </div>
-                <div class="panel-body collapse in" id="FJSC">
+                <div class="panel-body collapse in" id="FJSC">--%>
                     <table Width="540px">
                         <tr>
                             <td Width="490px">
@@ -71,18 +71,18 @@
                             </dx:GridViewCommandColumn>       
                             <dx:GridViewDataTextColumn Caption="序号"  VisibleIndex="1" FieldName="" Width="50px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataHyperLinkColumn Caption="文件名称" VisibleIndex="2" FieldName="FilePath" Width="300px">
-                                <PropertiesHyperLinkEdit TextField="OriginalFile" />
+                                <PropertiesHyperLinkEdit TextField="OriginalFile" Target="_blank" />
                             </dx:GridViewDataHyperLinkColumn>
                             <dx:GridViewDataTextColumn Caption="创建时间" VisibleIndex="5"  FieldName="CreateDate" Width="150px"></dx:GridViewDataTextColumn>                  
                         </Columns>
                         <Styles>
-                            <Header BackColor="#99CCFF"></Header>
-                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Header BackColor="#e5e5e5"></Header>
+                            <FocusedRow BackColor="#e5e5e5" ForeColor="#0000CC"></FocusedRow><%--99CCFF--%>
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                </div>
-            </div>       
+               <%-- </div>
+            </div> --%>      
         </div>
     </div>
     </form>
