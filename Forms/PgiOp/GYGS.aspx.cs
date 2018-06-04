@@ -106,9 +106,11 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
             this.gv_d.DataSource = ldt;
             this.gv_d.DataBind();
+
         }
         //((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).SelectedIndexChanged += new EventHandler(TypeNo_SelectedIndexChanged);
 
+        JgNum_ValueChanged(sender, e);
     }
 
 
@@ -481,29 +483,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         gv_d.DataBind();
     }
 
-
-    protected void JgNum_TextChanged(object sender, EventArgs e)
+    protected void JgNum_ValueChanged(object sender, EventArgs e)
     {
-        ASPxTextBox txt = sender as ASPxTextBox;
-        //GridViewDataItemTemplateContainer container = txt.NamingContainer as GridViewDataItemTemplateContainer;
-        //string jgnum = gv_d.GetRowValues(container.VisibleIndex, container.Column.FieldName).ToString().Trim(); if (jgnum == "") { jgnum = "0"; }
-        //string jgnum2 = txt.Text;
-
-        //string JgSec = gv_d.GetRowValues(container.VisibleIndex, "JgSec").ToString().Trim(); if (JgSec == "") { JgSec = "0"; }
-        //string WaitSec = gv_d.GetRowValues(container.VisibleIndex, "WaitSec").ToString().Trim(); if (WaitSec == "") { WaitSec = "0"; }
-        //string ZjSecc = gv_d.GetRowValues(container.VisibleIndex, "ZjSecc").ToString().Trim(); if (ZjSecc == "") { ZjSecc = "0"; }
-
-        //float TjOpSec = 0;
-        //if (jgnum == "0") { TjOpSec = 0; }
-        //else
-        //{
-        //    TjOpSec = (Convert.ToInt32(JgSec) + Convert.ToInt32(WaitSec) + Convert.ToInt32(ZjSecc)) / Convert.ToInt32(jgnum);
-        //}
-      
+        update_gv_d();
     }
 
-
-    protected void JgNum_ValueChanged(object sender, EventArgs e)
+    public void update_gv_d()
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
         for (int i = 0; i < ldt.Rows.Count; i++)
@@ -531,22 +516,22 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             if (Convert.ToDecimal(ldt.Rows[i]["TjOpSec"].ToString()) == 0) { ldt.Rows[i]["col3"] = 0; }//单台85%产量
             else
             {
-                ldt.Rows[i]["col3"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) * Convert.ToDecimal(0.85),0);
+                ldt.Rows[i]["col3"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) * Convert.ToDecimal(0.85), 0);
             }
 
             if (ldt.Rows[i]["col2"].ToString() == "") { ldt.Rows[i]["col4"] = 0; }//一人85%产量
             else
             {
-                ldt.Rows[i]["col4"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["col2"]) * Convert.ToDecimal(ldt.Rows[i]["col3"]),0);
+                ldt.Rows[i]["col4"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["col2"]) * Convert.ToDecimal(ldt.Rows[i]["col3"]), 0);
             }
 
-            if (Convert.ToDecimal(ldt.Rows[i]["JHour"].ToString()) == 0) { ldt.Rows[i]["col5"] = 0; }//整线班产量
+            if (Convert.ToDecimal(ldt.Rows[i]["JSec"].ToString()) == 0) { ldt.Rows[i]["col5"] = 0; }//整线班产量
             else
             {
-                ldt.Rows[i]["col5"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["JSec"]) * Convert.ToDecimal(0.85),0);
+                ldt.Rows[i]["col5"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["JSec"]) * Convert.ToDecimal(0.85), 0);
             }
 
-            if (ldt.Rows[i]["col1"].ToString() == ""){ ldt.Rows[i]["FinishHour"] = Math.Round(0.00, 2); }
+            if (ldt.Rows[i]["col1"].ToString() == "") { ldt.Rows[i]["FinishHour"] = Math.Round(0.00, 2); }
             else
             {
                 ldt.Rows[i]["FinishHour"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["JHour"]) * Convert.ToDecimal(ldt.Rows[i]["col1"]) * Convert.ToDecimal(ldt.Rows[i]["col4"]), 2);//完工工时
@@ -557,25 +542,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         this.gv_d.DataBind();
     }
 
-    protected void JgSec_TextChanged(object sender, EventArgs e)
-    {
-
-    }
-
-    protected void WaitSec_TextChanged(object sender, EventArgs e)
-    {
-
-    }
-
-    protected void ZjSecc_TextChanged(object sender, EventArgs e)
-    {
-
-    }
-
-    protected void JtNum_TextChanged(object sender, EventArgs e)
-    {
-
-    }
 
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script
