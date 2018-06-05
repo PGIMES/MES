@@ -56,7 +56,7 @@
                             <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_mtl_tl" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_cst_tot" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10数量" FieldName="qty1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10金额" FieldName="amount1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10-20数量" FieldName="qty2" Width="70px"></dx:GridViewDataTextColumn>
