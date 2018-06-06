@@ -55,7 +55,7 @@
             }
 
 
-            $("input[id*='rbltypeno']").change(function () {  
+            $("input[id*='typeno']").change(function () {  
                   gv_d.PerformCallback();
             }); 
 
@@ -92,12 +92,12 @@
         }
 
         function Get_wkzx(vi){
-            var url = "/select/select_wkzx.aspx?domain="+$("[id*='domain']").val()+"&vi="+vi;
+            var url = "/select/select_wkzx.aspx?domain="+$("#CPXX input[id*='domain']").val()+"&vi="+vi;
 
             layer.open({
                 title:'工作中心选择',
                 type: 2,
-                area: ['500px', '500px'],
+                area: ['600px', '600px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
@@ -163,7 +163,7 @@
             
             <%=ValidScript%>
 
-            if(typeof($("#CPXX input[id*='rbltypeno']:checked").val())=="undefined"){
+            if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
                 msg+="【类别】不可为空.<br />";
             }
 
@@ -262,7 +262,7 @@
                 flag=false;
                 layer.alert(msg);
             }
-           return false;
+           return flag;
         }
 
     </script>

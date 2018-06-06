@@ -14,6 +14,9 @@ using System.Web.UI.WebControls;
 public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 {
     public string ValidScript = "";
+    public string fieldStatus;
+    public string DisplayModel;
+
     string m_sid = "";
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -47,16 +50,17 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.tblCPXX.Rows.Add(ls[i]);
         }
 
+        ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Clear();
         if (Request.QueryString["Option"] == null)
         {
-            ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).Items.Add("压铸");
-            ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).Items.Add("机加&质量");
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Add("压铸");
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Add("机加&质量");
         }
         else
         {
-            ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).Items.Add("压铸");
-            ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).Items.Add("机加");
-            ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).Items.Add("质量");
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Add("压铸");
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Add("机加");
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Items.Add("质量");
         }
 
 
@@ -94,29 +98,219 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
             else
             {
+                DataTable ldt = DbHelperSQL.Query("select * from PGI_GYGS_Main_Form where formno='" + this.m_sid + "'").Tables[0];
+                //表头基本信息
+                txt_CreateById.Value = ldt.Rows[0]["CreateById"].ToString();
+                txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
+                txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
+                txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
+                SetControlValue("PGI_GYGS_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                txt_domain.Text = ldt.Rows[0]["domain"].ToString();
+
                 lssql += " where GYGSNo='" + this.m_sid + "'  order by a.typeno,op";
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             this.gv_d.DataSource = ldt_detail;
             this.gv_d.DataBind();
 
+
+            //特殊处理，签核界面，明细的框框拿掉
+            lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                        where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
+                            and instanceid='{2}' and stepname='{3}'";
+            lssql = string.Format(lssql, StepID, FlowID, m_sid, "申请人");
+            DataTable ldt_flow = DbHelperSQL.Query(lssql).Tables[0];
+            if (ldt_flow.Rows.Count == 0)
+            {                
+                for (int i = 0; i < ldt_detail.Rows.Count; i++)
+                {
+                    btndel.Visible = false;                    
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgNum"], "JgNum")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgNum"], "JgNum")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgSec"], "JgSec")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgSec"], "JgSec")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["WaitSec"], "WaitSec")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["WaitSec"], "WaitSec")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["ZjSecc"], "ZjSecc")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["ZjSecc"], "ZjSecc")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JtNum"], "JtNum")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JtNum"], "JtNum")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col1"], "col1")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col1"], "col1")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).ReadOnly = true;
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
+
+                    this.btnflowSend.Text = "批准";
+                }
+            }
+            if (Request.QueryString["display"] != null)
+            {
+
+            }
         }
         else
         {
 
-            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
-            this.gv_d.DataSource = ldt;
-            this.gv_d.DataBind();
+            //DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+            //this.gv_d.DataSource = ldt;
+            //this.gv_d.DataBind();
 
         }
 
         /*JgNum_ValueChanged(sender, e);*/
+
+        DisplayModel = Request.QueryString["display"] ?? "0";
+        RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+        fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
 
 
     private bool SaveData()
     {
-        return true;
+        bool flag = true;// 保存数据是否成功标识
+        //定义总SQL LIST
+        List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
+
+        //获取表头
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYGS_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+
+        /*
+        //数据库字段设置不能为空，需要验证，利用ToolTip 设置的，
+        //此处head部分，已经使用前端脚本处理，只是不是根据数据库动态判断的,效能会好。。
+        for (int i = 0; i < ls.Count; i++)
+        {
+            Pgi.Auto.Common com = new Pgi.Auto.Common();
+            com = ls[i];
+            if (ls[i].Code == "")
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", ls[i].Value + " 不能为空!");
+                return false;
+            }
+
+        }*/
+
+        //表体生成SQL
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+
+        if (this.m_sid == "")
+        {
+            //没有单号，自动生成
+            string lsid = "R" + System.DateTime.Now.Year.ToString().Substring(3, 1) + System.DateTime.Now.Month.ToString("00");
+            this.m_sid = Pgi.Auto.Public.GetNo("R", lsid, 0, 4);
+
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "formno")
+                {
+                    ls[i].Value = this.m_sid;
+                    ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = this.m_sid;
+                    break;
+                }
+
+            }
+            //新增时增加创建人ID
+            Pgi.Auto.Common lccreate_byid = new Pgi.Auto.Common();
+            lccreate_byid.Code = "CreateById";
+            lccreate_byid.Key = "";
+            lccreate_byid.Value = txt_CreateById.Value;
+            ls.Add(lccreate_byid);
+
+            Pgi.Auto.Common lccreate_byname = new Pgi.Auto.Common();
+            lccreate_byname.Code = "CreateByName";
+            lccreate_byname.Key = "";
+            lccreate_byname.Value = txt_CreateByName.Value;
+            ls.Add(lccreate_byname);
+
+            Pgi.Auto.Common lccreate_bydept = new Pgi.Auto.Common();
+            lccreate_bydept.Code = "CreateByDept";
+            lccreate_bydept.Key = "";
+            lccreate_bydept.Value = txt_CreateByDept.Value;
+            ls.Add(lccreate_bydept);
+
+            Pgi.Auto.Common lccreate_date = new Pgi.Auto.Common();
+            lccreate_date.Code = "CreateDate";
+            lccreate_date.Key = "";
+            lccreate_date.Value = txt_CreateDate.Value;
+            ls.Add(lccreate_date);
+
+
+            //主表相关字段赋值到明细表
+            for (int i = 0; i < ldt.Rows.Count; i++)
+            {
+
+                for (int j = 0; j < ls.Count; j++)
+                {
+                    if (ls[j].Code.ToLower() == "formno")
+                    {
+                        ldt.Rows[i]["GYGSNo"] = ls[j].Value;
+                        break;
+                    }
+                }
+            }
+
+        }
+
+
+        //获取的表头信息，自动生成SQL，增加到SUM中
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_GYGS_Main_Form"));
+
+        //明细数据自动生成SQL，并增入SUM
+        List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_GYGS_Dtl_Form", "id", "Column1,numid,flag");
+        for (int i = 0; i < ls1.Count; i++)
+        {
+            ls_sum.Add(ls1[i]);
+        }
+
+        //明细删除增加到list中
+        if (Session["del"] != null)
+        {
+            DataTable ldt_del = (DataTable)Session["del"];
+            for (int i = 0; i < ldt_del.Rows.Count; i++)
+            {
+                Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+                ls_del.Sql = "delete from PGI_GYGS_Dtl_Form where id=" + ldt_del.Rows[i]["id"].ToString();
+                ls_sum.Add(ls_del);
+            }
+            Session["del"] = null;
+        }
+
+        //批量提交
+        int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+        if (ln > 0)
+        {
+            flag = true;
+            //var titletype = sformsate.Left(4) == "edit" ? "刀具修改" : "刀具申请";
+
+            string title = "工艺工时申请--" + this.m_sid;
+            script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
+                 "$('#customformtitle',parent.document).val('" + title + "');";
+
+        }
+        else
+        {
+            flag = false;
+        }
+
+        return flag;
     }
 
 
@@ -213,7 +407,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     public void SetGvRow()
     {
 
-        string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).SelectedValue;
+        string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
         string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Text;
         string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
         if (lstypeno == "" || lspgi_no == "")
@@ -823,7 +1017,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 HiddenField htxt = new HiddenField();
                 htxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
                 ltxt.AutoPostBack = false;
-                ltxt.ID = "rbl" + ldt.Rows[i]["control_id"].ToString().ToLower();
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
                 //ToolTip
                 ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
                 //是否服务器运行
@@ -936,6 +1130,244 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         return ls;
     }
+    #endregion
+
+    #region 将界面中控件值统计到List中
+
+    /// <summary>
+    /// 将界面中控件值统计到List中
+    /// </summary>
+    /// <param name="lsform_type">要显示字段大类</param>
+    /// <param name="lsform_div">要显示字段小类</param>
+    /// <param name="p">要统计的界面Page</param>
+    /// <param name="lscontrol_format">界面控件中要套用的控件ID格式</param>
+    /// <returns></returns>
+    public static List<Pgi.Auto.Common> GetControlValue(string lsform_type, string lsform_div, System.Web.UI.Page p, string lscontrol_format = "")
+    {
+        string lswhere = "";
+        if (lsform_type != "")
+        {
+            lswhere += " and form_type=@form_type";
+        }
+        if (lsform_div != "")
+        {
+            lswhere += " and form_div=@form_div";
+        }
+        string lsconn = ConfigurationSettings.AppSettings["ConnectionMES"];
+        DataTable ldt = Pgi.Auto.SQLHelper.ExecuteDataSet(lsconn, CommandType.Text, "select * from auto_form where 1=1 " + lswhere + "",
+            new SqlParameter[]{
+              new SqlParameter("@form_type",lsform_type)
+                ,new SqlParameter("@form_div",lsform_div)}).Tables[0];
+
+        List<Pgi.Auto.Common> ls = new List<Pgi.Auto.Common>();
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            string lscontrol_id = ldt.Rows[i]["control_id"].ToString().ToLower();
+            if (lscontrol_format != "")
+            {
+                lscontrol_id = lscontrol_format.Replace("{0}", lscontrol_id);
+            }
+            if (p.FindControl(lscontrol_id) != null)
+            {
+
+
+
+                Pgi.Auto.Common com = new Pgi.Auto.Common();
+                com.Code = ldt.Rows[i]["control_id"].ToString().ToLower();
+                string lstr = "0|0";
+                string initlstr = "0|0";//初始lstr字符，以便忘记配置值而报错
+                                        //-----------------------------------控件判断开始----------------------------------
+                if (ldt.Rows[i]["control_type"].ToString() == "TEXTBOX")
+                {
+                    // ((TextBox)p.FindControl(ldt.Rows[i]["control_id"].ToString())).Enabled = true;
+                    // com.Value = ((TextBox)p.FindControl(ldt.Rows[i]["control_id"].ToString())).Text;
+                    com.Value = p.Request.Form[lscontrol_id].ToString();
+                    ((TextBox)p.FindControl(lscontrol_id)).Text = p.Request.Form[lscontrol_id].ToString();
+                    lstr = ((TextBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "DROPDOWNLIST")
+                {
+                    com.Value = ((DropDownList)p.FindControl(lscontrol_id)).SelectedValue;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DropDownList)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXCOMBOBOX")
+                {
+                    //com.Value = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).Text;
+                    com.Value = "";
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "RadioButtonList")
+                {
+                    //com.Value = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).Text;
+                    com.Value = "";
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((RadioButtonList)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDATEEDIT")
+                {
+                    com.Value = ((DevExpress.Web.ASPxDateEdit)p.FindControl(lscontrol_id)).Text;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxDateEdit)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDROPDOWNEDIT")
+                {
+                    com.Value = ((DevExpress.Web.ASPxDropDownEdit)p.FindControl(lscontrol_id)).Text;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxDropDownEdit)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                //-----------------------------------控件判断结束----------------------------------
+
+                string[] ls1 = lstr.Split('|');
+                com.Key = ls1[0];
+                if (ls1[1] == "1" && com.Value == "")
+                {
+                    com.Value = ldt.Rows[i]["control_dest"].ToString();
+                    com.Code = "";
+                }
+                ls.Add(com);
+            }
+        }
+        return ls;
+    }
+    #endregion
+
+
+    #region 将TableRow栏位值赋值给页面中的控件
+
+    //把表中值初始化给控件 added by fish:
+    /// <summary>
+    /// 将TableRow栏位值赋值给页面中的控件
+    /// </summary>
+    /// <param name="lsform_type">页面识别参数</param>
+    /// <param name="lsform_div">div显示范围识别参数</param>
+    /// <param name="p">page</param>
+    /// <param name="dr">a DataRow</param>
+    public static void SetControlValue(string lsform_type, string lsform_div, System.Web.UI.Page p, DataRow dr, string lscontrolformat = "")
+    {
+        string lswhere = "";
+        if (lsform_type != "")
+        {
+            lswhere += " and form_type=@form_type";
+        }
+        if (lsform_div != "")
+        {
+            lswhere += " and form_div=@form_div";
+        }
+        string lsconn = ConfigurationSettings.AppSettings["ConnectionMES"];
+        DataTable ldt = Pgi.Auto.SQLHelper.ExecuteDataSet(lsconn, CommandType.Text, "select * from auto_form where 1=1 and isnull(control_id,'')<>''" + lswhere + "",
+            new SqlParameter[]{
+                                    new SqlParameter("@form_type",lsform_type)
+                                    ,new SqlParameter("@form_div",lsform_div)}).Tables[0];
+
+
+        foreach (DataRow row in ldt.Rows)
+        {
+            if (p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower()) != null)
+            {
+                var columnValue = dr[row["control_id"].ToString().ToLower()].ToString();
+                if (row["control_type"].ToString() == "TEXTBOX")
+                {
+                    ((TextBox)p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower())).Text = columnValue;
+                }
+                else if (row["control_type"].ToString() == "DROPDOWNLIST")
+                {
+                    var drop = (DropDownList)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (drop != null)
+                    {
+                        ListItem item = drop.Items.FindByValue(columnValue);
+                        if (item != null)
+                        {
+                            // drop.ClearSelection();
+                            //  item.Selected = true;
+                            drop.SelectedValue = columnValue;
+                        }
+                    }
+                }
+                else if (row["control_type"].ToString() == "RadioButtonList")
+                {
+                    var drop = (RadioButtonList)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (drop != null)
+                    {
+                        ListItem item = drop.Items.FindByValue(columnValue);
+                        if (item != null)
+                        {
+                            // drop.ClearSelection();
+                            //  item.Selected = true;
+                            drop.SelectedValue = columnValue;
+                        }
+                    }
+                }
+                else if (row["control_type"].ToString() == "ASPXCOMBOBOX")
+                {
+                    var drop = (DevExpress.Web.ASPxComboBox)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (drop != null)
+                    {
+
+                        drop.Value = columnValue;
+
+                    }
+                }
+                else if (row["control_type"].ToString() == "FILEUPLOAD")
+                {
+                    var upload = (FileUpload)p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower());
+                    var link = (HyperLink)p.FindControl(lscontrolformat + "link_" + row["control_id"].ToString().ToLower());
+                    if (link != null && columnValue != "")
+                    {
+                        link.NavigateUrl = columnValue;
+                        var name = columnValue.Substring(columnValue.LastIndexOf(@"\") + 1);
+                        link.Text = name;
+                        link.Target = "_blank";
+                    }
+                }
+
+            }
+        }
+        // return ls;
+    }
+
     #endregion
 
     /*
