@@ -92,6 +92,55 @@
             gv_d.PerformCallback();
         }
 
+        function RefreshRow(vi) {
+            var JgNum = eval('JgNum' + vi); var JgSec = eval('JgSec' + vi); var WaitSec = eval('WaitSec' + vi); var ZjSecc = eval('ZjSecc' + vi);var JtNum = eval('JtNum' + vi); 
+            var col1 = eval('col1' + vi); var col2 = eval('col2' + vi);var col6 = eval('col6' + vi);
+
+            var JgNum_value = Number($.trim(JgNum.GetText()) == "" ? 0 : $.trim(JgNum.GetText()));//每次加工数量
+            var JgSec_value = Number($.trim(JgSec.GetText()) == "" ? 0 : $.trim(JgSec.GetText()));//加工时长(秒)
+            var WaitSec_value = Number($.trim(WaitSec.GetText()) == "" ? 0 : $.trim(WaitSec.GetText()));//设备等待时间(秒)
+            var ZjSecc_value = Number($.trim(ZjSecc.GetText()) == "" ? 0 : $.trim(ZjSecc.GetText()));//装夹时间(秒)
+            var JtNum_value = Number($.trim(JtNum.GetText()) == "" ? 0 : $.trim(JtNum.GetText()));//机器台数
+            var col1_value = Number($.trim(col1.GetText()) == "" ? 0 : $.trim(col1.GetText()));//单台需要人数
+            var col2_value = Number($.trim(col2.GetText()) == "" ? 0 : $.trim(col2.GetText()));//本工序一人操作台数
+            var col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
+
+            var TjOpSec = eval('TjOpSec' + vi); var JSec = eval('JSec' + vi);var JHour = eval('JHour' + vi);
+            var col3 = eval('col3' + vi); var col4 = eval('col4' + vi);var col5 = eval('col5' + vi);var col7 = eval('col7' + vi);
+
+            //单台单件工序工时(秒)TjOpSec
+            var TjOpSec_value = 0;
+            if (JgNum_value != 0) { TjOpSec_value = (JgSec_value + WaitSec_value + ZjSecc_value) / JgNum_value; }
+            TjOpSec.SetText(TjOpSec_value.toFixed(2));
+
+            //单件工时(秒)
+            var JSec_value = 0;
+            if (JtNum_value != 0) { JSec_value = TjOpSec_value / JtNum_value; }
+            JSec.SetText(JSec_value.toFixed(2));
+
+            //单件工时(时)
+            var JHour_value = TjOpSec_value/3600;
+            JHour.SetText(JHour_value.toFixed(5));
+
+            //单台85%产量
+            var col3_value=0;
+            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.85; }
+            col3.SetText(col3_value.toFixed(0));
+
+            //一人85%产量
+            var col4_value=col2_value*col3_value;
+            col4.SetText(col4_value.toFixed(0));
+
+            //整线班产量
+            var col5_value=0;
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.85;}
+            col5.SetText(col5_value.toFixed(0));
+            
+            //单人产出工时
+            var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+            col7.SetText(col7_value.toFixed(2));
+        }
+
     </script>
 
     <style type="text/css">
@@ -325,6 +374,7 @@
                 <div class="panel-body " id="CPXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <div>
+                            <asp:TextBox ID="txt_domain" runat="server" style="display:none;"></asp:TextBox>
                             <%--<asp:UpdatePanel ID="UpdatePanel_cpxx" runat="server">
                                 <ContentTemplate>--%>
                                     <asp:Table Style="width: 100%;" border="0" runat="server" ID="tblCPXX" Font-Size="12px" >  
@@ -383,8 +433,269 @@
                                         <dx:GridViewDataTextColumn Caption="是否报工<br />(Y/N)" FieldName="IsBg" Width="50px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="每次加工<br />数量" FieldName="JgNum" Width="50px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="JgNum" Width="50px" runat="server" Value='<%# Eval("JgNum")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "JgNum"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="加工时长<br />(秒)" FieldName="JgSec" Width="50px" VisibleIndex="12">
+                                            <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="JgNum" Width="50px" runat="server" Value='<%# Eval("JgNum")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged" ></dx:ASPxTextBox>
+                                                <dx:ASPxTextBox ID="JgSec" Width="50px" runat="server" Value='<%# Eval("JgSec")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "JgSec"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="设备等待<br />时间(秒)" FieldName="WaitSec" Width="50px" VisibleIndex="12">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="WaitSec" Width="50px" runat="server" Value='<%# Eval("WaitSec")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "WaitSec"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="装夹时间<br />(秒)" FieldName="ZjSecc" Width="50px" VisibleIndex="13">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="ZjSecc" Width="50px" runat="server" Value='<%# Eval("ZjSecc")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "ZjSecc"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="机器台数" FieldName="JtNum" Width="50px" VisibleIndex="14">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="JtNum" Width="50px" runat="server" Value='<%# Eval("JtNum")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "JtNum"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                               
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(秒)" FieldName="TjOpSec" Width="60px" VisibleIndex="15">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="TjOpSec" Width="50px" runat="server" Value='<%# Eval("TjOpSec")%>' 
+                                                    ClientInstanceName='<%# "TjOpSec"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单件工时<br />(秒)" FieldName="JSec" Width="50px" VisibleIndex="16">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="JSec" Width="50px" runat="server" Value='<%# Eval("JSec")%>' 
+                                                    ClientInstanceName='<%# "JSec"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单件工时<br />(小时)" FieldName="JHour" Width="60px" VisibleIndex="17">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="JHour" Width="60px" runat="server" Value='<%# Eval("JHour")%>' 
+                                                    ClientInstanceName='<%# "JHour"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                             <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单台<br />需要人数" FieldName="col1" Width="50px" VisibleIndex="18">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="col1" Width="50px" runat="server" Value='<%# Eval("col1")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "col1"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                                             
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="60px" VisibleIndex="19">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="col2" Width="60px" runat="server" Value='<%# Eval("col2")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "col2"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                                                    
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="60px" VisibleIndex="20">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="col3" Width="50px" runat="server" Value='<%# Eval("col3")%>' 
+                                                    ClientInstanceName='<%# "col3"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="60px" VisibleIndex="21">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="col4" Width="50px" runat="server" Value='<%# Eval("col4")%>' 
+                                                    ClientInstanceName='<%# "col4"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="整线班产量" FieldName="col5" Width="60px" VisibleIndex="22">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="col5" Width="50px" runat="server" Value='<%# Eval("col5")%>' 
+                                                    ClientInstanceName='<%# "col5"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单人报工<br />数量" FieldName="col6" Width="60px" VisibleIndex="23">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="col6" Width="60px" runat="server" Value='<%# Eval("col6")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "col6"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                                                    
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="col7" Width="50px" runat="server" Value='<%# Eval("col7")%>' 
+                                                    ClientInstanceName='<%# "col7"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        
+                                        <%--<dx:GridViewDataTextColumn Caption="单台100%<br />产量" FieldName="TSumNum" Width="70px" VisibleIndex="18"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单台80%<br />产量" FieldName="TPec8Num" Width="70px" VisibleIndex="19"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="操作人数" FieldName="OpNum" Width="70px" VisibleIndex="25">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="OpNum" Width="70px" runat="server" Value='<%# Eval("OpNum")%>' ></dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>--%>
+
+                                        <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="30" >
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxButton ID="btn" runat="server" Text="新增行"   CommandName="Add"  ></dx:ASPxButton>          
+                                            </DataItemTemplate>                        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="numid" Width="0px" >
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="id" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="GYGSNo" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="UpdateById" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="UpdateByName" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="UpdateDate" Width="0px"> 
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                    </Columns>                                                
+                                    <Styles>
+                                        <Header BackColor="#E4EFFA"  ></Header>        
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
+                                    </Styles>                                          
+                                </dx:aspxgridview>
+
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ"> 
+                </div>
+                <div class="panel-body ">
+                    <table border="0"  width="100%"  >
+                        <tr>
+                            <td width="100px" ><label>处理意见：</label></td>
+                            <td>
+                                <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</asp:Content>
+
+<%--<dx:aspxgridview ID="Aspxgridview1" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
+                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  >                                   
+                                    <SettingsPager PageSize="1000"></SettingsPager>
+                                    <Settings ShowFooter="True" />
+                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <Columns>
+                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺段" FieldName="typeno" Width="60px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="op" Width="60px" runat="server" Value='<%# Eval("op")%>' ></dx:ASPxTextBox>                
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="140px" VisibleIndex="5">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="op_desc" Width="140px" runat="server" Value='<%# Eval("op_desc")%>' ></dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工序说明" FieldName="op_remark" Width="140px" VisibleIndex="6">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="op_remark" Width="140px" runat="server" Value='<%# Eval("op_remark")%>' ></dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="设备" FieldName="gzzx_desc" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工作中心<br />代码" FieldName="gzzx" Width="50px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="是否报工<br />(Y/N)" FieldName="IsBg" Width="50px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="每次加工<br />数量" FieldName="JgNum" Width="50px" VisibleIndex="10">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="JgNum" Width="50px" runat="server" Value='<%# Eval("JgNum")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged"></dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="加工时长<br />(秒)" FieldName="JgSec" Width="50px" VisibleIndex="12">
@@ -439,14 +750,7 @@
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
                                         
-                                        <%--<dx:GridViewDataTextColumn Caption="单台100%<br />产量" FieldName="TSumNum" Width="70px" VisibleIndex="18"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台80%<br />产量" FieldName="TPec8Num" Width="70px" VisibleIndex="19"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="操作人数" FieldName="OpNum" Width="70px" VisibleIndex="25">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="OpNum" Width="70px" runat="server" Value='<%# Eval("OpNum")%>' ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>--%>
+                                        
 
                                         <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="30" >
                                             <Settings AllowCellMerge="False" />
@@ -489,33 +793,13 @@
                                         <Header BackColor="#E4EFFA"  ></Header>        
                                         <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
                                     </Styles>                                          
-                                </dx:aspxgridview>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                </dx:aspxgridview>--%>
 
-        <div class="row row-container">
-            <div class="panel panel-info">
-                <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ"> 
-                </div>
-                <div class="panel-body ">
-                    <table border="0"  width="100%"  >
-                        <tr>
-                            <td width="100px" ><label>处理意见：</label></td>
-                            <td>
-                                <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-</asp:Content>
-
+<%--<dx:GridViewDataTextColumn Caption="单台100%<br />产量" FieldName="TSumNum" Width="70px" VisibleIndex="18"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="单台80%<br />产量" FieldName="TPec8Num" Width="70px" VisibleIndex="19"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="操作人数" FieldName="OpNum" Width="70px" VisibleIndex="25">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="OpNum" Width="70px" runat="server" Value='<%# Eval("OpNum")%>' ></dx:ASPxTextBox>                
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>--%>

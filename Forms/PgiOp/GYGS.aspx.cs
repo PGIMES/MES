@@ -108,9 +108,8 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.gv_d.DataBind();
 
         }
-        //((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).SelectedIndexChanged += new EventHandler(TypeNo_SelectedIndexChanged);
 
-        JgNum_ValueChanged(sender, e);
+        /*JgNum_ValueChanged(sender, e);*/
     }
 
 
@@ -120,10 +119,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     }
 
 
-    //private void TypeNo_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //    SetGvRow();
-    //}
     protected void btndel_Click(object sender, EventArgs e)
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
@@ -174,24 +169,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             DataRow ldr = ldt.NewRow();
             for (int j = 0; j < ldt.Columns.Count; j++)
             {
-
-                //判断合并单元格
-                //if (ldt.Columns[j].ColumnName == "daoju_no" || ldt.Columns[j].ColumnName == "daoju_desc" || ldt.Columns[j].ColumnName == "length")
-                //{
-                //    if (lnadd_rows == 1)
-                //    {
-                //        ldr[ldt.Columns[j].ColumnName] = ldt.Rows[lnindex][ldt.Columns[j].ColumnName];
-                //    }
-                //    else
-                //    {
-                //        ldr[ldt.Columns[j].ColumnName] = lsempty;
-                //    }
-                //}
-                //else
-                //{
-                //    ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
-                //}
-
                 if (ldt.Columns[j].ColumnName == "typeno" || ldt.Columns[j].ColumnName == "pgi_no")
                 {
                     ldr[ldt.Columns[j].ColumnName] = ldt.Rows[lnindex][ldt.Columns[j].ColumnName];
@@ -214,6 +191,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         this.gv_d.DataBind();
 
     }
+
     protected void gv_d_RowCommand(object sender, DevExpress.Web.ASPxGridViewRowCommandEventArgs e)
     {
         if (e.CommandArgs.CommandName == "Add")
@@ -232,7 +210,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$rbltypeno")).SelectedValue;
         string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Text;
-        //string lsdomain = ((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
+        string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
         if (lstypeno == "" || lspgi_no == "")
         {
             return;
@@ -242,7 +220,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         if (lstypeno == "压铸")
         {
             DataTable dt_gx = null;
-            dt_gx = DbHelperSQL.Query(@"select ro_op,ro_desc,ro_wkctr from [PGIHR].report.[dbo].qad_ro_det where ro_routing='" + lspgi_no + "' order by ro_op").Tables[0];// and ro_domain='"+ lsdomain + "'
+            dt_gx = DbHelperSQL.Query(@"select ro_op,ro_desc,ro_wkctr from [PGIHR].report.[dbo].qad_ro_det where ro_routing='" + lspgi_no + "' and ro_domain='" + lsdomain + "' order by ro_op").Tables[0];
             for (int i = 0; i < dt_gx.Rows.Count; i++)
             {
                 DataRow ldr = ldt.NewRow();
@@ -303,7 +281,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "4"; ldr["JgSec"] = "86"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "10"; ldr["JtNum"] = "2";
                         ldr["TjOpSec"] = "24.00"; ldr["JSec"] = "12.00"; ldr["JHour"] = "0.00666667";
                         ldr["col1"] = "0.5"; ldr["col2"] = "2"; ldr["col3"] = "1530"; ldr["col4"] = "3060"; ldr["col5"] = "3060";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
 
                     if (i == 2)
@@ -312,7 +290,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "16"; ldr["JgSec"] = "256"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "128"; ldr["JtNum"] = "2";
                         ldr["TjOpSec"] = "24.00"; ldr["JSec"] = "12.00"; ldr["JHour"] = "0.00666667";
                         ldr["col1"] = "0.5"; ldr["col2"] = "2"; ldr["col3"] = "1530"; ldr["col4"] = "3060"; ldr["col5"] = "3060";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 3)
                     {
@@ -320,7 +298,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "12"; ldr["JgSec"] = "566"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "10"; ldr["JtNum"] = "4";
                         ldr["TjOpSec"] = "48.00"; ldr["JSec"] = "12.00"; ldr["JHour"] = "0.01333333";
                         ldr["col1"] = "0.5"; ldr["col2"] = "2"; ldr["col3"] = "765"; ldr["col4"] = "1530"; ldr["col5"] = "3060";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 4)
                     {
@@ -328,7 +306,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "1"; ldr["JgSec"] = "10"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "0"; ldr["JtNum"] = "1";
                         ldr["TjOpSec"] = "9.60"; ldr["JSec"] = "9.60"; ldr["JHour"] = "0.00266667";
                         ldr["col1"] = "0"; ldr["col2"] = "1"; ldr["col3"] = "3825"; ldr["col4"] = "3825"; ldr["col5"] = "3825";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 5)
                     {
@@ -336,7 +314,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "1"; ldr["JgSec"] = "8"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "0"; ldr["JtNum"] = "1";
                         ldr["TjOpSec"] = "7.68"; ldr["JSec"] = "7.68"; ldr["JHour"] = "0.00213333";
                         ldr["col1"] = "0"; ldr["col2"] = "1"; ldr["col3"] = "4871"; ldr["col4"] = "4871"; ldr["col5"] = "4871";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 6)
                     {
@@ -344,7 +322,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "1"; ldr["JgSec"] = "8"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "0"; ldr["JtNum"] = "1";
                         ldr["TjOpSec"] = "7.68"; ldr["JSec"] = "7.68"; ldr["JHour"] = "0.00213333";
                         ldr["col1"] = "1"; ldr["col2"] = "1"; ldr["col3"] = "4871"; ldr["col4"] = "4871"; ldr["col5"] = "4871";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 7)
                     {
@@ -352,7 +330,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "1"; ldr["JgSec"] = "8"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "0"; ldr["JtNum"] = "1";
                         ldr["TjOpSec"] = "7.68"; ldr["JSec"] = "7.68"; ldr["JHour"] = "0.00213333";
                         ldr["col1"] = "1"; ldr["col2"] = "1"; ldr["col3"] = "4871"; ldr["col4"] = "4871"; ldr["col5"] = "4871";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     ldt.Rows.Add(ldr);
                 }
@@ -388,7 +366,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ld["IsBg"] = "Y"; ld["JgNum"] = "2"; ld["JgSec"] = "24"; ld["WaitSec"] = "53"; ld["ZjSecc"] = "16"; ld["JtNum"] = "2";
                 ld["TjOpSec"] = "46.50"; ld["JSec"] = "23.25"; ld["JHour"] = "0.012916667";
                 ld["col1"] = "0.33"; ld["col2"] = "1"; ld["col3"] = "790"; ld["col4"] = "790"; ld["col5"] = "1579";
-                ld["FinishHour"] = Convert.ToDecimal(ld["JHour"]) * Convert.ToDecimal(ld["col1"]) * Convert.ToDecimal(ld["col4"]);
+                //ld["FinishHour"] = Convert.ToDecimal(ld["JHour"]) * Convert.ToDecimal(ld["col1"]) * Convert.ToDecimal(ld["col4"]);
                 ldt.Rows.Add(ld);
 
                 for (int i = 1; i <= 5; i++)
@@ -405,7 +383,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "2"; ldr["JgSec"] = "154"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "32"; ldr["JtNum"] = "4";
                         ldr["TjOpSec"] = "93.00"; ldr["JSec"] = "23.25"; ldr["JHour"] = "0.025833333";
                         ldr["col1"] = "0.17"; ldr["col2"] = "2"; ldr["col3"] = "395"; ldr["col4"] = "790"; ldr["col5"] = "1579";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
 
                     if (i == 2)
@@ -414,7 +392,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "2"; ldr["JgSec"] = "154"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "32"; ldr["JtNum"] = "4";
                         ldr["TjOpSec"] = "93.00"; ldr["JSec"] = "23.25"; ldr["JHour"] = "0.025833333";
                         ldr["col1"] = "0.17"; ldr["col2"] = "2"; ldr["col3"] = "395"; ldr["col4"] = "790"; ldr["col5"] = "1579";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 3)
                     {
@@ -422,7 +400,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "24"; ldr["JgSec"] = "240"; ldr["WaitSec"] = "0"; ldr["ZjSecc"] = "0"; ldr["JtNum"] = "1";
                         ldr["TjOpSec"] = "10.00"; ldr["JSec"] = "10.00"; ldr["JHour"] = "0.002777778";
                         ldr["col1"] = "2"; ldr["col2"] = "0.5"; ldr["col3"] = "3672"; ldr["col4"] = "1836"; ldr["col5"] = "3672";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 4)
                     {
@@ -430,7 +408,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "1"; ldr["JgSec"] = "20"; ldr["WaitSec"] = "16.5"; ldr["ZjSecc"] = "10"; ldr["JtNum"] = "2";
                         ldr["TjOpSec"] = "46.50"; ldr["JSec"] = "23.25"; ldr["JHour"] = "0.012916667";
                         ldr["col1"] = "0.25"; ldr["col2"] = "2"; ldr["col3"] = "790"; ldr["col4"] = "1580"; ldr["col5"] = "1579";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
                     if (i == 5)
                     {
@@ -438,7 +416,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr["IsBg"] = "Y"; ldr["JgNum"] = "2"; ldr["JgSec"] = "45"; ldr["WaitSec"] = "28"; ldr["ZjSecc"] = "20"; ldr["JtNum"] = "2";
                         ldr["TjOpSec"] = "46.50"; ldr["JSec"] = "23.25"; ldr["JHour"] = "0.012916667";
                         ldr["col1"] = "0.25"; ldr["col2"] = "2"; ldr["col3"] = "790"; ldr["col4"] = "1580"; ldr["col5"] = "1579";
-                        ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
+                        //ldr["FinishHour"] = Convert.ToDecimal(ldr["JHour"]) * Convert.ToDecimal(ldr["col1"]) * Convert.ToDecimal(ldr["col4"]);
                     }
 
 
@@ -456,7 +434,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ldr_z["IsBg"] = "Y"; ldr_z["JgNum"] = "1"; ldr_z["JgSec"] = "15"; ldr_z["WaitSec"] = "0"; ldr_z["ZjSecc"] = "0"; ldr_z["JtNum"] = "1";
                 ldr_z["TjOpSec"] = "15.00"; ldr_z["JSec"] = "15.00"; ldr_z["JHour"] = "0.004166667";
                 ldr_z["col1"] = "1"; ldr_z["col2"] = "1"; ldr_z["col3"] = "2448"; ldr_z["col4"] = "2448"; ldr_z["col5"] = "2448";
-                ldr_z["FinishHour"] = Convert.ToDecimal(ldr_z["JHour"]) * Convert.ToDecimal(ldr_z["col1"]) * Convert.ToDecimal(ldr_z["col4"]);
+                //ldr_z["FinishHour"] = Convert.ToDecimal(ldr_z["JHour"]) * Convert.ToDecimal(ldr_z["col1"]) * Convert.ToDecimal(ldr_z["col4"]);
 
                 ldt.Rows.Add(ldr_z);
 
@@ -471,7 +449,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ldr_z22["IsBg"] = "Y"; ldr_z22["JgNum"] = "1"; ldr_z22["JgSec"] = "15"; ldr_z22["WaitSec"] = "0"; ldr_z22["ZjSecc"] = "0"; ldr_z22["JtNum"] = "1";
                 ldr_z22["TjOpSec"] = "15.00"; ldr_z22["JSec"] = "15.00"; ldr_z22["JHour"] = "0.004166667";
                 ldr_z22["col1"] = "1"; ldr_z22["col2"] = "1"; ldr_z22["col3"] = "2448"; ldr_z22["col4"] = "2448"; ldr_z22["col5"] = "2448";
-                ldr_z22["FinishHour"] = Convert.ToDecimal(ldr_z22["JHour"]) * Convert.ToDecimal(ldr_z22["col1"]) * Convert.ToDecimal(ldr_z22["col4"]);
+                //ldr_z22["FinishHour"] = Convert.ToDecimal(ldr_z22["JHour"]) * Convert.ToDecimal(ldr_z22["col1"]) * Convert.ToDecimal(ldr_z22["col4"]);
             }
             #endregion
 
@@ -481,65 +459,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         gv_d.DataSource = ldt;
         gv_d.DataBind();
-    }
-
-    protected void JgNum_ValueChanged(object sender, EventArgs e)
-    {
-        update_gv_d();
-    }
-
-    public void update_gv_d()
-    {
-        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
-        for (int i = 0; i < ldt.Rows.Count; i++)
-        {
-            string jgnum = ldt.Rows[i]["jgnum"].ToString().Trim(); if (jgnum == "") { jgnum = "0"; }//每次加工数量
-            string JgSec = ldt.Rows[i]["JgSec"].ToString().Trim(); if (JgSec == "") { JgSec = "0"; }
-            string WaitSec = ldt.Rows[i]["WaitSec"].ToString().Trim(); if (WaitSec == "") { WaitSec = "0"; }
-            string ZjSecc = ldt.Rows[i]["ZjSecc"].ToString().Trim(); if (ZjSecc == "") { ZjSecc = "0"; }
-            string JtNum = ldt.Rows[i]["JtNum"].ToString().Trim(); if (JtNum == "") { JtNum = "0"; }
-
-            if (jgnum == "0") { ldt.Rows[i]["TjOpSec"] = Math.Round(0.00, 2); }//单台单件工序工时(秒)TjOpSec
-            else
-            {
-                ldt.Rows[i]["TjOpSec"] = Math.Round((Convert.ToDecimal(JgSec) + Convert.ToDecimal(WaitSec) + Convert.ToDecimal(ZjSecc)) / Convert.ToDecimal(jgnum), 2);
-            }
-
-            if (JtNum == "0") { ldt.Rows[i]["JSec"] = Math.Round(0.00, 2); }//单件工时(秒)
-            else
-            {
-                ldt.Rows[i]["JSec"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) / Convert.ToDecimal(JtNum), 2);
-            }
-            ldt.Rows[i]["JHour"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) / Convert.ToDecimal(3600), 5);//单件工时(时)
-
-
-            if (Convert.ToDecimal(ldt.Rows[i]["TjOpSec"].ToString()) == 0) { ldt.Rows[i]["col3"] = 0; }//单台85%产量
-            else
-            {
-                ldt.Rows[i]["col3"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) * Convert.ToDecimal(0.85), 0);
-            }
-
-            if (ldt.Rows[i]["col2"].ToString() == "") { ldt.Rows[i]["col4"] = 0; }//一人85%产量
-            else
-            {
-                ldt.Rows[i]["col4"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["col2"]) * Convert.ToDecimal(ldt.Rows[i]["col3"]), 0);
-            }
-
-            if (Convert.ToDecimal(ldt.Rows[i]["JSec"].ToString()) == 0) { ldt.Rows[i]["col5"] = 0; }//整线班产量
-            else
-            {
-                ldt.Rows[i]["col5"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["JSec"]) * Convert.ToDecimal(0.85), 0);
-            }
-
-            if (ldt.Rows[i]["col1"].ToString() == "") { ldt.Rows[i]["FinishHour"] = Math.Round(0.00, 2); }
-            else
-            {
-                ldt.Rows[i]["FinishHour"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["JHour"]) * Convert.ToDecimal(ldt.Rows[i]["col1"]) * Convert.ToDecimal(ldt.Rows[i]["col4"]), 2);//完工工时
-            }
-        }
-        ldt.AcceptChanges();
-        this.gv_d.DataSource = ldt;
-        this.gv_d.DataBind();
     }
 
 
@@ -1010,6 +929,76 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     }
     #endregion
 
+    /*
+    //测试数据
+
+    protected void JgNum_ValueChanged(object sender, EventArgs e)
+    {
+        update_gv_d();
+    }
+
+    public void update_gv_d()
+    {
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            string jgnum = ldt.Rows[i]["jgnum"].ToString().Trim(); if (jgnum == "") { jgnum = "0"; }//每次加工数量
+            string JgSec = ldt.Rows[i]["JgSec"].ToString().Trim(); if (JgSec == "") { JgSec = "0"; }
+            string WaitSec = ldt.Rows[i]["WaitSec"].ToString().Trim(); if (WaitSec == "") { WaitSec = "0"; }
+            string ZjSecc = ldt.Rows[i]["ZjSecc"].ToString().Trim(); if (ZjSecc == "") { ZjSecc = "0"; }
+            string JtNum = ldt.Rows[i]["JtNum"].ToString().Trim(); if (JtNum == "") { JtNum = "0"; }
+
+            if (jgnum == "0") { ldt.Rows[i]["TjOpSec"] = Math.Round(0.00, 2); }//单台单件工序工时(秒)TjOpSec
+            else
+            {
+                ldt.Rows[i]["TjOpSec"] = Math.Round((Convert.ToDecimal(JgSec) + Convert.ToDecimal(WaitSec) + Convert.ToDecimal(ZjSecc)) / Convert.ToDecimal(jgnum), 2);
+            }
+
+            if (JtNum == "0") { ldt.Rows[i]["JSec"] = Math.Round(0.00, 2); }//单件工时(秒)
+            else
+            {
+                ldt.Rows[i]["JSec"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) / Convert.ToDecimal(JtNum), 2);
+            }
+            ldt.Rows[i]["JHour"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) / Convert.ToDecimal(3600), 5);//单件工时(时)
 
 
+            if (Convert.ToDecimal(ldt.Rows[i]["TjOpSec"].ToString()) == 0) { ldt.Rows[i]["col3"] = 0; }//单台85%产量
+            else
+            {
+                ldt.Rows[i]["col3"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["TjOpSec"]) * Convert.ToDecimal(0.85), 0);
+            }
+
+            if (ldt.Rows[i]["col2"].ToString() == "") { ldt.Rows[i]["col4"] = 0; }//一人85%产量
+            else
+            {
+                ldt.Rows[i]["col4"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["col2"]) * Convert.ToDecimal(ldt.Rows[i]["col3"]), 0);
+            }
+
+            if (Convert.ToDecimal(ldt.Rows[i]["JSec"].ToString()) == 0) { ldt.Rows[i]["col5"] = 0; }//整线班产量
+            else
+            {
+                ldt.Rows[i]["col5"] = Math.Round((12 * 60 * 60) / Convert.ToDecimal(ldt.Rows[i]["JSec"]) * Convert.ToDecimal(0.85), 0);
+            }
+
+            //if (ldt.Rows[i]["col1"].ToString() == "") { ldt.Rows[i]["FinishHour"] = Math.Round(0.00, 2); }
+            //else
+            //{
+            //    ldt.Rows[i]["FinishHour"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["JHour"]) * Convert.ToDecimal(ldt.Rows[i]["col1"]) * Convert.ToDecimal(ldt.Rows[i]["col4"]), 2);//完工工时
+            //}
+        }
+        ldt.AcceptChanges();
+        this.gv_d.DataSource = ldt;
+        this.gv_d.DataBind();
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+
+        //表体生成SQL
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+
+        }
+    }
+    */
 }

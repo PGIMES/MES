@@ -11,7 +11,7 @@ public partial class Forms_PgiOp_1 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
+        DataTable ldt = DbHelperSQL.Query(@"select a.typeno,a.pgi_no,a.op,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
 
         DataTable dt_gx = null;
         dt_gx = DbHelperSQL.Query(@"select ro_op,ro_desc,ro_wkctr from [PGIHR].report.[dbo].qad_ro_det where ro_routing='P0322AA' order by ro_op").Tables[0];// and ro_domain='"+ lsdomain + "'
@@ -26,7 +26,6 @@ public partial class Forms_PgiOp_1 : System.Web.UI.Page
         }
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
-        op_ValueChanged(sender, e);
     }
 
     protected void gv_d_RowCommand(object sender, DevExpress.Web.ASPxGridViewRowCommandEventArgs e)
@@ -78,7 +77,32 @@ public partial class Forms_PgiOp_1 : System.Web.UI.Page
     }
 
 
-    protected void op_ValueChanged(object sender, EventArgs e)
+    //protected void op_ValueChanged(object sender, EventArgs e)
+    //{
+    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+    //    for (int i = 0; i < ldt.Rows.Count; i++)
+    //    {
+    //        ldt.Rows[i]["op"] = ldt.Rows[i]["op"] + "_ce";
+    //    }
+    //    ldt.AcceptChanges();
+    //    this.gv_d.DataSource = ldt;
+    //    this.gv_d.DataBind();
+    //}
+
+    //protected void op_TextChanged(object sender, EventArgs e)
+    //{
+
+    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+    //    for (int i = 0; i < ldt.Rows.Count; i++)
+    //    {
+    //        ldt.Rows[i]["op"] = ldt.Rows[i]["op"] + "_ce";
+    //    }
+    //    ldt.AcceptChanges();
+    //    this.gv_d.DataSource = ldt;
+    //    this.gv_d.DataBind();
+    //}
+
+    protected void Button1_Click(object sender, EventArgs e)
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
         for (int i = 0; i < ldt.Rows.Count; i++)
@@ -88,5 +112,18 @@ public partial class Forms_PgiOp_1 : System.Web.UI.Page
         ldt.AcceptChanges();
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
+
+    }
+
+
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+        //表体生成SQL
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+
+        }
     }
 }
