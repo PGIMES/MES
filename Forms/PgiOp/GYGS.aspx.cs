@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 
 public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 {
+    public string ValidScript = "";
     string m_sid = "";
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -233,7 +234,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ldr["op"] = "OP" + dt_gx.Rows[i]["ro_op"];
                 ldr["op_desc"] = dt_gx.Rows[i]["ro_desc"];
                 ldr["op_remark"] = dt_gx.Rows[i]["ro_desc"];
-                ldr["gzzx"] = dt_gx.Rows[i]["ro_wkctr"];
+                //ldr["gzzx"] = dt_gx.Rows[i]["ro_wkctr"];
                 ldr["isbg"] = "Y";
                 ldr["numid"] = i;
                 ldt.Rows.Add(ldr);

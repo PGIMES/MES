@@ -74,19 +74,18 @@
         }
         function setvalue_product(lspgi_no, lspn, lspn_desc, lsdomain, lsproduct_user, lsproduct_dept, lsstatus, lscailiao, lsnyl, lsline, lsver) 
         {
-            $("input[id*='pn']").val(lspn);
-            $("input[id*='pn_desc']").val(lspn_desc);
-            $("input[id*='domain']").val(lsdomain);
-            $("input[id*='product_user']").val(lsproduct_user);
-            $("input[id*='dept']").val(lsproduct_dept);
-            $("input[id*='status']").val(lsstatus);
-            $("input[id*='sku']").val(lscailiao);
-            $("input[id*='year_num']").val(lsnyl);
-            $("input[id*='line']").val(lsline);
-            if ($("input[id*='ver']").val() == "" || (lspgi_no != $("input[id*='pgi_no']").val())) {
-                $("input[id*='ver']").val(lsver);
+            $("#CPXX input[id*='pn']").val(lspn);
+            $("#CPXX input[id*='pn_desc']").val(lspn_desc);
+            $("#CPXX input[id*='domain']").val(lsdomain);
+            $("#CPXX input[id*='product_user']").val(lsproduct_user);
+            $("#CPXX input[id*='dept']").val(lsproduct_dept);
+            $("#CPXX input[id*='status']").val(lsstatus);
+            $("#CPXX input[id*='sku']").val(lscailiao);
+            $("#CPXX input[id*='year_num']").val(lsnyl);
+            if ($("#CPXX input[id*='ver']").val() == "" || (lspgi_no != $("#CPXX input[id*='pgi_no']").val())) {
+                $("#CPXX input[id*='ver']").val(lsver);
             }
-            $("input[id*='pgi_no']").val(lspgi_no);
+            $("#CPXX input[id*='pgi_no']").val(lspgi_no);
             popupwindow.close();
 
             gv_d.PerformCallback();
@@ -157,6 +156,113 @@
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
             col7.SetText(col7_value.toFixed(2));
+        }
+
+        function validate(action){
+            var flag=true;var msg="";
+            
+            <%=ValidScript%>
+
+            if(typeof($("#CPXX input[id*='rbltypeno']:checked").val())=="undefined"){
+                msg+="【类别】不可为空.<br />";
+            }
+
+            if($("#CPXX input[id*='pgi_no']").val()==""){
+                msg+="【PGI零件号】不可为空.<br />";
+            }
+
+            if(action=='submit'){
+                if($("select[id*='line'] option:selected").val()==""){
+                    msg+="【生产线】不可为空.<br />";
+                }
+                if($("[id$=gv_d] input[id*=op]").length==0){
+                    msg+="【工艺工时信息】不可为空.<br />";
+                }
+                $("[id$=gv_d] input[id*=op]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【工序号】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=op_desc]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【工序名称】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=op_remark]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【工序说明】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=gzzx_desc]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【设备】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=gzzx]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【工作中心代码】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=JgNum]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【每次加工数量】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=JgSec]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【加工时长】不可为空.<br />";
+                        return false;
+                    }
+                });
+                 $("[id$=gv_d] input[id*=WaitSec]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【设备等待时间】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=ZjSecc]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【装夹时间】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=JtNum]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【机器台数】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=col1]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【单台需要人数】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=col2]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【本工序一人操作台数】不可为空.<br />";
+                        return false;
+                    }
+                });
+                $("[id$=gv_d] input[id*=col6]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【单人报工数量】不可为空.<br />";
+                        return false;
+                    }
+                });
+            }
+
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+            }
+           return false;
         }
 
     </script>
@@ -337,7 +443,7 @@
         <div class="col-md-10  ">
             <div class="form-inline " style="text-align:right">
                 <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="return validate();" OnClick="btnSave_Click" />
-                <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate();" OnClick="btnflowSend_Click" />
+                <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate('submit');" OnClick="btnflowSend_Click" />
                 <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                 <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                 <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />

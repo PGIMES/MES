@@ -33,7 +33,7 @@ public partial class Select_select_wkzx : System.Web.UI.Page
         //else
         // { 
         string sql = @"select * from [172.16.5.6].[Report].[dbo].[qad_wkctr] 
-                    where domain='" + Request.QueryString["domain"] + "' and wkctr like '%" + txt_code.Text.Trim() + "%' and [desc] like '%" + txt_desc.Text.Trim() + "%'";
+                    where domain='" + Request.QueryString["domain"] + "' and wkctr like '%" + txt_code.Text.Trim() + "%' and [desc] like '%" + txt_desc.Text.Trim() + "%' order by wkctr";
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         GridView1.DataSource = dt;
         GridView1.DataBind();
