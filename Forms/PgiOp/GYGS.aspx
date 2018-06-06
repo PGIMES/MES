@@ -92,6 +92,24 @@
             gv_d.PerformCallback();
         }
 
+        function Get_wkzx(vi){
+            var url = "/select/select_wkzx.aspx?domain="+$("[id*='domain']").val()+"&vi="+vi;
+
+            layer.open({
+                title:'工作中心选择',
+                type: 2,
+                area: ['500px', '500px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });          
+        }
+
+        function setvalue_wkzx(ls_gzzx,ls_gzzx_desc,vi){
+            var gzzx_desc= eval('gzzx_desc' + vi);var gzzx= eval('gzzx' + vi);
+            gzzx_desc.SetText(ls_gzzx_desc);gzzx.SetText(ls_gzzx);
+        }
+
         function RefreshRow(vi) {
             var JgNum = eval('JgNum' + vi); var JgSec = eval('JgSec' + vi); var WaitSec = eval('WaitSec' + vi); var ZjSecc = eval('ZjSecc' + vi);var JtNum = eval('JtNum' + vi); 
             var col1 = eval('col1' + vi); var col2 = eval('col2' + vi);var col6 = eval('col6' + vi);
@@ -308,7 +326,9 @@
         .linewrite{
             height: 30px; width: 200px;font-size:9px; border:none; border-bottom:1px solid black;background-color:#FDF7D9;/*EFEFEF*/
         }
-        
+        /*.dxeTextBox .dxeEditArea{
+            background-color:#FDF7D9;
+        }*/
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -428,8 +448,28 @@
                                                 <dx:ASPxTextBox ID="op_remark" Width="140px" runat="server" Value='<%# Eval("op_remark")%>' ></dx:ASPxTextBox>                
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="设备" FieldName="gzzx_desc" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工作中心<br />代码" FieldName="gzzx" Width="50px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="设备<br />(工作中心名称)" FieldName="gzzx_desc" Width="100px" VisibleIndex="7">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="gzzx_desc" Width="100px" runat="server" Value='<%# Eval("gzzx_desc")%>' 
+                                                                ClientInstanceName='<%# "gzzx_desc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i class="fa fa-search" onclick="Get_wkzx(<%# Container.VisibleIndex %>)"></i></td>
+                                                    </tr>
+                                                </table>       
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工作中心<br />代码" FieldName="gzzx" Width="50px" VisibleIndex="8">
+                                             <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="gzzx" Width="50px" runat="server" Value='<%# Eval("gzzx")%>' 
+                                                    ClientInstanceName='<%# "gzzx"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="是否报工<br />(Y/N)" FieldName="IsBg" Width="50px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="每次加工<br />数量" FieldName="JgNum" Width="50px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>

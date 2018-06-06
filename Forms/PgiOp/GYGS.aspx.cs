@@ -177,6 +177,10 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 {
                     ldr[ldt.Columns[j].ColumnName] = dt_o.Rows.Count <= 0 ? 0 : (Convert.ToInt32(dt_o.Rows[0]["numid"]) + 1);
                 }
+                else if(ldt.Columns[j].ColumnName == "isbg")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "Y";
+                }
                 else 
                 {
                     ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
@@ -230,6 +234,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ldr["op_desc"] = dt_gx.Rows[i]["ro_desc"];
                 ldr["op_remark"] = dt_gx.Rows[i]["ro_desc"];
                 ldr["gzzx"] = dt_gx.Rows[i]["ro_wkctr"];
+                ldr["isbg"] = "Y";
                 ldr["numid"] = i;
                 ldt.Rows.Add(ldr);
             }
@@ -242,6 +247,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 ldr["typeno"] = "机加";
                 ldr["pgi_no"] = lspgi_no;
                 ldr["op"] = "OP1" + i.ToString() + "0";
+                ldr["isbg"] = "Y";
                 ldr["numid"] = i;
 
                 ldt.Rows.Add(ldr);
@@ -251,6 +257,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             ldr_z1["typeno"] = "质量";
             ldr_z1["pgi_no"] = lspgi_no;
             ldr_z1["op"] = "OP600";
+            ldr_z1["isbg"] = "Y";
             ldr_z1["numid"] = 8;
             ldt.Rows.Add(ldr_z1);
 
@@ -258,6 +265,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             ldr_z2["typeno"] = "质量";
             ldr_z2["pgi_no"] = lspgi_no;
             ldr_z2["op"] = "OP700";
+            ldr_z2["isbg"] = "Y";
             ldr_z2["numid"] = 9;
             ldt.Rows.Add(ldr_z2);
 

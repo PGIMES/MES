@@ -693,6 +693,7 @@
                                         测试管理</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=568476a2-06eb-42b7-a50f-d740383787d9&appid=4415B7BC-6782-4EBB-B1D4-09F98B1CF5D3" target="_blank">测试申请单(test_fileattach)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD" target="_blank">工艺工时申请单(GYGS)</a></li>
                                         <li class="divider"></li>
                                     </ul>
                                 </div>
