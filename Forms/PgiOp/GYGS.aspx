@@ -252,7 +252,7 @@
             <%=ValidScript%>
 
             if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
-                msg+="【类别】不可为空.<br />";
+                msg+="【工艺段】不可为空.<br />";
             }
 
             if($("#CPXX input[id*='pgi_no']").val()==""){
