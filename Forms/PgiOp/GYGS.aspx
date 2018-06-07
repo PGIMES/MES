@@ -863,7 +863,7 @@
                                     </Columns>                                                
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        
-                                       <%-- <SelectedRow BackColor="#FDF7D9"></SelectedRow>  --%>    
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
                                     </Styles>                                          
                                 </dx:aspxgridview>
 
