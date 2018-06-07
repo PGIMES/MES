@@ -54,6 +54,12 @@
                 $("#btntaskEnd").hide();
             }
 
+            var IsRead = '<%=IsRead%>';
+            if(IsRead=="Y"){
+                $("[id$=gv_d] [id*=gzzx_i]").each(function (){
+                    $(this).css("display","none");
+                });
+            }
 
             $("input[id*='typeno']").change(function () {  
                   gv_d.PerformCallback();
@@ -65,6 +71,88 @@
         function setComment(val) {
             $('#comment', parent.document).val(val);
         }
+
+        //设定表字段状态（可编辑性）
+        var tabName="PGI_GYGS_Main_Form";//表名
+        function SetControlStatus(fieldStatus)
+        {  // tabName_columnName:1_0
+            var flag=true;
+            for(var item in fieldStatus){
+                var id="MainContent_"+item.replace(tabName.toLowerCase()+"_","");
+                
+                if($("#"+id).length>0){
+                    var ctype="";
+                    if( $("#"+id).prop("tagName").toLowerCase()=="select"){
+                        ctype="select"
+                    }else if( $("#"+id).prop("tagName").toLowerCase() =="textarea"){
+                        ctype="textarea"
+                    }else if( $("#"+id).prop("tagName").toLowerCase() =="input"){
+                        ctype=$("#"+id).prop("type");
+                        
+                    }
+
+                    //ctype=(ctype).toLowerCase();
+
+                    var statu=fieldStatus[item];
+                    if( statu.indexOf("1_")!="-1" && (ctype=="text"||ctype=="textarea") ){
+                        $("#"+id).attr("readonly","readonly");
+                    }
+                    else if( statu.indexOf("1_")!="-1" && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file" ) ){
+                        $("#"+id).attr("disabled","disabled");
+                    }
+                }
+            }
+        }
+        var tabName2="PGI_GYGS_Dtl_Form";//表名
+        function SetControlStatus2(fieldStatus)
+        {  // tabName_columnName:1_0
+            var flag=true;
+            for(var item in fieldStatus){
+                var id=""+item.replace(tabName2.toLowerCase()+"_","");
+                
+                $.each($("[id*="+id+"]"), function (i, obj) {                
+
+
+                    var ctype="";
+                    if( $(obj).prop("tagName").toLowerCase()=="select"){
+                        ctype="select"
+                    }else if( $(obj).prop("tagName").toLowerCase() =="textarea"){
+                        ctype="textarea"
+                    }else if( $(obj).prop("tagName").toLowerCase() =="input"){
+                        ctype=$(obj).prop("type");
+                        
+                    }
+
+                    //ctype=(ctype).toLowerCase();
+
+                    var statu=fieldStatus[item];
+                    if( statu.indexOf("1_")!="-1" && (ctype=="text"||ctype=="textarea") ){
+                        $(obj).attr("readonly","readonly");
+                        $(obj).removeAttr("onclick");
+                    }
+                    else if( statu.indexOf("1_")!="-1" && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file"  ) ){
+                        $(obj).attr("disabled","disabled");
+                    }
+                    else if(statu.indexOf("1_")!="-1" && ( ctype=="input" ) ){
+                        $(obj).attr("type","hidden");
+                    }
+
+                });
+
+            }
+        }
+
+        var fieldStatus = "1"=="<%=Request.QueryString["isreadonly"]%>"? {} : <%=fieldStatus%>;
+        var displayModel = '<%=DisplayModel%>';
+        $(window).load(function (){
+
+            SetControlStatus(<%=fieldStatus%>);
+            SetControlStatus2(<%=fieldStatus%>);       
+
+            ////特殊控件处理
+            //if($("#MainContent_pgi_no").attr("readonly")=="readonly")
+            //{$("#MainContent_pgi_no").removeAttr("ondblclick")};
+	    });
 
     </script>
     <script type="text/javascript">
@@ -561,10 +649,10 @@
                                                     <tr>
                                                         <td>
                                                             <dx:ASPxTextBox ID="gzzx_desc" Width="100px" runat="server" Value='<%# Eval("gzzx_desc")%>' 
-                                                                ClientInstanceName='<%# "gzzx_desc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                                ClientInstanceName='<%# "gzzx_desc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
-                                                        <td><i class="fa fa-search" onclick="Get_wkzx(<%# Container.VisibleIndex %>)"></i></td>
+                                                        <td><i id="gzzx_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="Get_wkzx(<%# Container.VisibleIndex %>)"></i></td>
                                                     </tr>
                                                 </table>       
                                             </DataItemTemplate>
@@ -775,7 +863,7 @@
                                     </Columns>                                                
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        
-                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
+                                       <%-- <SelectedRow BackColor="#FDF7D9"></SelectedRow>  --%>    
                                     </Styles>                                          
                                 </dx:aspxgridview>
 
