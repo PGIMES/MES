@@ -115,8 +115,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.gv_d.DataBind();
 
 
-
-
             //特殊处理，签核界面，明细的框框拿掉
             lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
                         where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
@@ -128,11 +126,10 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             {
                 if (ldt_flow.Rows.Count == 0)
                 {
-                    setread(i);
                     this.btnflowSend.Text = "批准";
                 }
 
-                if (Request.QueryString["display"] != null)
+                if (ldt_flow.Rows.Count == 0 || Request.QueryString["display"] != null)
                 {
                     setread(i);
                 }
@@ -164,6 +161,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         ((TextBox)this.FindControl("ctl00$MainContent$remark")).CssClass = "lineread";
 
         btndel.Visible = false;
+
+        if (i == 0) {
+            gv_d.Columns[gv_d.VisibleColumns.Count - 1].Visible = false;
+            gv_d.Columns[0].Visible = false;
+        }
+
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).BorderStyle = BorderStyle.None;
 
@@ -388,7 +391,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 {
                     ldr[ldt.Columns[j].ColumnName] = dt_o.Rows.Count <= 0 ? 0 : (Convert.ToInt32(dt_o.Rows[0]["numid"]) + 1);
                 }
-                else if(ldt.Columns[j].ColumnName == "isbg")
+                else if(ldt.Columns[j].ColumnName.ToLower() == "isbg")
                 {
                     ldr[ldt.Columns[j].ColumnName] = "Y";
                 }

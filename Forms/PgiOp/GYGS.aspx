@@ -823,13 +823,7 @@
                                                 <dx:ASPxTextBox ID="OpNum" Width="70px" runat="server" Value='<%# Eval("OpNum")%>' ></dx:ASPxTextBox>                
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>--%>
-
-                                        <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="30" >
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxButton ID="btn" runat="server" Text="新增行"   CommandName="Add"  ></dx:ASPxButton>          
-                                            </DataItemTemplate>                        
-                                        </dx:GridViewDataTextColumn>
+                                                                                
                                         <dx:GridViewDataTextColumn FieldName="numid" Width="0px" >
                                              <HeaderStyle CssClass="hidden" />
                                              <CellStyle CssClass="hidden"></CellStyle>
@@ -859,6 +853,13 @@
                                              <HeaderStyle CssClass="hidden" />
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+
+                                        <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="99" >
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxButton ID="btn" runat="server" Text="新增行"   CommandName="Add"  ></dx:ASPxButton>          
+                                            </DataItemTemplate>                        
                                         </dx:GridViewDataTextColumn>
                                     </Columns>                                                
                                     <Styles>
