@@ -15,7 +15,7 @@
             var r = decodeURI(window.location.search).substr(1).match(reg);
             if (r != null) return unescape(r[2]); return null;
         }
-        var option = getQueryString("option");
+        var state = getQueryString("state");
 
         $(document).ready(function () {
             $("#mestitle").html("【工艺工时审批单】");
@@ -61,9 +61,14 @@
                 });
             }
 
-            $("input[id*='typeno']").change(function () {  
-                  gv_d.PerformCallback();
-            }); 
+            
+            if(state==null){
+                $("#MainContent_lbl_PGI_GYGS_Main_Form_HEAD_2").css("display","none");
+            }
+
+            //$("input[id*='typeno']").change(function () {  
+            //      gv_d.PerformCallback();
+            //}); 
 
         });
 
@@ -149,34 +154,64 @@
             SetControlStatus(<%=fieldStatus%>);
             SetControlStatus2(<%=fieldStatus%>);       
 
-            ////特殊控件处理
-            //if($("#MainContent_pgi_no").attr("readonly")=="readonly")
-            //{$("#MainContent_pgi_no").removeAttr("ondblclick")};
 	    });
 
     </script>
     <script type="text/javascript">
         function GetPgi_Product() 
         {
-            popupwindow = window.open('../../Select/select_product.aspx?ctrl1=pgi_no', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
+            var url = "/select/select_product_m.aspx";
+
+            layer.open({
+                title:'产品信息选择',
+                type: 2,
+                area: ['800px', '600px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
         }
-        function setvalue_product(lspgi_no, lspn, lspn_desc, lsdomain, lsproduct_user, lsproduct_dept, lsstatus, lscailiao, lsnyl, lsline, lsver) 
+        function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver) 
         {
-            $("#CPXX input[id*='pn']").val(lspn);
-            $("#CPXX input[id*='pn_desc']").val(lspn_desc);
-            $("#CPXX input[id*='domain']").val(lsdomain);
-            $("#CPXX input[id*='product_user']").val(lsproduct_user);
-            $("#CPXX input[id*='dept']").val(lsproduct_dept);
-            $("#CPXX input[id*='status']").val(lsstatus);
-            $("#CPXX input[id*='sku']").val(lscailiao);
-            $("#CPXX input[id*='year_num']").val(lsnyl);
-            if ($("#CPXX input[id*='ver']").val() == "" || (lspgi_no != $("#CPXX input[id*='pgi_no']").val())) {
-                $("#CPXX input[id*='ver']").val(lsver);
-            }
-            $("#CPXX input[id*='pgi_no']").val(lspgi_no);
-            popupwindow.close();
+            $("#CPXX input[id*='pn']").val(lsproductcode);
+            $("#CPXX input[id*='pn_desc']").val(lsproductname);
+            $("#CPXX input[id*='domain']").val(lsmake_factory);
+            $("#CPXX input[id*='pgi_no']").val(lspgino);
 
             gv_d.PerformCallback();
+
+            $.ajax({
+                type: "post",
+                url: "GYGS.aspx/GetVer",
+                data: "{'lspgino':'" + lspgino + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var obj=eval(data.d);
+                    $("#CPXX input[id*='ver']").val(obj[0].ver);
+                }
+
+            });
+        }
+
+        function GetPgi_Product_D(vi)
+        {
+            var url = "/select/select_product_d.aspx?pgi_no="+$("#CPXX input[id*='pgi_no']").val()+"&domain="+$("#CPXX input[id*='domain']").val()+"&vi="+vi;
+
+            layer.open({
+                title:'工艺流程选择',
+                type: 2,
+                area: ['800px', '600px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
+        }
+
+        function setvalue_product_d(lspgino, vi) 
+        {
+            var pgi_no_d= eval('pgi_no_d' + vi);
+            pgi_no_d.SetText(lspgino);
         }
 
         function Get_wkzx(vi){
@@ -251,12 +286,12 @@
             
             <%=ValidScript%>
 
-            if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
-                msg+="【工艺段】不可为空.<br />";
+            if($("#CPXX input[id*='pgi_no']").val()==""){
+                msg+="【PGI项目号】不可为空.<br />";
             }
 
-            if($("#CPXX input[id*='pgi_no']").val()==""){
-                msg+="【PGI零件号】不可为空.<br />";
+             if($("#CPXX input[id*='ver']").val()==""){
+                msg+="【PGI项目号】不可为空.<br />";
             }
 
             if(action=='submit'){
@@ -515,10 +550,10 @@
             font-weight:400;
         }
         .lineread{
-            height: 30px; width: 200px;font-size:9px; border:none; border-bottom:1px solid black;
+            font-size:9px; border:none; border-bottom:1px solid #ccc;
         }
         .linewrite{
-            height: 30px; width: 200px;font-size:9px; border:none; border-bottom:1px solid black;background-color:#FDF7D9;/*EFEFEF*/
+            font-size:9px; border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
         }
         /*.dxeTextBox .dxeEditArea{
             background-color:#FDF7D9;
@@ -556,19 +591,19 @@
                                         <td style="width:80px">申请人</td><%--class="form-control input-s-sm"--%>
                                         <td style="width:250px">
                                             <div class="form-inline">
-                                                <input id="txt_CreateById" class="lineread"  style="height: 30px; width: 90px;font-size:12px;" runat="server" readonly="True"  />
-                                                <input id="txt_CreateByName" class="lineread" style="height: 30px; width: 90px;font-size:12px;" runat="server" readonly="True" />
+                                                <input id="txt_CreateById" class="lineread"  style="height: 25px; width: 90px;font-size:12px;" runat="server" readonly="True"  />
+                                                <input id="txt_CreateByName" class="lineread" style="height: 25px; width: 90px;font-size:12px;" runat="server" readonly="True" />
                                             </div>
                                         </td>
                                         <td style="width:80px">申请部门</td>
                                         <td style="width:250px">
                                             <div class="form-inline">                                                
-                                                <input id="txt_CreateByDept" class="lineread" style="height: 30px; width: 180px;font-size:12px;" runat="server" readonly="True" />
+                                                <input id="txt_CreateByDept" class="lineread" style="height: 25px; width: 180px;font-size:12px;" runat="server" readonly="True" />
                                             </div>
                                         </td>
                                         <td style="width:80px">申请时间</td>
                                         <td style="width:250px">
-                                            <input id="txt_CreateDate" class="lineread" style="height: 30px; width: 180px;font-size:12px;" runat="server" readonly="True" />
+                                            <input id="txt_CreateDate" class="lineread" style="height: 25px; width: 180px;font-size:12px;" runat="server" readonly="True" />
                                         </td>
                                     </tr>
                                 </table>
@@ -589,12 +624,8 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <div>
                             <asp:TextBox ID="txt_domain" runat="server" style="display:none;"></asp:TextBox>
-                            <%--<asp:UpdatePanel ID="UpdatePanel_cpxx" runat="server">
-                                <ContentTemplate>--%>
-                                    <asp:Table Style="width: 100%;" border="0" runat="server" ID="tblCPXX" Font-Size="12px" >  
-                                    </asp:Table>
-                                <%--</ContentTemplate>
-                        </asp:UpdatePanel>--%>
+                            <asp:Table Style="width: 100%;" border="0" runat="server" ID="tblCPXX" Font-Size="12px" > 
+                            </asp:Table>
                         </div>
                     </div>
                 </div>
@@ -622,8 +653,23 @@
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺段" FieldName="typeno" Width="60px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺段" FieldName="typeno" Width="60px" VisibleIndex="2">
+                                             <Settings AllowCellMerge="True" />
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no" Width="80px" VisibleIndex="3">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>     
+                                                 <table>
+                                                    <tr>
+                                                        <td>           
+                                                            <dx:ASPxTextBox ID="pgi_no" Width="80px" runat="server" Value='<%# Eval("pgi_no")%>' 
+                                                                ClientInstanceName='<%# "pgi_no_d"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>   
+                                                        </td>
+                                                        <td><i id="pgi_no_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>)"></i></td>
+                                                    </tr>
+                                                </table>                  
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
