@@ -565,7 +565,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         #endregion
 
         #region 赋值常量2
-        if (lspgi_no == "P0656AA")
+        if (lspgi_no == "P0656")//P0656AA
         {
             ldt.Rows.Clear();
 
@@ -1327,6 +1327,20 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     lstr = ((RadioButtonList)p.FindControl(lscontrol_id)).ToolTip.ToString();
                     lstr = lstr == "" ? initlstr : lstr;
                 }
+                else if (ldt.Rows[i]["control_type"].ToString() == "CHECKBOX")
+                {
+                    com.Value = "";
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString()=="on"?"Y":"N"; //无法获取
+                        }
+
+                    }
+                    lstr = ((CheckBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
                 else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDATEEDIT")
                 {
                     com.Value = ((DevExpress.Web.ASPxDateEdit)p.FindControl(lscontrol_id)).Text;
@@ -1435,6 +1449,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                             //  item.Selected = true;
                             drop.SelectedValue = columnValue;
                         }
+                    }
+                }
+                else if (row["control_type"].ToString() == "CHECKBOX")
+                {
+                    var chk = (CheckBox)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (chk != null)
+                    {
+                        chk.Checked = columnValue == "Y" ? true : false;
                     }
                 }
                 else if (row["control_type"].ToString() == "ASPXCOMBOBOX")

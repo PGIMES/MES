@@ -290,14 +290,11 @@
                 msg+="【PGI项目号】不可为空.<br />";
             }
 
-             if($("#CPXX input[id*='ver']").val()==""){
-                msg+="【PGI项目号】不可为空.<br />";
+            if($("#CPXX input[id*='ver']").val()==""){
+                msg+="【工艺路线版本】不可为空.<br />";
             }
 
             if(action=='submit'){
-                if($("select[id*='line'] option:selected").val()==""){
-                    msg+="【生产线】不可为空.<br />";
-                }
                 if($("[id$=gv_d] input[id*=op]").length==0){
                     msg+="【工艺工时信息】不可为空.<br />";
                 }
