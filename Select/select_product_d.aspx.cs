@@ -12,8 +12,10 @@ public partial class Select_select_product_d : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         this.GridView1.PageSize = 20;
+        
         if (!IsPostBack)
         {
+            txtpgi_no.Text = Request["pgi_no"];
             GetData();
         }
     }
@@ -41,9 +43,9 @@ public partial class Select_select_product_d : System.Web.UI.Page
 	                    ,'A' as ver
                     from qad_pt_mstr a
 	                    inner join form3_Sale_Product_MainTable on left(a.pt_part,5)=form3_Sale_Product_MainTable.pgino
-                     where pt_prod_line<>'4010' and a.pt_domain='{0}' and a.pt_part like '{3}%' and a.pt_part like '%{1}%' and a.pt_desc1 like '%{2}%'
+                     where pt_prod_line<>'4010' and a.pt_domain='{0}' and a.pt_part like '%{1}%' and a.pt_desc1 like '%{2}%'
                     order by a.pt_part";
-        sql = string.Format(sql, Request["domain"], this.txtpgi_no.Text.Trim(), this.txtpn.Text.Trim(), Request["pgi_no"]);
+        sql = string.Format(sql, Request["domain"], this.txtpgi_no.Text.Trim(), this.txtpn.Text.Trim());
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         GridView1.DataSource = dt;
         GridView1.DataBind();

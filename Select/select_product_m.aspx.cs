@@ -34,7 +34,7 @@ public partial class Select_select_product_m : System.Web.UI.Page
         // { 
 
         string sql = @"select b.pgino,b.productcode,a.productname,case a.make_factory when '上海工厂' then '100' when '昆山工厂' then '200' else '' end make_factory,b.version
-                        ,c.zl_user,c.yz_user
+                        ,c.zl_user,c.yz_user,c.product_user 
                     from form3_Sale_Product_MainTable a
                         left join form3_Sale_Product_DetailTable b on a.pgino=b.pgino
                         left join V_Track_product c on a.pgino=c.xmh
@@ -67,10 +67,12 @@ public partial class Select_select_product_m : System.Web.UI.Page
         string lsproductname = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
         string lsmake_factory = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
         string lsver = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
-        string lszl_user = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
-        string lsyz_user = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
+        string lsproduct_user = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
+        string lszl_user = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
+        string lsyz_user = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
 
-        string temp = @"<script>parent.setvalue_product('" + lspgino + "','" + lsproductcode + "','" + lsproductname + "','" + lsmake_factory + "','" + lsver + "','" + lszl_user + "','" + lsyz_user + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        string temp = @"<script>parent.setvalue_product('" + lspgino + "','" + lsproductcode + "','" + lsproductname + "','" + lsmake_factory + "','" + lsver + "','"
+            + lszl_user + "','" + lsyz_user + "','" + lsproduct_user + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
 
 
         Response.Write(temp.Trim());

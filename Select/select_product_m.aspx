@@ -78,6 +78,12 @@
                                         <ItemStyle Width="6%" />
                                     </asp:BoundField>
 
+                                      <asp:BoundField DataField="product_user" HeaderText="产品工程师" 
+                                       ReadOnly="True" >  
+                                       <HeaderStyle Wrap="True" />
+                                        <ItemStyle Width="6%" />
+                                    </asp:BoundField>
+
                                       <asp:BoundField DataField="zl_user" HeaderText="质量工程师" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
