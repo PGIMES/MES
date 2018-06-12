@@ -171,11 +171,13 @@
                 content: url
             }); 
         }
-        function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver) 
+        function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver, lszl_user, lsyz_user) 
         {
             $("#CPXX input[id*='pn']").val(lsproductcode);
             $("#CPXX input[id*='pn_desc']").val(lsproductname);
             $("#CPXX input[id*='domain']").val(lsmake_factory);
+            $("#CPXX input[id*='zl_user']").val(lszl_user);
+            $("#CPXX input[id*='yz_user']").val(lsyz_user);
             $("#CPXX input[id*='pgi_no']").val(lspgino);
 
             gv_d.PerformCallback();
@@ -914,6 +916,24 @@
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#bgjl"> 
+                    <%--<strong>变更说明</strong>--%>
+                </div>
+                <div class="panel-body " id="bgjl">
+                    <table border="0"  width="100%"  >
+                        <tr>
+                            <td width="100px" ><label>变更说明：</label></td>
+                            <td>
+                                <textarea id="comment" cols="20" rows="2"  class="form-control" onchange="setComment(this.value)" ></textarea>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

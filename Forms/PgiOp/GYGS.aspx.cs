@@ -153,8 +153,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         IsRead = "Y";
         ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
         ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Attributes.Remove("ondblclick");
-        ((DropDownList)this.FindControl("ctl00$MainContent$line")).CssClass = "lineread";
-        ((TextBox)this.FindControl("ctl00$MainContent$remark")).CssClass = "lineread";
+        ((CheckBox)this.FindControl("ctl00$MainContent$containyazhu")).Enabled = true;
 
         btndel.Visible = false;
 
@@ -431,7 +430,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "' order by a.typeno,op";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {

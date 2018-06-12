@@ -13,37 +13,58 @@ public partial class Forms_PgiOp_GYGS_Report_Query : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
-    }
-
-    [WebMethod]
-    public static string Getuser(string lsdept)
-    {
-        string sql = @"select distinct product_user--right(product_user,len(product_user)-charindex('-',product_user)) as product_user 
-                        from form3_Sale_Product_MainTable a
-                        where a.product_user<>'' and  left(a.product_user,5) in (select workcode from HRM_EMP_MES where (departmentname='" + lsdept + "' or dept_name='" + lsdept + "'))";
-        string result = "[";
-        DataTable ldt = DbHelperSQL.Query(sql).Tables[0];
-        if (ldt.Rows.Count > 0)
+        if (!IsPostBack)
         {
-            for (int i = 0; i < ldt.Rows.Count; i++)
-            {
-                result = result + "{\"value\":\"" + ldt.Rows[i][0].ToString() + "\"},";
-            }
+            QueryASPxGridView();
         }
-        result = result.TrimEnd(',') + "]";
-        return result;
-
+        if (this.gv.IsCallback)//页面搜索条件使用
+        {
+            QueryASPxGridView();
+        }
     }
+
 
     protected void btn_search_Click(object sender, EventArgs e)
     {
-        txt_pgi_no.Text = "A1";
+        QueryASPxGridView();
 
     }
+
+    public void QueryASPxGridView()
+    {
+        GYGS GYGS = new GYGS();
+        DataTable dt = GYGS.GYGS_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue);
+        //Pgi.Auto.Control.SetGrid("GYGS_Query", "", this.gv, dt);
+
+        gv.DataSource = dt;
+        gv.DataBind();
+    }
+
+    protected void gv_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+    }
+
+    //protected void gv_tr_list_HtmlDataCellPrepared(object sender, DevExpress.Web.ASPxGridViewTableDataCellEventArgs e)
+    //{
+    //    if (e.DataColumn.Caption == "序号")
+    //    {
+    //        if (Convert.ToInt16(ViewState["i"]) == 0)
+    //        {
+    //            ViewState["i"] = 1;
+    //        }
+    //        int i = Convert.ToInt16(ViewState["i"]);
+    //        e.Cell.Text = i.ToString();
+    //        i++;
+    //        ViewState["i"] = i;
+    //    }
+    //}
 
     protected void btn_import_Click(object sender, EventArgs e)
     {
-        txt_pgi_no.Text = "A";
+        QueryASPxGridView();
+        ASPxGridViewExporter1.WriteXlsToResponse("库龄" + System.DateTime.Now.ToShortDateString());//导出到Excel
 
     }
+
 }
