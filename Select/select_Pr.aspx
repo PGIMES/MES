@@ -42,7 +42,7 @@
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server"  Width="1000px" ClientInstanceName="grid"  KeyFieldName="id"  EnableTheming="True" >
                          <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True"  />
-              <SettingsPager PageSize="100">
+              <SettingsPager PageSize="1000">
                      
                 </SettingsPager>
                   <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True"/>

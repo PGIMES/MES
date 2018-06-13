@@ -451,7 +451,7 @@
                             <div class="btn btn-padding-s btn-success " name="frm_GC">
                                 <div class="btn-group">
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_GC">
-                                        工艺路线管理</div>
+                                        工艺数据</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu"> 
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD" target="_blank">工艺路线申请(测试)</a></li>
                                         <li class="divider"></li>
