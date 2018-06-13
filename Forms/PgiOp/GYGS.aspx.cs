@@ -76,11 +76,13 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
 
             DataTable ldt_detail = null;
-            string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a";
+            string lssql = @"select a.id, GYGSNo, typeno, pgi_no, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
+                                , col1, col2, col3, col4, col5, col6, col7, TSumNum, TPec8Num, OpNum, UpdateById, UpdateByName, UpdateDate
+                                ,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid 
+                            from [dbo].[PGI_GYGS_Dtl_Form] a";
 
             if (this.m_sid == "")
-            {
-                //新增
+            {                
                 if (LogUserModel != null)
                 {
                     //新增时表头基本信息
@@ -90,7 +92,29 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     txt_CreateDate.Value = System.DateTime.Now.ToString();
                 }
 
-                lssql += " where 1=0";
+                //修改申请
+                if (Request.QueryString["formno"] != null && Request.QueryString["state"] =="edit")
+                {
+                    DataTable ldt = DbHelperSQL.Query("select * from PGI_GYGS_Main_Form where formno='" + Request.QueryString["formno"] + "'").Tables[0];
+                    SetControlValue("PGI_GYGS_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    txt_domain.Text = ldt.Rows[0]["domain"].ToString();
+
+                    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).ReadOnly = true;
+                    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
+
+                    ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text = GetVer_edit(ldt.Rows[0]["pgi_no"].ToString());
+                    ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
+
+                    lssql = @"select null id, GYGSNo, typeno, pgi_no, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
+                                , col1, col2, col3, col4, col5, col6, col7, TSumNum, TPec8Num, OpNum, UpdateById, UpdateByName, UpdateDate
+                                ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
+                           from[dbo].[PGI_GYGS_Dtl_Form] a 
+                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='"+ Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
+                }
+                else//新增申请
+                {
+                    lssql += " where 1=0";
+                }
 
             }
             else
@@ -120,15 +144,23 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
             for (int i = 0; i < ldt_detail.Rows.Count; i++)
             {
-                if (ldt_flow.Rows.Count == 0)
+                if (Request.QueryString["state"] == "edit")
                 {
-                    this.btnflowSend.Text = "批准";
-                }
 
-                if (ldt_flow.Rows.Count == 0 || Request.QueryString["display"] != null)
-                {
-                    setread(i);
                 }
+                else
+                {
+                    if (ldt_flow.Rows.Count == 0)
+                    {
+                        this.btnflowSend.Text = "批准";
+                    }
+
+                    if (ldt_flow.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    {
+                        setread(i);
+                    }
+                }
+                
             }
 
         }
@@ -223,6 +255,8 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
 
         }*/
+
+        //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
 
         //表体生成SQL
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
@@ -441,70 +475,77 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
     public void SetGvRow()
     {
-
-        string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Text;
-        string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
-
-        string lstypeno = "";
-        var chk = ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno"));
-        for (int k = 0; k < chk.Items.Count; k++)
+        if (Request.QueryString["state"] == "edit")
         {
-            if (chk.Items[k].Selected) { lstypeno += chk.Items[k].Value + ";"; }
+
         }
-
-        //if (lspgi_no == "" || lstypeno=="")
-        //{
-        //    return;
-        //}
-
-        //先查询数据库时候有数据
-        string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
-        string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "'  order by a.typeno,op";
-        DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
-        if (ldt_db != null)
+        else
         {
-            if (ldt_db.Rows.Count > 0)
+
+            string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Text;
+            string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
+
+            string lstypeno = "";
+            var chk = ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno"));
+            for (int k = 0; k < chk.Items.Count; k++)
             {
-                gv_d.DataSource = ldt_db;
-                gv_d.DataBind();
-                return;
+                if (chk.Items[k].Selected) { lstypeno += chk.Items[k].Value + ";"; }
             }
+
+            //if (lspgi_no == "" || lstypeno=="")
+            //{
+            //    return;
+            //}
+
+            //先查询数据库时候有数据
+            string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
+            string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a 
+                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "'  order by a.typeno,op";
+            DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
+            if (ldt_db != null)
+            {
+                if (ldt_db.Rows.Count > 0)
+                {
+                    gv_d.DataSource = ldt_db;
+                    gv_d.DataBind();
+                    return;
+                }
+            }
+
+            //首次
+            DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
+
+            for (int i = 1; i <= 7; i++)
+            {
+                DataRow ldr = ldt.NewRow();
+                ldr["typeno"] = "机加";
+                //ldr["pgi_no"] = lspgi_no;
+                ldr["op"] = "OP1" + i.ToString() + "0";
+                ldr["isbg"] = "Y";
+                ldr["numid"] = i;
+
+                ldt.Rows.Add(ldr);
+            }
+
+            DataRow ldr_z1 = ldt.NewRow();
+            ldr_z1["typeno"] = "质量";
+            //ldr_z1["pgi_no"] = lspgi_no;
+            ldr_z1["op"] = "OP600";
+            ldr_z1["isbg"] = "Y";
+            ldr_z1["numid"] = 8;
+            ldt.Rows.Add(ldr_z1);
+
+            DataRow ldr_z2 = ldt.NewRow();
+            ldr_z2["typeno"] = "质量";
+            //ldr_z2["pgi_no"] = lspgi_no;
+            ldr_z2["op"] = "OP700";
+            ldr_z2["isbg"] = "Y";
+            ldr_z2["numid"] = 9;
+            ldt.Rows.Add(ldr_z2);
+
+            gv_d.DataSource = ldt;
+            gv_d.DataBind();
         }
-
-        //首次
-        DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
-
-        for (int i = 1; i <= 7; i++)
-        {
-            DataRow ldr = ldt.NewRow();
-            ldr["typeno"] = "机加";
-            //ldr["pgi_no"] = lspgi_no;
-            ldr["op"] = "OP1" + i.ToString() + "0";
-            ldr["isbg"] = "Y";
-            ldr["numid"] = i;
-
-            ldt.Rows.Add(ldr);
-        }
-
-        DataRow ldr_z1 = ldt.NewRow();
-        ldr_z1["typeno"] = "质量";
-        //ldr_z1["pgi_no"] = lspgi_no;
-        ldr_z1["op"] = "OP600";
-        ldr_z1["isbg"] = "Y";
-        ldr_z1["numid"] = 8;
-        ldt.Rows.Add(ldr_z1);
-
-        DataRow ldr_z2 = ldt.NewRow();
-        ldr_z2["typeno"] = "质量";
-        //ldr_z2["pgi_no"] = lspgi_no;
-        ldr_z2["op"] = "OP700";
-        ldr_z2["isbg"] = "Y";
-        ldr_z2["numid"] = 9;
-        ldt.Rows.Add(ldr_z2);
-
-        gv_d.DataSource = ldt;
-        gv_d.DataBind();
 
     }
 
@@ -518,6 +559,19 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
         string result = "[{\"ver\":\"" + dt.Rows[0][0].ToString() + "\"}]";
+        return result;
+
+    }
+
+    public string GetVer_edit(string lspgino)
+    {
+        string sql = @"select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form 
+                    where pgi_no='{0}' and formno in(select InstanceID from RoadFlowWebForm.[dbo].[WorkFlowTask] where flowid='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' )";
+        sql = string.Format(sql, lspgino);
+
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        string result = dt.Rows[0][0].ToString();
         return result;
 
     }

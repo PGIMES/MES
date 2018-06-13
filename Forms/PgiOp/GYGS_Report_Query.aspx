@@ -78,7 +78,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1970px" OnPageIndexChanged="gv_PageIndexChanged" >
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="2050px" OnPageIndexChanged="gv_PageIndexChanged" >
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
@@ -93,7 +93,14 @@
                                 </DataItemTemplate>--%>
                             <%--</dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no_t" Width="100px" VisibleIndex="1">
-                                <Settings AllowCellMerge="True" />  
+                                <Settings AllowCellMerge="True" /> 
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_pgi_no_t" runat="server" Text='<%# Eval("pgi_no_t")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no_t"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no_t") %>'  
+                                         Target="_blank"
+                                        >                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pn" Width="120px" VisibleIndex="2">
                                 <Settings AllowCellMerge="True" />
@@ -136,6 +143,7 @@
                             <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="55px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="流程状态" FieldName="" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>
                         </Columns>
