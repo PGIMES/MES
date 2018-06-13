@@ -511,7 +511,11 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     [WebMethod]
     public static string GetVer(string lspgino)
     {
-        DataTable dt = DbHelperSQL.Query("select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form where pgi_no='" + lspgino + "' ").Tables[0];
+        string sql = @"select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form 
+                    where pgi_no='{0}' and formno in(select InstanceID from RoadFlowWebForm.[dbo].[WorkFlowTask] where flowid='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' )";
+        sql = string.Format(sql, lspgino);
+
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
         string result = "[{\"ver\":\"" + dt.Rows[0][0].ToString() + "\"}]";
         return result;
@@ -537,13 +541,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     //发送按钮
     protected void btnflowSend_Click(object sender, EventArgs e)
     {
-        //保存数据
-        bool flag = SaveData();
-        //发送
-        if (flag == true)
-        {
-            Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
-        }
+        Pgi.Auto.Public.MsgBox(Page, "alert", "流程开发中。。");
+        ////保存数据
+        //bool flag = SaveData();
+        ////发送
+        //if (flag == true)
+        //{
+        //    Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
+        //}
     }
     #endregion
 

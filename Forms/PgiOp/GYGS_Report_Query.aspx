@@ -1,4 +1,4 @@
-﻿<%@ Page Title="工艺工时查询" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="GYGS_Report_Query.aspx.cs" Inherits="Forms_PgiOp_GYGS_Report_Query" %>
+﻿<%@ Page Title="工艺路线查询" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="GYGS_Report_Query.aspx.cs" Inherits="Forms_PgiOp_GYGS_Report_Query" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.Web" TagPrefix="dx" %>
@@ -10,7 +10,7 @@
     <script type="text/javascript" src="/Content/js/jquery.cookie.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mestitle").text("【工艺工时查询】");
+            $("#mestitle").text("【工艺路线查询】");
 
             $('#btn_add').click(function () {
                 window.open('/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD')
