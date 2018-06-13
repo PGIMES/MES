@@ -141,7 +141,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.gv_d.DataBind();
 
 
-            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text!="A")
+            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text!="A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")
             {
                 ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
                 ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Attributes.Remove("ondblclick");
@@ -488,12 +488,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
     public void SetGvRow()
     {
-        if (Request.QueryString["state"] == "edit" || ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A")
-        {
+        //if (Request.QueryString["state"] == "edit")
+        //{
 
-        }
-        else
-        {
+        //}
+        //else
+        //{
 
             string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Text;
             string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
@@ -558,7 +558,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
             gv_d.DataSource = ldt;
             gv_d.DataBind();
-        }
+        //}
 
     }
 
