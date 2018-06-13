@@ -95,12 +95,18 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 //修改申请
                 if (Request.QueryString["formno"] != null && Request.QueryString["state"] =="edit")
                 {
-                    DataTable ldt = DbHelperSQL.Query("select * from PGI_GYGS_Main_Form where formno='" + Request.QueryString["formno"] + "'").Tables[0];
+                    string sql_head = @"select id, FormNo, pgi_no, pn, pn_desc, domain, ver, typeno, state
+                                        , isnull(a.product_user,c.product_user) product_user, isnull(a.zl_user,c.zl_user) zl_user, isnull(a.yz_user,c.yz_user) yz_user
+                                        , CreateById, CreateByName, CreateByDept, CreateDate 
+                                    from PGI_GYGS_Main a 
+                                        left join V_Track_product c on left(a.pgi_no,5)=c.xmh 
+                                    where formno='" + Request.QueryString["formno"] + "'";
+                    DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
                     SetControlValue("PGI_GYGS_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString();
 
-                    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).ReadOnly = true;
-                    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
+                    //((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).ReadOnly = true;
+                    //((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
 
                     ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text = GetVer_edit(ldt.Rows[0]["pgi_no"].ToString());
                     ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
@@ -108,7 +114,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     lssql = @"select null id, GYGSNo, typeno, pgi_no, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, col3, col4, col5, col6, col7, TSumNum, TPec8Num, OpNum, UpdateById, UpdateByName, UpdateDate
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
-                           from[dbo].[PGI_GYGS_Dtl_Form] a 
+                           from PGI_GYGS_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='"+ Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
                 }
                 else//新增申请
@@ -134,6 +140,13 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.gv_d.DataSource = ldt_detail;
             this.gv_d.DataBind();
 
+
+            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text!="A")
+            {
+                ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).CssClass = "lineread";
+                ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).Attributes.Remove("ondblclick");
+                ((TextBox)this.FindControl("ctl00$MainContent$pgi_no")).ReadOnly = true;
+            }
 
             //特殊处理，签核界面，明细的框框拿掉
             lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
@@ -475,7 +488,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
     public void SetGvRow()
     {
-        if (Request.QueryString["state"] == "edit")
+        if (Request.QueryString["state"] == "edit" || ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A")
         {
 
         }
@@ -552,8 +565,11 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     [WebMethod]
     public static string GetVer(string lspgino)
     {
-        string sql = @"select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form 
-                    where pgi_no='{0}' and formno in(select InstanceID from RoadFlowWebForm.[dbo].[WorkFlowTask] where flowid='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' )";
+        //string sql = @"select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form 
+        //            where pgi_no='{0}' and formno in(select InstanceID from RoadFlowWebForm.[dbo].[WorkFlowTask] where flowid='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' )";
+
+        string sql = @"select nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main where pgi_no='{0}' ";
+
         sql = string.Format(sql, lspgino);
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
@@ -565,8 +581,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
     public string GetVer_edit(string lspgino)
     {
-        string sql = @"select  nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main_Form 
-                    where pgi_no='{0}' and formno in(select InstanceID from RoadFlowWebForm.[dbo].[WorkFlowTask] where flowid='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' )";
+        string sql = @"select nchar(isnull(ascii(max(Ver)),64)+1) from PGI_GYGS_Main where pgi_no='{0}' ";
         sql = string.Format(sql, lspgino);
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];

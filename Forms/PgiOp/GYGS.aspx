@@ -63,11 +63,23 @@
                     $(this).css("display","none");
                 });
             }
-
             
-            //if(state==null){
-            //    $("#MainContent_lbl_PGI_GYGS_Main_Form_HEAD_2").css("display","none");
-            //}
+            if(state=="edit"){
+                $("#CPXX input[id*='typeno']").each(function (){
+                    if($(this).val()=="机加"){
+                        if($("#CPXX input[id*='product_user']").val()==""){ $(this).prop("checked", false);}
+                        else{ $(this).prop("checked", true);}  
+                    }
+                    if($(this).val()=="质量"){
+                        if($("#CPXX input[id*='zl_user']").val()==""){ $(this).prop("checked", false);}
+                        else{ $(this).prop("checked", true);}  
+                    }
+                    if($(this).val()=="压铸"){
+                        if($("#CPXX input[id*='yz_user']").val()==""){ $(this).prop("checked", false);}
+                        else{ $(this).prop("checked", true);}  
+                    }
+                });
+            }
 
             $("input[id*='typeno']").change(function () {  
                   gv_d.PerformCallback();
