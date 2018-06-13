@@ -78,25 +78,17 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1840px" OnPageIndexChanged="gv_PageIndexChanged" >
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1790px" OnPageIndexChanged="gv_PageIndexChanged" >
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
                         <Columns>
-                            <%--<dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>--%>
-                          <%--  <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="60px" VisibleIndex="2">
-                                <Settings AllowCellMerge="True" />--%>
-                                <%--<DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl="" >
-                                    </dx:ASPxHyperLink>
-                                </DataItemTemplate>--%>
-                            <%--</dx:GridViewDataTextColumn>--%>
-                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no_t" Width="100px" VisibleIndex="1">
+                            <%--<dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>--%>                          
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="100px" VisibleIndex="1">
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_pgi_no_t" runat="server" Text='<%# Eval("pgi_no_t")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no_t"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no_t") %>'  
+                                    <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no") %>'  
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
@@ -124,7 +116,7 @@
                             <dx:GridViewDataTextColumn Caption="加工时长<br />(秒)" FieldName="JgSec" Width="55px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="设备等待<br />时间(秒)" FieldName="WaitSec" Width="55px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="装夹时间<br />(秒)" FieldName="ZjSecc" Width="55px" VisibleIndex="13"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="机器台数" FieldName="JtNum" Width="55px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="机器<br />台数" FieldName="JtNum" Width="50px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(秒)" FieldName="TjOpSec" Width="70px" VisibleIndex="15">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
@@ -138,9 +130,9 @@
                             <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整线班产量" FieldName="col5" Width="65px" VisibleIndex="22"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单人报工<br />数量" FieldName="col6" Width="65px" VisibleIndex="23"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="55px" VisibleIndex="24">
+                            <dx:GridViewDataTextColumn Caption="整线班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="单人报工<br />数量" FieldName="col6" Width="50px" VisibleIndex="23"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
