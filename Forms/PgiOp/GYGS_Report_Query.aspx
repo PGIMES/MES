@@ -100,12 +100,9 @@
                             
                             <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="工艺段" FieldName="typeno" Width="50px" VisibleIndex="2">--%>
-                                <%--<Settings AllowCellMerge="True" />--%>
-                            <%--</dx:GridViewDataTextColumn>--%>
-                            <%--<dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />  
-                            </dx:GridViewDataTextColumn>--%>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="140px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序说明" FieldName="op_remark" Width="140px" VisibleIndex="6"></dx:GridViewDataTextColumn>
