@@ -775,7 +775,7 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="加工时长<br />(秒)" FieldName="JgSec" Width="50px" VisibleIndex="12">
+                                        <dx:GridViewDataTextColumn Caption="加工<br />时长(秒)" FieldName="JgSec" Width="40px" VisibleIndex="12">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
                                                 <dx:ASPxTextBox ID="JgSec" Width="50px" runat="server" Value='<%# Eval("JgSec")%>'
@@ -799,7 +799,7 @@
                                                 </dx:ASPxTextBox>                
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="装夹时间<br />(秒)" FieldName="ZjSecc" Width="50px" VisibleIndex="13">
+                                        <dx:GridViewDataTextColumn Caption="装夹<br />时间(秒)" FieldName="ZjSecc" Width="40px" VisibleIndex="13">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
                                                 <dx:ASPxTextBox ID="ZjSecc" Width="50px" runat="server" Value='<%# Eval("ZjSecc")%>'
