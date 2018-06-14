@@ -58,7 +58,7 @@ public partial class Select_select_wkzx : System.Web.UI.Page
         string ls_gzzx = GridView1.SelectedRow.Cells[0].Text.Trim().Replace("&nbsp;", "");
         string ls_gzzx_desc = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
         
-        string temp = @"<script>parent.setvalue_wkzx('" + ls_gzzx + "','" + ls_gzzx_desc + "','" + Request.QueryString["vi"] + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        string temp = @"<script>parent.setvalue_wkzx('" + ls_gzzx + "','" + ls_gzzx_desc + "','" + Request.QueryString["vi"] + "','" + Request.QueryString["ty"] + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
         Response.Write(temp.Trim());
     }
 }

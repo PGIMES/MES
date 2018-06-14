@@ -69,7 +69,7 @@ public partial class Select_select_product_d : System.Web.UI.Page
     {
         string lspgino = GridView1.SelectedRow.Cells[0].Text.Trim().Replace("&nbsp;", "");
 
-        string temp = @"<script>parent.setvalue_product_d('" + lspgino + "','"+Request["vi"]+"'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        string temp = @"<script>parent.setvalue_product_d('" + lspgino + "','"+Request["vi"]+ "','" + Request.QueryString["ty"] + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
 
 
         Response.Write(temp.Trim());
