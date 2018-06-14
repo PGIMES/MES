@@ -115,6 +115,16 @@
                 });
             }); 
 
+            //测试
+            //layer.prompt({title: '输入任何口令，并确认', formType: 1}, function(pass, index){
+            //    layer.close(index);
+            //    layer.prompt({title: '填写工号，并确认', formType: 2}, function(text, index){
+            //        $("#SQXX input[id*='txt_CreateById']").val(text);
+            //        layer.close(index);
+            //    });
+                
+            //});
+
         });
 
         //提出自定流程 JS 

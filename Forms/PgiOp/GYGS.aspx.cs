@@ -33,7 +33,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         }
 
         LoginUser LogUserModel = null;
-        //LogUserModel = InitUser.GetLoginUserInfo("02274", "");//02338//00495
+        //LogUserModel = InitUser.GetLoginUserInfo("01715", "");//02338//00495
 
         if (Request.ServerVariables["LOGON_USER"].ToString() == "")
         {
@@ -147,11 +147,25 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             {
                 dt_pro.Rows.Add(item.ItemArray);
             }
+
             if (dt_pro.Rows.Count > 0)
             {
-                IsGrid_pro = "Y";
-                this.gv_d.DataSource = dt_pro;
-                this.gv_d.DataBind();
+                if (Request.QueryString["state"] == "edit")
+                {
+                    if (((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Substring(0, 5) == ((LoginUser)Session["LogUser_CurPage"]).UserId)
+                    {
+                        IsGrid_pro = "Y";
+                        this.gv_d.DataSource = dt_pro;
+                        this.gv_d.DataBind();
+                    }
+                }
+                else
+                {
+                    IsGrid_pro = "Y";
+                    this.gv_d.DataSource = dt_pro;
+                    this.gv_d.DataBind();
+                }
+                    
             }
 
             DataRow[] drs_yz = ldt_detail.Select("typeno='压铸'");
@@ -160,11 +174,24 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             {
                 dt_yz.Rows.Add(item.ItemArray);
             }
+
             if (dt_yz.Rows.Count > 0)
             {
-                IsGrid_yz = "Y";
-                this.gv_d_yz.DataSource = dt_yz;
-                this.gv_d_yz.DataBind();
+                if (Request.QueryString["state"] == "edit")
+                {
+                    if (((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Substring(0, 5) == ((LoginUser)Session["LogUser_CurPage"]).UserId)
+                    {
+                        IsGrid_yz = "Y";
+                        this.gv_d_yz.DataSource = dt_yz;
+                        this.gv_d_yz.DataBind();
+                    }
+                }
+                else
+                {
+                    IsGrid_yz = "Y";
+                    this.gv_d_yz.DataSource = dt_yz;
+                    this.gv_d_yz.DataBind();
+                }
             }
 
             if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text!="A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")
