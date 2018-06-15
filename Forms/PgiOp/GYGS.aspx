@@ -367,7 +367,7 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.85;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83;}
             col5.SetText(col5_value.toFixed(0));
             
             //单人产出工时
@@ -416,7 +416,7 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.85;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83;}
             col5.SetText(col5_value.toFixed(0));
             
             //单人产出工时
