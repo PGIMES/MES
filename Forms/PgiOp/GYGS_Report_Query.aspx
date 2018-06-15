@@ -127,7 +127,7 @@
                             <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整线班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人报工<br />数量" FieldName="col6" Width="50px" VisibleIndex="23"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>

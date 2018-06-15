@@ -80,6 +80,18 @@
                     $(this).css("display","none");
                 });
             }
+
+            $("#CPXX input[id*='projectno']").change(function () {  
+                $("#CPXX input[id*='pn']").val("");
+                $("#CPXX input[id*='pn_desc']").val("");
+                $("#CPXX input[id*='domain']").val("");
+                $("#CPXX input[id*='yz_user']").val("");
+                $("#CPXX input[id*='zl_user']").val("");
+                $("#CPXX input[id*='product_user']").val("");
+                $("#CPXX input[id*='ver']").val("");
+
+                $("#CPXX input[id*='projectno']").val("");
+            });
             
             if(state=="edit"){
                 $("#CPXX input[id*='typeno']").each(function (){
@@ -1115,7 +1127,7 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="整线班<br />产量" FieldName="col5" Width="40px" VisibleIndex="22">
+                                        <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="40px" VisibleIndex="22">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col5" Width="40px" runat="server" Value='<%# Eval("col5")%>' 
                                                     ClientInstanceName='<%# "col5"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
@@ -1437,7 +1449,7 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="整线班<br />产量" FieldName="col5" Width="40px" VisibleIndex="22">
+                                        <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="40px" VisibleIndex="22">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col5" Width="40px" runat="server" Value='<%# Eval("col5")%>' 
                                                     ClientInstanceName='<%# "col5_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">

@@ -99,8 +99,9 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 if (Request.QueryString["formno"] != null && Request.QueryString["state"] =="edit")
                 {
                     string sql_head = @"select id, FormNo, projectno, pn, pn_desc, domain, ver, typeno, state
-                                        , isnull(a.product_user,c.product_user) product_user, isnull(a.zl_user,c.zl_user) zl_user, isnull(a.yz_user,c.yz_user) yz_user
-                                        , CreateById, CreateByName, CreateByDept, CreateDate 
+                                            --, isnull(a.product_user,c.product_user) product_user, isnull(a.zl_user,c.zl_user) zl_user, isnull(a.yz_user,c.yz_user) yz_user
+                                            ,c.product_user,c.zl_user,c.yz_user
+                                            , CreateById, CreateByName, CreateByDept, CreateDate 
                                     from PGI_GYGS_Main a 
                                         left join V_Track_product c on a.projectno=c.xmh 
                                     where formno='" + Request.QueryString["formno"] + "'";
@@ -738,8 +739,20 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
-        //获取表头
+        //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
         List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYGS_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+
+        string lstypeno = "";
+        var chk = ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno"));
+        for (int k = 0; k < chk.Items.Count; k++)
+        {
+            if (chk.Items[k].Selected) { lstypeno += chk.Items[k].Value + ";"; }
+        }
+
+        string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();        
+        string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
+        product_user = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
+        yz_user = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
 
         /*
         //数据库字段设置不能为空，需要验证，利用ToolTip 设置的，
@@ -755,42 +768,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
 
         }*/
-
-        //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
-
-        //表体生成SQL
-        DataTable ldt = new DataTable();
-        string lstypeno = "";
-        var chk = ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno"));
-        for (int k = 0; k < chk.Items.Count; k++)
-        {
-            if (chk.Items[k].Selected) { lstypeno += chk.Items[k].Value + ";"; }
-        }
-
-        string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
-        string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
-        if (lstypeno.Contains("机加"))//勾选机加，并且当前登录人是机加工程师
-        {
-            if (product_user != "")
-            {
-                if (product_user.Substring(0, 5) == ((LoginUser)Session["LogUser_CurPage"]).UserId)
-                {
-                    ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
-                }
-            }
-        }
-        if (lstypeno.Contains("压铸"))
-        {
-            if (yz_user != "")
-            {
-                if (yz_user.Substring(0, 5) == ((LoginUser)Session["LogUser_CurPage"]).UserId)
-                {
-                    ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
-                }
-            }
-        }
-
-
 
         if (this.m_sid == "")
         {
@@ -836,6 +813,66 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         }
 
+        string workcode = "'" + product_user + "','" + yz_user + "'";
+        string sql = @"select a.account,a.id ,b.workcode
+                    from RoadFlowWebForm.dbo.Users a 
+	                    inner join (select Manager_workcode,workcode from HR_EMP_MES a  where workcode in({0})) b on a.account=b.Manager_workcode 
+                    union all
+                    select a.account,a.id,'' workcode
+                    from RoadFlowWebForm.dbo.Users a where account in({0})";
+        sql = string.Format(sql, workcode);
+        DataTable dt_user= DbHelperSQL.Query(sql).Tables[0];
+        
+        string guid_cp_id = "", guid_yz_id = "", guid_cp_manager = "", guid_yz_manager = "";
+        foreach (DataRow item in dt_user.Rows)
+        {
+            if (item["workcode"].ToString() == "" && item["account"].ToString() == product_user) { guid_cp_id = "u_" + item["id"].ToString(); }
+            if (item["workcode"].ToString() == "" && item["account"].ToString() == yz_user) { guid_yz_id = "u_" + item["id"].ToString(); }
+            if (item["workcode"].ToString() != "" && item["workcode"].ToString() == product_user) { guid_cp_manager = "u_" + item["id"].ToString(); }
+            if (item["workcode"].ToString() != "" && item["workcode"].ToString() == yz_user) { guid_yz_manager = "u_" + item["id"].ToString(); }
+        }
+
+        Pgi.Auto.Common lccp_id = new Pgi.Auto.Common();
+        lccp_id.Code = "cp_id";
+        lccp_id.Key = "";
+        lccp_id.Value = guid_cp_id;
+        ls.Add(lccp_id);
+
+        Pgi.Auto.Common lcyz_id = new Pgi.Auto.Common();
+        lcyz_id.Code = "yz_id";
+        lcyz_id.Key = "";
+        lcyz_id.Value = guid_yz_id;
+        ls.Add(lcyz_id);
+
+        Pgi.Auto.Common lccp_manager = new Pgi.Auto.Common();
+        lccp_manager.Code = "cp_manager";
+        lccp_manager.Key = "";
+        lccp_manager.Value = guid_cp_manager;
+        ls.Add(lccp_manager);
+
+        Pgi.Auto.Common lcyz_manager = new Pgi.Auto.Common();
+        lcyz_manager.Code = "yz_manager";
+        lcyz_manager.Key = "";
+        lcyz_manager.Value = guid_yz_manager;
+        ls.Add(lcyz_manager);
+
+        //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
+        DataTable ldt = new DataTable();
+        
+        if (lstypeno.Contains("机加"))//勾选机加，并且当前登录人是机加工程师
+        {           
+            if (product_user == ((LoginUser)Session["LogUser_CurPage"]).UserId)
+            {
+                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+            }           
+        }
+        if (lstypeno.Contains("压铸"))
+        {
+            if (yz_user == ((LoginUser)Session["LogUser_CurPage"]).UserId)
+            {
+                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+            }
+        }
 
         //主表相关字段赋值到明细表
         for (int i = 0; i < ldt.Rows.Count; i++)
@@ -851,6 +888,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
         }
 
+        //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
         ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_GYGS_Main_Form"));
 
@@ -895,6 +933,8 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             //}
         }
 
+        //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
+
 
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
@@ -934,14 +974,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     //发送按钮
     protected void btnflowSend_Click(object sender, EventArgs e)
     {
-        Pgi.Auto.Public.MsgBox(Page, "alert", "流程开发中。。");
+        //Pgi.Auto.Public.MsgBox(Page, "alert", "流程开发中。。");
         //保存数据
-        //bool flag = SaveData();
-        ////发送
-        //if (flag == true)
-        //{
-        //    Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
-        //}
+        bool flag = SaveData();
+        //发送
+        if (flag == true)
+        {
+            Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
+        }
     }
     #endregion
 
