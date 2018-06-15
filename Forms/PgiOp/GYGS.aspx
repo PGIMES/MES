@@ -84,12 +84,12 @@
             if(state=="edit"){
                 $("#CPXX input[id*='typeno']").each(function (){
                     if($(this).val()=="机加"){
-                        if($("#CPXX input[id*='product_user']").val()==""){ $(this).prop("checked", false);}
-                        else{ $(this).prop("checked", true);}  
+                        if($("#SQXX input[id*='txt_CreateById']").val()==($("#CPXX input[id*='product_user']").val()).substr(0,5)){ $(this).prop("checked", true);}
+                        else{ $(this).prop("checked", false);}  
                     }
                     if($(this).val()=="压铸"){
-                        if($("#CPXX input[id*='yz_user']").val()==""){ $(this).prop("checked", false);}
-                        else{ $(this).prop("checked", true);}  
+                        if($("#SQXX input[id*='txt_CreateById']").val()==($("#CPXX input[id*='yz_user']").val()).substr(0,5)){ $(this).prop("checked", true);}
+                        else{ $(this).prop("checked", false);}  
                     }
                 });
             }
