@@ -78,7 +78,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1790px" OnPageIndexChanged="gv_PageIndexChanged" >
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1890px" OnPageIndexChanged="gv_PageIndexChanged" >
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
@@ -100,9 +100,9 @@
                             
                             <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="100px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />  
-                            </dx:GridViewDataTextColumn>--%>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="140px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序说明" FieldName="op_remark" Width="140px" VisibleIndex="6"></dx:GridViewDataTextColumn>
@@ -125,8 +125,8 @@
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台<br />需要人数" FieldName="col1" Width="55px" VisibleIndex="18"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整线班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人报工<br />数量" FieldName="col6" Width="50px" VisibleIndex="23"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">

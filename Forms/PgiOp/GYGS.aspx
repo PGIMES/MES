@@ -356,12 +356,12 @@
             var JHour_value = TjOpSec_value/3600;
             JHour.SetText(JHour_value.toFixed(5));
 
-            //单台85%产量
+            //单台83%产量
             var col3_value=0;
-            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.85; }
+            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83; }
             col3.SetText(col3_value.toFixed(0));
 
-            //一人85%产量
+            //一人83%产量
             var col4_value=col2_value*col3_value;
             col4.SetText(col4_value.toFixed(0));
 
@@ -405,12 +405,12 @@
             var JHour_value = TjOpSec_value/3600;
             JHour.SetText(JHour_value.toFixed(5));
 
-            //单台85%产量
+            //单台83%产量
             var col3_value=0;
-            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.85; }
+            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83; }
             col3.SetText(col3_value.toFixed(0));
 
-            //一人85%产量
+            //一人83%产量
             var col4_value=col2_value*col3_value;
             col4.SetText(col4_value.toFixed(0));
 
@@ -1423,14 +1423,14 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
+                                        <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col3" Width="40px" runat="server" Value='<%# Eval("col3")%>' 
                                                     ClientInstanceName='<%# "col3_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="40px" VisibleIndex="21">
+                                        <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="40px" VisibleIndex="21">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col4" Width="40px" runat="server" Value='<%# Eval("col4")%>' 
                                                     ClientInstanceName='<%# "col4_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
