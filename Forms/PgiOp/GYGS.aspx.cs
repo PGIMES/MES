@@ -33,8 +33,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         }
 
         LoginUser LogUserModel = null;
-        //LogUserModel = InitUser.GetLoginUserInfo("01715", "");//02338//00495
-
         if (Request.ServerVariables["LOGON_USER"].ToString() == "")
         {
             LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
@@ -43,6 +41,8 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         {
             LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         }
+
+        //LogUserModel = InitUser.GetLoginUserInfo("01746", "");//02338//00495//	01746
 
         Session["LogUser"] = LogUserModel;
         Session["LogUser_CurPage"] = LogUserModel;
@@ -471,14 +471,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
 
             DataRow ldr_z1 = ldt.NewRow();
-            ldr_z1["typeno"] = "质量";
+            ldr_z1["typeno"] = "机加";
             ldr_z1["op"] = "OP600";
             ldr_z1["isbg"] = "Y";
             ldr_z1["numid"] = 8;
             ldt.Rows.Add(ldr_z1);
 
             DataRow ldr_z2 = ldt.NewRow();
-            ldr_z2["typeno"] = "质量";
+            ldr_z2["typeno"] = "机加";//质量
             ldr_z2["op"] = "OP700";
             ldr_z2["isbg"] = "Y";
             ldr_z2["numid"] = 9;
@@ -935,7 +935,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
     protected void btnflowSend_Click(object sender, EventArgs e)
     {
         Pgi.Auto.Public.MsgBox(Page, "alert", "流程开发中。。");
-        ////保存数据
+        //保存数据
         //bool flag = SaveData();
         ////发送
         //if (flag == true)
