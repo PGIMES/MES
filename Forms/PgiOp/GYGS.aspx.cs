@@ -54,15 +54,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             this.tblCPXX.Rows.Add(ls[i]);
         }
 
-        //if (Request.QueryString["state"] == null)
-        //{
-        //    ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Visible = false;
-        //}
-        //else
-        //{
-        //    ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Visible = true;
-        //}
-
 
         if (!IsPostBack)
         {
@@ -826,6 +817,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
         List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYGS_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
+        string projectno = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text.Trim();
+        string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();        
+        string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
+        product_user = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
+        yz_user = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
+        
         string lstypeno = "";
         var chk = ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno"));
         for (int k = 0; k < chk.Items.Count; k++)
@@ -834,10 +831,20 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         }
         if (lstypeno.Length > 0) { lstypeno = lstypeno.Substring(0, lstypeno.Length - 1); }
 
-        string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();        
-        string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
-        product_user = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
-        yz_user = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
+
+        //----------------------------------------------------------------------------验证存在正在申请的项目
+        string re_sql = @"select a.InstanceID,b.createbyid,b.createbyname 
+                        from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' and status in(0,1))  a
+                            inner join PGI_GYGS_Main_Form b on a.InstanceID=b.formno
+                         where 1=1";
+        if (m_sid != "") { re_sql += " and InstanceID<>'"+ m_sid + "'"; }
+        DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
+
+        if (re_dt.Rows.Count > 0)
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", "该项目正在申请中，不能提交(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
+            return false;
+        }
 
         /*
         //数据库字段设置不能为空，需要验证，利用ToolTip 设置的，
@@ -1050,6 +1057,8 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         return flag;
     }
+
+
 
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script
