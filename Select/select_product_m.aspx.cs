@@ -40,6 +40,7 @@ public partial class Select_select_product_m : System.Web.UI.Page
                         left join V_Track_product c on a.pgino=c.xmh
                     where b.pgino like '%{0}%' and b.productcode like '%{1}%'
                     union all select 'P0056','01336301771','奇瑞B12/B14轴承支架','200','A','01337-王雪斌','01968-孙娟','02432-何桂勤'
+                    union all select 'P0055','01336301772','奇瑞B12/B14轴承支架','200','A','01337-王雪斌','01968-孙娟','02432-何桂勤'
                     order by b.pgino,b.version";
         sql = string.Format(sql,this.txtpgi_no.Text.Trim(), this.txtpn.Text.Trim());
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];

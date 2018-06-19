@@ -18,13 +18,35 @@
 
             $('#btn_edit').click(function () {
 
-            });           
-        });
+            });
 
+            mergecells();
+            
+        });
+        var rows1 = ""; var rowsnext = "";
+        function mergecells() {
+            $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
+                var rowspans = $(item).find("td:eq(1)").attr("rowspan");
+                
+                if (rowspans != undefined) {
+                    rows1 = $(item).find("td").length;
+                    rowsnext = $($("#MainContent_gv_DXMainTable tr[class*=DataRow]")[index + 1]).find("td").length;
+                    $(item).find("td:first").attr("rowspan", rowspans);
+                }
+                else {
+                    rowsnext = $(item).find("td").length;
+                    if (rows1 != rowsnext) {
+                        $(item).find("td:first").hide();
+                    }
+                }
+            })            
+        }
+        	
     </script>
+
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
-
+    
     <div class="col-md-12" >
         <div class="row  row-container">            
             <div class="panel panel-info">
@@ -78,13 +100,19 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1890px" OnPageIndexChanged="gv_PageIndexChanged" >
-                        <SettingsPager PageSize="1000" ></SettingsPager>
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1930px" OnPageIndexChanged="gv_PageIndexChanged"    >
+                        <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
+            	                   // window.alert('Page changed!');
+                                    mergecells();
+        	                    }" />
+                        <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
-                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
+                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>
-                            <%--<dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>--%>                          
-                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="100px" VisibleIndex="1">
+                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"   >
+                                
+                            </dx:GridViewCommandColumn>                           
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="100px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
@@ -125,6 +153,7 @@
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台<br />需要人数" FieldName="col1" Width="55px" VisibleIndex="18"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="本产品设<br />备占用率" FieldName="EquipmentRate" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>

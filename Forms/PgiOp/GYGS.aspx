@@ -306,11 +306,11 @@
         {
             if (ty=="") {
                 var pgi_no= eval('pgi_no' + vi);var pgi_no_t= eval('pgi_no_t' + vi);
-                pgi_no.SetText(lspgino);pgi_no_t.SetText(lspgino);
+                pgi_no.SetText(lspgino.substr(0,7));pgi_no_t.SetText(lspgino);
             }
             if (ty=="yz") {
                 var pgi_no_yz= eval('pgi_no_yz' + vi);var pgi_no_t_yz= eval('pgi_no_t_yz' + vi);
-                pgi_no_yz.SetText(lspgino);pgi_no_t_yz.SetText(lspgino);
+                pgi_no_yz.SetText(lspgino.substr(0,7));pgi_no_t_yz.SetText(lspgino);
             }
         }
 
@@ -340,7 +340,7 @@
 
         function RefreshRow(vi) {
             var JgNum = eval('JgNum' + vi); var JgSec = eval('JgSec' + vi); var WaitSec = eval('WaitSec' + vi); var ZjSecc = eval('ZjSecc' + vi);var JtNum = eval('JtNum' + vi); 
-            var col1 = eval('col1' + vi); var col2 = eval('col2' + vi);var col6 = eval('col6' + vi);
+            var col1 = eval('col1' + vi); var col2 = eval('col2' + vi);var EquipmentRate = eval('EquipmentRate' + vi);var col6 = eval('col6' + vi);
 
             var JgNum_value = Number($.trim(JgNum.GetText()) == "" ? 0 : $.trim(JgNum.GetText()));//每次加工数量
             var JgSec_value = Number($.trim(JgSec.GetText()) == "" ? 0 : $.trim(JgSec.GetText()));//加工时长(秒)
@@ -349,6 +349,7 @@
             var JtNum_value = Number($.trim(JtNum.GetText()) == "" ? 0 : $.trim(JtNum.GetText()));//机器台数
             var col1_value = Number($.trim(col1.GetText()) == "" ? 0 : $.trim(col1.GetText()));//单台需要人数
             var col2_value = Number($.trim(col2.GetText()) == "" ? 0 : $.trim(col2.GetText()));//本工序一人操作台数
+            var EquipmentRate_value = Number($.trim(EquipmentRate.GetText()) == "" ? 0 : $.trim(EquipmentRate.GetText()));//本产品设备占用率
             var col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
 
             var TjOpSec = eval('TjOpSec' + vi); var JSec = eval('JSec' + vi);var JHour = eval('JHour' + vi);
@@ -370,7 +371,7 @@
 
             //单台83%产量
             var col3_value=0;
-            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83; }
+            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83 * EquipmentRate_value; }
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
@@ -379,8 +380,14 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
+
+            //单人报工数量
+            if(col6_value<=0){
+                col6.SetText(col4.GetText());
+                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
+            }            
             
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
@@ -389,7 +396,7 @@
 
         function RefreshRow_yz(vi) {
             var JgNum = eval('JgNum_yz' + vi); var JgSec = eval('JgSec_yz' + vi); var WaitSec = eval('WaitSec_yz' + vi); var ZjSecc = eval('ZjSecc_yz' + vi);var JtNum = eval('JtNum_yz' + vi); 
-            var col1 = eval('col1_yz' + vi); var col2 = eval('col2_yz' + vi);var col6 = eval('col6_yz' + vi);
+            var col1 = eval('col1_yz' + vi); var col2 = eval('col2_yz' + vi);var EquipmentRate = eval('EquipmentRate_yz' + vi);var col6 = eval('col6_yz' + vi);
 
             var JgNum_value = Number($.trim(JgNum.GetText()) == "" ? 0 : $.trim(JgNum.GetText()));//每次加工数量
             var JgSec_value = Number($.trim(JgSec.GetText()) == "" ? 0 : $.trim(JgSec.GetText()));//加工时长(秒)
@@ -398,6 +405,7 @@
             var JtNum_value = Number($.trim(JtNum.GetText()) == "" ? 0 : $.trim(JtNum.GetText()));//机器台数
             var col1_value = Number($.trim(col1.GetText()) == "" ? 0 : $.trim(col1.GetText()));//单台需要人数
             var col2_value = Number($.trim(col2.GetText()) == "" ? 0 : $.trim(col2.GetText()));//本工序一人操作台数
+            var EquipmentRate_value = Number($.trim(EquipmentRate.GetText()) == "" ? 0 : $.trim(EquipmentRate.GetText()));//本产品设备占用率
             var col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
 
             var TjOpSec = eval('TjOpSec_yz' + vi); var JSec = eval('JSec_yz' + vi);var JHour = eval('JHour_yz' + vi);
@@ -419,7 +427,7 @@
 
             //单台83%产量
             var col3_value=0;
-            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83; }
+            if(TjOpSec_value!=0){ col3_value = (12 * 60 * 60 / TjOpSec_value) * 0.83 * EquipmentRate_value; }
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
@@ -428,8 +436,14 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
+
+            //单人报工数量
+            if(col6_value<=0){
+                col6.SetText(col4.GetText());
+                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
+            }
             
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
@@ -555,6 +569,12 @@
                             return false;
                         }
                     });
+                    $("[id$=gv_d] input[id*=EquipmentRate]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【本产品设备占用率】不可为空.<br />";
+                            return false;
+                        }
+                    });
                     $("[id$=gv_d] input[id*=col6]").each(function (){
                         if( $(this).val()==""){
                             msg+="【单人报工数量】不可为空.<br />";
@@ -663,6 +683,12 @@
                     $("[id$=gv_d_yz] input[id*=col2]").each(function (){
                         if( $(this).val()==""){
                             msg+="【本工序一人操作台数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=EquipmentRate]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【本产品设备占用率】不可为空.<br />";
                             return false;
                         }
                     });
@@ -1117,6 +1143,18 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="本产品设<br />备占用率" FieldName="EquipmentRate" Width="60px" VisibleIndex="19">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="EquipmentRate" Width="60px" runat="server" Value='<%# Eval("EquipmentRate")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "EquipmentRate"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                                                    
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col3" Width="40px" runat="server" Value='<%# Eval("col3")%>' 
@@ -1439,6 +1477,18 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="本产品设<br />备占用率" FieldName="EquipmentRate" Width="50px" VisibleIndex="19">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxTextBox ID="EquipmentRate" Width="50px" runat="server" Value='<%# Eval("EquipmentRate")%>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>' 
+                                                    ClientInstanceName='<%# "EquipmentRate_yz"+Container.VisibleIndex.ToString() %>'>
+                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                                                    
+                                            </DataItemTemplate>   
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col3" Width="40px" runat="server" Value='<%# Eval("col3")%>' 
@@ -1460,10 +1510,10 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单人报<br />工数量" FieldName="col6" Width="40px" VisibleIndex="23">
+                                        <dx:GridViewDataTextColumn Caption="单人报<br />工数量" FieldName="col6" Width="50px" VisibleIndex="23">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="col6" Width="40px" runat="server" Value='<%# Eval("col6")%>'
+                                                <dx:ASPxTextBox ID="col6" Width="50px" runat="server" Value='<%# Eval("col6")%>'
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "col6_yz"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">

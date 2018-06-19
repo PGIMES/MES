@@ -71,7 +71,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
             DataTable ldt_detail = null;
             string lssql = @"select a.id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
-                                , col1, col2, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate
+                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate
                                 ,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid 
                             from [dbo].[PGI_GYGS_Dtl_Form] a";
 
@@ -107,7 +107,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
 
                     lssql = @"select null id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
-                                , col1, col2, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate
+                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYGS_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
@@ -183,12 +183,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     ldr_z1["numid"] = 8;
                     ldt.Rows.Add(ldr_z1);
 
-                    DataRow ldr_z2 = ldt.NewRow();
-                    ldr_z2["typeno"] = "机加";//质量
-                    ldr_z2["op"] = "OP700";
-                    ldr_z2["isbg"] = "Y";
-                    ldr_z2["numid"] = 9;
-                    ldt.Rows.Add(ldr_z2);
+                    //DataRow ldr_z2 = ldt.NewRow();
+                    //ldr_z2["typeno"] = "机加";//质量
+                    //ldr_z2["op"] = "OP700";
+                    //ldr_z2["isbg"] = "Y";
+                    //ldr_z2["numid"] = 9;
+                    //ldt.Rows.Add(ldr_z2);
 
                     IsGrid_pro = "Y";
                     gv_d.DataSource = ldt;
@@ -392,6 +392,9 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).BorderStyle = BorderStyle.None;
 
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EquipmentRate"], "EquipmentRate")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EquipmentRate"], "EquipmentRate")).BorderStyle = BorderStyle.None;
+
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
     }
@@ -546,12 +549,12 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             ldr_z1["numid"] = 8;
             ldt.Rows.Add(ldr_z1);
 
-            DataRow ldr_z2 = ldt.NewRow();
-            ldr_z2["typeno"] = "机加";//质量
-            ldr_z2["op"] = "OP700";
-            ldr_z2["isbg"] = "Y";
-            ldr_z2["numid"] = 9;
-            ldt.Rows.Add(ldr_z2);
+            //DataRow ldr_z2 = ldt.NewRow();
+            //ldr_z2["typeno"] = "机加";//质量
+            //ldr_z2["op"] = "OP700";
+            //ldr_z2["isbg"] = "Y";
+            //ldr_z2["numid"] = 9;
+            //ldt.Rows.Add(ldr_z2);
 
             gv_d.DataSource = ldt;
             gv_d.DataBind();
@@ -623,6 +626,9 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col2"], "col2")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col2"], "col2")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["EquipmentRate"], "EquipmentRate")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["EquipmentRate"], "EquipmentRate")).BorderStyle = BorderStyle.None;
 
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col6"], "col6")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
@@ -836,7 +842,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         string re_sql = @"select a.InstanceID,b.createbyid,b.createbyname 
                         from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' and status in(0,1))  a
                             inner join PGI_GYGS_Main_Form b on a.InstanceID=b.formno
-                         where 1=1";
+                         where b.projectno='"+ projectno + "'";
         if (m_sid != "") { re_sql += " and InstanceID<>'"+ m_sid + "'"; }
         DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
