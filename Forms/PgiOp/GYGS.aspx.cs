@@ -168,6 +168,42 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 }
                     
             }
+            else
+            {
+                if (StepID.ToUpper() == "C43B5FA9-BBB6-454E-B119-66ED7D83E48A")//机加工程师 签核进来
+                {
+                    DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
+
+                    for (int i = 1; i <= 7; i++)
+                    {
+                        DataRow ldr = ldt.NewRow();
+                        ldr["typeno"] = "机加";
+                        ldr["op"] = "OP1" + i.ToString() + "0";
+                        ldr["isbg"] = "Y";
+                        ldr["numid"] = i;
+
+                        ldt.Rows.Add(ldr);
+                    }
+
+                    DataRow ldr_z1 = ldt.NewRow();
+                    ldr_z1["typeno"] = "机加";
+                    ldr_z1["op"] = "OP600";
+                    ldr_z1["isbg"] = "Y";
+                    ldr_z1["numid"] = 8;
+                    ldt.Rows.Add(ldr_z1);
+
+                    DataRow ldr_z2 = ldt.NewRow();
+                    ldr_z2["typeno"] = "机加";//质量
+                    ldr_z2["op"] = "OP700";
+                    ldr_z2["isbg"] = "Y";
+                    ldr_z2["numid"] = 9;
+                    ldt.Rows.Add(ldr_z2);
+
+                    IsGrid_pro = "Y";
+                    gv_d.DataSource = ldt;
+                    gv_d.DataBind();
+                }
+            }
 
             DataRow[] drs_yz = ldt_detail.Select("typeno='压铸'");
             DataTable dt_yz = ldt_detail.Clone();
@@ -192,6 +228,26 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     IsGrid_yz = "Y";
                     this.gv_d_yz.DataSource = dt_yz;
                     this.gv_d_yz.DataBind();
+                }
+            }
+            else
+            {
+                if(StepID.ToUpper()== "7E73689C-181E-44FA-B00F-870255AD9F4B")//压铸工程师 签核进来
+                {
+                    DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
+                    for (int i = 1; i <= 5; i++)
+                    {
+                        DataRow ldr = ldt.NewRow();
+                        ldr["typeno"] = "压铸";
+                        ldr["op"] = "OP" + i.ToString() + "0";
+                        ldr["isbg"] = "Y";
+                        ldr["numid"] = i;
+
+                        ldt.Rows.Add(ldr);
+                    }
+                    IsGrid_yz = "Y";
+                    gv_d_yz.DataSource = ldt;
+                    gv_d_yz.DataBind();
                 }
             }
 
@@ -260,14 +316,25 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         {
             //暂时不需要
             //DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+            //IsGrid_pro = "Y";
             //this.gv_d.DataSource = ldt;
             //this.gv_d.DataBind();
 
+            //DataTable ldt_yz = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+            //IsGrid_yz = "Y";
+            //this.gv_d_yz.DataSource = ldt_yz;
+            //this.gv_d_yz.DataBind();
+
         }
 
-        /*JgNum_ValueChanged(sender, e);*/
+        if (StepID.ToUpper() != "AA9D5EA8-6FC0-4A48-A656-48C387980D07")//压铸工程师 签核进来
+        {
+            ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+        }
 
-        DisplayModel = Request.QueryString["display"] ?? "0";
+            /*JgNum_ValueChanged(sender, e);*/
+
+            DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
@@ -279,7 +346,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         IsRead = "Y";
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = true;
+        ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
         btndel.Visible = false;
 
@@ -501,7 +568,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         IsRead_yz = "Y";
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = true;
+        ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
         btn_del_yz.Visible = false;
 
@@ -525,6 +592,15 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_remark"], "op_remark")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_remark"], "op_remark")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["weights"], "weights")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["weights"], "weights")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["acupoints"], "acupoints")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["acupoints"], "acupoints")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["capacity"], "capacity")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["capacity"], "capacity")).BorderStyle = BorderStyle.None;
 
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["JgNum"], "JgNum")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["JgNum"], "JgNum")).BorderStyle = BorderStyle.None;
@@ -682,8 +758,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         //首次
         DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
-
-        DataTable dt_gx = null;
         for (int i = 1; i <= 5; i++)
         {
             DataRow ldr = ldt.NewRow();
@@ -748,6 +822,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         {
             if (chk.Items[k].Selected) { lstypeno += chk.Items[k].Value + ";"; }
         }
+        if (lstypeno.Length > 0) { lstypeno = lstypeno.Substring(0, lstypeno.Length - 1); }
 
         string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();        
         string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
@@ -810,7 +885,17 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             lccreate_date.Value = txt_CreateDate.Value;
             ls.Add(lccreate_date);
 
-
+        }
+        else//typeno 获取不到
+        {
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "typeno")
+                {
+                    ls[i].Value = lstypeno;
+                    break;
+                }
+            }
         }
 
         string workcode = "'" + product_user + "','" + yz_user + "'";
@@ -857,20 +942,20 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         ls.Add(lcyz_manager);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
-        DataTable ldt = new DataTable();
+        DataTable ldt = new DataTable();string savetypeno = "";
         
         if (lstypeno.Contains("机加"))//勾选机加，并且当前登录人是机加工程师
         {           
             if (product_user == ((LoginUser)Session["LogUser_CurPage"]).UserId)
             {
-                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d); savetypeno = "机加";
             }           
         }
         if (lstypeno.Contains("压铸"))
         {
             if (yz_user == ((LoginUser)Session["LogUser_CurPage"]).UserId)
             {
-                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+                ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz); savetypeno = "压铸";
             }
         }
 
@@ -904,11 +989,11 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             if (dtl_ids != "")
             {
                 dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
-                ls_del.Sql = "delete from PGI_GYGS_Dtl_Form where GYGSNo='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+                ls_del.Sql = "delete from PGI_GYGS_Dtl_Form where GYGSNo='" + m_sid + "' and typeno='"+ savetypeno + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
             }
             else
             {
-                ls_del.Sql = "delete from PGI_GYGS_Dtl_Form where GYGSNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+                ls_del.Sql = "delete from PGI_GYGS_Dtl_Form where GYGSNo='" + m_sid + "' and typeno='" + savetypeno + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del);
 
@@ -934,7 +1019,6 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
         }
 
         //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
-
 
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);

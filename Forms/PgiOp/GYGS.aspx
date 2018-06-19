@@ -55,7 +55,7 @@
             }
 
             var IsGrid_pro = '<%=IsGrid_pro%>'; var IsGrid_yz = '<%=IsGrid_yz%>';
-            var IsRead = '<%=IsRead%>'; var IsRead_yz = '<%=IsRead%>';  
+            var IsRead = '<%=IsRead%>'; var IsRead_yz = '<%=IsRead_yz%>';  
             
             if(IsGrid_pro=="Y"){
                 $("#div_product").css("display","inline-block");
@@ -1569,7 +1569,6 @@
         </div>
 
     </div>
-
 
 </asp:Content>
 
