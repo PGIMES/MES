@@ -470,205 +470,209 @@
 
 
             if(action=='submit'){
-                $("[id$=gv_d] input[id*=pgi_no]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【项目号】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=pgi_no_t]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工艺流程】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=op]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序号】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=op_desc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序名称】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=op_remark]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序说明】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=gzzx_desc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【设备】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=gzzx]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工作中心代码】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=JgNum]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【每次加工数量】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=JgSec]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【加工时长】不可为空.<br />";
-                        return false;
-                    }
-                });
-                 $("[id$=gv_d] input[id*=WaitSec]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【设备等待时间】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=ZjSecc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【装夹时间】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=JtNum]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【机器台数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=col1]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【单台需要人数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=col2]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【本工序一人操作台数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d] input[id*=col6]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【单人报工数量】不可为空.<br />";
-                        return false;
-                    }
-                });
+                if($('#div_product').css('display')=='inline-block'){
+                    $("[id$=gv_d] input[id*=pgi_no]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【项目号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=pgi_no_t]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工艺流程】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=op]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=op_desc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序名称】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=op_remark]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序说明】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=gzzx_desc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【设备】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=gzzx]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工作中心代码】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=JgNum]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【每次加工数量】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=JgSec]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【加工时长】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=WaitSec]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【设备等待时间】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=ZjSecc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【装夹时间】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=JtNum]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【机器台数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=col1]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【单台需要人数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=col2]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【本工序一人操作台数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=col6]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【单人报工数量】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                }
 
-                $("[id$=gv_d_yz] input[id*=pgi_no]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【项目号】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=pgi_no_t]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工艺流程】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=op]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序号】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=op_desc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序名称】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=op_remark]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工序说明】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=gzzx_desc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【设备】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=gzzx]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【工作中心代码】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=weights]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【压铸每模重量(kg)】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=acupoints]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【每模穴数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=capacity]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【每小时设备产能(kg)】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=JgNum]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【每次加工数量】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=JgSec]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【加工时长】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=WaitSec]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【设备等待时间】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=ZjSecc]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【装夹时间】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=JtNum]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【机器台数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=col1]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【单台需要人数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=col2]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【本工序一人操作台数】不可为空.<br />";
-                        return false;
-                    }
-                });
-                $("[id$=gv_d_yz] input[id*=col6]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【单人报工数量】不可为空.<br />";
-                        return false;
-                    }
-                });
+                if($('#div_yz').css('display')=='inline-block'){
+                    $("[id$=gv_d_yz] input[id*=pgi_no]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【项目号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=pgi_no_t]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工艺流程】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=op]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=op_desc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序名称】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=op_remark]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工序说明】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=gzzx_desc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【设备】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=gzzx]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工作中心代码】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=weights]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【压铸每模重量(kg)】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=acupoints]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【每模穴数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=capacity]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【每小时设备产能(kg)】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=JgNum]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【每次加工数量】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=JgSec]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【加工时长】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=WaitSec]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【设备等待时间】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=ZjSecc]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【装夹时间】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=JtNum]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【机器台数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=col1]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【单台需要人数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=col2]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【本工序一人操作台数】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=col6]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【单人报工数量】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                }
             }
 
             if(msg!=""){  

@@ -327,7 +327,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         }
 
-        if (StepID.ToUpper() != "AA9D5EA8-6FC0-4A48-A656-48C387980D07")//压铸工程师 签核进来
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != "AA9D5EA8-6FC0-4A48-A656-48C387980D07")//压铸工程师 签核进来
         {
             ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
         }
