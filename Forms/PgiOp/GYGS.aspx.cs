@@ -85,7 +85,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                             from [dbo].[PGI_GYGS_Dtl_Form] a";
 
             if (this.m_sid == "")
-            {                
+            {
                 if (LogUserModel != null)
                 {
                     //新增时表头基本信息
@@ -96,7 +96,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 }
 
                 //修改申请
-                if (Request.QueryString["formno"] != null && Request.QueryString["state"] =="edit")
+                if (Request.QueryString["formno"] != null && Request.QueryString["state"] == "edit")
                 {
                     string sql_head = @"select id, FormNo, projectno, pn, pn_desc, domain, ver, typeno, state
                                             --, isnull(a.product_user,c.product_user) product_user, isnull(a.zl_user,c.zl_user) zl_user, isnull(a.yz_user,c.yz_user) yz_user
@@ -119,7 +119,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                                 , col1, col2, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYGS_Dtl a 
-                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='"+ Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
+                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
                 }
                 else//新增申请
                 {
@@ -142,7 +142,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
-            DataRow[] drs_pro = ldt_detail.Select("typeno='机加'"); 
+            DataRow[] drs_pro = ldt_detail.Select("typeno='机加'");
             DataTable dt_pro = ldt_detail.Clone();
             foreach (DataRow item in drs_pro)
             {
@@ -166,7 +166,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     this.gv_d.DataSource = dt_pro;
                     this.gv_d.DataBind();
                 }
-                    
+
             }
             else
             {
@@ -232,7 +232,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             }
             else
             {
-                if(StepID.ToUpper()== "7E73689C-181E-44FA-B00F-870255AD9F4B")//压铸工程师 签核进来
+                if (StepID.ToUpper() == "7E73689C-181E-44FA-B00F-870255AD9F4B")//压铸工程师 签核进来
                 {
                     DataTable ldt = DbHelperSQL.Query(@"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYGS_Dtl_Form] a where 1=0").Tables[0];
                     for (int i = 1; i <= 5; i++)
@@ -251,7 +251,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                 }
             }
 
-            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text!="A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")
+            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")
             {
                 ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
                 ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
@@ -264,7 +264,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                             and instanceid='{2}' and (stepname='{3}' or stepname='{4}')";
             string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请人", "产品工程师");
             DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
-           
+
             for (int i = 0; i < dt_pro.Rows.Count; i++)
             {
                 if (Request.QueryString["state"] == "edit")
@@ -282,9 +282,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     {
                         setread(i);
                     }
-                    
+                    if (StepID.ToUpper() == "AA9D5EA8-6FC0-4A48-A656-48C387980D07"
+                        && ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Substring(0, 5) != ((LoginUser)Session["LogUser_CurPage"]).UserId)
+                    {
+                        setread(i);
+                    }
+
                 }
-                
+
             }
 
             string sql_yz = string.Format(lssql, StepID, FlowID, m_sid, "申请人", "压铸工程师");
@@ -304,6 +309,11 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                     }
 
                     if (ldt_flow_yz.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    {
+                        setread_yz(i);
+                    }
+                    if (StepID.ToUpper() == "AA9D5EA8-6FC0-4A48-A656-48C387980D07"
+                       && ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Substring(0, 5) != ((LoginUser)Session["LogUser_CurPage"]).UserId)
                     {
                         setread_yz(i);
                     }
@@ -327,14 +337,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
 
         }
 
-        if (StepID.ToUpper() != "A" && StepID.ToUpper() != "AA9D5EA8-6FC0-4A48-A656-48C387980D07")//压铸工程师 签核进来
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != "AA9D5EA8-6FC0-4A48-A656-48C387980D07")//非申请时候
         {
             ((CheckBoxList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
         }
 
-            /*JgNum_ValueChanged(sender, e);*/
+        /*JgNum_ValueChanged(sender, e);*/
 
-            DisplayModel = Request.QueryString["display"] ?? "0";
+        DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
