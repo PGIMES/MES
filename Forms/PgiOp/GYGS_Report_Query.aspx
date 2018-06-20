@@ -18,8 +18,29 @@
             });
 
             $('#btn_edit').click(function () {
-
+                
+                var index_check=-1;
+                $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
+                    //alert($(item).find("td:eq(0) span:first").attr("class"));
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked=='dxICheckBox dxichSys dx-not-acc dxWeb_edtCheckBoxChecked'){
+                        index_check=index;
+                        return false;
+                    }
+                });      
+                
+                if(index_check==-1){
+                    layer.alert("请选择需要编辑的记录!");return;
+                }
+                grid.GetRowValues(index_check, 'formno;pgi_no', OnGetRowValues); 
+            
             });
+
+             function OnGetRowValues(values) {
+                var lsstr = values;    //  与字段索引取值
+                //alert(lsstr);
+                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno='+ lsstr[0] + '&pgi_no=' + lsstr[1]);
+            }
 
             mergecells();
             
@@ -83,10 +104,10 @@
                                     </asp:DropDownList>
                                 </td>
                                 <td>  
-                                    &nbsp;&nbsp;
+                                    &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
                                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
                                     <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
-                                    <button id="btn_edit" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_edit_Click"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
+                                    <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
                                     <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
                                 </td>
                             </tr>                      
@@ -101,7 +122,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1995px" OnPageIndexChanged="gv_PageIndexChanged"    >
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1995px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"  >
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
                                     mergecells();

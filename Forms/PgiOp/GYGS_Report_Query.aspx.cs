@@ -68,25 +68,4 @@ public partial class Forms_PgiOp_GYGS_Report_Query : System.Web.UI.Page
 
     }
 
-
-
-
-    protected void btn_edit_Click(object sender, EventArgs e)
-    {
-        List<object> lSelectValues = gv.GetSelectedFieldValues("id_dtl");
-
-        if (lSelectValues.Count <= 0)
-        {
-            Pgi.Auto.Public.MsgBox(this, "alert", " 请选择需要编辑的记录!");
-            return;
-        }
-
-        List<object> lSelectValues_formno = gv.GetSelectedFieldValues("formno");
-        List<object> lSelectValues_pgi_no = gv.GetSelectedFieldValues("pgi_no");
-
-        string temp = "<script>window.open('/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno="
-            + lSelectValues_formno[0] + "&pgi_no=" + lSelectValues_pgi_no[0] + "');</script>";
-
-        Response.Write(temp);
-    }
 }
