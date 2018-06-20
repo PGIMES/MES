@@ -137,6 +137,13 @@
                 
             //});
 
+            //$("#btn_modify").click(function (){
+            //    var createman=$("#SQXX input[id*='txt_CreateById']").val()+"-"+$("#SQXX input[id*='txt_CreateByName']").val();
+            //    $("#CPXX input[id*='yz_user']").val(createman);
+            //    $("#CPXX input[id*='zl_user']").val(createman);
+            //    $("#CPXX input[id*='product_user']").val(createman);
+            //});
+
         });
 
         //提出自定流程 JS 
@@ -241,6 +248,7 @@
 
         function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver, lszl_user, lsyz_user,lsproduct_user) 
         {
+            
             $("#CPXX input[id*='pn']").val(lsproductcode);
             $("#CPXX input[id*='pn_desc']").val(lsproductname);
             $("#CPXX input[id*='domain']").val(lsmake_factory);
@@ -248,6 +256,19 @@
             $("#CPXX input[id*='zl_user']").val(lszl_user);
             $("#CPXX input[id*='product_user']").val(lsproduct_user);
             $("#CPXX input[id*='projectno']").val(lspgino);
+
+            //该条件仅作为测试使用
+            if($("#SQXX input[id*='txt_CreateByDept']").val()=="IT部"){
+                lsproduct_user=$("#SQXX input[id*='txt_CreateById']").val()+"-"+$("#SQXX input[id*='txt_CreateByName']").val();
+
+                if($("#SQXX input[id*='txt_CreateById']").val()=="02432"){lsyz_user="01968-孙娟";}
+                else{lsyz_user=lsproduct_user;}
+
+                $("#CPXX input[id*='yz_user']").val(lsyz_user);
+                $("#CPXX input[id*='product_user']").val(lsproduct_user); 
+                
+
+            }
             
             var bf_product=false,bf_yz=false;
             $("#CPXX input[id*='typeno']").each(function (){
@@ -274,18 +295,18 @@
                 }
             }
 
-            $.ajax({
-                type: "post",
-                url: "GYGS.aspx/GetVer",
-                data: "{'lspgino':'" + lspgino + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    var obj=eval(data.d);
-                    $("#CPXX input[id*='ver']").val(obj[0].ver);
-                }
+            //$.ajax({
+            //    type: "post",
+            //    url: "GYGS.aspx/GetVer",
+            //    data: "{'lspgino':'" + lspgino + "'}",
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    success: function (data) {
+            //        var obj=eval(data.d);
+            //        $("#CPXX input[id*='ver']").val(obj[0].ver);
+            //    }
 
-            });
+            //});
         }
 
         function GetPgi_Product_D(vi,ty)
@@ -304,13 +325,14 @@
 
         function setvalue_product_d(lspgino, vi,ty) 
         {
+            //20180620此处需要修改：需要判断项目号是否有申请过，开窗申请版本必须是A
             if (ty=="") {
                 var pgi_no= eval('pgi_no' + vi);var pgi_no_t= eval('pgi_no_t' + vi);
                 pgi_no.SetText(lspgino.substr(0,7));pgi_no_t.SetText(lspgino);
             }
             if (ty=="yz") {
                 var pgi_no_yz= eval('pgi_no_yz' + vi);var pgi_no_t_yz= eval('pgi_no_t_yz' + vi);
-                pgi_no_yz.SetText(lspgino.substr(0,7));pgi_no_t_yz.SetText(lspgino);
+                pgi_no_yz.SetText(lspgino);pgi_no_t_yz.SetText(lspgino);
             }
         }
 
@@ -367,7 +389,7 @@
 
             //单件工时(时)
             var JHour_value = TjOpSec_value/3600;
-            JHour.SetText(JHour_value.toFixed(5));
+            JHour.SetText(JHour_value.toFixed(10));
 
             //单台83%产量
             var col3_value=0;
@@ -376,18 +398,17 @@
 
             //一人83%产量
             var col4_value=col2_value*col3_value;
+            //单人报工数量
+            if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
+                col6.SetText(col4_value.toFixed(0));
+                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
+            }
             col4.SetText(col4_value.toFixed(0));
 
             //整线班产量
             var col5_value=0;
             if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
-
-            //单人报工数量
-            if(col6_value<=0){
-                col6.SetText(col4.GetText());
-                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
-            }            
             
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
@@ -423,7 +444,7 @@
 
             //单件工时(时)
             var JHour_value = TjOpSec_value/3600;
-            JHour.SetText(JHour_value.toFixed(5));
+            JHour.SetText(JHour_value.toFixed(10));
 
             //单台83%产量
             var col3_value=0;
@@ -432,6 +453,11 @@
 
             //一人83%产量
             var col4_value=col2_value*col3_value;
+             //单人报工数量
+            if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
+                col6.SetText(col4_value.toFixed(0));
+                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
+            }
             col4.SetText(col4_value.toFixed(0));
 
             //整线班产量
@@ -439,12 +465,6 @@
             if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
 
-            //单人报工数量
-            if(col6_value<=0){
-                col6.SetText(col4.GetText());
-                col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
-            }
-            
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
             col7.SetText(col7_value.toFixed(2));
@@ -457,10 +477,6 @@
 
             if($("#CPXX input[id*='projectno']").val()==""){
                 msg+="【PGI项目号】不可为空.<br />";
-            }
-
-            if($("#CPXX input[id*='ver']").val()==""){
-                msg+="【工艺路线版本】不可为空.<br />";
             }
 
             var bf=false;
@@ -488,6 +504,12 @@
                     $("[id$=gv_d] input[id*=pgi_no]").each(function (){
                         if( $(this).val()==""){
                             msg+="【项目号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d] input[id*=ver]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工艺路线版本】不可为空.<br />";
                             return false;
                         }
                     });
@@ -587,6 +609,12 @@
                     $("[id$=gv_d_yz] input[id*=pgi_no]").each(function (){
                         if( $(this).val()==""){
                             msg+="【项目号】不可为空.<br />";
+                            return false;
+                        }
+                    });
+                    $("[id$=gv_d_yz] input[id*=ver]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【工艺路线版本】不可为空.<br />";
                             return false;
                         }
                     });
@@ -900,7 +928,7 @@
         <div class="row row-container">
             <div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
-                    <strong>申请人信息</strong>
+                    <strong>申请人信息</strong><%--&nbsp;&nbsp;<input id="btn_modify" type="button" value="IT修改工程师" />--%>
                 </div>
                 <div class="panel-body <% =ViewState["lv"].ToString() == "SQXX" ? "" : "collapse" %>" id="SQXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
@@ -944,6 +972,7 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <div>
                             <asp:TextBox ID="txt_domain" runat="server" style="display:none;"></asp:TextBox>
+                            <asp:TextBox ID="txt_pn" runat="server" style="display:none;"></asp:TextBox>
                             <asp:Table Style="width: 100%;" border="0" runat="server" ID="tblCPXX" Font-Size="12px" > 
                             </asp:Table>
                         </div>
@@ -987,6 +1016,7 @@
                                                 </table>                  
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3"></dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
@@ -1111,13 +1141,13 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="55px" VisibleIndex="17">
+                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="JHour" Width="55px" runat="server" Value='<%# Eval("JHour")%>' 
+                                                <dx:ASPxTextBox ID="JHour" Width="90px" runat="server" Value='<%# Eval("JHour")%>' 
                                                     ClientInstanceName='<%# "JHour"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
-                                             <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
+                                             <PropertiesTextEdit DisplayFormatString="{0:N10}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="单台需<br />要人数" FieldName="col1" Width="40px" VisibleIndex="18">
                                             <Settings AllowCellMerge="False" />
@@ -1162,7 +1192,7 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="40px" VisibleIndex="21">
+                                        <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="40px" VisibleIndex="21">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col4" Width="40px" runat="server" Value='<%# Eval("col4")%>' 
                                                     ClientInstanceName='<%# "col4"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
@@ -1232,6 +1262,16 @@
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="domain" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="pn" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
 
                                         <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="99" >
                                             <Settings AllowCellMerge="False" />
@@ -1288,6 +1328,7 @@
                                                 </table>                  
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3"></dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
@@ -1445,13 +1486,13 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="55px" VisibleIndex="17">
+                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="JHour" Width="55px" runat="server" Value='<%# Eval("JHour")%>' 
+                                                <dx:ASPxTextBox ID="JHour" Width="90px" runat="server" Value='<%# Eval("JHour")%>' 
                                                     ClientInstanceName='<%# "JHour_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
-                                             <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
+                                             <PropertiesTextEdit DisplayFormatString="{0:N10}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="单台需<br />要人数" FieldName="col1" Width="40px" VisibleIndex="18">
                                             <Settings AllowCellMerge="False" />
@@ -1562,6 +1603,16 @@
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn FieldName="typeno" Width="0px" >
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="domain" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="pn" Width="0px">
                                              <HeaderStyle CssClass="hidden" />
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>

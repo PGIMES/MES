@@ -8,6 +8,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <script type="text/javascript" src="/Content/js/jquery.min.js"></script>
     <script type="text/javascript" src="/Content/js/jquery.cookie.min.js"></script>
+    <script src="/Content/js/layer/layer.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#mestitle").text("【工艺路线查询】");
@@ -35,7 +36,7 @@
                 }
                 else {
                     rowsnext = $(item).find("td").length;
-                    if (rows1 != rowsnext) {
+                    if (rows1 != rowsnext && index>0) {
                         $(item).find("td:first").hide();
                     }
                 }
@@ -85,7 +86,7 @@
                                     &nbsp;&nbsp;
                                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
                                     <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
-                                    <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
+                                    <button id="btn_edit" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_edit_Click"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
                                     <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
                                 </td>
                             </tr>                      
@@ -100,7 +101,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="" AutoGenerateColumns="False" Width="1930px" OnPageIndexChanged="gv_PageIndexChanged"    >
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1995px" OnPageIndexChanged="gv_PageIndexChanged"    >
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
                                     mergecells();
@@ -115,8 +116,13 @@
                             <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="100px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
+                                    <%--<dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD&state=edit&formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no") %>'  
+                                         Target="_blank"
+                                        >                                        
+                                    </dx:ASPxHyperLink>--%>
+                                    <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Forms/PgiOp/Rpt_ProductBom_Query.aspx?formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no") %>'  
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
@@ -153,7 +159,7 @@
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台<br />需要人数" FieldName="col1" Width="55px" VisibleIndex="18"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="本产品设<br />备占用率" FieldName="EquipmentRate" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="本产品设<br />备占用率" FieldName="EquipmentRate" Width="65px" VisibleIndex="19"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="65px" VisibleIndex="20"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="65px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
@@ -164,6 +170,8 @@
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
                             <%--<dx:GridViewDataTextColumn Caption="流程状态" FieldName="" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
