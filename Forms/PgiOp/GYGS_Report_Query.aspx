@@ -143,7 +143,7 @@
                                         >                                        
                                     </dx:ASPxHyperLink>--%>
                                     <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Forms/PgiOp/Rpt_ProductBom_Query.aspx?formno="+ Eval("formno")+"&pgi_no="+ Eval("pgi_no") %>'  
+                                         NavigateUrl='<%# "/Forms/PgiOp/Rpt_ProductBom_Query.aspx?domain="+ Eval("domain")+"&pgino_pn="+ Eval("pgi_no")+"/"+ Eval(HttpUtility.UrlEncode("pn")) %>'  
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>

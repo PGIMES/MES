@@ -25,6 +25,12 @@ public partial class Product_Rpt_ProductBom_Query : System.Web.UI.Page
                 fun.initDropDownList(this.ddl_ljh, dtPgino, "productcode", "productcode");
             }
             ddl_ljh.Items.Insert(0, new ListItem("", ""));
+
+            ddl_ljh.SelectedValue = Request["pgino_pn"].ToString();
+            ddl_comp.SelectedValue= Request["domain"].ToString();
+
+            Button1_Click(sender, e);
+
             hideTab();
         }
       
@@ -44,9 +50,10 @@ public partial class Product_Rpt_ProductBom_Query : System.Web.UI.Page
         var pgino = ddl_ljh.Text.Substring(0, 7);
         var domain = ddl_comp.SelectedValue;
         //初始化产品信息
-        var sqlProdinf = "select a.pgino, b.productcode,productname, pc_date,end_date,end_customer_name,customer_project,product_img ,(select qty_year from  [dbo].[V_form3_SUM_Quantity_MAX] where pgino=a.pgino )qty_year "
-                        + " from [dbo].[form3_Sale_Product_MainTable] a inner join[dbo].[form3_Sale_Product_DetailTable] b on a.pgino = b.pgino "
-                        + " where b.pgino+b.version = '{0}'  ";//where ro_routing like  
+        var sqlProdinf = @"select a.pgino, b.productcode,productname, pc_date,end_date,end_customer_name,customer_project,right(product_img,len(product_img)-2) product_img,(select qty_year from  [dbo].[V_form3_SUM_Quantity_MAX] where pgino=a.pgino )qty_year 
+                        from [dbo].[form3_Sale_Product_MainTable] a 
+                            inner join[dbo].[form3_Sale_Product_DetailTable] b on a.pgino = b.pgino
+                        where b.pgino+b.version = '{0}'  ";//where ro_routing like  
        
         DataTable dtProdinf = DbHelperSQL.Query(string.Format(sqlProdinf, pgino.Substring(0, 6))).Tables[0];
         var strpgiver = ddl_ljh.Text.Substring(0, 7);
