@@ -79,9 +79,9 @@ public partial class Product_Rpt_ProductBom_Query : System.Web.UI.Page
 
         BindTreeData(pgino);
         var sqlOP = "  select ro_op 工序号,ro_desc 工序名称,cast([ro_men_mch] as float(2)) 单台需要人数,cast(ro_setup_men as float(2)) 本工序1人操作台数,ro_mch_op 总机台数,"
-                        + "cast(ro_run as decimal(6,5)) [单台单件工时(时)], cast(cast(ro_run as float)*3600 as int) [单台单件工时(秒)], "
-                        + "iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*0.83 as int)) [单台班产量(83%)],iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*ro_setup_men*0.83 as int)) [1人班产量(83%)],"
-                        + "iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*ro_mch_op*0.83 as int))  [整线班产量(83%)]"//,iif(ro_run=0 or ro_mch_op=0,0,cast( (cast(12 as float)/ro_run)/ro_mch_op as int)) [per100],iif(ro_run=0 or ro_mch_op=0,0,cast(((cast(12 as float)/ro_run)/ro_mch_op)*0.85 as int)) [per85] "
+                        + "cast(ro_run as decimal(6,5)) [单台单件工时(时)], cast(cast(ro_run as float)*3600 as decimal(18,0)) [单台单件工时(秒)], "
+                        + "iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*0.83 as decimal(18,0))) [单台班产量(83%)],iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*ro_setup_men*0.83 as decimal(18,0))) [1人班产量(83%)],"
+                        + "iif(ro_run=0 or ro_mch_op=0,0,cast((cast(12 as float)/ro_run)*ro_mch_op*0.83 as decimal(18,0)))  [整线班产量(83%)]"//,iif(ro_run=0 or ro_mch_op=0,0,cast( (cast(12 as float)/ro_run)/ro_mch_op as int)) [per100],iif(ro_run=0 or ro_mch_op=0,0,cast(((cast(12 as float)/ro_run)/ro_mch_op)*0.85 as int)) [per85] "
                         + " from [qad].[dbo].[qad_ro_det] where ro_routing like  '{0}' order by  ro_op ";
         DataTable dtOP = DbHelperSQL.Query(string.Format(sqlOP, strpgiver)).Tables[0];
         ASPxGridView0.DataSource = dtOP;
