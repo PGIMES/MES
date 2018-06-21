@@ -100,6 +100,18 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                                         left join form3_Sale_Product_MainTable c on a.projectno=c.pgino 
                                     where formno='" + Request.QueryString["formno"] + "'";
                     DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
+
+                    //该条件仅作为测试使用
+                    if (txt_CreateByDept.Value == "IT部") {
+                        string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
+                        string test_yz_user = "";
+                        if (txt_CreateById.Value == "02432") { test_yz_user = "01968-孙娟"; }
+                        else { test_yz_user = test_product_user; }
+
+                        ldt.Rows[0]["product_user"] = test_product_user;
+                        ldt.Rows[0]["yz_user"] = test_yz_user;
+                    }
+                    //end
                     SetControlValue("PGI_GYGS_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
                     
@@ -199,12 +211,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                         ldr_z1["numid"] = 8;
                         ldt.Rows.Add(ldr_z1);
 
-                        //DataRow ldr_z2 = ldt.NewRow();
-                        //ldr_z2["typeno"] = "机加";//质量
-                        //ldr_z2["op"] = "OP700";
-                        //ldr_z2["isbg"] = "Y";
-                        //ldr_z2["numid"] = 9;
-                        //ldt.Rows.Add(ldr_z2);
+                        DataRow ldr_z2 = ldt.NewRow();
+                        ldr_z2["typeno"] = "机加";//质量
+                        ldr_z2["ver"] = "A";
+                        ldr_z2["op"] = "OP700";
+                        ldr_z2["isbg"] = "Y";
+                        ldr_z2["domain"] = txt_domain.Text; ldr_z2["pn"] = txt_pn.Text;
+                        ldr_z2["numid"] = 9;
+                        ldt.Rows.Add(ldr_z2);
                     }
                     IsGrid_pro = "Y";
                     gv_d.DataSource = ldt;
@@ -588,12 +602,14 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
             ldr_z1["numid"] = 8;
             ldt.Rows.Add(ldr_z1);
 
-            //DataRow ldr_z2 = ldt.NewRow();
-            //ldr_z2["typeno"] = "机加";//质量
-            //ldr_z2["op"] = "OP700";
-            //ldr_z2["isbg"] = "Y";
-            //ldr_z2["numid"] = 9;
-            //ldt.Rows.Add(ldr_z2);
+            DataRow ldr_z2 = ldt.NewRow();
+            ldr_z2["typeno"] = "机加";//质量
+            ldr_z2["ver"] = "A";
+            ldr_z2["op"] = "OP700";
+            ldr_z2["isbg"] = "Y";
+            ldr_z2["domain"] = txt_domain.Text; ldr_z2["pn"] = txt_pn.Text;
+            ldr_z2["numid"] = 9;
+            ldt.Rows.Add(ldr_z2);
 
             gv_d.DataSource = ldt;
             gv_d.DataBind();
