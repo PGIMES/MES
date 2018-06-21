@@ -453,9 +453,11 @@
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_GC">
                                         工艺数据</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu"> 
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD" target="_blank">工艺路线申请(测试)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD" target="_blank">工艺路线申请(old)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4" target="_blank">工艺路线申请(测试)</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="/Forms/PgiOp/GYGS_Report_Query.aspx" target="_blank">工艺路线查询(测试)</a></li>
+                                        <li><a href="/Forms/PgiOp/GYGS_Report_Query.aspx" target="_blank">工艺路线查询(old)</a></li>
+                                        <li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询(测试)</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_GC">
