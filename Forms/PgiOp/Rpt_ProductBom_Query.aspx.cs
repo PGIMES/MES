@@ -26,7 +26,7 @@ public partial class Product_Rpt_ProductBom_Query : System.Web.UI.Page
             }
             ddl_ljh.Items.Insert(0, new ListItem("", ""));
 
-            ddl_ljh.SelectedValue = Request["pgino_pn"].ToString().Replace('-',' ');
+            ddl_ljh.SelectedValue = Request["pgino_pn"].ToString();
             ddl_comp.SelectedValue= Request["domain"].ToString();
 
             Button1_Click(sender, e);
