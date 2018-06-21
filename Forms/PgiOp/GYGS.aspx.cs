@@ -122,7 +122,7 @@ public partial class Forms_PgiOp_GYGS : System.Web.UI.Page
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver, pn
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYGS_Dtl a 
-                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno,op";
+                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,op";
                 }
                 else//新增申请
                 {

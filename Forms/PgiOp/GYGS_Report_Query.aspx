@@ -188,7 +188,9 @@
                             <dx:GridViewDataTextColumn Caption="单人产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25">
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
                             <%--<dx:GridViewDataTextColumn Caption="流程状态" FieldName="" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
