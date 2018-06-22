@@ -270,7 +270,7 @@
             layer.open({
                 title:'是否报工选择',
                 type: 2,
-                area: ['250px', '250px'],
+                area: ['250px', '150px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
