@@ -180,6 +180,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
                 SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                 txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
+                modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
 
                 lssql += " where GYGSNo='" + this.m_sid + "'  order by a.typeno,op";
             }
