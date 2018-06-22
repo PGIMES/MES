@@ -227,6 +227,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
         }
 
+        if (StepID.ToUpper() != SQ_StepID && StepID != "A")
+        {
+            modifyremark.ReadOnly = true;
+        }
+
         /*JgNum_ValueChanged(sender, e);*/
 
         DisplayModel = Request.QueryString["display"] ?? "0";
@@ -341,6 +346,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+
+        modifyremark.ReadOnly = true; 
 
         ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = "Y"; 
 
@@ -575,6 +582,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+
+        modifyremark.ReadOnly = true;
 
         ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "Y";
 
@@ -945,9 +954,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ls.Add(lcmanager_id);
 
         Pgi.Auto.Common lcModifyRemark = new Pgi.Auto.Common();
-        lcModifyRemark.Code = "manager_id";
+        lcModifyRemark.Code = "ModifyRemark";
         lcModifyRemark.Key = "";
-        lcModifyRemark.Value = modifyremark.Value.Trim();
+        lcModifyRemark.Value = modifyremark.Text.Trim();//modifyremark.Value.Trim();
         ls.Add(lcModifyRemark);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------

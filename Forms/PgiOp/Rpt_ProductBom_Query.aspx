@@ -5,18 +5,19 @@
 <%@ Register assembly="DevExpress.Web.ASPxTreeList.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxTreeList" tagprefix="dx" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="../../Content/js/jquery.min.js"></script>
-    <script src="../../Content/js/bootstrap.min.js"></script>
-    <script src="../../Content/js/plugins/layer/layer.min.js"></script>
-    <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
-    <link href="../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="/Content/js/jquery.min.js"></script>
+    <script src="/Content/js/bootstrap.min.js"></script>
+    <script src="/Content/js/plugins/layer/layer.min.js"></script>
+    <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
+    <link href="/Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
 
-    <script src="../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
 
     <script type="text/javascript">
-        $("#mestitle").text("【产品信息】");
+       
         $(document).ready(function () {
+            $("#mestitle").text("【产品信息】");
             $("input[id*='Button1']").click(function () {
                 var val = $("[id*='ddl_ljh_I']").val();
                 if (val == "") {
@@ -29,8 +30,7 @@
         })
     </script>
 
-  
-    </script>
+ 
 
     <style type="text/css">
         .row {
@@ -51,7 +51,9 @@
             padding-left: 2px;
             padding-right: 2px;
         }
-
+          .lineread{
+            font-size:9px; border:none; border-bottom:1px solid #ccc;
+        }
         fieldset {
             background: rgba(255,255,255,.3);
             border-color: lightblue;
@@ -227,7 +229,7 @@
                                             <td>项目号：</td>
                                             <td>
                                                 <div class="form-inline">
-                                                <input id="txt_pgino" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server" readonly="True" /></div>
+                                                <input id="txt_pgino" class="lineread" style="height: 35px; width: 200px" runat="server" readonly="True" /></div>
                                             </td>
                                             <td rowspan="8"><asp:Panel ID=Panel4 runat =server GroupingText="图片信息"   Font-Size=Medium   BodyPadding="5">
                             <table>
@@ -245,38 +247,38 @@
                                         <tr>
                                             <td>零件号：</td>
                                             <td><div class="form-inline">
-                                                <input id="txt_productcode" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server" readonly="True" /></div> </td>
+                                                <input id="txt_productcode" class="lineread" style="height: 35px; width: 200px" runat="server" readonly="True" /></div> </td>
                                         </tr>
                                         <tr>
                                             <td>零件名称：</td>
                                             <td><div class="form-inline">
-                                                <input id="txt_productname" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server" readonly="True" /></div> </td>
+                                                <input id="txt_productname" class="lineread" style="height: 35px; width: 200px" runat="server" readonly="True" /></div> </td>
                                         </tr>
                                         <tr>
                                             <td>最终客户：</td>
                                              <td><div class="form-inline">
-                                                <input id="txt_EndCustName"  class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server" readonly="True" /></div></td>
+                                                <input id="txt_EndCustName"  class="lineread" style="height: 35px; width: 200px" runat="server" readonly="True" /></div></td>
                                         </tr>
                                         <tr>
                                             <td>顾客项目：</td>
                                            <td><div class="form-inline">
-                                                <input id="txt_CustProject" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div> </td>
+                                                <input id="txt_CustProject" class="lineread" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div> </td>
                                         </tr>
                                         <tr>
                                             <td>最大年用量：</td>
                                             <td> 
                                                <div class="form-inline">
-                                                <input id="txt_MaxYearuseCounts" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
+                                                <input id="txt_MaxYearuseCounts" class="lineread" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
                                         </tr>
                                         <tr>
                                             <td>批产日期：</td>
                                             <td> <div class="form-inline">
-                                                 <input id="txt_PCDate" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
+                                                 <input id="txt_PCDate" class="lineread" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
                                         </tr>
                                         <tr>
                                             <td>停产日期：</td>
                                             <td> <div class="form-inline">
-                                               <input id="txt_EndDate" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
+                                               <input id="txt_EndDate" class="lineread" style="height: 35px; width: 200px" runat="server"  readonly="True" /></div></td>
                                         </tr>
                                         </table>
                                     <table width="100%">
@@ -428,7 +430,7 @@
                                                     <dx:TabPage Name="TabPage6" Text="BOM">
                                                         <ContentCollection>
                                                             <dx:ContentControl runat="server">
-                                                                                                                               <dx:ASPxTreeList ID="treeList1" runat="server" 
+                                                                                                                               <dx:ASPxTreeList ID="treeList1" runat="server"  Width="800px"
                                                                     AutoGenerateColumns="False">
                                                                     <settingsbehavior allowautofilter="True" />
                                                                     <settingscustomizationwindow popuphorizontalalign="RightSides" 
@@ -436,32 +438,47 @@
                                                                     <Columns>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="物料号" Name="物料号" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="1">
+                                                                            ShowInFilterControl="Default" VisibleIndex="1" 
+                                                                            >
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="物料描述" Name="物料描述" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="2">
+                                                                            ShowInFilterControl="Default" VisibleIndex="2" 
+                                                                            Width="150px">
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="描述2" Name="描述2" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="3">
+                                                                            ShowInFilterControl="Default" VisibleIndex="3" 
+                                                                            Width="150px">
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="工序" Name="工序" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="4">
+                                                                            ShowInFilterControl="Default" VisibleIndex="4" 
+                                                                            Width="50px">
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="数量" Name="数量" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="5">
+                                                                            ShowInFilterControl="Default" VisibleIndex="5" 
+                                                                            Width="80px">
+                                                                            <CellStyle HorizontalAlign="Right">
+                                                                            </CellStyle>
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
-                                                                            FieldName="重量" Name="重量" ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="6">
+                                                                            FieldName="重量(KG)" Name="重量" ShowInCustomizationForm="True" 
+                                                                            ShowInFilterControl="Default" VisibleIndex="6" 
+                                                                            Width="80px">
+                                                                            
+                                                                            <CellStyle HorizontalAlign="Right">
+                                                                            </CellStyle>
                                                                         </dx:TreeListTextColumn>
                                                                         <dx:TreeListTextColumn AutoFilterCondition="Default" 
                                                                             FieldName="最小包装量" Name="最小包装量" 
                                                                             ShowInCustomizationForm="True" 
-                                                                            ShowInFilterControl="Default" VisibleIndex="7">
+                                                                            ShowInFilterControl="Default" VisibleIndex="7" 
+                                                                            Width="80px">
+                                                                           
+                                                                            <CellStyle HorizontalAlign="Right">
+                                                                            </CellStyle>
                                                                         </dx:TreeListTextColumn>
                                                                     </Columns>
 <SettingsBehavior AllowAutoFilter="True"></SettingsBehavior>

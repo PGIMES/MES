@@ -1639,7 +1639,8 @@
                         <tr>
                             <td width="100px" ><label>变更说明：</label></td>
                             <td>
-                                <textarea id="modifyremark" cols="20" rows="2"  class="form-control" runat="server"></textarea>
+                                <%--<textarea id="modifyremark" cols="20" rows="2"  class="form-control" runat="server"></textarea>--%>
+                                <asp:TextBox ID="modifyremark" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>
                             </td>
                         </tr>
                     </table>
