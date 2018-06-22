@@ -99,7 +99,7 @@
         }
 
         //设定表字段状态（可编辑性）
-        var tabName="PGI_GYGS_Main_Form";//表名
+        var tabName="pgi_gylx_main_form";//表名
         function SetControlStatus(fieldStatus)
         {  // tabName_columnName:1_0
             var flag=true;
@@ -129,7 +129,7 @@
                 }
             }
         }
-        var tabName2="PGI_GYGS_Dtl_Form";//表名
+        var tabName2="pgi_gylx_dtl_form";//表名
         function SetControlStatus2(fieldStatus)
         {  // tabName_columnName:1_0
             var flag=true;
@@ -1639,7 +1639,7 @@
                         <tr>
                             <td width="100px" ><label>变更说明：</label></td>
                             <td>
-                                <textarea id="comment" cols="20" rows="2"  class="form-control" onchange="setComment(this.value)" ></textarea>
+                                <textarea id="modifyremark" cols="20" rows="2"  class="form-control" runat="server"></textarea>
                             </td>
                         </tr>
                     </table>

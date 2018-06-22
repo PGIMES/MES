@@ -944,6 +944,12 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcmanager_id.Value = "u_" + dt_manager.Rows[0][0].ToString();
         ls.Add(lcmanager_id);
 
+        Pgi.Auto.Common lcModifyRemark = new Pgi.Auto.Common();
+        lcModifyRemark.Code = "manager_id";
+        lcModifyRemark.Key = "";
+        lcModifyRemark.Value = modifyremark.Value.Trim();
+        ls.Add(lcModifyRemark);
+
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable(); 
 
