@@ -55,40 +55,12 @@
             }
 
             var IsGrid_pro = '<%=IsGrid_pro%>'; var IsGrid_yz = '<%=IsGrid_yz%>';
-            var IsRead = '<%=IsRead%>'; var IsRead_yz = '<%=IsRead_yz%>';  
             
             if(IsGrid_pro=="Y"){
                 $("#div_product").css("display","inline-block");
             }
             if(IsGrid_yz=="Y"){
                 $("#div_yz").css("display","inline-block");
-            }
-
-            if(IsRead=="Y"){
-                $("[id$=gv_d] [id*=gzzx_i_]").each(function (){
-                    $(this).css("display","none");
-                });
-                $("[id$=gv_d] [id*=pgi_no_i_]").each(function (){
-                    $(this).css("display","none");
-                });
-            }
-            if(IsRead=="Y1"){
-                $("[id$=gv_d] [id*=pgi_no_i_]").each(function (){
-                    $(this).css("display","none");
-                });
-            }
-            if(IsRead_yz=="Y"){
-                $("[id$=gv_d_yz] [id*=gzzx_i_yz_]").each(function (){
-                    $(this).css("display","none");
-                });
-                $("[id$=gv_d_yz] [id*=pgi_no_i_yz_]").each(function (){
-                    $(this).css("display","none");
-                });
-            }
-            if(IsRead_yz=="Y1"){
-                $("[id$=gv_d_yz] [id*=pgi_no_i_yz_]").each(function (){
-                    $(this).css("display","none");
-                });
             }
 
             $("#CPXX input[id*='projectno']").change(function () {  
@@ -853,6 +825,12 @@
         /*.dxeTextBox .dxeEditArea{
             background-color:#FDF7D9;
         }*/
+        .i_hidden{
+            display:none;
+        }
+         .i_show{
+            display:inline-block;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -958,7 +936,8 @@
                                                             <dx:ASPxTextBox ID="pgi_no" Width="75px" runat="server" Value='<%# Eval("pgi_no")%>' 
                                                                 ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>   
                                                         </td>
-                                                        <td><i id="pgi_no_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'')"></i></td>
+                                                        <td><i id="pgi_no_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["pgi_no_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'')"></i>
+                                                        </td>
                                                     </tr>
                                                 </table>                  
                                             </DataItemTemplate>   
@@ -999,7 +978,7 @@
                                                                 ClientInstanceName='<%# "gzzx_desc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
-                                                        <td><i id="gzzx_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="Get_wkzx(<%# Container.VisibleIndex %>,'')"></i></td>
+                                                        <td><i id="gzzx_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["gzzx_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_wkzx(<%# Container.VisibleIndex %>,'')"></i></td>
                                                     </tr>
                                                 </table>       
                                             </DataItemTemplate>
@@ -1270,7 +1249,7 @@
                                                             <dx:ASPxTextBox ID="pgi_no" Width="75px" runat="server" Value='<%# Eval("pgi_no")%>' 
                                                                 ClientInstanceName='<%# "pgi_no_yz"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>   
                                                         </td>
-                                                        <td><i id="pgi_no_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'yz')"></i></td>
+                                                        <td><i id="pgi_no_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["pgi_no_i_yz"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'yz')"></i></td>
                                                     </tr>
                                                 </table>                  
                                             </DataItemTemplate>   
@@ -1311,7 +1290,7 @@
                                                                 ClientInstanceName='<%# "gzzx_desc_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
-                                                        <td><i id="gzzx_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search" onclick="Get_wkzx(<%# Container.VisibleIndex %>,'yz')"></i></td>
+                                                        <td><i id="gzzx_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["gzzx_i_yz"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_wkzx(<%# Container.VisibleIndex %>,'yz')"></i></td>
                                                     </tr>
                                                 </table>       
                                             </DataItemTemplate>

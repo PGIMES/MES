@@ -26,6 +26,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         ViewState["lv"] = "";
+
+        ViewState["pgi_no_i"] = ""; ViewState["gzzx_i"] = "";
+        ViewState["pgi_no_i_yz"] = ""; ViewState["gzzx_i_yz"] = "";
+
         //string FlowID = "A";
         //string StepID = "A";
         //string state = "";
@@ -114,6 +118,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                                         left join form3_Sale_Product_MainTable c on a.projectno=c.pgino 
                                     where formno='" + Request.QueryString["formno"] + "'";
                     DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
+
+                    //该条件仅作为测试使用
+                    if (txt_CreateByDept.Value == "IT部")
+                    {
+                        string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
+                        ldt.Rows[0]["product_user"] = test_product_user;
+                        ldt.Rows[0]["yz_user"] = test_product_user;
+                    }
+                    //end
 
                     SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
@@ -211,17 +224,23 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
-            if (state == "edit")
+            if (state == "edit" || ldt_detail.Rows[i]["ver"].ToString() != "A")
             {
+                ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
+                ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
+                ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
+
+                ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+
                 if (lstypeno == "机加")
                 {
-                    IsRead = "Y1";
+                    ViewState["pgi_no_i"] = "Y";
                     ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
                     ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
                 }
                 if (lstypeno == "压铸")
                 {
-                    IsRead_yz = "Y1";
+                    ViewState["pgi_no_i_yz"] = "Y";
                     ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
                     ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
                 }
@@ -251,7 +270,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void setread(int i)
     {
-        IsRead = "Y";
+        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y";
 
         btndel.Visible = false;
 
@@ -479,7 +498,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void setread_yz(int i)
     {
-        IsRead_yz = "Y";
+        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y";
 
         btn_del_yz.Visible = false;
 
@@ -839,17 +858,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ls.Add(lccreate_date);
 
         }
-        else//typeno 获取不到
+       
+        for (int i = 0; i < ls.Count; i++)
         {
-            for (int i = 0; i < ls.Count; i++)
+            if (ls[i].Code.ToLower() == "typeno")
             {
-                if (ls[i].Code.ToLower() == "typeno")
-                {
-                    ls[i].Value = lstypeno;
-                    break;
-                }
+                ls[i].Value = lstypeno;
+                break;
             }
         }
+       
 
         Pgi.Auto.Common lcmanager_id = new Pgi.Auto.Common();
         lcmanager_id.Code = "manager_id";
@@ -882,6 +900,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
         }
+
 
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
