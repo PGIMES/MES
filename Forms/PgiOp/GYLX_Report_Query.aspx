@@ -38,8 +38,27 @@
 
              function OnGetRowValues(values) {
                 var lsstr = values;    //  与字段索引取值
-                //alert(lsstr);
-                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + lsstr[0] + '&pgi_no=' + lsstr[1]);
+                 //alert(lsstr);
+
+                     $.ajax({
+                         type: "post",
+                         url: "GYLX_Report_Query.aspx/CheckData",
+                         data: "{'pgi_no':'" + lsstr[1]+ "'}",
+                         contentType: "application/json; charset=utf-8",
+                         dataType: "json",
+                         async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                         success: function (data) {
+                             var obj=eval(data.d);
+
+                             if (obj[0].re_flag != "") {
+                                 layer.alert(obj[0].re_flag);
+                             } else {
+                                 window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + lsstr[0] + '&pgi_no=' + lsstr[1]);
+                             }
+                         }
+
+                     });
+
             }
 
             mergecells();

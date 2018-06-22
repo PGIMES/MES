@@ -111,34 +111,52 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 //修改申请
                 if (Request.QueryString["formno"] != null && state == "edit")
                 {
-                    string sql_head = @"select a.id, a.FormNo, a.projectno, a.pn, a.pn_desc, a.domain, a.typeno, a.state
+                    //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
+
+                    string re_sql = @"select top 1 a.InstanceID,c.createbyid,c.createbyname 
+                                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0,1))  a
+                                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID=b.GYGSNo
+                                        inner join PGI_GYLX_Main_Form c on a.InstanceID=c.formno
+                                     where b.pgi_no='" + Request.QueryString["pgi_no"] + "'";
+                    //if (m_sid != "") { re_sql += " and InstanceID<>'" + m_sid + "'"; }
+                    DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
+
+                    if (re_dt.Rows.Count > 0)
+                    {
+                        Pgi.Auto.Public.MsgBox(this, "alert", "该项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
+                    }
+                    else
+                    {
+                        string sql_head = @"select a.id, a.FormNo, a.projectno, a.pn, a.pn_desc, a.domain, a.typeno, a.state
                                             , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate 
                                             ,c.product_user,c.zl_user,c.yz_user
                                     from PGI_GYLX_Main a 
                                         left join form3_Sale_Product_MainTable c on a.projectno=c.pgino 
                                     where formno='" + Request.QueryString["formno"] + "'";
-                    DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
+                        DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
 
-                    //该条件仅作为测试使用
-                    if (txt_CreateByDept.Value == "IT部")
-                    {
-                        string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
-                        ldt.Rows[0]["product_user"] = test_product_user;
-                        ldt.Rows[0]["yz_user"] = test_product_user;
-                    }
-                    //end
+                        //该条件仅作为测试使用
+                        if (txt_CreateByDept.Value == "IT部")
+                        {
+                            string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
+                            ldt.Rows[0]["product_user"] = test_product_user;
+                            ldt.Rows[0]["yz_user"] = test_product_user;
+                        }
+                        //end
 
-                    SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                    txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
+                        SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                        txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
 
 
-                    ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
+                        ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
 
-                    lssql = @"select null id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
+                        lssql = @"select null id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver, pn
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,op";
+                    }
+                    
                 }
                 else//新增申请
                 {
@@ -772,22 +790,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }*/
 
 
-        //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
-        //string projectno = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text.Trim();
-
-        //string re_sql = @"select a.InstanceID,b.createbyid,b.createbyname 
-        //                from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='a7ec8bec-1f81-4a81-81d2-a9c7385dedb7' and status in(0,1))  a
-        //                    inner join PGI_GYLX_Main_Form b on a.InstanceID=b.formno
-        //                 where b.projectno='" + projectno + "'";
-        //if (m_sid != "") { re_sql += " and InstanceID<>'" + m_sid + "'"; }
-        //DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
-
-        //if (re_dt.Rows.Count > 0)
-        //{
-        //    Pgi.Auto.Public.MsgBox(this, "alert", "该项目正在申请中，不能提交(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
-        //    return false;
-        //}
-
         //------------------------------------------------------------------------------工程师对应主管
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
@@ -942,9 +944,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         if (ln > 0)
         {
             flag = true;
-            //var titletype = sformsate.Left(4) == "edit" ? "刀具修改" : "刀具申请";
 
-            string title = "工艺路线申请--" + this.m_sid;
+            var titletype = ldt.Rows[0]["ver"].ToString() == "A" ? "工艺路线申请" : "工艺路线修改";
+            string title = titletype + "--" + this.m_sid;
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
 
