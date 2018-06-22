@@ -231,7 +231,7 @@
             //20180620此处需要修改：需要判断项目号是否有申请过，开窗申请版本必须是A
             if (ty=="") {
                 var pgi_no= eval('pgi_no' + vi);var pgi_no_t= eval('pgi_no_t' + vi);
-                pgi_no.SetText(lspgino.substr(0,7));pgi_no_t.SetText(lspgino);
+                pgi_no.SetText(lspgino);pgi_no_t.SetText(lspgino);//lspgino.substr(0,7)
             }
             if (ty=="yz") {
                 var pgi_no_yz= eval('pgi_no_yz' + vi);var pgi_no_t_yz= eval('pgi_no_t_yz' + vi);
@@ -260,6 +260,31 @@
             if (ty=="yz") {
                 var gzzx_desc_yz= eval('gzzx_desc_yz' + vi);var gzzx_yz= eval('gzzx_yz' + vi);
                 gzzx_desc_yz.SetText(ls_gzzx_desc);gzzx_yz.SetText(ls_gzzx);
+            }
+        }
+
+        function Get_IsBg(vi,ty){
+           
+            var url = "/select/select_yn.aspx?vi="+vi+"&ty="+ty;
+
+            layer.open({
+                title:'是否报工选择',
+                type: 2,
+                area: ['250px', '250px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
+        }
+
+        function setvalue_IsBg(yn,vi,ty){
+            if (ty=="") {
+                var IsBg= eval('IsBg' + vi);
+                IsBg.SetText(yn);
+            }
+            if (ty=="yz") {
+               var IsBg= eval('IsBg_yz' + vi);
+                IsBg.SetText(yn);
             }
         }
 
@@ -937,7 +962,7 @@
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
+                                        <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
                                                  <table>
@@ -1000,7 +1025,22 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="是否报<br />工(Y/N)" FieldName="IsBg" Width="35px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="是否报<br />工(Y/N)" FieldName="IsBg" Width="35px" VisibleIndex="9">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>     
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsBg")%>' 
+                                                                ClientInstanceName='<%# "IsBg"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="IsBg_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["IsBg_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_IsBg(<%# Container.VisibleIndex %>,'')"></i></td>
+                                                    </tr>
+                                                </table>              
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="每次加<br />工数量" FieldName="JgNum" Width="40px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
@@ -1250,7 +1290,7 @@
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
+                                        <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
                                                  <table>
@@ -1312,7 +1352,22 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="是否报<br />工(Y/N)" FieldName="IsBg" Width="35px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="是否报<br />工(Y/N)" FieldName="IsBg" Width="35px" VisibleIndex="9">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>     
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsBg")%>' 
+                                                                ClientInstanceName='<%# "IsBg_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="IsBg_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["IsBg_i_yz"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_IsBg(<%# Container.VisibleIndex %>,'yz')"></i></td>
+                                                    </tr>
+                                                </table>                  
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="压铸每模<br />重量(kg)" FieldName="weights" Width="60px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>

@@ -54,7 +54,9 @@ public partial class Select_select_product_d : System.Web.UI.Page
                                 from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a
                                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID = b.gygsno
                                     ) bb on aa.pt_part=bb.pgi_no
-                    where bb.pgi_no is null and aa.pt_prod_line<>'4010' and aa.pt_domain='{0}' and aa.pt_part like '%{1}%' and aa.pt_desc1 like '%{2}%'
+                    where bb.pgi_no is null 
+                        and (aa.pt_prod_line like '2%' or aa.pt_prod_line like '3%') and (aa.pt_status<>'DEAD' and aa.pt_status<>'OBS') and aa.pt_domain='{0}' 
+                        and aa.pt_part like '%{1}%' and aa.pt_desc1 like '%{2}%'
                     order by aa.pt_part";
         sql = string.Format(sql, Request["domain"], this.txtpgi_no.Text.Trim(), this.txtpn.Text.Trim());
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];

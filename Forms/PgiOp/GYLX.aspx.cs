@@ -29,6 +29,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         ViewState["pgi_no_i"] = ""; ViewState["gzzx_i"] = "";
         ViewState["pgi_no_i_yz"] = ""; ViewState["gzzx_i_yz"] = "";
+        ViewState["IsBg_i"] = ""; ViewState["IsBg_i_yz"] = "";
 
         //string FlowID = "A";
         //string StepID = "A";
@@ -288,7 +289,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void setread(int i)
     {
-        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y";
+        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = ""; 
 
         btndel.Visible = false;
 
@@ -516,7 +517,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void setread_yz(int i)
     {
-        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y";
+        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "";
 
         btn_del_yz.Visible = false;
 
@@ -717,7 +718,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ldr["typeno"] = "压铸";
             ldr["ver"] = "A";
             ldr["op"] = "OP" + i.ToString() + "0";
-            ldr["isbg"] = "Y";
+            if (i == 1 || i == 2)
+            {
+                ldr["isbg"] = "N";
+            }
+            else
+            {
+                ldr["isbg"] = "Y";
+            }            
             ldr["domain"] = lsdomain; ldr["pn"] = lspn;
             ldr["numid"] = i;
 

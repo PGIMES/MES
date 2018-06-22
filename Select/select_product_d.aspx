@@ -72,11 +72,11 @@
                                         <ItemStyle Width="8%" />
                                     </asp:BoundField>
 
-                                     <asp:BoundField DataField="pt_prod_line" HeaderText="生产线" 
+                                     <%--<asp:BoundField DataField="pt_prod_line" HeaderText="生产线" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="6%" />
-                                    </asp:BoundField>
+                                    </asp:BoundField>--%>
 
                                      <asp:CommandField ButtonType="Button" SelectText="选择" 
                                          ShowSelectButton="True" HeaderText="选择" >
