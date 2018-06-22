@@ -290,11 +290,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
     }
 
-    #region 机加
 
     public void setpgino_read(DataTable dt)
     {
-        if (ViewState["pgi_no_i"].ToString()=="Y")
+        if (ViewState["pgi_no_i"].ToString() == "Y")
         {
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -313,8 +312,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
     }
 
+    #region 机加
+
     public void setread(int i)
     {
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
+
+        ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+
         ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = ""; 
 
         btndel.Visible = false;
@@ -543,6 +550,12 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void setread_yz(int i)
     {
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
+        ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
+
+        ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+
         ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "";
 
         btn_del_yz.Visible = false;
