@@ -397,6 +397,11 @@
 
             if(action=='submit'){
                 if($('#div_product').css('display')=='inline-block'){
+
+                    if($("[id$=gv_d] input[id*=op]").length==0){
+                        msg+="【工艺工时信息】不可为空.<br />";
+                    }
+
                     $("[id$=gv_d] input[id*=pgi_no]").each(function (){
                         if( $(this).val()==""){
                             msg+="【项目号】不可为空.<br />";
@@ -502,6 +507,11 @@
                 }
 
                 if($('#div_yz').css('display')=='inline-block'){
+
+                    if($("[id$=gv_d_yz] input[id*=op]").length==0){
+                        msg+="【工艺工时信息】不可为空.<br />";
+                    }
+
                     $("[id$=gv_d_yz] input[id*=pgi_no]").each(function (){
                         if( $(this).val()==""){
                             msg+="【项目号】不可为空.<br />";

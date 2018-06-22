@@ -18,7 +18,7 @@
         $("#mestitle").text("【产品信息】");
         $(document).ready(function () {
             $("input[id*='Button1']").click(function () {
-                var val = $("[id*='ddl_ljh']").val();
+                var val = $("[id*='ddl_ljh_I']").val();
                 if (val == "") {
                     layer.alert("请选择零件号.");
                     return false;
@@ -174,9 +174,10 @@
                                                 <div class="form-inline">
                                                 
                                                 <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm " Width="100px">
-                                                 <asp:ListItem Value=""></asp:ListItem>
-                                                 <asp:ListItem Value="100">100</asp:ListItem>
+                                               <%--  <asp:ListItem Value=""></asp:ListItem>--%>
                                                  <asp:ListItem Value="200">200</asp:ListItem>
+                                       
+                                                 <asp:ListItem Value="100">100</asp:ListItem>
                                        
                                     </asp:DropDownList>
                                                 </div>
@@ -185,10 +186,14 @@
                                                 零件号:</td>
                                             <td  style=" width:280px">
                                                   <div class="form-inline">
-                                                <asp:DropDownList ID="ddl_ljh" runat="server" 
+                                                <%--<asp:DropDownList ID="ddl_ljh" runat="server" 
                                                     class="form-control input-s-sm " Width="250px">
                                        
-                                    </asp:DropDownList>
+                                    </asp:DropDownList>--%>
+                                                      <dx:ASPxComboBox ID="ddl_ljh" runat="server" 
+                                                          IncrementalFilteringMode="Contains" 
+                                                          ValueType="System.String" Width="200px" Height="30px">
+                                                      </dx:ASPxComboBox>
                                     </div>
                                                 </td>
                                             <td>
