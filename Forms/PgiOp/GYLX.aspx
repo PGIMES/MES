@@ -1161,7 +1161,7 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
+                                        <dx:GridViewDataTextColumn Caption="单台83%<br />产量" FieldName="col3" Width="40px" VisibleIndex="20">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col3" Width="40px" runat="server" Value='<%# Eval("col3")%>' 
                                                     ClientInstanceName='<%# "col3"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
