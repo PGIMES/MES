@@ -248,6 +248,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
+
             if (state == "edit" || ldt_detail.Rows[i]["ver"].ToString() != "A")
             {
                 ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
@@ -268,7 +269,26 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
                     ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
                 }
-            }
+
+                if (state != "edit" && ldt_detail.Rows[i]["ver"].ToString() != "A")
+                {
+                    if (ldt_flow_pro.Rows.Count == 0)
+                    {
+                        this.btnflowSend.Text = "批准";
+                    }
+                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    {
+                        if (lstypeno == "机加")
+                        {
+                            setread(i);
+                        }
+                        if (lstypeno == "压铸")
+                        {
+                            setread_yz(i);
+                        }
+                    }
+                }
+            }            
             else
             {
                 if (ldt_flow_pro.Rows.Count == 0)
@@ -322,7 +342,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
-        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = ""; 
+        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = "Y"; 
 
         btndel.Visible = false;
 
@@ -556,7 +576,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
-        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "";
+        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "Y";
 
         btn_del_yz.Visible = false;
 
