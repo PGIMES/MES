@@ -26,10 +26,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         ViewState["lv"] = "";
+        
+        if (ViewState["pgi_no_i"] == null) { ViewState["pgi_no_i"] = ""; }
+        if (ViewState["gzzx_i"] == null) { ViewState["gzzx_i"] = ""; }
 
-        ViewState["pgi_no_i"] = ""; ViewState["gzzx_i"] = "";
-        ViewState["pgi_no_i_yz"] = ""; ViewState["gzzx_i_yz"] = "";
-        ViewState["IsBg_i"] = ""; ViewState["IsBg_i_yz"] = "";
+        if (ViewState["pgi_no_i_yz"] == null) { ViewState["pgi_no_i_yz"] = ""; }
+        if (ViewState["gzzx_i_yz"] == null) { ViewState["gzzx_i_yz"] = ""; }
+
+        if (ViewState["IsBg_i"] == null) { ViewState["IsBg_i"] = ""; }
+        if (ViewState["IsBg_i_yz"] == null) { ViewState["IsBg_i_yz"] = ""; }
 
         //string FlowID = "A";
         //string StepID = "A";
@@ -287,6 +292,27 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     #region 机加
 
+    public void setpgino_read(DataTable dt)
+    {
+        if (ViewState["pgi_no_i"].ToString()=="Y")
+        {
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
+                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
+            }
+        }
+
+        if (ViewState["pgi_no_i_yz"].ToString() == "Y")
+        {
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
+                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
+            }
+        }
+    }
+
     public void setread(int i)
     {
         ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = ""; 
@@ -373,7 +399,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //}
         gv_d.DataSource = ldt;
         gv_d.DataBind();
-        setGridIsRead(ldt);
+        setpgino_read(ldt);
     }
 
     private void GvAddRows(int lnadd_rows, int lnindex)
@@ -419,7 +445,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
 
-        setGridIsRead(ldt);
+        setpgino_read(ldt);
     }
 
     protected void gv_d_RowCommand(object sender, DevExpress.Web.ASPxGridViewRowCommandEventArgs e)
@@ -611,7 +637,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         gv_d_yz.DataSource = ldt;
         gv_d_yz.DataBind();
 
-        setGridIsRead(ldt);
+        setpgino_read(ldt);
     }
 
     private void GvAddRows_yz(int lnadd_rows, int lnindex)
@@ -658,7 +684,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         this.gv_d_yz.DataBind();
 
 
-        setGridIsRead(ldt);
+        setpgino_read(ldt);
 
     }
 
