@@ -666,6 +666,11 @@
                 return flag;
             }
 
+            
+            if(!parent.checkSign()){
+                flag=false;return flag;
+            }
+
             //if(flag){
             //    $.ajax({
             //        type: "post",
