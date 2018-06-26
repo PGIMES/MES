@@ -412,13 +412,28 @@
             }else {
                 if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
                     if($("#CPXX input[id*='product_user']").val()==""){msg+="【工艺段】为机加，【产品工程师】不可为空.<br />";}
+
+                    if($("[id$=gv_d] input[id*=op]").length==0){
+                        msg+="【工艺工时信息】不可为空.<br />";
+                    }else {
+                        if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                            msg+="【工艺工时信息】格式必须正确.<br />";
+                        }
+                    }
                 }
 
                 if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
                     if($("#CPXX input[id*='yz_user']").val()==""){msg+="【工艺段】为压铸，【压铸工程师】不可为空.<br />";}
-                }
-            }          
 
+                    if($("[id$=gv_d_yz] input[id*=op]").length==0){
+                        msg+="【工艺工时信息】不可为空.<br />";
+                    }else {
+                        if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                            msg+="【工艺工时信息】格式必须正确.<br />";
+                        }
+                    }
+                }
+            }     
 
             if(action=='submit'){
                 if($('#div_product').css('display')=='inline-block'){
@@ -1053,7 +1068,11 @@
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="45px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' ></dx:ASPxTextBox>                
+                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' >
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{3}$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="130px" VisibleIndex="5">
@@ -1386,7 +1405,11 @@
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="45px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' ></dx:ASPxTextBox>                
+                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' >
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{2}$" />
+                                                    </ValidationSettings>
+                                                </dx:ASPxTextBox>                
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="130px" VisibleIndex="5">
