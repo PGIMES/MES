@@ -946,6 +946,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
 
         //------------------------------------------------------------------------------工程师对应主管
+        string projectno = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text.Trim();
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
 
@@ -1044,7 +1045,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ls.Add(lcModifyRemark);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
-        DataTable ldt = new DataTable(); 
+        DataTable ldt = new DataTable();string titlever = "A";
 
         if (lstypeno == "机加")
         {
@@ -1077,6 +1078,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         if (ldt.Rows.Count > 0)
         {
+            titlever = ldt.Rows[0]["ver"].ToString();
+
             Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
             string dtl_ids = "";
             for (int i = 0; i < ldt.Rows.Count; i++)
@@ -1111,8 +1114,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             flag = true;
 
-            var titletype = ldt.Rows[0]["ver"].ToString() == "A" ? "工艺路线申请" : "工艺路线修改";
-            string title = titletype + "--" + this.m_sid;
+            var titletype = titlever == "A" ? "工艺路线申请" : "工艺路线修改";
+            string title = titletype + "" + projectno + "--" + this.m_sid;
+
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
 
