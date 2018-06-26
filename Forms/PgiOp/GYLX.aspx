@@ -671,28 +671,80 @@
                 flag=false;return flag;
             }
 
-            //if(flag){
-            //    $.ajax({
-            //        type: "post",
-            //        url: "GYLX.aspx/CheckData",
-            //        data: "{'typeno':'" + $("#CPXX input[id*='typeno']:checked").val() 
-            //            + "','product_user':'" + $("#CPXX input[id*='product_user']").val() 
-            //            + "','yz_user':'" + $("#CPXX input[id*='yz_user']").val() + "'}",
-            //        contentType: "application/json; charset=utf-8",
-            //        dataType: "json",
-            //        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-            //        success: function (data) {
-            //            var obj=eval(data.d);
+            if(flag){
 
-            //            if(obj[0].manager_flag!=""){
-            //                flag=false;
-            //                layer.alert(obj[0].manager_flag);
-            //            }
-            //        }
+                var formno=$("#CPXX input[id*='formno']").val();
+                var typeno=$("#CPXX input[id*='typeno']:checked").val();
+                var product_user=$("#CPXX input[id*='product_user']").val();
+                var yz_user=$("#CPXX input[id*='yz_user']").val();
 
-            //    });
-            //}
+                var pgi_no="";var ver="";
+                if(typeno=="机加"){
+                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
+                        pgi_no=pgi_no+ eval('pgi_no' + index).GetText()+","; 
+                        ver=ver+ eval('ver' + index).GetText()+","; 
+                    });
+                }
+                if(typeno=="压铸"){
+                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
+                        pgi_no=pgi_no+ eval('pgi_no_yz' + index).GetText()+",";  
+                        ver=ver+ eval('ver_yz' + index).GetText()+","; 
+                    });
+                }                
+                if(pgi_no.length>0){pgi_no=pgi_no.substr(0,pgi_no.length-1);}
+                if(ver.length>0){ver=ver.substr(0,ver.length-1);}
+
+                $.ajax({
+                    type: "post",
+                    url: "GYLX.aspx/CheckData",
+                    data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','pgi_no':'" + pgi_no + "','ver':'" + ver + "','formno':'" + formno + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj=eval(data.d);
+
+                        if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
+                        if(obj[0].pgino_flag!=""){ msg+=obj[0].pgino_flag; }
+
+                        if(msg!=""){  
+                            flag=false;
+                            layer.alert(msg);
+                            return flag;
+                        }
+                    }
+
+                });
+            }
             return flag;
+        }
+
+        function checkData_pgino(i){
+            var formno=$("#CPXX input[id*='formno']").val();
+           
+            gv_d.GetRowValues(i, 'ver'
+                ,  function a(values) {
+                    var ver = values;   
+                    var pgi_no = eval('pgi_no' + i).GetText();  
+
+                    $.ajax({
+                        type: "post",
+                        url: "GYLX.aspx/checkData_pgino_change",
+                        data: "{'pgi_no':'" + pgi_no+ "','ver':'" + ver+ "','formno':'" + formno + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                        success: function (data) {
+                            var obj=eval(data.d);
+
+                            if (obj[0].pgino_flag != "") {
+                                layer.alert(obj[0].pgino_flag);
+                            } 
+                        }
+
+                    });
+                }
+            ); 
         }
 
     </script>
@@ -972,9 +1024,11 @@
                                             <DataItemTemplate>     
                                                  <table>
                                                     <tr>
-                                                        <td>           
+                                                        <td>      
+                                                            <%--     --%> 
                                                             <dx:ASPxTextBox ID="pgi_no" Width="75px" runat="server" Value='<%# Eval("pgi_no")%>' 
-                                                                ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>   
+                                                                ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
+                                                                ClientSideEvents-ValueChanged='<%# "function(s,e){checkData_pgino("+Container.VisibleIndex+");}" %>'></dx:ASPxTextBox>   
                                                         </td>
                                                         <td><i id="pgi_no_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["pgi_no_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'')"></i>
                                                         </td>
@@ -982,7 +1036,13 @@
                                                 </table>                  
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="ver" Width="35px" runat="server" Value='<%# Eval("ver")%>' 
+                                                    ClientInstanceName='<%# "ver"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
@@ -1309,7 +1369,13 @@
                                                 </table>                  
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3">
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="ver" Width="35px" runat="server" Value='<%# Eval("ver")%>' 
+                                                    ClientInstanceName='<%# "ver_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     

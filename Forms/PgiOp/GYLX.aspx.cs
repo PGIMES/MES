@@ -173,14 +173,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             else
             {
                 DataTable ldt = DbHelperSQL.Query("select * from PGI_GYLX_Main_Form where formno='" + this.m_sid + "'").Tables[0];
-                //表头基本信息
-                txt_CreateById.Value = ldt.Rows[0]["CreateById"].ToString();
-                txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
-                txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
-                txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
-                SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
-                modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
+                if (ldt.Rows.Count > 0)
+                {
+                    //表头基本信息
+                    txt_CreateById.Value = ldt.Rows[0]["CreateById"].ToString();
+                    txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
+                    txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
+                    txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
+                    SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
+                    modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
+                }
+                else
+                {
+                    Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
+                }
 
                 lssql += " where GYGSNo='" + this.m_sid + "'  order by a.typeno,op";
             }
@@ -218,8 +225,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         }
 
-
-        if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit")
+        //if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit")
+        if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit" || (this.m_sid != "" && txt_CreateById.Value == "")) 
         {
             ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
             ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
@@ -808,37 +815,108 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     #endregion
 
-    //[WebMethod]
-    //public static string CheckData(string typeno, string product_user, string yz_user)
-    //{
-    //    //------------------------------------------------------------------------------验证工程师对应主管是否为空
-    //    string manager_flag = "";
+    [WebMethod]
+    public static string CheckData(string typeno, string product_user, string yz_user, string pgi_no, string ver,string formno)
+    {
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(typeno, product_user, yz_user, out dt_manager, out manager_flag);
 
-    //    string appuserid = "";
-    //    if (typeno == "机加")
-    //    {
-    //        appuserid = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
-    //    }
-    //    if (typeno == "压铸")
-    //    {
-    //        appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
-    //    }
+        string[] pgi_no_arr = pgi_no.Split(','); string[] ver_arr = ver.Split(',');
+        string pgino_flag = "";
+        for (int i = 0; i < pgi_no_arr.Length; i++)
+        {
+            pgino_flag += checkData_pgino(pgi_no_arr[i], ver_arr[i], formno);
+        }
 
-    //    DataTable dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
-    //    if (dt_manager == null)
-    //    {
-    //        manager_flag = typeno + "工程师工号(" + appuserid + ")的主管不存在，不能提交!";
-    //    }
-    //    if (dt_manager.Rows.Count <= 0)
-    //    {
-    //        manager_flag = typeno + "工程师工号(" + appuserid + ")的主管不存在，不能提交!";
-    //    }
+        string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"pgino_flag\":\"" + pgino_flag + "\"}]";
+        return result;
 
-    //    string result = "[{\"manager_flag\":\"" + manager_flag + "\"}]";
-    //    return result;
+    }
+    
+    public static void CheckData_manager(string typeno, string product_user, string yz_user,out DataTable dt_manager, out string manager_flag)
+    {
+        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        manager_flag = "";
 
-    //}
+        string appuserid = "";
+        if (typeno == "机加")
+        {
+            appuserid = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
+        }
+        if (typeno == "压铸")
+        {
+            appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
+        }
 
+        dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
+
+        if (dt_manager == null)
+        {
+            manager_flag = typeno + "工程师工号(" + appuserid + ")的主管不存在，不能提交!<br />";
+        }
+        if (dt_manager.Rows.Count <= 0)
+        {
+            manager_flag = typeno + "工程师工号(" + appuserid + ")的主管不存在，不能提交!<br />";
+        }
+
+    }
+
+    public static string checkData_pgino(string pgi_no, string ver,string formno)
+    {
+        string flag = "";
+
+        string sql = @"select b.pgi_no
+                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
+                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID = b.gygsno
+                    where b.pgi_no='" + pgi_no + "'";
+        if (formno != "") { sql = sql + " and a.InstanceID<>'" + formno + "'"; }
+
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count > 0)
+        {
+            flag = pgi_no + "正在申请中，不能申请!<br />";
+        }
+
+        if (flag == "")
+        {
+            sql = @"select pgi_no,ascii(max(ver)) ver_db,ascii('"+ ver + "') ver_page from [dbo].[PGI_GYLX_Dtl] where pgi_no='" + pgi_no + "' group by pgi_no";
+            DataTable dt2 = DbHelperSQL.Query(sql).Tables[0];
+
+            if (ver == "A")
+            {
+                if (dt2.Rows.Count > 0)
+                {
+                    flag = pgi_no + "已经存在，不能新增申请!<br />";
+                }
+            }
+            else
+            {
+                if (dt2.Rows.Count > 0)
+                {
+                    if (Convert.ToInt32(dt2.Rows[0]["ver_db"].ToString()) != Convert.ToInt32(dt2.Rows[0]["ver_page"].ToString()) - 1)
+                    {
+                        flag = pgi_no + "修改申请版本" + ver + "，不正确，不能申请!<br />";
+                    }
+                }
+                else
+                {
+                    flag = pgi_no + "没有申请过，不能修改申请!<br />";
+                }
+            }
+
+        }
+        return flag;
+    }
+
+
+    [WebMethod]
+    public static string checkData_pgino_change(string pgi_no, string ver, string formno)
+    {
+        string pgino_flag = checkData_pgino(pgi_no, ver, formno);
+
+        string result = "[{\"pgino_flag\":\"" + pgino_flag + "\"}]";
+        return result;
+    }
 
     private bool SaveData()
     {
@@ -870,8 +948,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //------------------------------------------------------------------------------工程师对应主管
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
-        
-        string appuserid = "";
+
+        string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
+        string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(lstypeno, product_user, yz_user, out dt_manager, out manager_flag);
+
+        /*string appuserid = "";
         if (lstypeno == "机加")
         {
             string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
@@ -893,7 +976,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             Pgi.Auto.Public.MsgBox(this, "alert", "工程师工号(" + appuserid + ")的主管不存在，不能提交!");
             return false;
-        }
+        }*/
 
         if (this.m_sid == "")
         {
