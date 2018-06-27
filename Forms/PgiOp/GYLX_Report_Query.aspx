@@ -19,12 +19,15 @@
 
             $('#btn_edit').click(function () {
                 
-                var index_check=-1;
+                var index_check = -1;
                 $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
+
                     //alert($(item).find("td:eq(0) span:first").attr("class"));
                     var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
                     if(class_checked=='dxICheckBox dxichSys dx-not-acc dxWeb_edtCheckBoxChecked'){
-                        index_check=index;
+                        //alert(item.id);
+                        //index_check = index;//分页就不对了
+                        index_check = item.id.replace('MainContent_gv_DXDataRow', '');
                         return false;
                     }
                 });      
