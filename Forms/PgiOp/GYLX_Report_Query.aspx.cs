@@ -43,7 +43,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     protected void gv_PageIndexChanged(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
     }
 
     //protected void gv_tr_list_HtmlDataCellPrepared(object sender, DevExpress.Web.ASPxGridViewTableDataCellEventArgs e)
