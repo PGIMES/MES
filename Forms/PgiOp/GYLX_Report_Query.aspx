@@ -60,10 +60,6 @@
                      });
 
             }
-             //alert($("div[class=dxgvCSD]").css("height"));
-             //alert($(window).height());
-             //alert($("#div_p").height());
-
              setHeight();
 
              $(window).resize(function () {
@@ -93,6 +89,11 @@
         }
 
         function setHeight() {
+
+            //alert($("div[class=dxgvCSD]").css("height"));
+            //alert($(window).height());
+            //alert($("#div_p").height());
+
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
         }
         	
