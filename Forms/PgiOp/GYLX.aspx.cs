@@ -189,7 +189,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                lssql += " where GYGSNo='" + this.m_sid + "'  order by a.typeno,op";
+                lssql += " where GYGSNo='" + this.m_sid + "' order by a.typeno, pgi_no, pgi_no_t,op"; //order by a.typeno,op
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
@@ -1085,6 +1085,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
                 if (ldt.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
+                //排除：数据库中的数据不在网页上的，需要删除；其中OP700需要删除
+                //if (ldt.Rows[i]["id"].ToString() != "" && ldt.Rows[i]["op"].ToString() != "OP700") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
             }
             if (dtl_ids != "")
             {
@@ -1096,6 +1098,42 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 ls_del.Sql = "delete from PGI_GYLX_Dtl_Form where GYGSNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del);
+
+            /*
+            //copy600to700 begin
+            for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+            {
+                if (ldt.Rows[i]["op"].ToString() == "OP700")
+                {
+                    ldt.Rows[i].Delete();
+                }
+            }       
+            for (int i = 0; i < ldt.Rows.Count; i++)
+            {
+                if (ldt.Rows[i]["op"].ToString() == "OP600")
+                {
+                    DataRow ldr = ldt.NewRow();
+                    for (int j = 0; j < ldt.Columns.Count; j++)
+                    {
+                        if (ldt.Columns[j].ColumnName == "id")
+                        {
+                            ldr[ldt.Columns[j].ColumnName] = "";
+                        }
+                        else if(ldt.Columns[j].ColumnName == "op")
+                        {
+                            ldr[ldt.Columns[j].ColumnName] = "OP700";
+                        }
+                        else
+                        {
+                            ldr[ldt.Columns[j].ColumnName] = ldt.Rows[i][ldt.Columns[j].ColumnName];
+                        }
+                    }
+                    ldt.Rows.Add(ldr.ItemArray);
+                    break;
+                }
+            }
+            //copy600to700 end
+            */
 
             //明细数据自动生成SQL，并增入SUM
             List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_GYLX_Dtl_Form", "id", "Column1,numid,flag");
