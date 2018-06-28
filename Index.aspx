@@ -58,9 +58,9 @@
                             </div>
                         </div>
                         <div class="area_block">
-                            <div class="btn btn-large btn-gray" name="frm_A">
-                                <a href="Default.aspx" class="btn-group">
-                                    <div class="btn btn-primary disabled" data-toggle="" name="btn_A">
+                            <div class="btn btn-large btn-success" name="frm_A">
+                                <a href="DefaultFe2.aspx" target="_blank" class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="" name="btn_A">
                                         二车间铁机加
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
@@ -133,6 +133,33 @@
                                 </div>
                             </div>
                         </div>
+                 
+
+                           <div class="area_block">
+                            <div class="btn btn-large   btn-success" name="frm_A">
+                                <div class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="dropdown" name="btn_pro">
+                                        生产报表
+                                    </div>
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href="http://172.16.5.6:8080/zhiliang/pn_fpl_list.aspx" target="_blank">废品率</a></li>
+                                        <li><a href="http://172.16.5.6:8080/zhiliang/pn_fp_list.aspx" target="_blank">废品原因</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="http://172.16.5.6:8080/production/gd_listmx.aspx" target="_blank">工料废明细</a></li>
+                                        <li><a href="http://172.16.5.6:8080/production/fgd_list.aspx" target="_blank">父工单明细</a></li>
+                                        <li><a href="http://172.16.5.6:8080/production/gd_list.aspx" target="_blank">工单明细</a></li>
+                                        <li><a href="http://172.16.5.6:8080/production/gx_list.aspx" target="_blank">工序明细</a></li>
+                                        <li><a href="http://172.16.5.6:8080/production/m_report_qad.aspx" target="_blank">生产报表分析(QAD)</a></li>
+                                         <li><a href="/production/Production_Report.aspx" target="_blank">生产报表(NEW)</a></li>
+                                         <li><a href="/ProductionData/Rpt_OpQuery.aspx" target="_blank">工序明细(NEW)</a></li>
+                                         <li><a href="/ProductionData/Rpt_GDQuery.aspx" target="_blank">工单明细(NEW)</a></li>
+                                    </ul>
+                                </div>
+                                <div class="area" id="div1" name="A">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -453,18 +480,17 @@
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_GC">
                                         工艺数据</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu"> 
-                                        <%--<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=a7ec8bec-1f81-4a81-81d2-a9c7385dedb7&appid=13093704-4425-4713-B3E1-81851C6F96CD" target="_blank">工艺路线申请(old)</a></li>--%>
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4" target="_blank">工艺路线申请</a></li>
+										<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4" target="_blank">工艺路线申请</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=4A901BC7-EA83-43B1-80B6-5B14708DEDE9&appid=" target="_blank">BOM申请(测试)</a></li>
                                         <li class="divider"></li>
-                                        <%--<li><a href="/Forms/PgiOp/GYGS_Report_Query.aspx" target="_blank">工艺路线查询(old)</a></li>--%>
-                                        <li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询</a></li>
+										<li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询</a></li>
+                                        <li><a href="/Forms/PgiOp/Rpt_GYBom_Query.aspx" target="_blank">工艺数据状态查询(测试)</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_GC">
                                 </div>
                             </div>
-                        </div>
-                       
+                        </div>                       
                     </div>
                 </div>
             </div>
@@ -503,6 +529,7 @@
                                         排产计划</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">                                        
                                         <li><a href="javascript:void(0)" target="_blank">待完善....</a></li>
+                                        
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
@@ -579,9 +606,12 @@
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_bule2-1">
                                         物流</div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">                                       
-                                         
+                                         <li><a href="http://172.16.5.6:8080/wms/shipment_list.aspx"  target="_blank">出货跟踪查询</a></li>  
+                                         <li><a href="http://172.16.5.6:8080/wms/shipment_report.aspx"  target="_blank">出货量统计报表</a></li> 
+                                           <li class="divider"></li>
                                         <li><a href="/wuliu/wuliu_container_rate_report.aspx"  target="_blank">集装箱利用率</a></li> 
-                                         <li><a href="/wuliu/FH_Query.aspx"  target="_blank">发运记录查询</a></li>                                       
+                                         <li><a href="/wuliu/FH_Query.aspx"  target="_blank">发运记录查询</a></li>  
+                                                                               
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
@@ -678,39 +708,6 @@
                                         <li class="divider"></li>
                                         <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询 </a></li>
                                         <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询 </a></li>
-                                    </ul>
-                                </div>
-                                <div class="area" id="div_bule2-1">
-                                </div>
-                            </div>
-                        </div>                        
-                        
-                        
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <%--测试--%>
-    <div class="row  row-container">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <strong>测试</strong>                   
-                </div>
-                <div class="panel-body">
-                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
-                        <div class="area_block">
-                            <div class="btn btn-padding-s btn-success " name="frm_bule2-1">
-                                <div class="btn-group">
-                                    <div class="btn btn-primary " data-toggle="dropdown"  name="btn_bule2-1">
-                                        测试管理</div>
-                                    <ul class="dropdown-menu" style="color: Black" role="menu">
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=568476a2-06eb-42b7-a50f-d740383787d9&appid=4415B7BC-6782-4EBB-B1D4-09F98B1CF5D3" target="_blank">测试申请单(test_fileattach)</a></li>
-                                        <li class="divider"></li>
-                                        
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">

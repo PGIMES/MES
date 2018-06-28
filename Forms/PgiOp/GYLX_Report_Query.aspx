@@ -19,7 +19,31 @@
 
             $('#btn_edit').click(function () {
                 
-                var index_check = -1;
+                var count = selList.GetItemCount();
+                if (count != 1) { layer.alert("请选择一条记录!"); return; }
+
+                var item = selList.GetItem(0);
+
+                $.ajax({
+                    type: "post",
+                    url: "GYLX_Report_Query.aspx/CheckData",
+                    data: "{'pgi_no':'" + item.text + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj = eval(data.d);
+
+                        if (obj[0].re_flag != "") {
+                            layer.alert(obj[0].re_flag);
+                        } else {
+                            window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + item.value + '&pgi_no=' + item.text);
+                        }
+                    }
+
+                });
+                
+                /*var index_check = -1;
                 $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
 
                     //alert($(item).find("td:eq(0) span:first").attr("class"));
@@ -35,34 +59,10 @@
                 if(index_check==-1){
                     layer.alert("请选择需要编辑的记录!");return;
                 }
-                grid.GetRowValues(index_check, 'formno;pgi_no', OnGetRowValues); 
-            
+                grid.GetRowValues(index_check, 'formno;pgi_no', OnGetRowValues); */
+                
             });
 
-             function OnGetRowValues(values) {
-                var lsstr = values;    //  与字段索引取值
-                 //alert(lsstr);
-
-                     $.ajax({
-                         type: "post",
-                         url: "GYLX_Report_Query.aspx/CheckData",
-                         data: "{'pgi_no':'" + lsstr[1]+ "'}",
-                         contentType: "application/json; charset=utf-8",
-                         dataType: "json",
-                         async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                         success: function (data) {
-                             var obj=eval(data.d);
-
-                             if (obj[0].re_flag != "") {
-                                 layer.alert(obj[0].re_flag);
-                             } else {
-                                 window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + lsstr[0] + '&pgi_no=' + lsstr[1]);
-                             }
-                         }
-
-                     });
-
-            }
              setHeight();
 
              $(window).resize(function () {
@@ -76,18 +76,26 @@
         function mergecells() {
             $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
                 var rowspans = $(item).find("td:eq(1)").attr("rowspan");
-                
+
+
                 if (rowspans != undefined) {
-                    rows1 = $(item).find("td").length;
-                    rowsnext = $($("#MainContent_gv_DXMainTable tr[class*=DataRow]")[index + 1]).find("td").length;
                     $(item).find("td:first").attr("rowspan", rowspans);
-                }
-                else {
-                    rowsnext = $(item).find("td").length;
-                    if (rows1 != rowsnext && index>0) {
-                        $(item).find("td:first").hide();
+                    for (var i = 1; i < rowspans; i++) {
+                        $($("#MainContent_gv_DXMainTable tr[class*=DataRow]")[index + i]).find("td:first").hide();
                     }
                 }
+                
+                //if (rowspans != undefined) {
+                //    rows1 = $(item).find("td").length;
+                //    rowsnext = $($("#MainContent_gv_DXMainTable tr[class*=DataRow]")[index + 1]).find("td").length;
+                //    $(item).find("td:first").attr("rowspan", rowspans);
+                //}
+                //else {
+                //    rowsnext = $(item).find("td").length;
+                //    if (rows1 != rowsnext && index>0) {
+                //        $(item).find("td:first").hide();
+                //    }
+                //}
             })            
         }
 
@@ -98,6 +106,47 @@
             //alert($("#div_p").height());
 
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
+        }
+        
+        /*function OnGetRowValues(values) {
+            var lsstr = values;    //  与字段索引取值
+            //alert(lsstr);
+
+            $.ajax({
+                type: "post",
+                url: "GYLX_Report_Query.aspx/CheckData",
+                data: "{'pgi_no':'" + lsstr[1] + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj = eval(data.d);
+
+                    if (obj[0].re_flag != "") {
+                        layer.alert(obj[0].re_flag);
+                    } else {
+                        window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + lsstr[0] + '&pgi_no=' + lsstr[1]);
+                    }
+                }
+
+            });
+
+        }*/
+
+        function grid_SelectionChanged(s, e) {
+            s.GetSelectedFieldValues("formno;pgi_no", GetSelectedFieldValuesCallback);
+        }
+        function GetSelectedFieldValuesCallback(values) {
+            selList.BeginUpdate();
+            try {
+                selList.ClearItems();
+                for (var i = 0; i < values.length; i++) {
+                    selList.AddItem(values[i][1],values[i][0]);
+                }
+            } finally {
+                selList.EndUpdate();
+            }
+            document.getElementById("selCount").innerHTML = grid.GetSelectedRowCount();
         }
         	
     </script>
@@ -158,18 +207,20 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared" OnCustomCellMerge="gv_CustomCellMerge"--%>
+                    <div style="display:none;"><dx:ASPxListBox ID="ASPxListBox1" ClientInstanceName="selList" runat="server" Height="150px" Width="500px" ValueType="System.String"></dx:ASPxListBox></div>
+
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1875px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
-                          >
+                          OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
                                     mergecells();setHeight();
-        	                    }" />
+        	                    }"  SelectionChanged="grid_SelectionChanged" />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>
-                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"   >
+                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"    >
                                 
                             </dx:GridViewCommandColumn>                           
                             <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="80px" VisibleIndex="1" >
@@ -186,8 +237,8 @@
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                             
-                            <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"><Settings AllowCellMerge="True" /> </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"><Settings AllowCellMerge="True" /></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />  
                             </dx:GridViewDataTextColumn>

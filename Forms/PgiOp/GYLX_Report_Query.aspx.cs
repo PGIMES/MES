@@ -20,21 +20,20 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (this.gv.IsCallback)//页面搜索条件使用
         {
             QueryASPxGridView();
+            ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
         }
     }
-
 
     protected void btn_search_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
     }
 
     public void QueryASPxGridView()
     {
         GYLX GYLX = new GYLX();
         DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue);
-        //Pgi.Auto.Control.SetGrid("GYLX_Query", "", this.gv, dt);
 
         gv.DataSource = dt;
         gv.DataBind();
@@ -92,35 +91,18 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     }
 
 
-    //protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
-    //{
-    //    if (e.Column.FieldName == "ver")
-    //    {
-    //        var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no");
-    //        var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no");
+    protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
+    {
+        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
+            || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "formno")
+        {
+            var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no");
+            var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no");
 
-    //        if (pgi_no1 == pgi_no2 && e.Value1 == e.Value2)
-    //        {
-    //            e.Merge = true;
-    //            e.Handled = true;
-    //        }
-    //    }
-
-    //    //string firstColumnFieldName = "Time", secondColumnFieldName = "B";
-
-
-
-    //    //if (e.Column.FieldName == secondColumnFieldName)
-    //    //{
-    //    //gv.GetRowValues(e.RowVisibleIndex1,new string[](firstColumnFieldName))
-
-    //    //string valueFirstColumn1 = Convert.ToString(view.GetRowCellValue(e.RowVisibleIndex1, view.Columns[firstColumnFieldName]));
-    //    //string valueFirstColumn2 = Convert.ToString(view.GetRowCellValue(e.RowVisibleIndex2, view.Columns[firstColumnFieldName]));
-    //    //string valueSecondColumn1 = Convert.ToString(view.GetRowCellValue(e.RowVisibleIndex1, view.Columns[secondColumnFieldName]));
-    //    //string valueSecondColumn2 = Convert.ToString(view.GetRowCellValue(e.RowVisibleIndex2, view.Columns[secondColumnFieldName]));
-
-    //    //e.Merge = valueFirstColumn1 == valueFirstColumn2 && valueSecondColumn1 == valueSecondColumn2;
-    //    //e.Handled = true;
-    //    //}
-    //}
+            if (pgi_no1.ToString() != pgi_no2.ToString())
+            {
+                e.Handled = true;
+            }
+        }
+    }
 }

@@ -9,23 +9,31 @@
     <script type="text/javascript" src="/Content/js/jquery.min.js"></script>
     <script type="text/javascript" src="/Content/js/jquery.cookie.min.js"></script>
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
-   <script type="text/javascript">
 
-       $(document).ready(function () {
-           $("#mestitle").text("【工艺数据状态查询】");
-          
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mestitle").text("【工艺数据状态查询】");
+            setHeight();
+            $(window).resize(function () {
+                setHeight();
+            });
+
+        });
 
 
-       })
+        function setHeight() {
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 300) + "px");
+        }
+        	
     </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
     
-    <div class="col-md-12" >
+    <div class="col-md-12"  id="div_p">
         <div class="row  row-container">            
             <div class="panel panel-info">
-                <div class="panel-heading" data-toggle="collapse" data-target="#CPXX">
+                <div class="panel-heading" >
                     <strong>查询</strong>
                 </div>
                 <div class="panel-body collapse in" id="CPXX" >
@@ -46,10 +54,10 @@
                                 </td>
                                     <td style="width:70px;">工厂:</td>
                                 <td style="width:100px;"> 
-                                    <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-md " Width="80px">
+                                    <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-md " Width="120px">
                                         <asp:ListItem Value="">ALL</asp:ListItem>
-                                        <asp:ListItem Value="200">200</asp:ListItem>
-                                        <asp:ListItem Value="100">100</asp:ListItem>
+                                        <asp:ListItem Value="200">昆山工厂</asp:ListItem>
+                                        <asp:ListItem Value="100">上海工厂</asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
                                 <td>  
@@ -70,22 +78,23 @@
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
                     <dx:ASPxGridView ID="gv" runat="server" 
-                        AutoGenerateColumns="False" Width="1050px" 
-                        OnPageIndexChanged="gv_PageIndexChanged"    >
+                        AutoGenerateColumns="False" Width="1200px" 
+                        OnPageIndexChanged="gv_PageIndexChanged" 
+                        oncustomcellmerge="gv_CustomCellMerge"    >
                         
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" 
-                            ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" 
+                            ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
                             AutoFilterCondition="Contains" ShowFooter="True"  />
-                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  AllowCellMerge="True"  />
                         <Columns>
                                                       
                              <dx:GridViewDataTextColumn Caption="申请单号" 
                                  FieldName="FormNo" Width="100px" VisibleIndex="1" >
-                                <Settings AllowCellMerge="True" /> 
+                               <%-- <Settings AllowCellMerge="True" /> --%>
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=13093704-4425-4713-B3E1-81851C6F96CD&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&display=1&appid=13093704-4425-4713-B3E1-81851C6F96CD&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
@@ -95,13 +104,14 @@
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pn" Width="120px" VisibleIndex="3"> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工艺路线版本" FieldName="ver" Width="100px" VisibleIndex="4"> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="120px" VisibleIndex="5"> </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工作中心" FieldName="gzzx" Width="80px" VisibleIndex="6"> </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="50px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="createByName" Width="80px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                              <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工序" FieldName="op" Width="60px" VisibleIndex="10"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="GY_currnode" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="gy_approvetime" Width="80px" VisibleIndex="12"></dx:GridViewDataTextColumn>
+                             <dx:GridViewDataTextColumn Caption="工序" FieldName="op" Width="60px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                              <dx:GridViewDataTextColumn Caption="工序描述" FieldName="op_desc" Width="100px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工作中心" FieldName="gzzx" Width="80px" VisibleIndex="8"> </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="createByName" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
+                              <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="GY_currnode" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="gy_approvetime" Width="80px" VisibleIndex="13"></dx:GridViewDataTextColumn>
                             
                        
                            
@@ -117,18 +127,19 @@
                     </dx:ASPxGridViewExporter>
                     <br />
                     <dx:ASPxGridView ID="gv_BOM" runat="server" 
-                        AutoGenerateColumns="False" Width="1050px">
-                        
+                        AutoGenerateColumns="False" Width="1100px" 
+                        oncustomcellmerge="gv_BOM_CustomCellMerge">
+                     
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" 
-                            ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" 
+                            ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
                             AutoFilterCondition="Contains" ShowFooter="True"  />
-                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" AllowCellMerge="True"  />
                         <Columns>
                                                       
                              <dx:GridViewDataTextColumn Caption="申请单号" 
                                  FieldName="aplno" Width="120px" VisibleIndex="1" >
-                                <Settings AllowCellMerge="True" /> 
+                                <%--<Settings AllowCellMerge="True" />--%> 
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo0" runat="server" 
                                         Text='<%# Eval("aplno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
@@ -147,7 +158,7 @@
                                  </CellStyle>
                              </dx:GridViewDataTextColumn>
                              <dx:GridViewDataTextColumn Caption="单件用量" FieldName="ps_qty_per" Width="80px" VisibleIndex="7"> </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="50px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="80px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="CreateByName" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                               <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="bom_currnode" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
