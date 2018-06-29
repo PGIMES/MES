@@ -848,7 +848,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
         }
 
-        dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
+        //dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
+        dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select zg_workcode from V_HRM_EMP_MES where workcode='" + appuserid + "')").Tables[0];
 
         if (dt_manager == null)
         {
