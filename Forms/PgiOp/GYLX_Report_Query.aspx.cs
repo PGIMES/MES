@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using DevExpress.Web;
+using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +13,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        Setddl_p_leibie();
 
         if (!IsPostBack)
         {
@@ -24,6 +26,19 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         }
     }
 
+    public void Setddl_p_leibie()
+    {
+        string strSQL = @"	SELECT CLASS_NAME as  status_id,CLASS_NAME as status  from form3_Sale_Product_BASE
+                            where base_name='DDL_product_leibie'
+                            order by CLASS_ID";
+        DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
+
+        ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).TextField= dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).ValueField = dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).DataSource = dt;
+        ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).DataBind();
+    }
+
     protected void btn_search_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
@@ -33,7 +48,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         GYLX GYLX = new GYLX();
-        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue);
+        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue, ASPxDropDownEdit1.Text);
 
         gv.DataSource = dt;
         gv.DataBind();
@@ -94,7 +109,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
     {
         if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
-            || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "formno")
+            || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
             var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no");
             var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no");

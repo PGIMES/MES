@@ -21,73 +21,31 @@
                 if (grid.GetSelectedRowCount() != 1) { layer.alert("请选择一条记录!"); return; }
 
                 grid.GetSelectedFieldValues("formno;pgi_no", function GetVal(values) {
-                   
-                    for (var i = 0; i < values.length; i++) {
-                        $.ajax({
-                            type: "post",
-                            url: "GYLX_Report_Query.aspx/CheckData",
-                            data: "{'pgi_no':'" + values[i][1] + "'}",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                            success: function (data) {
-                                var obj = eval(data.d);
+                    //for (var i = 0; i < values.length; i++) { values[i][1]}
+                    var formno = values[0][0];
+                    var pgi_no = values[0][1];
 
-                                if (obj[0].re_flag != "") {
-                                    layer.alert(obj[0].re_flag);
-                                } else {
-                                    window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno='+ values[i][0] + '&pgi_no=' + values[i][1]);
-                                }
+                    $.ajax({
+                        type: "post",
+                        url: "GYLX_Report_Query.aspx/CheckData",
+                        data: "{'pgi_no':'" + pgi_no + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                        success: function (data) {
+                            var obj = eval(data.d);
+
+                            if (obj[0].re_flag != "") {
+                                layer.alert(obj[0].re_flag);
+                            } else {
+                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + formno + '&pgi_no=' + pgi_no);
                             }
+                        }
 
-                        });
-                    }
+                    });
 
                 });
 
-
-                /*var count = selList.GetItemCount();
-                if (count != 1) { layer.alert("请选择一条记录!"); return; }
-
-                var item = selList.GetItem(0);
-
-                $.ajax({
-                    type: "post",
-                    url: "GYLX_Report_Query.aspx/CheckData",
-                    data: "{'pgi_no':'" + item.text + "'}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                    success: function (data) {
-                        var obj = eval(data.d);
-
-                        if (obj[0].re_flag != "") {
-                            layer.alert(obj[0].re_flag);
-                        } else {
-                            window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + item.value + '&pgi_no=' + item.text);
-                        }
-                    }
-
-                });*/
-                
-                /*var index_check = -1;
-                $("#MainContent_gv_DXMainTable tr[class*=DataRow]").each(function (index, item) {
-
-                    //alert($(item).find("td:eq(0) span:first").attr("class"));
-                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                    if(class_checked=='dxICheckBox dxichSys dx-not-acc dxWeb_edtCheckBoxChecked'){
-                        //alert(item.id);
-                        //index_check = index;//分页就不对了
-                        index_check = item.id.replace('MainContent_gv_DXDataRow', '');
-                        return false;
-                    }
-                });      
-                
-                if(index_check==-1){
-                    layer.alert("请选择需要编辑的记录!");return;
-                }
-                grid.GetRowValues(index_check, 'formno;pgi_no', OnGetRowValues); */
-                
             });
 
              setHeight();
@@ -134,51 +92,38 @@
 
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
         }
-        
-        /*function OnGetRowValues(values) {
-            var lsstr = values;    //  与字段索引取值
-            //alert(lsstr);
+         	
+    </script>
 
-            $.ajax({
-                type: "post",
-                url: "GYLX_Report_Query.aspx/CheckData",
-                data: "{'pgi_no':'" + lsstr[1] + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                success: function (data) {
-                    var obj = eval(data.d);
-
-                    if (obj[0].re_flag != "") {
-                        layer.alert(obj[0].re_flag);
-                    } else {
-                        window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + lsstr[0] + '&pgi_no=' + lsstr[1]);
-                    }
-                }
-
-            });
-
-        }*/
-
-        /*
-        function grid_SelectionChanged(s, e) {
-            s.GetSelectedFieldValues("formno;pgi_no", GetSelectedFieldValuesCallback);
+    <script type="text/javascript">
+        var textSeparator = ";";
+        function updateText() {
+            var selectedItems = checkListBox.GetSelectedItems();
+            checkComboBox.SetText(getSelectedItemsText(selectedItems));
         }
-        function GetSelectedFieldValuesCallback(values) {
-            selList.BeginUpdate();
-            try {
-                selList.ClearItems();
-                for (var i = 0; i < values.length; i++) {
-                    selList.AddItem(values[i][1],values[i][0]);
-                }
-            } finally {
-                selList.EndUpdate();
+        function synchronizeListBoxValues(dropDown, args) {
+            checkListBox.UnselectAll();
+            var texts = dropDown.GetText().split(textSeparator);
+            var values = getValuesByTexts(texts);
+            checkListBox.SelectValues(values);
+            updateText(); // for remove non-existing texts
+        }
+        function getSelectedItemsText(items) {
+            var texts = [];
+            for (var i = 0; i < items.length; i++) 
+                    texts.push(items[i].text);
+            return texts.join(textSeparator);
+        }
+        function getValuesByTexts(texts) {
+            var actualValues = [];
+            var item;
+            for(var i = 0; i < texts.length; i++) {
+                item = checkListBox.FindItemByText(texts[i]);
+                if(item != null)
+                    actualValues.push(item.value);
             }
-            //alert(grid.GetSelectedRowCount());
-        }*/
-
-        
-        	
+            return actualValues;
+        }
     </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server">
@@ -195,28 +140,59 @@
                         <table class="tblCondition" style=" border-collapse: collapse;">
                             <tr>
                                 <td style="width:70px;">PGI项目号</td>
-                                <td style="width:130px;">
-                                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
+                                <td style="width:100px;">
+                                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="90px"></asp:TextBox>
                                 </td>
                                 <td style="width:70px;">客户零件号</td>
                                 <td style="width:130px;">
                                     <asp:TextBox ID="txt_pn" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
                                 </td>    
                                 <td style="width:70px;">当前版本</td>
-                                <td style="width:130px;"> 
-                                    <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="120px">
+                                <td style="width:90px;"> 
+                                    <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
                                         <asp:ListItem Value="">ALL</asp:ListItem>
                                         <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
                                 <td style="width:70px;">工艺段</td>
-                                <td style="width:130px;"> 
-                                    <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="120px">
+                                <td style="width:90px;"> 
+                                    <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="80px">
                                         <asp:ListItem Value="">ALL</asp:ListItem>
                                         <asp:ListItem Value="压铸">压铸</asp:ListItem>
                                         <asp:ListItem Value="机加">机加</asp:ListItem>
-                                        <asp:ListItem Value="质量">质量</asp:ListItem>
                                     </asp:DropDownList>
+                                </td>                                
+                                <td style="width:70px;">产品类</td>
+                                <td style="width:150px;"> 
+                                    <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
+                                        <DropDownWindowStyle BackColor="#EDEDED" />
+                                        <DropDownWindowTemplate>
+                                            <dx:ASPxListBox Width="100%" ID="listBox" ClientInstanceName="checkListBox" SelectionMode="CheckColumn"
+                                                runat="server" Height="200" EnableSelectAll="true">
+                                                <FilteringSettings ShowSearchUI="true"/>
+                                                <Border BorderStyle="None" />
+                                                <BorderBottom BorderStyle="Solid" BorderWidth="1px" BorderColor="#DCDCDC" />
+                                                <Items> 
+                                                    <%--<dx:ListEditItem Text="Chrome" Value="0" />
+                                                    <dx:ListEditItem Text="Firefox" Value="1" />
+                                                    <dx:ListEditItem Text="IE" Value="2" />
+                                                    <dx:ListEditItem Text="Opera" Value="3" />
+                                                    <dx:ListEditItem Text="Safari" Value="4" />--%>
+                                                </Items>
+                                                <ClientSideEvents SelectedIndexChanged="updateText" />
+                                            </dx:ASPxListBox>
+                                            <table style="width: 100%">
+                                                <tr>
+                                                    <td style="padding: 4px">
+                                                        <dx:ASPxButton ID="ASPxButton1" AutoPostBack="False" runat="server" Text="Close" style="float: right">
+                                                            <ClientSideEvents Click="function(s, e){ checkComboBox.HideDropDown(); }" />
+                                                        </dx:ASPxButton>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </DropDownWindowTemplate>
+                                        <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
+                                    </dx:ASPxDropDownEdit>
                                 </td>
                                 <td>  
                                     &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
@@ -236,15 +212,13 @@
     <div class="col-sm-12">
         <table>
             <tr>
-                <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared" OnCustomCellMerge="gv_CustomCellMerge"--%>
-                    <%--<div style="display:none;"><dx:ASPxListBox ID="ASPxListBox1" ClientInstanceName="selList" runat="server" Height="150px" Width="500px" ValueType="System.String"></dx:ASPxListBox></div>--%>
-
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1875px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1965px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
                                     mergecells();setHeight();
-        	                    }"  /><%--SelectionChanged="grid_SelectionChanged"--%> 
+        	                    }"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
@@ -302,10 +276,13 @@
                             <dx:GridViewDataTextColumn Caption="单人产<br />出工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="80px" VisibleIndex="25">
+                            <dx:GridViewDataTextColumn Caption="产品工程师" FieldName="product_user" Width="90px" VisibleIndex="25">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="流程状态" FieldName="" Width="80px" VisibleIndex="25"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="90px" VisibleIndex="26">
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <%--
                             <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
