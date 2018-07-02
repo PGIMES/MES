@@ -260,6 +260,8 @@
             if (ty=="yz") {
                 var gzzx_desc_yz= eval('gzzx_desc_yz' + vi);var gzzx_yz= eval('gzzx_yz' + vi);
                 gzzx_desc_yz.SetText(ls_gzzx_desc);gzzx_yz.SetText(ls_gzzx);
+
+                RefreshRow_yz(vi);
             }
         }
 
@@ -344,15 +346,56 @@
         }
 
         function RefreshRow_yz(vi) {
+            var op = eval('op_yz' + vi);             
             var JgNum = eval('JgNum_yz' + vi); var JgSec = eval('JgSec_yz' + vi); var WaitSec = eval('WaitSec_yz' + vi); var ZjSecc = eval('ZjSecc_yz' + vi);var JtNum = eval('JtNum_yz' + vi); 
             var col1 = eval('col1_yz' + vi); var col2 = eval('col2_yz' + vi);var EquipmentRate = eval('EquipmentRate_yz' + vi);var col6 = eval('col6_yz' + vi);
 
-            var JgNum_value = Number($.trim(JgNum.GetText()) == "" ? 0 : $.trim(JgNum.GetText()));//每次加工数量
+            var JgNum_value = Number($.trim(JgNum.GetText()) == "" ? 0 : $.trim(JgNum.GetText()));//每次加工数量 
+            var op20_vi=-1;//op10的工作中心改变，需要再次更新op20的数据，设备产能及每次加工数量会变化，其他数据也会发生变化
+            if(op.GetText() == "OP10" || op.GetText() == "OP20"){
+
+                var weights = eval('weights_yz' + vi); var acupoints = eval('acupoints_yz' + vi);var capacity = eval('capacity_yz' + vi); 
+                if(op.GetText()=="OP10"){
+                    var gzzx_desc_yz= eval('gzzx_desc_yz' + vi);
+                    if(gzzx_desc_yz.GetText()=="A380熔炼炉"){capacity.SetText(1800);}
+                    if(gzzx_desc_yz.GetText()=="EN46000熔炼炉"){capacity.SetText(1200);}
+                    if(gzzx_desc_yz.GetText()=="EN47100熔炼炉" || gzzx_desc_yz.GetText()=="ADC12熔炼炉"){capacity.SetText(450);}
+
+                    $("#MainContent_gv_d_yz_DXMainTable tr[class*=DataRow]").each(function (index, item) {
+                        if((eval('op_yz'+index)).GetText()=="OP20"){op20_vi=index;return false;}
+                    });
+                }
+
+                if(op.GetText()=="OP20"){
+                    var op10_vi=-1;
+                    $("#MainContent_gv_d_yz_DXMainTable tr[class*=DataRow]").each(function (index, item) {
+                        if((eval('op_yz'+index)).GetText()=="OP10"){op10_vi=index;return false;}
+                    });
+                    if(op10_vi!=-1){
+                        var gzzx_desc_yz= eval('gzzx_desc_yz'+op10_vi);
+                        if(gzzx_desc_yz.GetText()=="A380熔炼炉" || gzzx_desc_yz.GetText()=="EN46000熔炼炉"){capacity.SetText(720);}
+                        if(gzzx_desc_yz.GetText()=="EN47100熔炼炉" || gzzx_desc_yz.GetText()=="ADC12熔炼炉"){capacity.SetText(450);}
+                        //weights.SetText((eval('weights_yz'+op10_vi)).GetText());
+                        //acupoints.SetText((eval('acupoints_yz'+op10_vi)).GetText());
+                    }
+                }
+                
+                var weights_value = Number($.trim(weights.GetText()) == "" ? 0 : $.trim(weights.GetText()));//每模重量
+                var acupoints_value = Number($.trim(acupoints.GetText()) == "" ? 0 : $.trim(acupoints.GetText()));//每模穴数
+                var capacity_value = Number($.trim(capacity.GetText()) == "" ? 0 : $.trim(capacity.GetText()));//每小时设备产能
+
+                if(weights_value != 0){ JgNum_value = capacity_value/weights_value*acupoints_value; }
+                JgNum.SetText(JgNum_value.toFixed(0));
+            }
+
             var JgSec_value = Number($.trim(JgSec.GetText()) == "" ? 0 : $.trim(JgSec.GetText()));//加工时长(秒)
             var WaitSec_value = Number($.trim(WaitSec.GetText()) == "" ? 0 : $.trim(WaitSec.GetText()));//设备等待时间(秒)
             var ZjSecc_value = Number($.trim(ZjSecc.GetText()) == "" ? 0 : $.trim(ZjSecc.GetText()));//装夹时间(秒)
             var JtNum_value = Number($.trim(JtNum.GetText()) == "" ? 0 : $.trim(JtNum.GetText()));//机器台数
             var col1_value = Number($.trim(col1.GetText()) == "" ? 0 : $.trim(col1.GetText()));//单台需要人数
+
+            if(col1_value!=0){col2.SetText((1/col1_value).toFixed(0));}//本工序一人操作台数
+
             var col2_value = Number($.trim(col2.GetText()) == "" ? 0 : $.trim(col2.GetText()));//本工序一人操作台数
             var EquipmentRate_value = Number($.trim(EquipmentRate.GetText()) == "" ? 0 : $.trim(EquipmentRate.GetText()));//本产品设备占用率
             var col6_value = Number($.trim(col6.GetText()) == "" ? 0 : $.trim(col6.GetText()));//单人报工数量
@@ -396,6 +439,8 @@
             //单人产出工时
             var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
             col7.SetText(col7_value.toFixed(2));
+
+            if(op20_vi!=-1){RefreshRow_yz(op20_vi);}
         }
 
         function validate(action){
@@ -1405,7 +1450,9 @@
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="45px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' >
+                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>'
+                                                     ClientInstanceName='<%# "op_yz"+Container.VisibleIndex.ToString() %>' >
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{2}$" />
                                                     </ValidationSettings>
@@ -1466,6 +1513,7 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="weights" Width="60px" runat="server" Value='<%# Eval("weights")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "weights_yz"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
@@ -1477,6 +1525,7 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="acupoints" Width="40px" runat="server" Value='<%# Eval("acupoints")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "acupoints_yz"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
@@ -1488,17 +1537,15 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="capacity" Width="60px" runat="server" Value='<%# Eval("capacity")%>' 
-                                                    ClientInstanceName='<%# "capacity_yz"+Container.VisibleIndex.ToString() %>'>
-                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
-                                                    </ValidationSettings>
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>'
+                                                    ClientInstanceName='<%# "capacity_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="每次加<br />工数量" FieldName="JgNum" Width="40px" VisibleIndex="10">
+                                        <dx:GridViewDataTextColumn Caption="每次加<br />工数量" FieldName="JgNum" Width="50px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="JgNum" Width="40px" runat="server" Value='<%# Eval("JgNum")%>' 
+                                                <dx:ASPxTextBox ID="JgNum" Width="50px" runat="server" Value='<%# Eval("JgNum")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "JgNum_yz"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
@@ -1596,10 +1643,7 @@
                                             <DataItemTemplate>                
                                                 <dx:ASPxTextBox ID="col2" Width="60px" runat="server" Value='<%# Eval("col2")%>'
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>' 
-                                                    ClientInstanceName='<%# "col2_yz"+Container.VisibleIndex.ToString() %>'>
-                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
-                                                    </ValidationSettings>
+                                                    ClientInstanceName='<%# "col2_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>

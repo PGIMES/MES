@@ -712,6 +712,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 {
                     ldr[ldt.Columns[j].ColumnName] = ldt.Rows[lnindex][ldt.Columns[j].ColumnName];
                 }
+                else if (ldt.Columns[j].ColumnName.ToLower() == "equipmentrate")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "1";
+                }
+                else if (ldt.Columns[j].ColumnName.ToLower() == "weights" || ldt.Columns[j].ColumnName.ToLower() == "acupoints" || ldt.Columns[j].ColumnName.ToLower() == "capacity")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "0";
+                }
                 else if (ldt.Columns[j].ColumnName == "numid")
                 {
                     ldr[ldt.Columns[j].ColumnName] = dt_o.Rows.Count <= 0 ? 0 : (Convert.ToInt32(dt_o.Rows[0]["numid"]) + 1);
@@ -800,9 +808,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
             else
             {
-                ldr["isbg"] = "Y";
+                ldr["isbg"] = "Y"; ldr["weights"] = "0"; ldr["acupoints"] = "0"; ldr["capacity"] = "0";
             }            
-            ldr["domain"] = lsdomain; ldr["pn"] = lspn;
+            ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["EquipmentRate"] = "1";
             ldr["numid"] = i;
 
             ldt.Rows.Add(ldr);
