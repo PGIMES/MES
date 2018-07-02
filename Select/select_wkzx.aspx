@@ -51,22 +51,22 @@
                                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />    
                                 
                                  <Columns>
-                                      <asp:BoundField DataField="wkctr" HeaderText="代码" 
+                                      <asp:BoundField DataField="wc_wkctr" HeaderText="代码" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="5%" />
                                     </asp:BoundField>
-                                        <asp:BoundField DataField="desc" HeaderText="名称" 
+                                        <asp:BoundField DataField="wc_desc" HeaderText="名称" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="8%" />
                                     </asp:BoundField>
-                                    <%--<asp:BoundField DataField="dept" HeaderText="部门" 
+                                    <%--<asp:BoundField DataField="wc_dept" HeaderText="部门" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="10%" />
                                     </asp:BoundField>
-                                     <asp:BoundField DataField="domain" HeaderText="工厂" 
+                                     <asp:BoundField DataField="wc_domain" HeaderText="工厂" 
                                        ReadOnly="True" >  
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="4%" />
