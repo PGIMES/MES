@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="GYLX_Report_Query.aspx.cs" Inherits="Forms_PgiOp_GYLX_Report_Query" %>
+﻿<%@ Page Title="【工艺路线查询】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="GYLX_Report_Query.aspx.cs" Inherits="Forms_PgiOp_GYLX_Report_Query" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.Web" TagPrefix="dx" %>
@@ -129,84 +129,73 @@
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
     
-    <div class="col-md-12" id="div_p" >
-        <div class="row  row-container">            
-            <div class="panel panel-info">
-                <div class="panel-heading" data-toggle="collapse" data-target="#CPXX">
-                    <strong>工艺工时查询</strong>
-                </div>
-                <div class="panel-body collapse in" id="CPXX" >
-                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="font-size:13px;">
-                        <table class="tblCondition" style=" border-collapse: collapse;">
-                            <tr>
-                                <td style="width:70px;">PGI项目号</td>
-                                <td style="width:100px;">
-                                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="90px"></asp:TextBox>
-                                </td>
-                                <td style="width:70px;">客户零件号</td>
-                                <td style="width:130px;">
-                                    <asp:TextBox ID="txt_pn" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
-                                </td>    
-                                <td style="width:70px;">当前版本</td>
-                                <td style="width:90px;"> 
-                                    <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
-                                        <asp:ListItem Value="">ALL</asp:ListItem>
-                                        <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
-                                    </asp:DropDownList>
-                                </td>
-                                <td style="width:70px;">工艺段</td>
-                                <td style="width:90px;"> 
-                                    <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="80px">
-                                        <asp:ListItem Value="">ALL</asp:ListItem>
-                                        <asp:ListItem Value="压铸">压铸</asp:ListItem>
-                                        <asp:ListItem Value="机加">机加</asp:ListItem>
-                                    </asp:DropDownList>
-                                </td>                                
-                                <td style="width:70px;">产品类</td>
-                                <td style="width:150px;"> 
-                                    <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
-                                        <DropDownWindowStyle BackColor="#EDEDED" />
-                                        <DropDownWindowTemplate>
-                                            <dx:ASPxListBox Width="100%" ID="listBox" ClientInstanceName="checkListBox" SelectionMode="CheckColumn"
-                                                runat="server" Height="200" EnableSelectAll="true">
-                                                <FilteringSettings ShowSearchUI="true"/>
-                                                <Border BorderStyle="None" />
-                                                <BorderBottom BorderStyle="Solid" BorderWidth="1px" BorderColor="#DCDCDC" />
-                                                <Items> 
-                                                    <%--<dx:ListEditItem Text="Chrome" Value="0" />
-                                                    <dx:ListEditItem Text="Firefox" Value="1" />
-                                                    <dx:ListEditItem Text="IE" Value="2" />
-                                                    <dx:ListEditItem Text="Opera" Value="3" />
-                                                    <dx:ListEditItem Text="Safari" Value="4" />--%>
-                                                </Items>
-                                                <ClientSideEvents SelectedIndexChanged="updateText" />
-                                            </dx:ASPxListBox>
-                                            <table style="width: 100%">
-                                                <tr>
-                                                    <td style="padding: 4px">
-                                                        <dx:ASPxButton ID="ASPxButton1" AutoPostBack="False" runat="server" Text="Close" style="float: right">
-                                                            <ClientSideEvents Click="function(s, e){ checkComboBox.HideDropDown(); }" />
-                                                        </dx:ASPxButton>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </DropDownWindowTemplate>
-                                        <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
-                                    </dx:ASPxDropDownEdit>
-                                </td>
-                                <td>  
-                                    &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
-                                    <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
-                                    <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
-                                    <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
-                                    <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
-                                </td>
-                            </tr>                      
-                        </table>
-                    </div>
-                </div>
-            </div>            
-        </div>
+    <div class="col-md-12" id="div_p"  style="margin-bottom:5px">
+        <table style=" border-collapse: collapse;">
+            <tr>
+                <td style="width:70px;">PGI项目号</td>
+                <td style="width:100px;">
+                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="90px"></asp:TextBox>
+                </td>
+                <td style="width:70px;">客户零件号</td>
+                <td style="width:130px;">
+                    <asp:TextBox ID="txt_pn" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
+                </td>    
+                <td style="width:70px;">当前版本</td>
+                <td style="width:90px;"> 
+                    <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
+                        <asp:ListItem Value="">ALL</asp:ListItem>
+                        <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td style="width:70px;">工艺段</td>
+                <td style="width:90px;"> 
+                    <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="80px">
+                        <asp:ListItem Value="机加">机加</asp:ListItem>
+                        <asp:ListItem Value="压铸">压铸</asp:ListItem>
+                    </asp:DropDownList>
+                </td>                                
+                <td style="width:70px;">产品类</td>
+                <td style="width:150px;"> 
+                    <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
+                        <DropDownWindowStyle BackColor="#EDEDED" />
+                        <DropDownWindowTemplate>
+                            <dx:ASPxListBox Width="100%" ID="listBox" ClientInstanceName="checkListBox" SelectionMode="CheckColumn"
+                                runat="server" Height="200" EnableSelectAll="true">
+                                <FilteringSettings ShowSearchUI="true"/>
+                                <Border BorderStyle="None" />
+                                <BorderBottom BorderStyle="Solid" BorderWidth="1px" BorderColor="#DCDCDC" />
+                                <Items> 
+                                    <%--<dx:ListEditItem Text="Chrome" Value="0" />
+                                    <dx:ListEditItem Text="Firefox" Value="1" />
+                                    <dx:ListEditItem Text="IE" Value="2" />
+                                    <dx:ListEditItem Text="Opera" Value="3" />
+                                    <dx:ListEditItem Text="Safari" Value="4" />--%>
+                                </Items>
+                                <ClientSideEvents SelectedIndexChanged="updateText" />
+                            </dx:ASPxListBox>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="padding: 4px">
+                                        <dx:ASPxButton ID="ASPxButton1" AutoPostBack="False" runat="server" Text="Close" style="float: right">
+                                            <ClientSideEvents Click="function(s, e){ checkComboBox.HideDropDown(); }" />
+                                        </dx:ASPxButton>
+                                    </td>
+                                </tr>
+                            </table>
+                        </DropDownWindowTemplate>
+                        <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
+                    </dx:ASPxDropDownEdit>
+                </td>
+                <td>  
+                    &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
+                    <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
+                    <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
+                    <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
+                    <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
+                </td>
+            </tr>                      
+        </table>
+                   
     </div>
 
     <div class="col-sm-12">
@@ -227,7 +216,7 @@
                             <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"    >
                                 
                             </dx:GridViewCommandColumn>                           
-                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="pgi_no" Width="80px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="80px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pgi_no")%>' Cursor="pointer" ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
@@ -299,8 +288,6 @@
             </tr>
         </table>
     </div>
-    
-
 
 </asp:Content>
 
