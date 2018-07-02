@@ -219,7 +219,7 @@
             	                   // window.alert('Page changed!');
                                     mergecells();setHeight();
         	                    }"  />
-                        <SettingsPager PageSize="100" ></SettingsPager>
+                        <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
