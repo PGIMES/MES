@@ -50,8 +50,25 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         GYLX GYLX = new GYLX();
         DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue, ASPxDropDownEdit1.Text);
 
-        gv.DataSource = dt;
-        gv.DataBind();
+        if (ddl_typeno.SelectedValue=="机加")
+        {
+            gv.Visible = true;
+            gv_yz.Visible = false;
+
+            gv.DataSource = dt;
+            gv.DataBind();
+        }
+
+        if (ddl_typeno.SelectedValue == "压铸")
+        {
+            gv.Visible = false;
+            gv_yz.Visible = true;
+
+            gv_yz.DataSource = dt;
+            gv_yz.DataBind();
+        }
+
+
     }
 
     protected void gv_PageIndexChanged(object sender, EventArgs e)
@@ -78,8 +95,15 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     protected void btn_import_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ASPxGridViewExporter1.WriteXlsToResponse("工艺路线" + System.DateTime.Now.ToShortDateString());//导出到Excel
+        if (ddl_typeno.SelectedValue == "机加")
+        {
+            ASPxGridViewExporter1.WriteXlsToResponse("工艺路线" + System.DateTime.Now.ToShortDateString());//导出到Excel
+        }
 
+        if (ddl_typeno.SelectedValue == "压铸")
+        {
+            ASPxGridViewExporter2.WriteXlsToResponse("工艺路线" + System.DateTime.Now.ToShortDateString());//导出到Excel
+        }
     }
 
     [WebMethod]
@@ -113,6 +137,22 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         {
             var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no");
             var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no");
+
+            if (pgi_no1.ToString() != pgi_no2.ToString())
+            {
+                e.Handled = true;
+            }
+        }
+
+    }
+
+    protected void gv_yz_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
+    {
+        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
+            || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
+        {
+            var pgi_no1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "pgi_no");
+            var pgi_no2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "pgi_no");
 
             if (pgi_no1.ToString() != pgi_no2.ToString())
             {
