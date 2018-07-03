@@ -15,7 +15,10 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        QueryASPxGridView();
+        if (!IsPostBack)
+        {
+            QueryASPxGridView();
+        }
     }
     protected void btn_search_Click(object sender, EventArgs e)
     {
@@ -61,11 +64,10 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
     {
         if (ddl_type.SelectedValue == "BOM")
         {
-            int row1 = e.RowVisibleIndex1;
-            int row2 = e.RowVisibleIndex2;
-            string value1 = gv_BOM.GetDataRow(row1)["aplno"].ToString();
-            string value2 = gv_BOM.GetDataRow(row2)["aplno"].ToString();
-            if (value1 != value2)
+
+            var value1 = gv_BOM.GetRowValues(e.RowVisibleIndex1, "aplno");
+            var value2 = gv_BOM.GetRowValues(e.RowVisibleIndex2, "aplno");
+            if (value1.ToString() != value2.ToString())
             {
                 e.Handled = true;
             }
@@ -75,11 +77,11 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
     {
         if (ddl_type.SelectedValue == "GY")
         {
-            int row1 = e.RowVisibleIndex1;
-            int row2 = e.RowVisibleIndex2;
-            string value1 = gv.GetDataRow(row1)["FormNo"].ToString();
-            string value2 = gv.GetDataRow(row2)["FormNo"].ToString();
-            if (value1 != value2)
+            //string value1 = gv.GetDataRow(row1)["FormNo"].ToString();
+            //string value2 = gv.GetDataRow(row2)["FormNo"].ToString();
+            var value1 = gv.GetRowValues(e.RowVisibleIndex1, "FormNo");
+            var value2 = gv.GetRowValues(e.RowVisibleIndex2, "FormNo");
+            if (value1.ToString() != value2.ToString())
             {
                 e.Handled = true;
             }
