@@ -526,7 +526,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "'  order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "' and typeno='" + lstypeno + "'  order by a.typeno,op";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
@@ -782,7 +782,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "'  order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "' and typeno='" + lstypeno + "' order by a.typeno,op";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
