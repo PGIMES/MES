@@ -91,6 +91,46 @@
 
             }); 
 
+            //add keydown事件
+            $("#div_product input:text").not("[readonly]").bind("keydown",function(e){
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (code == 13) {
+                    var inputs = $("#div_product").find(":text").not("[readonly]"); // 获取表单中的所有输入框  
+                    var idx = inputs.index(this); // 获取当前焦点输入框所处的位置  
+
+                    if (idx == inputs.length - 1) {// 判断是否是最后一个输入框  
+                        $("#MainContent_modifyremark").focus();
+                        $("#MainContent_modifyremark").select();
+                    } else {  
+                        inputs[idx + 1].focus(); // 设置焦点  
+                        inputs[idx + 1].select(); // 选中文字  
+                    }  
+                    return false;// 取消默认的提交行为  
+
+                }
+            });
+
+            $("#div_yz input:text").not("[readonly]").bind("keydown",function(e){
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (code == 13) {
+                    var inputs = $("#div_yz").find(":text").not("[readonly]"); // 获取表单中的所有输入框  
+                    var idx = inputs.index(this); // 获取当前焦点输入框所处的位置  
+
+                    if (idx == inputs.length - 1) {// 判断是否是最后一个输入框  
+                        $("#MainContent_modifyremark").focus();
+                        $("#MainContent_modifyremark").select();
+                    } else {  
+                        inputs[idx + 1].focus(); // 设置焦点  
+                        inputs[idx + 1].select(); // 选中文字  
+                    }  
+                    return false;// 取消默认的提交行为  
+
+                }
+            });
+
+
         });
 
         //提出自定流程 JS 
@@ -214,7 +254,8 @@
 
         function GetPgi_Product_D(vi,ty)
         {
-            var url = "/select/select_product_d.aspx?pgi_no="+$("#CPXX input[id*='projectno']").val()+"&domain="+$("#CPXX input[id*='domain']").val()+"&vi="+vi+"&ty="+ty;
+            var url = "/select/select_product_d.aspx?pgi_no="+$("#CPXX input[id*='projectno']").val()+"&domain="+$("#CPXX input[id*='domain']").val()
+                +"&formno="+$("#CPXX input[id*='formno']").val()+"&vi="+vi+"&ty="+ty;
 
             layer.open({
                 title:'工艺流程选择',
