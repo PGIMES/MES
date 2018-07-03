@@ -1068,13 +1068,19 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //主表相关字段赋值到明细表
         for (int i = 0; i < ldt.Rows.Count; i++)
         {
-
             for (int j = 0; j < ls.Count; j++)
             {
                 if (ls[j].Code.ToLower() == "formno")
                 {
                     ldt.Rows[i]["GYGSNo"] = ls[j].Value;
-                    break;
+                }
+                if (ls[j].Code.ToLower() == "pn")
+                {
+                    ldt.Rows[i]["pn"] = ls[j].Value;
+                }
+                if (ls[j].Code.ToLower() == "domain")
+                {
+                    ldt.Rows[i]["domain"] = ls[j].Value;
                 }
             }
         }
