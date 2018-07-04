@@ -578,6 +578,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     }
 
+    protected void gv_d_DataBound(object sender, EventArgs e)
+    {
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();", true);
+    }
+
     #endregion
 
 
@@ -819,6 +824,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         gv_d_yz.DataSource = ldt;
         gv_d_yz.DataBind();
 
+    }
+
+    protected void gv_d_yz_DataBound(object sender, EventArgs e)
+    {
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();", true);
     }
 
     #endregion

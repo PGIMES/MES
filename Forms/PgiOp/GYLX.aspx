@@ -1117,7 +1117,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
 
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
-                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  > 
+                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  OnDataBound="gv_d_DataBound" > 
                                      <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();}"  />  
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
@@ -1458,7 +1458,7 @@
                                 <asp:Button ID="btn_del_yz" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btn_del_yz_Click" />
 
                                 <dx:aspxgridview ID="gv_d_yz" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_yz_CustomCallback" 
-                                      OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  >    
+                                      OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  OnDataBound="gv_d_yz_DataBound" >    
                                     <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();}"  />                                                                 
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
