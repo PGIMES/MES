@@ -135,12 +135,19 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
-            var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no");
-            var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no");
+            var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no"); var ver1 = gv.GetRowValues(e.RowVisibleIndex1, "ver");
+            var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no"); var ver2 = gv.GetRowValues(e.RowVisibleIndex2, "ver");
 
             if (pgi_no1.ToString() != pgi_no2.ToString())
             {
                 e.Handled = true;
+            }
+            else
+            {
+                if (ver1.ToString() != ver2.ToString())
+                {
+                    e.Handled = true;
+                }
             }
         }
 
@@ -151,12 +158,19 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
-            var pgi_no1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "pgi_no");
-            var pgi_no2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "pgi_no");
+            var pgi_no1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "pgi_no"); var ver1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "ver");
+            var pgi_no2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "pgi_no"); var ver2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "ver");
 
             if (pgi_no1.ToString() != pgi_no2.ToString())
             {
                 e.Handled = true;
+            }
+            else
+            {
+                if (ver1.ToString() != ver2.ToString())
+                {
+                    e.Handled = true;
+                }
             }
         }
     }
