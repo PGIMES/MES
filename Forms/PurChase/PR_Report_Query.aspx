@@ -66,40 +66,28 @@
     <script src="../../Content/js/bootstrap.min.js"></script>
     <script src="../../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
-    <script type="text/javascript">
-        $("#mestitle").text("【请购单查询】");
-        jQuery.fn.rowspan = function (colIdx) {//封装jQuery小插件用于合并相同内容单元格(列)  
-            return this.each(function () {
-                var that;
-                $('tr', this).each(function (row) {
-                    $('td:eq(' + colIdx + ')', this).filter(':visible').each(function (col) {
-                        if (that != null && $(this).html() == $(that).html()) {
-                            rowspan = $(that).attr("rowSpan");
-                            if (rowspan == undefined) {
-                                $(that).attr("rowSpan", 1);
-                                rowspan = $(that).attr("rowSpan");
-                            }
-                            rowspan = Number(rowspan) + 1;
-                            $(that).attr("rowSpan", rowspan);
-                            $(this).hide();
-                        } else {
-                            that = this;
-                        }
-                    });
-                });
-            });
-        }
+       <script type="text/javascript">
+           $(document).ready(function () {
+               $("#mestitle").text("【请购单查询】");
+               setHeight();
+               $(window).resize(function () {
+                   setHeight();
+               });
 
-        $(function () {//第一列内容相同的进行合并  
-            // $("#MainContent_GridView1").rowspan(1);//传入的参数是对应的列数从0开始，哪一列有相同的内容就输入对应的列数值  
-        });
+           });
+
+
+           function setHeight() {
+               $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height()-300 ) + "px");
+           }
+        	
     </script>
             <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
      
 <%--     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>--%>
-                        <div class="panel-body">
+                        <div class="panel-body" id="div_p">
                             <div class="col-sm-12">
 
                                 <table>
@@ -172,7 +160,11 @@
                          
                          OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" 
                          OnHtmlRowCreated="GV_PART_HtmlRowCreated" 
-                         onrowcommand="GV_PART_RowCommand">
+                         onrowcommand="GV_PART_RowCommand" 
+                         onpageindexchanged="GV_PART_PageIndexChanged">
+                            <ClientSideEvents EndCallback="function(s, e) {           
+                            setHeight();
+        	                    }" />
                          <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" />
               <SettingsPager PageSize="1000">
                      
@@ -181,7 +173,7 @@
             <AlternatingRow Enabled="true" />
            
         </Styles>
-                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="VirtualSmooth" VerticalScrollableHeight="500"
+                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"
                              ShowFilterRowMenuLikeItem="True"   ShowGroupPanel="True" 
                              ShowFooter="True"/>
             <SettingsSearchPanel Visible="True" />

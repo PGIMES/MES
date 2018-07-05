@@ -137,5 +137,10 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
 
         ASPxGridViewExporter1.WriteXlsToResponse("采购单" + System.DateTime.Now.ToString("yyyyMMdd"));//导出到Excel
     }
-   
+
+    protected void GV_PART_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "", "setHeight() ;", true);
+    }
 }
