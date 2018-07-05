@@ -15,10 +15,9 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
+       
             QueryASPxGridView();
-        }
+        
     }
     protected void btn_search_Click(object sender, EventArgs e)
     {
