@@ -1500,7 +1500,7 @@
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>'
                                                      ClientInstanceName='<%# "op_yz"+Container.VisibleIndex.ToString() %>' >
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{2}$" />
+                                                        <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{2,3}$" />
                                                     </ValidationSettings>
                                                 </dx:ASPxTextBox>                
                                             </DataItemTemplate>   
