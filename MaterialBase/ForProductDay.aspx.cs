@@ -42,21 +42,26 @@ public partial class MaterialBase_ForProductDay : System.Web.UI.Page
         string isSchedule = (string)e.GetValue("isSchedule");
         if (isSchedule == "否")
         {
-            int sydays = (int)e.GetValue("sydays");
-            if (sydays < 0)
-            {
-                e.Row.Style.Add("background-color", "red");
-            }
 
-            string ppap_date2 = (string)e.GetValue("ppap_date2");
-            if (ppap_date2 != "")
+            if ((string)e.GetValue("isNeedSchedule") == "需要")
             {
-                int pdays = Convert.ToInt32(e.GetValue("purchase_days").ToString()) + 7;
-                if (Convert.ToDateTime(ppap_date2).AddDays(-pdays) <= Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")))//今天超过了算下来的日期，就应该标红
+                int sydays = (int)e.GetValue("sydays");
+                if (sydays < 0)
                 {
                     e.Row.Style.Add("background-color", "red");
                 }
+
+                string ppap_date2 = (string)e.GetValue("ppap_date2");
+                if (ppap_date2 != "")
+                {
+                    int pdays = Convert.ToInt32(e.GetValue("purchase_days").ToString()) + 7;
+                    if (Convert.ToDateTime(ppap_date2).AddDays(-pdays) <= Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")))//今天超过了算下来的日期，就应该标红
+                    {
+                        e.Row.Style.Add("background-color", "red");
+                    }
+                }
             }
+
         }
     }
 
