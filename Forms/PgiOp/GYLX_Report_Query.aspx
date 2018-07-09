@@ -302,7 +302,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2135px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2145px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_yz_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -344,7 +344,7 @@
                             <dx:GridViewDataTextColumn Caption="压铸每模<br />重量(kg)" FieldName="weights" Width="50px" VisibleIndex="10"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="每模<br />穴数" FieldName="acupoints" Width="40px" VisibleIndex="10"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="每小时设<br />备产能(kg)" FieldName="capacity" Width="60px" VisibleIndex="10"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="每次加<br />工数量" FieldName="JgNum" Width="70px" VisibleIndex="10"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="每次加<br />工数量" FieldName="JgNum" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="加工时<br />长(秒)" FieldName="JgSec" Width="50px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="设备等待<br />时间(秒)" FieldName="WaitSec" Width="55px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="装夹时<br />间(秒)" FieldName="ZjSecc" Width="50px" VisibleIndex="13"></dx:GridViewDataTextColumn>
