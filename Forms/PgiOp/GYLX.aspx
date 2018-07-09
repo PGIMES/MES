@@ -429,7 +429,7 @@
                 var capacity_value = Number($.trim(capacity.GetText()) == "" ? 0 : $.trim(capacity.GetText()));//每小时设备产能
 
                 if(weights_value != 0){ JgNum_value = capacity_value/weights_value*acupoints_value; }
-                JgNum.SetText(JgNum_value.toFixed(0));
+                JgNum.SetText(JgNum_value.toFixed(10));//JgNum.SetText(JgNum_value.toFixed(0));
             }
 
             var JgSec_value = Number($.trim(JgSec.GetText()) == "" ? 0 : $.trim(JgSec.GetText()));//加工时长(秒)
