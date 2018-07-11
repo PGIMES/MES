@@ -646,19 +646,6 @@
                     if($("[id$=gv_d] input[id*=op]").length==0){
                         msg+="【工艺工时信息】不可为空.<br />";
                     }
-
-                    $("[id$=gv_d] input[id*=pgi_no]").each(function (){
-                        if( $(this).val()==""){
-                            msg+="【项目号】不可为空.<br />";
-                            return false;
-                        }
-                    });
-                    $("[id$=gv_d] input[id*=ver]").each(function (){
-                        if( $(this).val()==""){
-                            msg+="【工艺路线版本】不可为空.<br />";
-                            return false;
-                        }
-                    });
                     $("[id$=gv_d] input[id*=pgi_no_t]").each(function (){
                         if( $(this).val()==""){
                             msg+="【工艺流程】不可为空.<br />";
@@ -755,20 +742,7 @@
 
                     if($("[id$=gv_d_yz] input[id*=op]").length==0){
                         msg+="【工艺工时信息】不可为空.<br />";
-                    }
-
-                    $("[id$=gv_d_yz] input[id*=pgi_no]").each(function (){
-                        if( $(this).val()==""){
-                            msg+="【项目号】不可为空.<br />";
-                            return false;
-                        }
-                    });
-                    $("[id$=gv_d_yz] input[id*=ver]").each(function (){
-                        if( $(this).val()==""){
-                            msg+="【工艺路线版本】不可为空.<br />";
-                            return false;
-                        }
-                    });
+                    }                    
                     $("[id$=gv_d_yz] input[id*=pgi_no_t]").each(function (){
                         if( $(this).val()==""){
                             msg+="【工艺流程】不可为空.<br />";
@@ -1446,21 +1420,6 @@
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateById" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateByName" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateDate" Width="0px"> 
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn FieldName="typeno" Width="0px" >
                                              <HeaderStyle CssClass="hidden" />
                                              <CellStyle CssClass="hidden"></CellStyle>
@@ -1801,21 +1760,6 @@
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn FieldName="GYGSNo" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateById" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateByName" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateDate" Width="0px"> 
                                              <HeaderStyle CssClass="hidden" />
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>

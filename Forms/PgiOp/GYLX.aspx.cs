@@ -158,7 +158,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver, pn
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
-                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,op";
+                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
                     }
                     
                 }
@@ -187,7 +187,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                lssql += " where GYGSNo='" + this.m_sid + "' order by a.typeno, pgi_no, pgi_no_t,op"; //order by a.typeno,op
+                lssql += " where GYGSNo='" + this.m_sid + "' order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)"; //order by a.typeno,op
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
@@ -540,7 +540,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "'  order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "'  order by a.typeno,cast(right(op,len(op)-2) as int)";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
@@ -834,7 +834,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "' order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "' order by a.typeno,cast(right(op,len(op)-2) as int)";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
@@ -1018,30 +1018,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         DataTable dt_manager = null; string manager_flag = "";
         CheckData_manager(lstypeno, product_user, yz_user, out dt_manager, out manager_flag);
 
-        /*string appuserid = "";
-        if (lstypeno == "机加")
-        {
-            string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
-            appuserid = product_user.Length >= 5 ? product_user.Substring(0, 5) : product_user;
-        }
-        if (lstypeno == "压铸")
-        {
-            string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
-            appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
-        }
-
-        DataTable dt_manager = DbHelperSQL.Query(@"select a.id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
-        if (dt_manager == null)
-        {
-            Pgi.Auto.Public.MsgBox(this, "alert", "工程师工号(" + appuserid + ")的主管不存在，不能提交!");
-            return false;
-        }
-        if (dt_manager.Rows.Count <= 0)
-        {
-            Pgi.Auto.Public.MsgBox(this, "alert", "工程师工号(" + appuserid + ")的主管不存在，不能提交!");
-            return false;
-        }*/
-
         if (this.m_sid == "")
         {
             //没有单号，自动生成
@@ -1176,7 +1152,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
 
         //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
-
+        
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
 
