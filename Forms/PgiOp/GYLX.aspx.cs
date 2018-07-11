@@ -131,7 +131,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     else
                     {
                         string sql_head = @"select a.id, a.FormNo, a.projectno, a.pn, a.pn_desc, a.domain, a.typeno, a.state
-                                            , a.containgp, a.ver, a.pgi_no_t
+                                            , a.containgp, nchar(ascii(isnull(ver,'A'))+1) ver, a.pgi_no_t
                                             , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate 
                                             ,c.product_user,c.zl_user,c.yz_user
                                     from PGI_GYLX_Main a 
