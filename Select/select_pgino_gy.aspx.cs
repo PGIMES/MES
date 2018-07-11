@@ -32,7 +32,7 @@ public partial class Select_select_pgino_gy : System.Web.UI.Page
                         ,fpm.zl_user,fpm.yz_user,fpm.product_user 
                     from qad_pt_mstr aa
                         left join form3_Sale_Product_MainTable fpm on left(aa.pt_part,5)=fpm.pgino
-                    where (aa.pt_prod_line like '2%' or aa.pt_prod_line like '3%') and (aa.pt_status<>'DEAD' and aa.pt_status<>'OBS')
+                    where (aa.pt_prod_line not like '4%' and aa.pt_prod_line not like '5%') and (aa.pt_status<>'DEAD' and aa.pt_status<>'OBS' and isnull(aa.pt_status,'')<>'')
                         and aa.pt_part like '%{0}%' and aa.pt_desc1 like '%{1}%'
                     order by aa.pt_part";
         sql = string.Format(sql, this.txtpgi_no.Text.Trim(), this.txtpn.Text.Trim());
