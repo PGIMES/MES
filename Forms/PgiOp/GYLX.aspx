@@ -72,19 +72,80 @@
                 $("#CPXX input[id*='product_user']").val("");
 
                 $("#CPXX input[id*='projectno']").val("");
+                $("#CPXX input[id*='pgi_no_t']").val("");
+                $("#CPXX input[id*='ver']").val("");
+
+            });
+
+            $("#CPXX input[id*='pgi_no_t']").change(function () {
+                CheckVer();
+            });
+
+            $("#CPXX input[id*='containgp']").change(function () {
+                var typeno=$("#CPXX input[id*='typeno']:checked").val();
+                if (typeof(typeno)=="undefined") {
+                    layer.alert("请先选择工艺段！");
+                    $("#CPXX input[id*='containgp']").removeAttr('checked');
+                    return false;
+                }
+
+                var op700_flag=false;
+                if(typeno=="机加"){
+                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
+                        if((eval('op' + index)).GetText()=="OP700"){
+                            op700_flag=true;
+                        }
+                    });
+                }
+                if(typeno=="压铸"){
+                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
+                        if((eval('op_yz' + index)).GetText()=="OP700"){
+                            op700_flag=true;
+                        }
+                    });
+                }
+
+                if($("#CPXX input[id*='containgp']:checked").val()=="Y"){
+                    if(typeno=="机加" && op700_flag==false){
+                        gv_d.PerformCallback("Y");
+                    }
+                    if(typeno=="压铸" && op700_flag==false){
+                        gv_d_yz.PerformCallback("Y");
+                    }
+                }
+                if($("#CPXX input[id*='containgp']:checked").val()=="N"){
+                    if(typeno=="机加" && op700_flag==true){
+                        gv_d.PerformCallback("N");
+                    }
+                    if(typeno=="压铸" && op700_flag==true){
+                        gv_d_yz.PerformCallback("N");
+                    }
+                }
             });
             
             $("#CPXX input[id*='typeno']").change(function () {  
+                var pgi_no=$("#CPXX input[id*='projectno']").val();
+                var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
+                var ver=$("#CPXX input[id*='ver']").val();
+
+                if (pgi_no=="" || pgi_no_t=="" || ver=="") {
+                    layer.alert("请先选择物料号、工艺流程！");
+                    $("#CPXX input[id*='typeno']").removeAttr('checked');
+                    return false;
+                }
+
+                $("#CPXX input[id*='containgp']").removeAttr('checked');
+
                 if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
                     $("#div_product").css("display","inline-block");
-                    gv_d.PerformCallback();
+                    gv_d.PerformCallback("机加");
                 }else {
                     $("#div_product").css("display","none");
                 }
 
                 if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
                     $("#div_yz").css("display","inline-block");
-                    gv_d_yz.PerformCallback();
+                    gv_d_yz.PerformCallback("压铸");
                 }else {
                     $("#div_yz").css("display","none");
                 }
@@ -224,7 +285,7 @@
     <script type="text/javascript">
         function GetPgi_Product() 
         {
-            var url = "/select/select_product_m.aspx";
+            var url = "/select/select_pgino_gy.aspx";
 
             layer.open({
                 title:'产品信息选择',
@@ -245,7 +306,10 @@
             $("#CPXX input[id*='yz_user']").val(lsyz_user);
             $("#CPXX input[id*='zl_user']").val(lszl_user);
             $("#CPXX input[id*='product_user']").val(lsproduct_user);
+
+            $("#CPXX input[id*='pgi_no_t']").val(lspgino);
             $("#CPXX input[id*='projectno']").val(lspgino);
+            $("#CPXX input[id*='ver']").val(lsver);
 
             //该条件仅作为测试使用
             if($("#SQXX input[id*='txt_CreateByDept']").val()=="IT部"){
@@ -255,34 +319,40 @@
             }
         }
 
-        function GetPgi_Product_D(vi,ty)
-        {
-            var url = "/select/select_product_d.aspx?pgi_no="+$("#CPXX input[id*='projectno']").val()+"&domain="+$("#CPXX input[id*='domain']").val()
-                +"&formno="+$("#CPXX input[id*='formno']").val()+"&vi="+vi+"&ty="+ty;
+        function CheckVer(){
+            var pgi_no=$("#CPXX input[id*='projectno']").val();
+            var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
+            var ver=$("#CPXX input[id*='ver']").val();
+            var formno=$("#CPXX input[id*='formno']").val();
 
-            layer.open({
-                title:'工艺流程选择',
-                type: 2,
-                area: ['800px', '600px'],
-                fixed: false, //不固定
-                maxmin: true,
-                content: url
-            }); 
-        }
-
-        function setvalue_product_d(lspgino, vi,ty) 
-        {
-            //20180620此处需要修改：需要判断项目号是否有申请过，开窗申请版本必须是A
-            if (ty=="") {
-                var pgi_no= eval('pgi_no' + vi);var pgi_no_t= eval('pgi_no_t' + vi);
-                pgi_no.SetText(lspgino);pgi_no_t.SetText(lspgino);//lspgino.substr(0,7)
+            if(pgi_no!=pgi_no_t){
+                if(pgi_no_t.substr(pgi_no_t.length-3,3)!="-X1"){
+                    layer.alert("请填写正确的物料号、工艺流程代码");
+                    $("#CPXX input[id*='pgi_no_t']").val("");
+                    return false;
+                }
             }
-            if (ty=="yz") {
-                var pgi_no_yz= eval('pgi_no_yz' + vi);var pgi_no_t_yz= eval('pgi_no_t_yz' + vi);
-                pgi_no_yz.SetText(lspgino);pgi_no_t_yz.SetText(lspgino);
-            }
-        }
 
+            $.ajax({
+                type: "post",
+                url: "GYLX.aspx/CheckVer",
+                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver+ "','formno':'" + formno+ "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj=eval(data.d);
+
+                    if(obj[0].flag!=""){
+                        layer.alert(obj[0].flag);
+                        $("#CPXX input[id*='pgi_no_t']").val("");
+                        return false;
+                    }
+                }
+
+            });
+        }
+        
         function Get_wkzx(vi,ty){
             var url = "/select/select_wkzx.aspx?domain="+$("#CPXX input[id*='domain']").val()+"&vi="+vi+"&ty="+ty;
 
@@ -493,7 +563,53 @@
             <%=ValidScript%>
 
             if($("#CPXX input[id*='projectno']").val()==""){
-                msg+="【PGI项目号】不可为空.<br />";
+                msg+="【物料号】不可为空.<br />";
+            }
+            if($("#CPXX input[id*='pgi_no_t']").val()==""){
+                msg+="【工艺流程】不可为空.<br />";
+            }
+
+            if(typeof($("#CPXX input[id*='containgp']:checked").val())=="undefined"){
+                msg+="【需要GP12】不可为空.<br />";
+            }else {
+                var containgp=$("#CPXX input[id*='containgp']:checked").val();
+                var typeno=$("#CPXX input[id*='typeno']:checked").val();
+                var pgi_no_t=$.trim($("#CPXX input[id*='pgi_no_t']").val());
+
+                var op700_flag=false;
+                if(typeno=="机加"){
+                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
+                        if((eval('op' + index)).GetText()=="OP700"){
+                            op700_flag=true;
+                        }
+                        if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
+                            msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                        }
+                        if((eval('op' + index)).GetText()!="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t){
+                            msg+="工序号"+(eval('op' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                        }
+                    });
+                }
+                if(typeno=="压铸"){
+                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
+                        if((eval('op_yz' + index)).GetText()=="OP700"){
+                            op700_flag=true;
+                        }
+                        if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
+                            msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                        }
+                        if((eval('op_yz' + index)).GetText()!="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t){
+                            msg+="工序号"+(eval('op_yz' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                        }
+                    });
+                }   
+
+                if(containgp=="Y"){
+                    if(!op700_flag){msg+="需要GP12 必须填写工序号OP700.<br />";}
+                }
+                if(containgp=="N"){
+                    if(op700_flag){msg+="不需要GP12 请删除工序号OP700.<br />";}
+                }
             }
 
             if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
@@ -782,26 +898,15 @@
                 var product_user=$("#CPXX input[id*='product_user']").val();
                 var yz_user=$("#CPXX input[id*='yz_user']").val();
 
-                var pgi_no="";var ver="";
-                if(typeno=="机加"){
-                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
-                        pgi_no=pgi_no+ eval('pgi_no' + index).GetText()+","; 
-                        ver=ver+ eval('ver' + index).GetText()+","; 
-                    });
-                }
-                if(typeno=="压铸"){
-                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
-                        pgi_no=pgi_no+ eval('pgi_no_yz' + index).GetText()+",";  
-                        ver=ver+ eval('ver_yz' + index).GetText()+","; 
-                    });
-                }                
-                if(pgi_no.length>0){pgi_no=pgi_no.substr(0,pgi_no.length-1);}
-                if(ver.length>0){ver=ver.substr(0,ver.length-1);}
+                var pgi_no=$("#CPXX input[id*='projectno']").val();
+                var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
+                var ver=$("#CPXX input[id*='ver']").val();
 
                 $.ajax({
                     type: "post",
                     url: "GYLX.aspx/CheckData",
-                    data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','pgi_no':'" + pgi_no + "','ver':'" + ver + "','formno':'" + formno + "'}",
+                    data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','pgi_no':'" + pgi_no 
+                        + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -821,34 +926,6 @@
                 });
             }
             return flag;
-        }
-
-        function checkData_pgino(i){
-            var formno=$("#CPXX input[id*='formno']").val();
-           
-            gv_d.GetRowValues(i, 'ver'
-                ,  function a(values) {
-                    var ver = values;   
-                    var pgi_no = eval('pgi_no' + i).GetText();  
-
-                    $.ajax({
-                        type: "post",
-                        url: "GYLX.aspx/checkData_pgino_change",
-                        data: "{'pgi_no':'" + pgi_no+ "','ver':'" + ver+ "','formno':'" + formno + "'}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                        success: function (data) {
-                            var obj=eval(data.d);
-
-                            if (obj[0].pgino_flag != "") {
-                                layer.alert(obj[0].pgino_flag);
-                            } 
-                        }
-
-                    });
-                }
-            ); 
         }
 
     </script>
@@ -1124,41 +1201,18 @@
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
+                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="110px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
-                                                 <table>
-                                                    <tr>
-                                                        <td>      
-                                                            <%--     --%> 
-                                                            <dx:ASPxTextBox ID="pgi_no" Width="75px" runat="server" Value='<%# Eval("pgi_no")%>' 
-                                                                ClientInstanceName='<%# "pgi_no"+Container.VisibleIndex.ToString() %>'
-                                                                ClientSideEvents-ValueChanged='<%# "function(s,e){checkData_pgino("+Container.VisibleIndex+");}" %>'></dx:ASPxTextBox>   
-                                                        </td>
-                                                        <td><i id="pgi_no_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["pgi_no_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'')"></i>
-                                                        </td>
-                                                    </tr>
-                                                </table>                  
-                                            </DataItemTemplate>   
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3">
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="ver" Width="35px" runat="server" Value='<%# Eval("ver")%>' 
-                                                    ClientInstanceName='<%# "ver"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
-                                                </dx:ASPxTextBox> 
-                                            </DataItemTemplate>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>     
-                                                 <dx:ASPxTextBox ID="pgi_no_t" Width="75px" runat="server" Value='<%# Eval("pgi_no_t")%>' 
-                                                                ClientInstanceName='<%# "pgi_no_t"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>                    
+                                                 <dx:ASPxTextBox ID="pgi_no_t" Width="110px" runat="server" Value='<%# Eval("pgi_no_t")%>' 
+                                                                ClientInstanceName='<%# "pgi_no_t"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true" ></dx:ASPxTextBox>                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="45px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' >
+                                                <dx:ASPxTextBox ID="op" Width="45px" runat="server" Value='<%# Eval("op")%>' 
+                                                    ClientInstanceName='<%# "op"+Container.VisibleIndex.ToString() %>'>
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正确格式！" ValidationExpression="^[O]+[P]+\d{3}$" />
                                                     </ValidationSettings>
@@ -1422,6 +1476,16 @@
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="pgi_no" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="ver" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
 
                                         <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="99" >
                                             <Settings AllowCellMerge="False" />
@@ -1464,33 +1528,12 @@
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
-                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="75px" VisibleIndex="3">
+                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>                                        
+                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="110px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>     
-                                                 <table>
-                                                    <tr>
-                                                        <td>           
-                                                            <dx:ASPxTextBox ID="pgi_no" Width="75px" runat="server" Value='<%# Eval("pgi_no")%>' 
-                                                                ClientInstanceName='<%# "pgi_no_yz"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>   
-                                                        </td>
-                                                        <td><i id="pgi_no_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["pgi_no_i_yz"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="GetPgi_Product_D(<%# Container.VisibleIndex %>,'yz')"></i></td>
-                                                    </tr>
-                                                </table>                  
-                                            </DataItemTemplate>   
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="35px" VisibleIndex="3">
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="ver" Width="35px" runat="server" Value='<%# Eval("ver")%>' 
-                                                    ClientInstanceName='<%# "ver_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
-                                                </dx:ASPxTextBox> 
-                                            </DataItemTemplate>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="75px" VisibleIndex="3">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>     
-                                                 <dx:ASPxTextBox ID="pgi_no_t" Width="75px" runat="server" Value='<%# Eval("pgi_no_t")%>' 
-                                                                ClientInstanceName='<%# "pgi_no_t_yz"+Container.VisibleIndex.ToString() %>' ></dx:ASPxTextBox>                    
+                                                 <dx:ASPxTextBox ID="pgi_no_t" Width="110px" runat="server" Value='<%# Eval("pgi_no_t")%>' 
+                                                                ClientInstanceName='<%# "pgi_no_t_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true" ></dx:ASPxTextBox>                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="45px" VisibleIndex="4">
@@ -1792,6 +1835,16 @@
                                              <CellStyle CssClass="hidden"></CellStyle>
                                              <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="pgi_no" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="ver" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
 
                                         <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="99" >
                                             <Settings AllowCellMerge="False" />
@@ -1853,145 +1906,7 @@
 
 </asp:Content>
 
-<%--<dx:aspxgridview ID="Aspxgridview1" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
-                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  >                                   
-                                    <SettingsPager PageSize="1000"></SettingsPager>
-                                    <Settings ShowFooter="True" />
-                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-                                    <Columns>
-                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="1"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺段" FieldName="typeno" Width="60px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op" Width="60px" runat="server" Value='<%# Eval("op")%>' ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>   
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工序名称" FieldName="op_desc" Width="140px" VisibleIndex="5">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op_desc" Width="140px" runat="server" Value='<%# Eval("op_desc")%>' ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工序说明" FieldName="op_remark" Width="140px" VisibleIndex="6">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="op_remark" Width="140px" runat="server" Value='<%# Eval("op_remark")%>' ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="设备" FieldName="gzzx_desc" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="工作中心<br />代码" FieldName="gzzx" Width="50px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="是否报工<br />(Y/N)" FieldName="IsBg" Width="50px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="每次加工<br />数量" FieldName="JgNum" Width="50px" VisibleIndex="10">
-                                            <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="JgNum" Width="50px" runat="server" Value='<%# Eval("JgNum")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged"></dx:ASPxTextBox>
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="加工时长<br />(秒)" FieldName="JgSec" Width="50px" VisibleIndex="12">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="JgSec" Width="50px" runat="server" Value='<%# Eval("JgSec")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged" ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="设备等待<br />时间(秒)" FieldName="WaitSec" Width="50px" VisibleIndex="12">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="WaitSec" Width="50px" runat="server" Value='<%# Eval("WaitSec")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged" ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="装夹时间<br />(秒)" FieldName="ZjSecc" Width="50px" VisibleIndex="13">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="ZjSecc" Width="50px" runat="server" Value='<%# Eval("ZjSecc")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged" ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="机器台数" FieldName="JtNum" Width="50px" VisibleIndex="14">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="JtNum" Width="50px" runat="server" Value='<%# Eval("JtNum")%>' AutoPostBack="true" OnValueChanged="JgNum_ValueChanged" ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(秒)" FieldName="TjOpSec" Width="60px" VisibleIndex="15">
-                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工时<br />(秒)" FieldName="JSec" Width="50px" VisibleIndex="16">
-                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工时<br />(小时)" FieldName="JHour" Width="50px" VisibleIndex="17">
-                                             <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台<br />需要人数" FieldName="col1" Width="50px" VisibleIndex="18">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="col1" Width="50px" runat="server" Value='<%# Eval("col1")%>' AutoPostBack="true"  OnValueChanged="JgNum_ValueChanged"></dx:ASPxTextBox>                
-                                            </DataItemTemplate>   
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="本工序一人<br />操作台数" FieldName="col2" Width="60px" VisibleIndex="19">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="col2" Width="60px" runat="server" Value='<%# Eval("col2")%>' AutoPostBack="true"  OnValueChanged="JgNum_ValueChanged"></dx:ASPxTextBox>                
-                                            </DataItemTemplate>   
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台85%<br />产量" FieldName="col3" Width="60px" VisibleIndex="20"> </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="一人85%<br />产量" FieldName="col4" Width="60px" VisibleIndex="21"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="整线班产量" FieldName="col5" Width="60px" VisibleIndex="22"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="完工工时" FieldName="FinishHour" Width="50px" VisibleIndex="23">
-                                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
-                                        </dx:GridViewDataTextColumn>
-                                        
-                                        
 
-                                        <dx:GridViewDataTextColumn FieldName="" Caption=" " VisibleIndex="30" >
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxButton ID="btn" runat="server" Text="新增行"   CommandName="Add"  ></dx:ASPxButton>          
-                                            </DataItemTemplate>                        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="numid" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="id" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="GYGSNo" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateById" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateByName" Width="0px">
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="UpdateDate" Width="0px"> 
-                                             <HeaderStyle CssClass="hidden" />
-                                             <CellStyle CssClass="hidden"></CellStyle>
-                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>
-                                    </Columns>                                                
-                                    <Styles>
-                                        <Header BackColor="#E4EFFA"  ></Header>        
-                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
-                                    </Styles>                                          
-                                </dx:aspxgridview>--%>
 
-<%--<dx:GridViewDataTextColumn Caption="单台100%<br />产量" FieldName="TSumNum" Width="70px" VisibleIndex="18"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单台80%<br />产量" FieldName="TPec8Num" Width="70px" VisibleIndex="19"></dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="操作人数" FieldName="OpNum" Width="70px" VisibleIndex="25">
-                                            <Settings AllowCellMerge="False" />
-                                            <DataItemTemplate>                
-                                                <dx:ASPxTextBox ID="OpNum" Width="70px" runat="server" Value='<%# Eval("OpNum")%>' ></dx:ASPxTextBox>                
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>--%>
+
 

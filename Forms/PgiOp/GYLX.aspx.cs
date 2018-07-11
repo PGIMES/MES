@@ -27,10 +27,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     {
         ViewState["lv"] = "";
         
-        if (ViewState["pgi_no_i"] == null) { ViewState["pgi_no_i"] = ""; }
         if (ViewState["gzzx_i"] == null) { ViewState["gzzx_i"] = ""; }
-
-        if (ViewState["pgi_no_i_yz"] == null) { ViewState["pgi_no_i_yz"] = ""; }
         if (ViewState["gzzx_i_yz"] == null) { ViewState["gzzx_i_yz"] = ""; }
 
         if (ViewState["IsBg_i"] == null) { ViewState["IsBg_i"] = ""; }
@@ -76,7 +73,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         Session["LogUser_CurPage"] = LogUserModel;
 
         //加载表头控件
-        List<TableRow> ls = ShowControl("PGI_GYLX_Main_Form", "HEAD", 4, "", "", "lineread", "linewrite");//Pgi.Auto.Control.form-control input-s-sm
+        List<TableRow> ls = ShowControl("PGI_GYLX_Main_Form", "HEAD_NEW", 4, "", "", "lineread", "linewrite");//Pgi.Auto.Control.form-control input-s-sm
         for (int i = 0; i < ls.Count; i++)
         {
             this.tblCPXX.Rows.Add(ls[i]);
@@ -119,25 +116,26 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 {
                     //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
 
-                    string re_sql = @"select top 1 a.InstanceID,c.createbyid,c.createbyname 
+                    string re_sql = @"select top 1 a.InstanceID,b.createbyid,b.createbyname 
                                     from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0,1))  a
-                                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID=b.GYGSNo
-                                        inner join PGI_GYLX_Main_Form c on a.InstanceID=c.formno
-                                     where b.pgi_no='" + Request.QueryString["pgi_no"] + "'";
-                    //if (m_sid != "") { re_sql += " and InstanceID<>'" + m_sid + "'"; }
+                                        inner join PGI_GYLX_Main_Form b on a.InstanceID=b.formno 
+                                     where b.projectno='" + Request.QueryString["pgi_no"] + "' and b.pgi_no_t='" + Request.QueryString["pgi_no_t"] + "'";
                     DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
                     if (re_dt.Rows.Count > 0)
                     {
-                        Pgi.Auto.Public.MsgBox(this, "alert", "该项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
+                        Pgi.Auto.Public.MsgBox(this, "alert", Request.QueryString["pgi_no"] + "(" + Request.QueryString["pgi_no_t"]
+                            + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:"
+                            + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
                     }
                     else
                     {
                         string sql_head = @"select a.id, a.FormNo, a.projectno, a.pn, a.pn_desc, a.domain, a.typeno, a.state
+                                            , a.containgp, a.ver, a.pgi_no_t
                                             , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate 
                                             ,c.product_user,c.zl_user,c.yz_user
                                     from PGI_GYLX_Main a 
-                                        left join form3_Sale_Product_MainTable c on a.projectno=c.pgino 
+                                        left join form3_Sale_Product_MainTable c on left(a.projectno,5)=c.pgino 
                                     where formno='" + Request.QueryString["formno"] + "'";
                         DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
 
@@ -150,7 +148,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         }
                         //end
 
-                        SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                        SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                         txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
 
 
@@ -180,7 +178,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
                     txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
                     txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
-                    SetControlValue("PGI_GYLX_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
                     modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
                 }
@@ -232,7 +230,19 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
             ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
+            ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
+            ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
+
             ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
+            {
+                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+            }
+            else
+            {
+                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
+            }
+            
         }
 
         if (StepID.ToUpper() != SQ_StepID && StepID != "A")
@@ -268,20 +278,12 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
                 ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
-                ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+                ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
+                ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
 
-                if (lstypeno == "机加")
-                {
-                    ViewState["pgi_no_i"] = "Y";
-                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-                }
-                if (lstypeno == "压铸")
-                {
-                    ViewState["pgi_no_i_yz"] = "Y";
-                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-                }
+                ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+                
 
                 if (state != "edit" && ldt_detail.Rows[i]["ver"].ToString() != "A")
                 {
@@ -324,27 +326,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
 
 
-    public void setpgino_read(DataTable dt)
-    {
-        if (ViewState["pgi_no_i"].ToString() == "Y")
-        {
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-            }
-        }
-
-        if (ViewState["pgi_no_i_yz"].ToString() == "Y")
-        {
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-            }
-        }
-    }
-
     #region 机加
 
     public void setread(int i)
@@ -353,11 +334,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
+        ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
+
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+        ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
 
         modifyremark.ReadOnly = true; 
 
-        ViewState["pgi_no_i"] = "Y"; ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = "Y"; 
+        ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = "Y"; 
 
         btndel.Visible = false;
 
@@ -366,12 +351,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             gv_d.Columns[gv_d.VisibleColumns.Count - 1].Visible = false;
             gv_d.Columns[0].Visible = false;
         }
-
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no_t"], "pgi_no_t")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["pgi_no_t"], "pgi_no_t")).BorderStyle = BorderStyle.None;
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).BorderStyle = BorderStyle.None;
@@ -441,13 +420,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //}
         gv_d.DataSource = ldt;
         gv_d.DataBind();
-        setpgino_read(ldt);
     }
 
-    private void GvAddRows(int lnadd_rows, int lnindex)
+    private void GvAddRows(int lnadd_rows, int lnindex,bool isop700)
     {
         //新增一行或一组
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+
+        if (isop700) { lnindex = ldt.Rows.Count - 1; }
 
         DataRow[] drs = ldt.Select("", "numid desc");
         DataTable dt_o = ldt.Clone();
@@ -462,9 +442,19 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             for (int j = 0; j < ldt.Columns.Count; j++)
             {
                 if (ldt.Columns[j].ColumnName == "typeno" || ldt.Columns[j].ColumnName == "pgi_no" || ldt.Columns[j].ColumnName == "ver"
-                    || ldt.Columns[j].ColumnName == "pgi_no_t" || ldt.Columns[j].ColumnName == "domain" || ldt.Columns[j].ColumnName == "pn")
+                    || ldt.Columns[j].ColumnName == "domain" || ldt.Columns[j].ColumnName == "pn")
                 {
                     ldr[ldt.Columns[j].ColumnName] = ldt.Rows[lnindex][ldt.Columns[j].ColumnName];
+                }
+                else if (ldt.Columns[j].ColumnName == "pgi_no_t")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text.Trim() + "-GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text; }                    
+                }
+                else if (ldt.Columns[j].ColumnName == "op")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "OP700"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
                 }
                 else if (ldt.Columns[j].ColumnName == "numid")
                 {
@@ -487,20 +477,42 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
 
-        setpgino_read(ldt);
     }
 
     protected void gv_d_RowCommand(object sender, DevExpress.Web.ASPxGridViewRowCommandEventArgs e)
     {
         if (e.CommandArgs.CommandName == "Add")
         {
-            GvAddRows(1, e.VisibleIndex);
+            GvAddRows(1, e.VisibleIndex,false);
         }
     }
 
     protected void gv_d_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
     {
-        SetGvRow();
+        string param = e.Parameters.Trim();
+        if (param=="机加")
+        {
+            SetGvRow();
+        }
+
+        if (param == "Y")
+        {
+            GvAddRows(1, 0, true);
+        }
+        if (param == "N")
+        {
+            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+            for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+            {
+                if (ldt.Rows[i]["op"].ToString() == "OP700")
+                {
+                    ldt.Rows[i].Delete();
+                }
+            }
+            ldt.AcceptChanges();
+            gv_d.DataSource = ldt;
+            gv_d.DataBind();
+        }
     }
 
     public void SetGvRow()
@@ -513,11 +525,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //{
 
         string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text;
+        string lspgi_no_t = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text;
+
         string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
         string lspn = txt_pn.Text; //((TextBox)this.FindControl("ctl00$MainContent$pn")).Text;
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
-
+        
         //if (lspgi_no == "" || lstypeno=="")
         //{
         //    return;
@@ -526,7 +540,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "' and typeno='" + lstypeno + "'  order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "'  order by a.typeno,op";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
@@ -548,7 +562,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ldr["ver"] = "A";
             ldr["op"] = "OP1" + i.ToString() + "0";
             ldr["isbg"] = "Y";
-            ldr["domain"] = lsdomain; ldr["pn"] = lspn;
+            ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["pgi_no"] = lspgi_no; ldr["pgi_no_t"] = lspgi_no_t;
             ldr["numid"] = i;
 
             ldt.Rows.Add(ldr);
@@ -559,21 +573,22 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ldr_z1["ver"] = "A";
         ldr_z1["op"] = "OP600";
         ldr_z1["isbg"] = "Y";
-        ldr_z1["domain"] = lsdomain; ldr_z1["pn"] = lspn;
+        ldr_z1["domain"] = lsdomain; ldr_z1["pn"] = lspn; ldr_z1["pgi_no"] = lspgi_no; ldr_z1["pgi_no_t"] = lspgi_no_t;
         ldr_z1["numid"] = 8;
         ldt.Rows.Add(ldr_z1);
 
-        DataRow ldr_z2 = ldt.NewRow();
-        ldr_z2["typeno"] = "机加";//质量
-        ldr_z2["ver"] = "A";
-        ldr_z2["op"] = "OP700";
-        ldr_z2["isbg"] = "Y";
-        ldr_z2["domain"] = txt_domain.Text; ldr_z2["pn"] = txt_pn.Text;
-        ldr_z2["numid"] = 9;
-        ldt.Rows.Add(ldr_z2);
-
+        //DataRow ldr_z2 = ldt.NewRow();
+        //ldr_z2["typeno"] = "机加";//质量
+        //ldr_z2["ver"] = "A";
+        //ldr_z2["op"] = "OP700";
+        //ldr_z2["isbg"] = "Y";
+        //ldr_z2["domain"] = txt_domain.Text; ldr_z2["pn"] = txt_pn.Text; ldr_z2["pgi_no"] = lspgi_no; ldr_z2["pgi_no_t"] = lspgi_no_t + "-GP12";
+        //ldr_z2["numid"] = 9;
+        //ldt.Rows.Add(ldr_z2);
+        
         gv_d.DataSource = ldt;
         gv_d.DataBind();
+
         //}
 
     }
@@ -594,11 +609,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
 
+        ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
+
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+        ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
 
         modifyremark.ReadOnly = true;
 
-        ViewState["pgi_no_i_yz"] = "Y"; ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "Y";
+        ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "Y";
 
         btn_del_yz.Visible = false;
 
@@ -607,12 +626,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             gv_d_yz.Columns[gv_d_yz.VisibleColumns.Count - 1].Visible = false;
             gv_d_yz.Columns[0].Visible = false;
         }
-
-        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no"], "pgi_no")).BorderStyle = BorderStyle.None;
-
-        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no_t"], "pgi_no_t")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["pgi_no_t"], "pgi_no_t")).BorderStyle = BorderStyle.None;
 
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op"], "op")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op"], "op")).BorderStyle = BorderStyle.None;
@@ -692,13 +705,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         gv_d_yz.DataSource = ldt;
         gv_d_yz.DataBind();
 
-        setpgino_read(ldt);
     }
 
-    private void GvAddRows_yz(int lnadd_rows, int lnindex)
+    private void GvAddRows_yz(int lnadd_rows, int lnindex, bool isop700)
     {
         //新增一行或一组
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+
+        if (isop700) { lnindex = ldt.Rows.Count - 1; }
 
         DataRow[] drs = ldt.Select("", "numid desc");
         DataTable dt_o = ldt.Clone();
@@ -713,9 +727,19 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             for (int j = 0; j < ldt.Columns.Count; j++)
             {
                 if (ldt.Columns[j].ColumnName == "typeno" || ldt.Columns[j].ColumnName == "pgi_no" || ldt.Columns[j].ColumnName == "ver"
-                    || ldt.Columns[j].ColumnName == "pgi_no_t" || ldt.Columns[j].ColumnName == "domain" || ldt.Columns[j].ColumnName == "pn")
+                    || ldt.Columns[j].ColumnName == "domain" || ldt.Columns[j].ColumnName == "pn")
                 {
                     ldr[ldt.Columns[j].ColumnName] = ldt.Rows[lnindex][ldt.Columns[j].ColumnName];
+                }
+                else if (ldt.Columns[j].ColumnName == "pgi_no_t")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text.Trim() + "-GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text; }
+                }
+                else if (ldt.Columns[j].ColumnName == "op")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "OP700"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
                 }
                 else if (ldt.Columns[j].ColumnName.ToLower() == "equipmentrate")
                 {
@@ -747,7 +771,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         this.gv_d_yz.DataBind();
 
 
-        setpgino_read(ldt);
 
     }
 
@@ -755,13 +778,35 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     {
         if (e.CommandArgs.CommandName == "Add")
         {
-            GvAddRows_yz(1, e.VisibleIndex);
+            GvAddRows_yz(1, e.VisibleIndex,false);
         }
     }
 
     protected void gv_d_yz_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
     {
-        SetGvRow_yz();
+        string param = e.Parameters.Trim();
+        if (param == "压铸")
+        {
+            SetGvRow_yz();
+        }
+        if (param == "Y")
+        {
+            GvAddRows_yz(1, 0, true);
+        }
+        if (param == "N")
+        {
+            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+            for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+            {
+                if (ldt.Rows[i]["op"].ToString() == "OP700")
+                {
+                    ldt.Rows[i].Delete();
+                }
+            }
+            ldt.AcceptChanges();
+            gv_d_yz.DataSource = ldt;
+            gv_d_yz.DataBind();
+        }
     }
 
     public void SetGvRow_yz()
@@ -774,6 +819,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //{
 
         string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text;
+        string lspgi_no_t = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text;
+
         string lsdomain = txt_domain.Text; //((TextBox)this.FindControl("ctl00$MainContent$domain")).Text;
         string lspn = txt_pn.Text; //((TextBox)this.FindControl("ctl00$MainContent$pn")).Text;
 
@@ -787,7 +834,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
         string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid from [dbo].[PGI_GYLX_Dtl_Form] a 
-                        where GYGSNo='" + lsformno + "' and left(pgi_no,5)='" + lspgi_no + "' and typeno='" + lstypeno + "' order by a.typeno,op";
+                        where GYGSNo='" + lsformno + "' and pgi_no='" + lspgi_no + "' and typeno='" + lstypeno + "' order by a.typeno,op";
         DataTable ldt_db = DbHelperSQL.Query(lssql).Tables[0];
         if (ldt_db != null)
         {
@@ -815,7 +862,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             {
                 ldr["isbg"] = "Y"; ldr["weights"] = "0"; ldr["acupoints"] = "0"; ldr["capacity"] = "0";
             }            
-            ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["EquipmentRate"] = "1";
+            ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["EquipmentRate"] = "1"; ldr["pgi_no"] = lspgi_no; ldr["pgi_no_t"] = lspgi_no_t;
             ldr["numid"] = i;
 
             ldt.Rows.Add(ldr);
@@ -833,18 +880,70 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     #endregion
 
+
     [WebMethod]
-    public static string CheckData(string typeno, string product_user, string yz_user, string pgi_no, string ver,string formno)
+    public static string CheckVer(string pgi_no, string pgi_no_t, string ver, string formno)
+    {
+        string flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
+        string result = "[{\"flag\":\"" + flag + "\"}]";
+        return result;
+    }
+
+    public static string CheckVer_data(string pgi_no, string pgi_no_t, string ver, string formno)
+    {
+        string flag = "";
+
+        string sql = @"select b.projectno,b.pgi_no_t
+                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
+                        inner join PGI_GYLX_Main_Form b on a.InstanceID = b.formno
+                    where b.projectno='" + pgi_no + "' and b.pgi_no_t='" + pgi_no_t + "'";
+        if (formno != "") { sql = sql + " and a.InstanceID<>'" + formno + "'"; }
+
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count > 0)
+        {
+            flag = pgi_no + "(" + pgi_no_t + ")正在申请中，不能申请!<br />";
+        }
+
+        if (flag == "")
+        {
+            sql = @"select projectno,pgi_no_t,ascii(max(ver)) ver_db,ascii('" + ver + "') ver_page from [dbo].[PGI_GYLX_Main] where projectno='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' group by projectno,pgi_no_t";
+            DataTable dt2 = DbHelperSQL.Query(sql).Tables[0];
+
+            if (ver == "A")
+            {
+                if (dt2.Rows.Count > 0)
+                {
+                    flag = pgi_no + "(" + pgi_no_t + ")已经存在，不能新增申请!<br />";
+                }
+            }
+            else
+            {
+                if (dt2.Rows.Count > 0)
+                {
+                    if (Convert.ToInt32(dt2.Rows[0]["ver_db"].ToString()) != Convert.ToInt32(dt2.Rows[0]["ver_page"].ToString()) - 1)
+                    {
+                        flag = pgi_no + "(" + pgi_no_t + ")修改申请版本" + ver + "，不正确，不能申请!<br />";
+                    }
+                }
+                else
+                {
+                    flag = pgi_no + "(" + pgi_no_t + ")没有申请过，不能修改申请!<br />";
+                }
+            }
+
+        }
+        return flag;
+    }
+
+
+    [WebMethod]
+    public static string CheckData(string typeno, string product_user, string yz_user, string pgi_no, string pgi_no_t, string ver,string formno)
     {
         DataTable dt_manager = null; string manager_flag = "";
         CheckData_manager(typeno, product_user, yz_user, out dt_manager, out manager_flag);
-
-        string[] pgi_no_arr = pgi_no.Split(','); string[] ver_arr = ver.Split(',');
-        string pgino_flag = "";
-        for (int i = 0; i < pgi_no_arr.Length; i++)
-        {
-            pgino_flag += checkData_pgino(pgi_no_arr[i], ver_arr[i], formno);
-        }
+        
+        string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
 
         string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"pgino_flag\":\"" + pgino_flag + "\"}]";
         return result;
@@ -880,62 +979,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     }
 
-    public static string checkData_pgino(string pgi_no, string ver,string formno)
-    {
-        string flag = "";
-
-        string sql = @"select b.pgi_no
-                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
-                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID = b.gygsno
-                    where b.pgi_no='" + pgi_no + "'";
-        if (formno != "") { sql = sql + " and a.InstanceID<>'" + formno + "'"; }
-
-        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
-        if (dt.Rows.Count > 0)
-        {
-            flag = pgi_no + "正在申请中，不能申请!<br />";
-        }
-
-        if (flag == "")
-        {
-            sql = @"select pgi_no,ascii(max(ver)) ver_db,ascii('"+ ver + "') ver_page from [dbo].[PGI_GYLX_Dtl] where pgi_no='" + pgi_no + "' group by pgi_no";
-            DataTable dt2 = DbHelperSQL.Query(sql).Tables[0];
-
-            if (ver == "A")
-            {
-                if (dt2.Rows.Count > 0)
-                {
-                    flag = pgi_no + "已经存在，不能新增申请!<br />";
-                }
-            }
-            else
-            {
-                if (dt2.Rows.Count > 0)
-                {
-                    if (Convert.ToInt32(dt2.Rows[0]["ver_db"].ToString()) != Convert.ToInt32(dt2.Rows[0]["ver_page"].ToString()) - 1)
-                    {
-                        flag = pgi_no + "修改申请版本" + ver + "，不正确，不能申请!<br />";
-                    }
-                }
-                else
-                {
-                    flag = pgi_no + "没有申请过，不能修改申请!<br />";
-                }
-            }
-
-        }
-        return flag;
-    }
-
-
-    [WebMethod]
-    public static string checkData_pgino_change(string pgi_no, string ver, string formno)
-    {
-        string pgino_flag = checkData_pgino(pgi_no, ver, formno);
-
-        string result = "[{\"pgino_flag\":\"" + pgino_flag + "\"}]";
-        return result;
-    }
 
     private bool SaveData()
     {
@@ -945,7 +988,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYLX_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW", this, "ctl00$MainContent${0}");
 
 
         /*
@@ -968,6 +1011,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string projectno = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text.Trim();
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
+        string lscontaingp = ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue;
 
         string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
         string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
@@ -1046,7 +1090,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             if (ls[i].Code.ToLower() == "typeno")
             {
                 ls[i].Value = lstypeno;
-                break;
+            }
+            if (ls[i].Code.ToLower() == "containgp")
+            {
+                ls[i].Value = lscontaingp;
             }
         }
        
@@ -1080,18 +1127,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             for (int j = 0; j < ls.Count; j++)
             {
-                if (ls[j].Code.ToLower() == "formno")
+                if (ls[j].Code.ToLower() == "formno") { ldt.Rows[i]["GYGSNo"] = ls[j].Value; }
+                if (ls[j].Code.ToLower() == "pn") { ldt.Rows[i]["pn"] = ls[j].Value; }
+                if (ls[j].Code.ToLower() == "domain") { ldt.Rows[i]["domain"] = ls[j].Value; }
+                if (ls[j].Code.ToLower() == "projectno") { ldt.Rows[i]["pgi_no"] = ls[j].Value; }
+                if (ls[j].Code.ToLower() == "pgi_no_t")
                 {
-                    ldt.Rows[i]["GYGSNo"] = ls[j].Value;
+                    if (ldt.Rows[i]["op"].ToString() != "OP700") { ldt.Rows[i]["pgi_no_t"] = ls[j].Value; }
+                    else { ldt.Rows[i]["pgi_no_t"] = ls[j].Value.Trim() + "-GP12"; }
                 }
-                if (ls[j].Code.ToLower() == "pn")
-                {
-                    ldt.Rows[i]["pn"] = ls[j].Value;
-                }
-                if (ls[j].Code.ToLower() == "domain")
-                {
-                    ldt.Rows[i]["domain"] = ls[j].Value;
-                }
+                if (ls[j].Code.ToLower() == "ver") { ldt.Rows[i]["ver"] = ls[j].Value; }
             }
         }
 
@@ -1110,8 +1155,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
                 if (ldt.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
-                //排除：数据库中的数据不在网页上的，需要删除；其中OP700需要删除
-                //if (ldt.Rows[i]["id"].ToString() != "" && ldt.Rows[i]["op"].ToString() != "OP700") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
             }
             if (dtl_ids != "")
             {
@@ -1123,42 +1166,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 ls_del.Sql = "delete from PGI_GYLX_Dtl_Form where GYGSNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del);
-
-            /*
-            //copy600to700 begin
-            for (int i = ldt.Rows.Count - 1; i >= 0; i--)
-            {
-                if (ldt.Rows[i]["op"].ToString() == "OP700")
-                {
-                    ldt.Rows[i].Delete();
-                }
-            }       
-            for (int i = 0; i < ldt.Rows.Count; i++)
-            {
-                if (ldt.Rows[i]["op"].ToString() == "OP600")
-                {
-                    DataRow ldr = ldt.NewRow();
-                    for (int j = 0; j < ldt.Columns.Count; j++)
-                    {
-                        if (ldt.Columns[j].ColumnName == "id")
-                        {
-                            ldr[ldt.Columns[j].ColumnName] = "";
-                        }
-                        else if(ldt.Columns[j].ColumnName == "op")
-                        {
-                            ldr[ldt.Columns[j].ColumnName] = "OP700";
-                        }
-                        else
-                        {
-                            ldr[ldt.Columns[j].ColumnName] = ldt.Rows[i][ldt.Columns[j].ColumnName];
-                        }
-                    }
-                    ldt.Rows.Add(ldr.ItemArray);
-                    break;
-                }
-            }
-            //copy600to700 end
-            */
 
             //明细数据自动生成SQL，并增入SUM
             List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_GYLX_Dtl_Form", "id", "Column1,numid,flag");
@@ -1199,6 +1206,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     //临时保存按钮
     protected void btnSave_Click(object sender, EventArgs e)
     {
+        //Pgi.Auto.Public.MsgBox(Page, "alert", "GP12调整中,请2018/7/11再申请，谢谢！");
         //保存数据
         bool flag = SaveData();
         //保存当前流程
@@ -1211,7 +1219,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     //发送按钮
     protected void btnflowSend_Click(object sender, EventArgs e)
     {
-        //Pgi.Auto.Public.MsgBox(Page, "alert", "流程开发中。。");
+        //Pgi.Auto.Public.MsgBox(Page, "alert", "GP12调整中,请2018/7/11再签核，谢谢！");
         //保存数据
         bool flag = SaveData();
         //发送

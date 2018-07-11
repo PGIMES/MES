@@ -19,7 +19,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         {
             QueryASPxGridView();
         }
-        if (this.gv.IsCallback)//页面搜索条件使用
+        if (this.gv.IsCallback == true || this.gv_yz.IsCallback == true)//页面搜索条件使用
         {
             QueryASPxGridView();
             ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
@@ -107,21 +107,20 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckData(string pgi_no)
+    public static string CheckData(string pgi_no,string pgi_no_t)
     {
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
         string re_flag = "";
 
-        string re_sql = @"select top 1 a.InstanceID,c.createbyid,c.createbyname 
-                                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0,1))  a
-                                        inner join PGI_GYLX_Dtl_Form b on a.InstanceID=b.GYGSNo
-                                        inner join PGI_GYLX_Main_Form c on a.InstanceID=c.formno
-                                     where b.pgi_no='" + pgi_no + "'";
+        string re_sql = @"select b.projectno,b.pgi_no_t
+                    from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
+                        inner join PGI_GYLX_Main_Form b on a.InstanceID = b.formno
+                    where b.projectno='" + pgi_no + "' and b.pgi_no_t='" + pgi_no_t + "'";
         DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
         if (re_dt.Rows.Count > 0)
         {
-            re_flag= "该项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!";
+            re_flag= pgi_no + "(" + pgi_no_t + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!";
         }
 
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
@@ -135,20 +134,14 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
-            var pgi_no1 = gv.GetRowValues(e.RowVisibleIndex1, "pgi_no"); var ver1 = gv.GetRowValues(e.RowVisibleIndex1, "ver");
-            var pgi_no2 = gv.GetRowValues(e.RowVisibleIndex2, "pgi_no"); var ver2 = gv.GetRowValues(e.RowVisibleIndex2, "ver");
+            var formno1 = gv.GetRowValues(e.RowVisibleIndex1, "formno"); 
+            var formno2 = gv.GetRowValues(e.RowVisibleIndex2, "formno");
 
-            if (pgi_no1.ToString() != pgi_no2.ToString())
+            if (formno1.ToString() != formno2.ToString())
             {
                 e.Handled = true;
             }
-            else
-            {
-                if (ver1.ToString() != ver2.ToString())
-                {
-                    e.Handled = true;
-                }
-            }
+
         }
 
     }
@@ -158,20 +151,14 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
-            var pgi_no1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "pgi_no"); var ver1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "ver");
-            var pgi_no2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "pgi_no"); var ver2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "ver");
+            var formno1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "formno");
+            var formno2 = gv_yz.GetRowValues(e.RowVisibleIndex2, "formno");
 
-            if (pgi_no1.ToString() != pgi_no2.ToString())
+            if (formno1.ToString() != formno2.ToString())
             {
                 e.Handled = true;
             }
-            else
-            {
-                if (ver1.ToString() != ver2.ToString())
-                {
-                    e.Handled = true;
-                }
-            }
+
         }
     }
 }

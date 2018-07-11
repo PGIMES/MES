@@ -20,15 +20,16 @@
             $('#btn_edit').click(function () {
                 if (grid.GetSelectedRowCount() != 1) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues("formno;pgi_no", function GetVal(values) {
+                grid.GetSelectedFieldValues("formno;pgi_no;pgi_no_t", function GetVal(values) {
                     //for (var i = 0; i < values.length; i++) { values[i][1]}
                     var formno = values[0][0];
                     var pgi_no = values[0][1];
+                    var pgi_no_t = values[0][2];
 
                     $.ajax({
                         type: "post",
                         url: "GYLX_Report_Query.aspx/CheckData",
-                        data: "{'pgi_no':'" + pgi_no + "'}",
+                        data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -38,7 +39,7 @@
                             if (obj[0].re_flag != "") {
                                 layer.alert(obj[0].re_flag);
                             } else {
-                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + formno + '&pgi_no=' + pgi_no);
+                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + formno + '&pgi_no=' + pgi_no + '&pgi_no_t=' + pgi_no_t);
                             }
                         }
 
@@ -141,7 +142,7 @@
     <div class="col-md-12" id="div_p"  style="margin-bottom:5px">
         <table style=" border-collapse: collapse;">
             <tr>
-                <td style="width:70px;">PGI项目号</td>
+                <td style="width:70px;">物料号</td>
                 <td style="width:100px;">
                     <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="90px"></asp:TextBox>
                 </td>
@@ -211,7 +212,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="1965px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2005px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -241,7 +242,7 @@
                             
                             <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"><Settings AllowCellMerge="True" /> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"><Settings AllowCellMerge="True" /></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="120px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />  
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4"></dx:GridViewDataTextColumn>
@@ -302,7 +303,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2145px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2185px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_yz_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -332,7 +333,7 @@
                             
                             <dx:GridViewDataTextColumn Caption="工艺路<br />线版本" FieldName="ver" Width="50px" VisibleIndex="2"><Settings AllowCellMerge="True" /> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="2"><Settings AllowCellMerge="True" /></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="80px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="120px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />  
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工序号" FieldName="op" Width="60px" VisibleIndex="4"></dx:GridViewDataTextColumn>
