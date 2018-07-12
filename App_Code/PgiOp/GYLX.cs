@@ -32,4 +32,30 @@ public class GYLX
         return SQLHelper.GetDataTable("Report_GYLX", param);
 
     }
+
+    public DataTable GYLX_IsNeedCloseWork(DataTable dt, string lstypeno, string formno_main, string projectno_main, string pgi_no_t_main, string domain_main, string titlever,string containgp)
+    {
+        SqlParameter[] param = new SqlParameter[]
+      {
+            new SqlParameter("@dt",dt),
+            new SqlParameter("@formno",formno_main),
+            new SqlParameter("@pgi_no",projectno_main),
+            new SqlParameter("@pgi_no_t",pgi_no_t_main),
+            new SqlParameter("@domain",domain_main),
+            new SqlParameter("@ver",titlever),
+            new SqlParameter("@containgp",containgp)
+      };
+
+        string strsql = "";
+        if (lstypeno == "机加")
+        {
+            strsql = "usp_GYLX_IsNeedCloseWork_product";
+        }
+        if (lstypeno == "压铸")
+        {
+            strsql = "usp_GYLX_IsNeedCloseWork_yz";
+        }
+        return SQLHelper.GetDataTable(strsql, param);
+
+    }
 }

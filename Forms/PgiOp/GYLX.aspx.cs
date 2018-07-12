@@ -234,6 +234,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
 
             ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+            
+
             if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
             {
                 ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
@@ -248,6 +250,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         if (StepID.ToUpper() != SQ_StepID && StepID != "A")
         {
             modifyremark.ReadOnly = true;
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
         }
 
         /*JgNum_ValueChanged(sender, e);*/
@@ -282,8 +285,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
 
                 ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-                
+
+                if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
+                {
+                    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+                }
+                else
+                {
+                    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
+                }
+
 
                 if (state != "edit" && ldt_detail.Rows[i]["ver"].ToString() != "A")
                 {
@@ -1087,8 +1098,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ls.Add(lcModifyRemark);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
-        DataTable ldt = new DataTable();string titlever = "A";
-
+        DataTable ldt = new DataTable();
         if (lstypeno == "机加")
         {
             ldt = Pgi.Auto.Control.AgvToDt(this.gv_d); 
@@ -1099,23 +1109,57 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
 
         //主表相关字段赋值到明细表
-        for (int i = 0; i < ldt.Rows.Count; i++)
+        string titlever = "A", formno_main = "", pn_main = "", domain_main = "", projectno_main = "", pgi_no_t_main = "";
+        for (int j = 0; j < ls.Count; j++)
         {
-            for (int j = 0; j < ls.Count; j++)
-            {
-                if (ls[j].Code.ToLower() == "formno") { ldt.Rows[i]["GYGSNo"] = ls[j].Value; }
-                if (ls[j].Code.ToLower() == "pn") { ldt.Rows[i]["pn"] = ls[j].Value; }
-                if (ls[j].Code.ToLower() == "domain") { ldt.Rows[i]["domain"] = ls[j].Value; }
-                if (ls[j].Code.ToLower() == "projectno") { ldt.Rows[i]["pgi_no"] = ls[j].Value; }
-                if (ls[j].Code.ToLower() == "pgi_no_t")
-                {
-                    if (ldt.Rows[i]["op"].ToString() != "OP700") { ldt.Rows[i]["pgi_no_t"] = ls[j].Value; }
-                    else { ldt.Rows[i]["pgi_no_t"] = ls[j].Value.Trim() + "-GP12"; }
-                }
-                if (ls[j].Code.ToLower() == "ver") { ldt.Rows[i]["ver"] = ls[j].Value; }
-            }
+            if (ls[j].Code.ToLower() == "formno") { formno_main = ls[j].Value; }
+            if (ls[j].Code.ToLower() == "pn") { pn_main = ls[j].Value; }
+            if (ls[j].Code.ToLower() == "domain") { domain_main = ls[j].Value; }
+            if (ls[j].Code.ToLower() == "projectno") { projectno_main = ls[j].Value; }
+            if (ls[j].Code.ToLower() == "pgi_no_t") { pgi_no_t_main = ls[j].Value.Trim(); }
+            if (ls[j].Code.ToLower() == "ver") { titlever = ls[j].Value; }
         }
 
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            ldt.Rows[i]["GYGSNo"] = formno_main;
+            ldt.Rows[i]["pn"] = pn_main;
+            ldt.Rows[i]["domain"] = domain_main;
+            ldt.Rows[i]["pgi_no"] = projectno_main;
+            if (ldt.Rows[i]["op"].ToString() != "OP700")
+            {
+                ldt.Rows[i]["pgi_no_t"] = pgi_no_t_main;
+            }
+            else {
+                ldt.Rows[i]["pgi_no_t"] = pgi_no_t_main + "-GP12";
+            }
+            ldt.Rows[i]["ver"] = titlever;
+        }
+        
+        //---------------------------------------------------------根据表体数据与上一版本数据比较，更新IsNeedCloseWork---------------------------------------------------------------------
+        string IsNeedCloseWork = "";
+        try
+        {
+            GYLX gylx = new GYLX();
+            IsNeedCloseWork = gylx.GYLX_IsNeedCloseWork(ldt, lstypeno, formno_main, projectno_main, pgi_no_t_main, domain_main, titlever, lscontaingp).Rows[0][0].ToString();
+        }
+        catch (Exception ex)
+        {
+            IsNeedCloseWork = "e";
+        }
+
+        if (IsNeedCloseWork == "e")//异常（存储过程异常或上一行代码捕捉到的异常）
+        {
+            flag = false;
+            return flag;
+        }
+
+        //填表到主表集合中，更新到数据库
+        Pgi.Auto.Common lcIsNeedCloseWork = new Pgi.Auto.Common();
+        lcIsNeedCloseWork.Code = "IsNeedCloseWork";
+        lcIsNeedCloseWork.Key = "";
+        lcIsNeedCloseWork.Value = IsNeedCloseWork;
+        ls.Add(lcIsNeedCloseWork);
 
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
@@ -1124,8 +1168,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         if (ldt.Rows.Count > 0)
         {
-            titlever = ldt.Rows[0]["ver"].ToString();
-
             Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
             string dtl_ids = "";
             for (int i = 0; i < ldt.Rows.Count; i++)
