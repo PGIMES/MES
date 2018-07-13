@@ -22,7 +22,7 @@
         });
 
         function setHeight() {            
-            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 250) + "px");
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
         }
 
         
@@ -80,9 +80,8 @@
                     <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="2260px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="1000"></SettingsPager>
-                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" ShowGroupedColumns="True" 
+                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True" ShowGroupedColumns="True" 
                             AutoFilterCondition="Contains" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600" />
-                        <SettingsSearchPanel Visible="True" />
                         <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
                         <Columns>
                             <dx:GridViewDataTextColumn Caption="序号" FieldName="" Width="40px"></dx:GridViewDataTextColumn>
