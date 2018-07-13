@@ -17,7 +17,7 @@ public class Wuliu_tr_hist
         //
     }
 
-    Wuliu_SF_SQLHelp SQLHelper = new Wuliu_SF_SQLHelp();
+    SQLHelper SQLHelper = new SQLHelper();
 
     /// <summary>
     /// 根据物料号和公司别 
@@ -25,15 +25,16 @@ public class Wuliu_tr_hist
     /// <param name="domain">公司别</param>
     /// <param name="part_no">物料号</param>
     /// <returns></returns>
-    public DataTable Get_tr_list_query(string domain, string part_no_start)//, string part_no_end
+    public DataTable Get_tr_list_query(string domain, string site, string part_no_start)
     {
         SqlParameter[] param = new SqlParameter[]
       {
             new SqlParameter("@flag","2"),
            new SqlParameter("@domain",domain),
-           new SqlParameter("@part_no_start",part_no_start)//,
-           //new SqlParameter("@part_no_end",part_no_end)
+           new SqlParameter("@site",site),
+           new SqlParameter("@part_no_start",part_no_start)
       };
+         
         return SQLHelper.GetDataTable("Report_tr_hist", param);
 
     }

@@ -18,6 +18,7 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
         if (this.gv_tr_list.IsCallback)//页面搜索条件使用
         {
             QueryASPxGridView();
+            ScriptManager.RegisterStartupScript(this, e.GetType(), "set", "setHeight();", true);
         }
     }
 
@@ -29,8 +30,7 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         Wuliu_tr_hist trlist_query = new Wuliu_tr_hist();
-        DataTable dt = trlist_query.Get_tr_list_query(ddl_comp.SelectedValue, txt_tr_part_start.Text.Trim());//, txt_tr_part_end.Text.Trim()
-        //Pgi.Auto.Control.SetGrid(this.gv_tr_list, dt, 100);
+        DataTable dt = trlist_query.Get_tr_list_query(ddl_comp.SelectedValue, txt_site.Text.Trim(), txt_tr_part_start.Text.Trim());
         gv_tr_list.DataSource = dt;
         gv_tr_list.DataBind();
     }

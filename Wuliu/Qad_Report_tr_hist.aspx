@@ -7,56 +7,93 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="Server">
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $("#mestitle").text("【库龄报表】");
+        $(document).ready(function () {
+            $("#mestitle").text("【库龄报表】");
+            setHeight();
+
+            $(window).resize(function () {
+                setHeight();
+            });
+
+            $("#div_p select[id*='ddl_comp']").on('change', function () {
+                $("#div_p input[id*='txt_site']").val($(this).val());
+            });
+
+        });
+
+        function setHeight() {            
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 250) + "px");
+        }
+
+        
+        function Get_Site() {
+            var url = "/select/select_site.aspx?domain=" + $("#div_p select[id*='ddl_comp']").val();
+
+            layer.open({
+                title: '地点',
+                type: 2,
+                area: ['600px', '600px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });
+        }
+
+        function setvalue_site(ls_site) {
+            $("#div_p input[id*='txt_site']").val(ls_site);
+        }
+       
+
     </script>
 
-    <div class="panel-body">
-        <div class="col-sm-12">
-            <table class="tblCondition">
-                <tr>
-                    <td>工厂：</td>
-                    <td>
-                        <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm ">
-                            <asp:ListItem Value="">ALL</asp:ListItem>
-                            <asp:ListItem Value="100">上海工厂</asp:ListItem>
-                            <asp:ListItem Value="200">昆山工厂</asp:ListItem>
-                        </asp:DropDownList>
-                    </td>
-                    <td>物料号：</td>
-                    <td>
-                        <asp:TextBox ID="txt_tr_part_start" class="form-control" runat="server" Width="150px"></asp:TextBox>
-                    </td>
-                    <%--<td>至</td>
-                    <td>
-                        <asp:TextBox ID="txt_tr_part_end" class="form-control" runat="server" Width="150px"></asp:TextBox>
-                    </td>--%>
-                    <td>
-                        <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" Width="100px" OnClick="Bt_select_Click" />
-                        <asp:Button ID="btnimport" runat="server" Text="导出Excel"  class="btn btn-primary" Width="100px" OnClick="btnimport_Click" />
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div class="col-sm-12" id="div_p" style="margin-bottom:5px">
+        <table class="tblCondition">
+            <tr>
+                <td>域：</td>
+                <td>
+                    <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm ">
+                        <asp:ListItem Value="100">100</asp:ListItem>
+                        <asp:ListItem Value="200">200</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td>&nbsp;&nbsp;地点：</td>
+                <td>
+                    <asp:TextBox ID="txt_site" class="form-control" runat="server" Width="100px" Text="100"></asp:TextBox>
+                </td>                
+                <td><i class="fa fa-search" onclick="Get_Site()"></i></td>
+                <td>&nbsp;&nbsp;物料编码：</td>
+                <td>
+                    <asp:TextBox ID="txt_tr_part_start" class="form-control" runat="server" Width="150px"></asp:TextBox>
+                </td>
+                <td>&nbsp;&nbsp;
+                    <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" Width="100px" OnClick="Bt_select_Click" />
+                    <asp:Button ID="btnimport" runat="server" Text="导出Excel"  class="btn btn-primary" Width="100px" OnClick="btnimport_Click" />
+                </td>
+            </tr>
+        </table>
     </div>
 
-    <div>
+    <div class="col-sm-12">
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="1750px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
+                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="2260px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="1000"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" ShowGroupedColumns="True" 
-                            AutoFilterCondition="Contains" />
+                            AutoFilterCondition="Contains" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600" />
                         <SettingsSearchPanel Visible="True" />
                         <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
                         <Columns>
                             <dx:GridViewDataTextColumn Caption="序号" FieldName="" Width="40px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="物料编号" FieldName="tr_part" Width="80px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料编码" FieldName="tr_part" Width="100px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料描述" FieldName="pt_desc1" Width="150px"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="工厂" FieldName="tr_domain" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_site" Width="60px"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="80px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_cst_tot" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="单位" FieldName="pt_um" Width="40px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="价格" FieldName="sct_cst_tot" Width="80px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10数量" FieldName="qty1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10金额" FieldName="amount1" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="10-20数量" FieldName="qty2" Width="70px"></dx:GridViewDataTextColumn>
@@ -75,6 +112,11 @@
                             <dx:GridViewDataTextColumn Caption="360以上金额" FieldName="amount8"  Width="90px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="库存" FieldName="ld_qty_oh" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="库存金额" FieldName="ld_qty_oh_amount" Width="80px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="零件状态" FieldName="pt_status" Width="60px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="产品线" FieldName="pt_prod_line" Width="50px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="计划员" FieldName="pt_buyer" Width="50px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="超180天数量" FieldName="qty9" Width="90px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="超180天金额" FieldName="amount9"  Width="90px"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
