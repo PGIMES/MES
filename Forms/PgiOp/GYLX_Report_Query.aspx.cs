@@ -112,7 +112,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
         string re_flag = "";
 
-        string re_sql = @"select b.projectno,b.pgi_no_t
+        string re_sql = @"select b.projectno,b.pgi_no_t,b.formno,b.createbyid,b.createbyname
                     from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
                         inner join PGI_GYLX_Main_Form b on a.InstanceID = b.formno
                     where b.projectno='" + pgi_no + "' and b.pgi_no_t='" + pgi_no_t + "'";
@@ -120,7 +120,8 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
         if (re_dt.Rows.Count > 0)
         {
-            re_flag= pgi_no + "(" + pgi_no_t + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:" + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!";
+            re_flag= pgi_no + "(" + pgi_no_t + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",申请人:" 
+                + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!";
         }
 
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";

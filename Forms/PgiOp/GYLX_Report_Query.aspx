@@ -143,8 +143,8 @@
         <table style=" border-collapse: collapse;">
             <tr>
                 <td style="width:70px;">物料号</td>
-                <td style="width:100px;">
-                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="90px"></asp:TextBox>
+                <td style="width:120px;">
+                    <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="110px"></asp:TextBox>
                 </td>
                 <td style="width:70px;">客户零件号</td>
                 <td style="width:130px;">
