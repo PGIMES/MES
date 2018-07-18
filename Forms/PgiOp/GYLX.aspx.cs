@@ -991,7 +991,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
 
 
-    private bool SaveData()
+    private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
 
@@ -1135,23 +1135,27 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
             ldt.Rows[i]["ver"] = titlever;
         }
-        
+
         //---------------------------------------------------------根据表体数据与上一版本数据比较，更新IsNeedCloseWork---------------------------------------------------------------------
         string IsNeedCloseWork = "";
-        try
-        {
-            GYLX gylx = new GYLX();
-            IsNeedCloseWork = gylx.GYLX_IsNeedCloseWork(ldt, lstypeno, formno_main, projectno_main, pgi_no_t_main, domain_main, titlever, lscontaingp).Rows[0][0].ToString();
-        }
-        catch (Exception ex)
-        {
-            IsNeedCloseWork = "e";
-        }
 
-        if (IsNeedCloseWork == "e")//异常（存储过程异常或上一行代码捕捉到的异常）
+        if (action == "submit")
         {
-            flag = false;
-            return flag;
+            try
+            {
+                GYLX gylx = new GYLX();
+                IsNeedCloseWork = gylx.GYLX_IsNeedCloseWork(ldt, lstypeno, formno_main, projectno_main, pgi_no_t_main, domain_main, titlever, lscontaingp).Rows[0][0].ToString();
+            }
+            catch (Exception ex)
+            {
+                IsNeedCloseWork = "e";
+            }
+
+            //if (IsNeedCloseWork == "e")//异常（存储过程异常或上一行代码捕捉到的异常）
+            //{
+            //    flag = false;
+            //    return flag;
+            //}
         }
 
         //填表到主表集合中，更新到数据库
@@ -1226,7 +1230,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     {
         //Pgi.Auto.Public.MsgBox(Page, "alert", "GP12调整中,请2018/7/11再申请，谢谢！");
         //保存数据
-        bool flag = SaveData();
+        bool flag = SaveData("save");
         //保存当前流程
         if (flag == true)
         {
@@ -1239,7 +1243,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     {
         //Pgi.Auto.Public.MsgBox(Page, "alert", "GP12调整中,请2018/7/11再签核，谢谢！");
         //保存数据
-        bool flag = SaveData();
+        bool flag = SaveData("submit");
         //发送
         if (flag == true)
         {
