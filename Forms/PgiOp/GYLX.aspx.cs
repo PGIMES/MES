@@ -191,6 +191,30 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
+            //add 2080723 停留在申请人步骤不加删除行，
+            if (ldt_detail.Rows.Count > 0)
+            {
+                string stepname = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                    + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                if (stepname != "申请人")
+                {
+                    string del_sql = @"select a.id, a.GYGSNo, 'del' typeno, a.pgi_no, a.pgi_no_t, a.op, a.op_desc, a.op_remark, a.gzzx, a.gzzx_desc, a.IsBg, a.JgNum, a.JgSec, a.WaitSec, a.ZjSecc, a.JtNum, a.TjOpSec, a.JSec, a.JHour
+                                                , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn  
+                                             ,(select count(1)+ROW_NUMBER() OVER (ORDER BY a.UpdateDate) from PGI_GYLX_Dtl_Form where GYGSNo='{3}') numid
+                                       from (select * from [dbo].[PGI_GYLX_Dtl] where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1)) a
+                                        left join (select * from PGI_GYLX_Dtl_Form where GYGSNo='{3}') b on a.pgi_no=b.pgi_no and a.pgi_no_t=b.pgi_no_t and a.op=b.op
+                                       where b.op is null
+                                        order by cast(right(a.op,len(a.op)-2) as int)";
+                    del_sql = string.Format(del_sql, ldt_detail.Rows[0]["pgi_no"], ldt_detail.Rows[0]["pgi_no_t"], ldt_detail.Rows[0]["ver"], this.m_sid);
+
+                    DataTable ldt_detail_del = DbHelperSQL.Query(del_sql).Tables[0];
+                    foreach (DataRow row in ldt_detail_del.Rows)  // 将查询的结果添加到dt中； 
+                    {
+                        ldt_detail.Rows.Add(row.ItemArray);
+                    }
+                }
+            }//end
+
             string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
             if (lstypeno == "机加")
             {
@@ -609,6 +633,118 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();", true);
     }
 
+    protected void gv_d_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != DevExpress.Web.GridViewRowType.Data)
+        {
+            return;
+        }
+
+        string ver = e.GetValue("ver").ToString(); 
+        if (ver == "A") { return; }
+
+        string GYGSNo = e.GetValue("GYGSNo").ToString();
+        if (GYGSNo == "") { return; }
+
+        //if (Request.QueryString["stepid"] == null)
+        //{
+        //    return;
+        //}
+
+        //if (Request.QueryString["stepid"].ToString().ToUpper() == SQ_StepID)
+        //{
+        //    return;
+        //}
+
+        //停留在申请人步骤不加色彩，
+        string stepname = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+           + GYGSNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+        if (stepname == "申请人") { return; }
+
+        //string IsNeedCloseWork = DbHelperSQL.Query("select IsNeedCloseWork from PGI_GYLX_Main_Form where formno='" + GYGSNo + "'").Tables[0].Rows[0][0].ToString();
+        //if (IsNeedCloseWork == "N" || IsNeedCloseWork == "") { return; }
+
+        string pgi_no = e.GetValue("pgi_no").ToString(); string pgi_no_t = e.GetValue("pgi_no_t").ToString(); string op = e.GetValue("op").ToString();
+
+        string sql = @"select * from PGI_GYLX_Dtl where pgi_no='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' and ver=nchar(ascii('" + ver + "')-1) and op='"+ op + "'";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        //新增行
+        bool is_add = false;
+        if (dt == null) { is_add = true; }
+        if (dt.Rows.Count <= 0) { is_add = true; }
+
+        if (is_add)
+        {
+            e.Row.Style.Add("background-color", "#FA8072");
+            for (int i = 0; i < this.gv_d.DataColumns.Count; i++)
+            {
+                if (this.gv_d.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#FA8072");
+                }
+            }
+            return;
+        }
+
+        //删除行#D3D3D3
+        if (e.GetValue("typeno").ToString() == "del")
+        {
+            e.Row.Style.Add("background-color", "#DCDCDC");
+            for (int i = 0; i < this.gv_d.DataColumns.Count; i++)
+            {
+                if (this.gv_d.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#DCDCDC");
+                }
+            }
+            return;
+        }
+
+        //修改数据 判断每一列
+        for (int i = 0; i < this.gv_d.DataColumns.Count; i++)
+        {
+            string colname = gv_d.DataColumns[i].FieldName.ToLower();
+            if (colname == "gzzx" || colname == "isbg")
+            {
+                if (e.GetValue(gv_d.DataColumns[i].FieldName).ToString() != dt.Rows[0][gv_d.DataColumns[i].FieldName].ToString())
+                {
+                    e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00");
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+            //#C1FFC1
+            if (colname == "op_desc" || colname == "op_remark" || colname == "gzzx_desc" )
+            {
+                if (e.GetValue(gv_d.DataColumns[i].FieldName).ToString() != dt.Rows[0][gv_d.DataColumns[i].FieldName].ToString())
+                {
+                    e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00");
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+
+            if (colname == "jgnum" || colname == "jgsec" || colname == "waitsec" || colname == "zjsecc" || colname == "jtnum"
+                || colname == "tjopsec" || colname == "jsec" || colname == "jhour" || colname == "col1" || colname == "col2"
+                || colname == "equipmentrate" || colname == "col3" || colname == "col4" || colname == "col5" || colname == "col6" || colname == "col7")
+            {
+                if (Convert.ToDouble(e.GetValue(gv_d.DataColumns[i].FieldName).ToString()) != Convert.ToDouble(dt.Rows[0][gv_d.DataColumns[i].FieldName].ToString()))
+                {
+                    if (colname == "jgnum") { e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00"); }
+                    else { e.Row.Cells[i + 3].Style.Add("background-color", "#EEEE00"); }
+
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+        }
+
+    }
+
+
     #endregion
 
 
@@ -888,6 +1024,106 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     {
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();", true);
     }
+    
+    protected void gv_d_yz_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != DevExpress.Web.GridViewRowType.Data)
+        {
+            return;
+        }
+        string ver = e.GetValue("ver").ToString();
+        if (ver == "A") { return; }
+
+        string GYGSNo = e.GetValue("GYGSNo").ToString();
+        if (GYGSNo == "") { return; }
+
+        //停留在申请人步骤不加色彩，
+        string stepname = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+            + GYGSNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+        if (stepname == "申请人") { return; }
+
+        //string IsNeedCloseWork = DbHelperSQL.Query("select IsNeedCloseWork from PGI_GYLX_Main_Form where formno='" + GYGSNo + "'").Tables[0].Rows[0][0].ToString();
+        //if (IsNeedCloseWork == "N" || IsNeedCloseWork == "") { return; }
+
+        string pgi_no = e.GetValue("pgi_no").ToString(); string pgi_no_t = e.GetValue("pgi_no_t").ToString(); string op = e.GetValue("op").ToString();
+
+        string sql = @"select * from PGI_GYLX_Dtl where pgi_no='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' and ver=nchar(ascii('" + ver + "')-1) and op='" + op + "'";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        //新增行
+        bool is_add = false;
+        if (dt == null) { is_add = true; }
+        if (dt.Rows.Count <= 0) { is_add = true; }
+
+        if (is_add)
+        {
+            e.Row.Style.Add("background-color", "#FA8072");
+            for (int i = 0; i < this.gv_d_yz.DataColumns.Count; i++)
+            {
+                if (this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#FA8072");
+                }
+            }
+            return;
+        }
+
+        //删除行#D3D3D3
+        if (e.GetValue("typeno").ToString() == "del")
+        {
+            e.Row.Style.Add("background-color", "#DCDCDC");
+            for (int i = 0; i < this.gv_d_yz.DataColumns.Count; i++)
+            {
+                if (this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#DCDCDC");
+                }
+            }
+            return;
+        }
+
+        //修改数据 判断每一列
+        for (int i = 0; i < this.gv_d_yz.DataColumns.Count; i++)
+        {
+            string colname = gv_d_yz.DataColumns[i].FieldName.ToLower();
+            if (colname == "gzzx" || colname == "isbg")
+            {
+                if (e.GetValue(gv_d_yz.DataColumns[i].FieldName).ToString() != dt.Rows[0][gv_d_yz.DataColumns[i].FieldName].ToString())
+                {
+                    e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00");
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+            //#C1FFC1
+            if (colname == "op_desc" || colname == "op_remark" || colname == "gzzx_desc")
+            {
+                if (e.GetValue(gv_d.DataColumns[i].FieldName).ToString() != dt.Rows[0][gv_d.DataColumns[i].FieldName].ToString())
+                {
+                    e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00");
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+
+            if (colname == "jgnum" || colname == "jgsec" || colname == "waitsec" || colname == "zjsecc" || colname == "jtnum"
+                || colname == "tjopsec" || colname == "jsec" || colname == "jhour" || colname == "col1" || colname == "col2"
+                || colname == "equipmentrate" || colname == "col3" || colname == "col4" || colname == "col5" || colname == "col6" || colname == "col7"
+                || colname == "weights" || colname == "acupoints" || colname == "capacity")
+            {
+                if (Convert.ToDouble(e.GetValue(gv_d_yz.DataColumns[i].FieldName).ToString()) != Convert.ToDouble(dt.Rows[0][gv_d_yz.DataColumns[i].FieldName].ToString()))
+                {
+                    if (colname == "jgnum" || colname == "weights" || colname == "acupoints" || colname == "capacity") { e.Row.Cells[i + 2].Style.Add("background-color", "#EEEE00"); }
+                    else { e.Row.Cells[i + 3].Style.Add("background-color", "#EEEE00"); }
+
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
+                }
+            }
+        }
+    }
 
     #endregion
 
@@ -1107,6 +1343,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz); 
         }
+
+        //add 20180723 移除页面显示的灰色删除行
+        for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+        {
+            if (ldt.Rows[i]["typeno"].ToString() == "del")
+            {
+                ldt.Rows[i].Delete();
+            }
+        }//end
 
         //主表相关字段赋值到明细表
         string titlever = "A", formno_main = "", pn_main = "", domain_main = "", projectno_main = "", pgi_no_t_main = "";
@@ -2059,5 +2304,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
 
     #endregion
+    
 
 }

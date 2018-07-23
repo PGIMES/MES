@@ -1156,7 +1156,8 @@
         <div id="div_product" class="row  row-container" style="display:none;">
             <div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-target="#GYGS">
-                        <strong>工艺工时信息<font color="blue">-机加</font></strong>
+                    <strong>工艺工时信息<font color="blue">-机加</font></strong>
+                    &nbsp;&nbsp;<font style="color:red; font-size:9px;">提示：与上一版本比较，删除行（灰色），新增行（红色），修改行（黄色）</font>
                 </div>
                 <div class="panel-body " id="GYGS">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
@@ -1168,7 +1169,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
 
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
-                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  OnDataBound="gv_d_DataBound" > 
+                                      OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  OnDataBound="gv_d_DataBound" OnHtmlRowCreated="gv_d_HtmlRowCreated"> 
                                      <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();}"  />  
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
@@ -1469,7 +1470,8 @@
         <div id="div_yz" class="row  row-container" style="display:none;">
             <div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-target="#GYGS_YZ">
-                        <strong>工艺工时信息<font color="blue">-压铸</font></strong>
+                    <strong>工艺工时信息<font color="blue">-压铸</font></strong>
+                    &nbsp;&nbsp;<font style="color:red; font-size:9px;">提示：与上一版本比较，删除行（灰色），新增行（红色），修改行（黄色）</font>
                 </div>
                 <div class="panel-body " id="GYGS_YZ">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
@@ -1481,7 +1483,7 @@
                                 <asp:Button ID="btn_del_yz" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btn_del_yz_Click" />
 
                                 <dx:aspxgridview ID="gv_d_yz" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_yz_CustomCallback" 
-                                      OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  OnDataBound="gv_d_yz_DataBound" >    
+                                      OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  OnDataBound="gv_d_yz_DataBound" OnHtmlRowCreated="gv_d_yz_HtmlRowCreated">    
                                     <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();}"  />                                                                 
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
