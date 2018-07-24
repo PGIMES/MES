@@ -154,7 +154,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
                         ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
 
-                        lssql = @"select null id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
+                        lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver, pn
                                 ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
@@ -192,7 +192,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
             //add 2080723 停留在申请人步骤不加删除行，
-            if (ldt_detail.Rows.Count > 0)
+            if (ldt_detail.Rows.Count > 0 && this.m_sid != "")
             {
                 string stepname = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
                     + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
