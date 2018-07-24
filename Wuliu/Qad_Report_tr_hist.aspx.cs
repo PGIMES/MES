@@ -13,6 +13,8 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            ddl_year.SelectedValue= DateTime.Now.AddMonths(-1).ToString("YYYY"); //获取上月年份
+            ddl_month.SelectedValue = DateTime.Now.AddMonths(-1).ToString("MM"); //获取上月月份
             QueryASPxGridView();
         }
         if (this.gv_tr_list.IsCallback)//页面搜索条件使用
@@ -30,7 +32,12 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         Wuliu_tr_hist trlist_query = new Wuliu_tr_hist();
-        DataTable dt = trlist_query.Get_tr_list_query(ddl_comp.SelectedValue, txt_site.Text.Trim(), txt_tr_part_start.Text.Trim());
+        string curmonth = "";
+        if (ddl_condition.SelectedValue == "his")
+        {
+            curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
+        }
+        DataTable dt = trlist_query.Get_tr_list_query(ddl_comp.SelectedValue, txt_site.Text.Trim(), txt_tr_part_start.Text.Trim(), curmonth);
         gv_tr_list.DataSource = dt;
         gv_tr_list.DataBind();
     }
@@ -61,4 +68,5 @@ public partial class Wuliu_Qad_Report_tr_hist : System.Web.UI.Page
         QueryASPxGridView();
         ASPxGridViewExporter1.WriteXlsToResponse("库龄"+System.DateTime.Now.ToShortDateString());//导出到Excel
     }
+    
 }

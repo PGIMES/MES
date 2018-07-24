@@ -15,6 +15,25 @@
                 setHeight();
             });
 
+            if ($("#div_p select[id*='ddl_condition']").val() == "his") {
+                $("#td_year").css("display", "block"); $("#td_month").css("display", "block");
+                $("#div_p select[id*='ddl_year']").css("display", "block");
+                $("#div_p select[id*='ddl_month']").css("display", "block");
+            }
+
+            $("#div_p select[id*='ddl_condition']").on('change', function () {
+                if ($(this).val() == "cur") {
+                    $("#td_year").css("display", "none"); $("#td_month").css("display", "none");
+                    $("#div_p select[id*='ddl_year']").css("display", "none");
+                    $("#div_p select[id*='ddl_month']").css("display", "none");
+                }
+                if ($(this).val() == "his") {
+                    $("#td_year").css("display", "block"); $("#td_month").css("display", "block");
+                    $("#div_p select[id*='ddl_year']").css("display","block");
+                    $("#div_p select[id*='ddl_month']").css("display", "block");
+                }
+            });
+
             $("#div_p select[id*='ddl_comp']").on('change', function () {
                 $("#div_p input[id*='txt_site']").val($(this).val());
             });
@@ -26,30 +45,54 @@
         }
 
         
-        function Get_Site() {
-            var url = "/select/select_site.aspx?domain=" + $("#div_p select[id*='ddl_comp']").val();
+        //function Get_Site() {
+        //    var url = "/select/select_site.aspx?domain=" + $("#div_p select[id*='ddl_comp']").val();
 
-            layer.open({
-                title: '地点',
-                type: 2,
-                area: ['600px', '600px'],
-                fixed: false, //不固定
-                maxmin: true,
-                content: url
-            });
-        }
+        //    layer.open({
+        //        title: '地点',
+        //        type: 2,
+        //        area: ['600px', '600px'],
+        //        fixed: false, //不固定
+        //        maxmin: true,
+        //        content: url
+        //    });
+        //}
 
-        function setvalue_site(ls_site) {
-            $("#div_p input[id*='txt_site']").val(ls_site);
-        }
+        //function setvalue_site(ls_site) {
+        //    $("#div_p input[id*='txt_site']").val(ls_site);
+        //}
        
 
     </script>
 
-    <div class="col-sm-12" id="div_p" style="margin-bottom:5px">
-        <table class="tblCondition">
+    <div class="col-sm-12" id="div_p" style="margin-bottom:5px"> 
+        <table style="line-height:40px;">
             <tr>
-                <td>域：</td>
+                <td></td>
+                <td>
+                    <asp:DropDownList ID="ddl_condition" runat="server" class="form-control input-s-sm ">
+                        <asp:ListItem Value="cur">当前数据</asp:ListItem>
+                        <asp:ListItem Value="his">历史数据</asp:ListItem>
+                    </asp:DropDownList>
+                 </td>
+                <td id="td_year" style="display:none;">&nbsp;&nbsp;年份：</td>
+                <td>
+                    <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-sm " style="display:none;">
+                        <asp:ListItem Value="2018">2018</asp:ListItem>
+                        <asp:ListItem Value="2019">2019</asp:ListItem>
+                        <asp:ListItem Value="2020">2020</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td id="td_month" style="display:none;">&nbsp;&nbsp;月份：</td>
+                <td>
+                    <asp:DropDownList ID="ddl_month" runat="server" class="form-control input-s-sm " style="display:none;">
+                        <asp:ListItem Value="01">1</asp:ListItem><asp:ListItem Value="02">2</asp:ListItem><asp:ListItem Value="03">3</asp:ListItem>   
+                        <asp:ListItem Value="04">4</asp:ListItem><asp:ListItem Value="05">5</asp:ListItem><asp:ListItem Value="06">6</asp:ListItem>
+                        <asp:ListItem Value="07">7</asp:ListItem><asp:ListItem Value="08">8</asp:ListItem><asp:ListItem Value="09">9</asp:ListItem>
+                        <asp:ListItem Value="10">10</asp:ListItem><asp:ListItem Value="11">12</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td>&nbsp;&nbsp;域：</td>
                 <td>
                     <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm ">
                         <asp:ListItem Value="100">100</asp:ListItem>
@@ -60,7 +103,7 @@
                 <td>
                     <asp:TextBox ID="txt_site" class="form-control" runat="server" Width="100px" Text="100"></asp:TextBox>
                 </td>                
-                <td><i class="fa fa-search" onclick="Get_Site()"></i></td>
+                <%--<td><i class="fa fa-search" onclick="Get_Site()"></i></td>--%>
                 <td>&nbsp;&nbsp;物料编码：</td>
                 <td>
                     <asp:TextBox ID="txt_tr_part_start" class="form-control" runat="server" Width="150px"></asp:TextBox>
@@ -78,6 +121,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="2260px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
+                        <ClientSideEvents EndCallback="function(s, e) { setHeight(); }"  />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="1000"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True" ShowGroupedColumns="True" 
