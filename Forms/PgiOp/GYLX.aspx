@@ -568,84 +568,89 @@
             if($("#CPXX input[id*='pgi_no_t']").val()==""){
                 msg+="【工艺流程】不可为空.<br />";
             }
-
             if(typeof($("#CPXX input[id*='containgp']:checked").val())=="undefined"){
                 msg+="【需要GP12】不可为空.<br />";
-            }else {
-                var containgp=$("#CPXX input[id*='containgp']:checked").val();
-                var typeno=$("#CPXX input[id*='typeno']:checked").val();
-                var pgi_no_t=$.trim($("#CPXX input[id*='pgi_no_t']").val());
+            }
+            if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
+                msg+="【工艺段】不可为空.<br />";
+            }
 
-                var op700_flag=false;
-                if(typeno=="机加"){
-                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
-                        if((eval('op' + index)).GetText()=="OP700"){
-                            op700_flag=true;
-                        }
-                        if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
-                            msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
-                        }
-                        if((eval('op' + index)).GetText()!="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t){
-                            msg+="工序号"+(eval('op' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
-                        }
-                    });
-                }
-                if(typeno=="压铸"){
-                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
-                        if((eval('op_yz' + index)).GetText()=="OP700"){
-                            op700_flag=true;
-                        }
-                        if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
-                            msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
-                        }
-                        if((eval('op_yz' + index)).GetText()!="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t){
-                            msg+="工序号"+(eval('op_yz' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
-                        }
-                    });
-                }   
-
-                if(containgp=="Y"){
-                    if(!op700_flag){msg+="需要GP12 必须填写工序号OP700.<br />";}
-                }
-                if(containgp=="N"){
-                    if(op700_flag){msg+="不需要GP12 请删除工序号OP700.<br />";}
+            if($('#div_product').css('display')=='inline-block'){
+                if($("[id$=gv_d] input[id*=op]").length==0){
+                    msg+="【工艺工时信息】不可为空.<br />";
+                }else {
+                    if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                        msg+="【工艺工时信息】格式必须正确.<br />";
+                    } 
                 }
             }
 
-            if(typeof($("#CPXX input[id*='typeno']:checked").val())=="undefined"){
-                msg+="【工艺段】不可为空.<br />";
-            }else {
-                if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
-                    if($("#CPXX input[id*='product_user']").val()==""){msg+="【工艺段】为机加，【产品工程师】不可为空.<br />";}
-
-                    if($("[id$=gv_d] input[id*=op]").length==0){
-                        msg+="【工艺工时信息】不可为空.<br />";
-                    }else {
-                        if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
-                            msg+="【工艺工时信息】格式必须正确.<br />";
-                        }
+            if($('#div_yz').css('display')=='inline-block'){
+                if($("[id$=gv_d_yz] input[id*=op]").length==0){
+                    msg+="【工艺工时信息】不可为空.<br />";
+                }else {
+                    if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                        msg+="【工艺工时信息】格式必须正确.<br />";
                     }
                 }
+            }
 
-                if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
-                    if($("#CPXX input[id*='yz_user']").val()==""){msg+="【工艺段】为压铸，【压铸工程师】不可为空.<br />";}
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+                return flag;
+            }
 
-                    if($("[id$=gv_d_yz] input[id*=op]").length==0){
-                        msg+="【工艺工时信息】不可为空.<br />";
-                    }else {
-                        if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
-                            msg+="【工艺工时信息】格式必须正确.<br />";
-                        }
+            var containgp=$("#CPXX input[id*='containgp']:checked").val();
+            var typeno=$("#CPXX input[id*='typeno']:checked").val();
+            var pgi_no_t=$.trim($("#CPXX input[id*='pgi_no_t']").val());
+
+            if(typeno=="机加"){
+                if($("#CPXX input[id*='product_user']").val()==""){msg+="【工艺段】为机加，【产品工程师】不可为空.<br />";}
+            }
+
+            if(typeno=="压铸"){
+                if($("#CPXX input[id*='yz_user']").val()==""){msg+="【工艺段】为压铸，【压铸工程师】不可为空.<br />";}
+            }
+
+            var op700_flag=false;
+            if(typeno=="机加"){
+                $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
+                    if((eval('op' + index)).GetText()=="OP700"){
+                        op700_flag=true;
                     }
-                }
-            }     
+                    if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
+                        msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    }
+                    if((eval('op' + index)).GetText()!="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t){
+                        msg+="工序号"+(eval('op' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                    }
+                });
+            }
+            if(typeno=="压铸"){
+                $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
+                    if((eval('op_yz' + index)).GetText()=="OP700"){
+                        op700_flag=true;
+                    }
+                    if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
+                        msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    }
+                    if((eval('op_yz' + index)).GetText()!="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t){
+                        msg+="工序号"+(eval('op_yz' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                    }
+                });
+            }   
+
+            if(containgp=="Y"){
+                if(!op700_flag){msg+="需要GP12 必须填写工序号OP700.<br />";}
+            }
+            if(containgp=="N"){
+                if(op700_flag){msg+="不需要GP12 请删除工序号OP700.<br />";}
+            }
 
             if(action=='submit'){
                 if($('#div_product').css('display')=='inline-block'){
 
-                    if($("[id$=gv_d] input[id*=op]").length==0){
-                        msg+="【工艺工时信息】不可为空.<br />";
-                    }
                     $("[id$=gv_d] input[id*=pgi_no_t]").each(function (){
                         if( $(this).val()==""){
                             msg+="【工艺流程】不可为空.<br />";
@@ -740,9 +745,6 @@
 
                 if($('#div_yz').css('display')=='inline-block'){
 
-                    if($("[id$=gv_d_yz] input[id*=op]").length==0){
-                        msg+="【工艺工时信息】不可为空.<br />";
-                    }                    
                     $("[id$=gv_d_yz] input[id*=pgi_no_t]").each(function (){
                         if( $(this).val()==""){
                             msg+="【工艺流程】不可为空.<br />";
