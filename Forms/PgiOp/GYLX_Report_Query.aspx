@@ -20,11 +20,17 @@
             $('#btn_edit').click(function () {
                 if (grid.GetSelectedRowCount() != 1) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues("formno;pgi_no;pgi_no_t", function GetVal(values) {
+                grid.GetSelectedFieldValues("formno;pgi_no;pgi_no_t;pt_status", function GetVal(values) {
                     //for (var i = 0; i < values.length; i++) { values[i][1]}
                     var formno = values[0][0];
                     var pgi_no = values[0][1];
                     var pgi_no_t = values[0][2];
+                    var pt_status = values[0][3];
+
+                    if (pt_status == "OBS" || pt_status == "DEAD") {
+                        layer.alert("物料号" + pgi_no + "已经失效，不能修改申请！");
+                        return;
+                    }
 
                     $.ajax({
                         type: "post",
