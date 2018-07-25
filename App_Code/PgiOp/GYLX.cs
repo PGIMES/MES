@@ -19,7 +19,7 @@ public class GYLX
     SQLHelper SQLHelper = new SQLHelper();
 
 
-    public DataTable GYLX_query(string pgi_no, string pn, string ver,string ddl_typeno, string cpl)
+    public DataTable GYLX_query(string pgi_no, string pn, string ver,string ddl_typeno, string cpl,string pt_status)
     {
         SqlParameter[] param = new SqlParameter[]
       {
@@ -27,7 +27,8 @@ public class GYLX
            new SqlParameter("@pn",pn),
            new SqlParameter("@ver",ver),
            new SqlParameter("@typeno",ddl_typeno),
-           new SqlParameter("@cpl",cpl)
+           new SqlParameter("@cpl",cpl),
+           new SqlParameter("@pt_status",pt_status)
       };
         return SQLHelper.GetDataTable("Report_GYLX", param);
 

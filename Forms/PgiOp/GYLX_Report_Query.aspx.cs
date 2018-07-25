@@ -48,7 +48,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         GYLX GYLX = new GYLX();
-        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue, ASPxDropDownEdit1.Text);
+        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue, ASPxDropDownEdit1.Text,ddl_pt_status.SelectedValue);
 
         if (ddl_typeno.SelectedValue=="机加")
         {
@@ -132,7 +132,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
     protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
     {
-        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
+        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
             var formno1 = gv.GetRowValues(e.RowVisibleIndex1, "formno"); 
@@ -149,7 +149,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
     protected void gv_yz_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
     {
-        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pgi_no_t"
+        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
             var formno1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "formno");

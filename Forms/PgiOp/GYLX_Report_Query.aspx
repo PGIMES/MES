@@ -165,7 +165,7 @@
                     </asp:DropDownList>
                 </td>                                
                 <td style="width:70px;">产品类</td>
-                <td style="width:150px;"> 
+                <td style="width:160px;"> 
                     <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
                         <DropDownWindowStyle BackColor="#EDEDED" />
                         <DropDownWindowTemplate>
@@ -196,6 +196,13 @@
                         <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
                     </dx:ASPxDropDownEdit>
                 </td>
+                <td style="width:70px;">物料状态</td>
+                <td style="width:90px;">
+                    <asp:DropDownList ID="ddl_pt_status" runat="server" class="form-control input-s-md " Width="80px">
+                        <asp:ListItem Value="Y">有效</asp:ListItem>
+                        <asp:ListItem Value="N">无效</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
                 <td>  
                     &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
@@ -212,7 +219,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2005px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2055px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -235,6 +242,9 @@
                                         >                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料<br />状态" FieldName="pt_status" Width="50px" VisibleIndex="2">
+                                <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pn" Width="110px" VisibleIndex="2">
                                 <Settings AllowCellMerge="True" />
@@ -303,7 +313,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2185px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2235px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_yz_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -326,6 +336,9 @@
                                         >                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料<br />状态" FieldName="pt_status" Width="50px" VisibleIndex="2">
+                                <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pn" Width="110px" VisibleIndex="2">
                                 <Settings AllowCellMerge="True" />
