@@ -225,7 +225,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2055px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2115px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -297,8 +297,7 @@
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="90px" VisibleIndex="26">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <%--
-                            <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="27"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
@@ -319,7 +318,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2235px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2295px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_yz_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -394,8 +393,7 @@
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="90px" VisibleIndex="26">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <%--
-                            <dx:GridViewDataTextColumn Caption="创建时间" FieldName="createdate" Width="130px" VisibleIndex="26"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="27"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
