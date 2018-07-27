@@ -307,7 +307,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server" GridViewID="gv">
                     </dx:ASPxGridViewExporter>
                 </td>
             </tr>
@@ -403,7 +403,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter2" runat="server">
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter2" runat="server" GridViewID="gv_yz">
                     </dx:ASPxGridViewExporter>
                 </td>
             </tr>
