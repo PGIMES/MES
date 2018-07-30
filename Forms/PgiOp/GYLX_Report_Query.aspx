@@ -18,40 +18,10 @@
             });
 
             $('#btn_edit').click(function () {
-                if (grid.GetSelectedRowCount() != 1) { layer.alert("请选择一条记录!"); return; }
+                if (selList.GetItemCount() != 1) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues("formno;pgi_no;pgi_no_t;pt_status", function GetVal(values) {
-                    //for (var i = 0; i < values.length; i++) { values[i][1]}
-                    var formno = values[0][0];
-                    var pgi_no = values[0][1];
-                    var pgi_no_t = values[0][2];
-                    var pt_status = values[0][3];
-
-                    if (pt_status == "OBS" || pt_status == "DEAD") {
-                        layer.alert("物料号" + pgi_no + "已经失效，不能修改申请！");
-                        return;
-                    }
-
-                    $.ajax({
-                        type: "post",
-                        url: "GYLX_Report_Query.aspx/CheckData",
-                        data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "'}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                        success: function (data) {
-                            var obj = eval(data.d);
-
-                            if (obj[0].re_flag != "") {
-                                layer.alert(obj[0].re_flag);
-                            } else {
-                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + formno + '&pgi_no=' + pgi_no + '&pgi_no_t=' + pgi_no_t);
-                            }
-                        }
-
-                    });
-
-                });
+                var item = selList.GetItem(0);
+                grid.GetRowValues(parseInt(item.value), 'formno;pgi_no;pgi_no_t;pt_status', OnGetRowValues);
 
             });
 
@@ -60,45 +30,8 @@
              $(window).resize(function () {
                  setHeight();
              });
-
-            mergecells();
-            
+                 
         });
-        var rows1 = ""; var rowsnext = "";
-        function mergecells() {
-
-            var gvid="";
-            if($("#MainContent_ddl_typeno").val()=="机加"){
-                gvid="MainContent_gv_DXMainTable";
-            }
-            if($("#MainContent_ddl_typeno").val()=="压铸"){
-                gvid="MainContent_gv_yz_DXMainTable";
-            }
-
-            $("#"+gvid+" tr[class*=DataRow]").each(function (index, item) {
-                var rowspans = $(item).find("td:eq(1)").attr("rowspan");
-
-
-                if (rowspans != undefined) {
-                    $(item).find("td:first").attr("rowspan", rowspans);
-                    for (var i = 1; i < rowspans; i++) {
-                        $($("#"+gvid+" tr[class*=DataRow]")[index + i]).find("td:first").hide();
-                    }
-                }
-                
-                //if (rowspans != undefined) {
-                //    rows1 = $(item).find("td").length;
-                //    rowsnext = $($("#MainContent_gv_DXMainTable tr[class*=DataRow]")[index + 1]).find("td").length;
-                //    $(item).find("td:first").attr("rowspan", rowspans);
-                //}
-                //else {
-                //    rowsnext = $(item).find("td").length;
-                //    if (rows1 != rowsnext && index>0) {
-                //        $(item).find("td:first").hide();
-                //    }
-                //}
-            })            
-        }
 
         function setHeight() {
 
@@ -107,6 +40,69 @@
             //alert($("#div_p").height());
 
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
+        }
+
+        function RefreshRow(vi) {
+            var chk = eval('chk' + vi);
+            selList.BeginUpdate();
+            try {
+                var count = selList.GetItemCount();
+                for (var i = count - 1; i >= 0; i--) {
+                    var item = selList.GetItem(i);
+                    if (item.text == vi.toString() && item.value == vi.toString()) {
+                        selList.RemoveItem(i);
+                    }
+                }
+
+                if (chk.GetValue()) {
+                    selList.AddItem(vi.toString(), vi.toString());
+                } 
+                
+            } finally {
+                selList.EndUpdate();
+            }
+        }
+
+        function OnGetRowValues(values) {
+            var formno = values[0];
+            var pgi_no = values[1];
+            var pgi_no_t = values[2];
+            var pt_status = values[3];
+
+            if (pt_status == "OBS" || pt_status == "DEAD") {
+                layer.alert("物料号" + pgi_no + "已经失效，不能修改申请！");
+                return;
+            }
+
+            $.ajax({
+                type: "post",
+                url: "GYLX_Report_Query.aspx/CheckData",
+                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj = eval(data.d);
+
+                    if (obj[0].re_flag != "") {
+                        layer.alert(obj[0].re_flag);
+                    } else {
+                        window.open('/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&formno=' + formno + '&pgi_no=' + pgi_no + '&pgi_no_t=' + pgi_no_t);
+                    }
+                }
+
+            });
+
+        }
+
+        function clear() {
+            selList.BeginUpdate();
+            try {
+                selList.ClearItems();
+
+            } finally {
+                selList.EndUpdate();
+            }
         }
          	
     </script>
@@ -142,36 +138,42 @@
         }
     </script>
 
+    <style>
+        .btn{
+            padding:6px 6px;
+        }
+    </style>
+
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
     
     <div class="col-md-12" id="div_p"  style="margin-bottom:5px">
         <table style=" border-collapse: collapse;">
             <tr>
-                <td style="width:70px;">物料号</td>
-                <td style="width:120px;">
+                <td style="width:60px;">物料号</td>
+                <td style="width:115px;">
                     <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="110px"></asp:TextBox>
                 </td>
                 <td style="width:70px;">客户零件号</td>
-                <td style="width:130px;">
+                <td style="width:125px;">
                     <asp:TextBox ID="txt_pn" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
                 </td>    
-                <td style="width:70px;">当前版本</td>
-                <td style="width:90px;"> 
+                <td style="width:40px;">版本</td>
+                <td style="width:85px;"> 
                     <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="">ALL</asp:ListItem>
                         <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td style="width:70px;">工艺段</td>
-                <td style="width:90px;"> 
+                <td style="width:60px;">工艺段</td>
+                <td style="width:85px;"> 
                     <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="机加">机加</asp:ListItem>
                         <asp:ListItem Value="压铸">压铸</asp:ListItem>
                     </asp:DropDownList>
                 </td>                                
-                <td style="width:70px;">产品类</td>
-                <td style="width:160px;"> 
+                <td style="width:60px;">产品类</td>
+                <td style="width:155px;"> 
                     <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
                         <DropDownWindowStyle BackColor="#EDEDED" />
                         <DropDownWindowTemplate>
@@ -203,14 +205,14 @@
                     </dx:ASPxDropDownEdit>
                 </td>
                 <td style="width:70px;">物料状态</td>
-                <td style="width:90px;">
+                <td style="width:85px;">
                     <asp:DropDownList ID="ddl_pt_status" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="Y">有效</asp:ListItem>
                         <asp:ListItem Value="N">无效</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td>  
-                    &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
+                <td id="td_btn">  
+                    <%--runat="server" onserverclick="btn_edit_Click"--%>
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
                     <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
                     <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
@@ -221,24 +223,26 @@
                    
     </div>
 
+    <div style="display:none;"><dx:ASPxListBox ID="ASPxListBox1" ClientInstanceName="selList" runat="server" Height="150px" Width="500px" ValueType="System.String"></dx:ASPxListBox></div>
     <div class="col-sm-12">
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2115px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
-                        <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
-            	                   // window.alert('Page changed!');
-                                    mergecells();setHeight();
-        	                    }"  />
+                        <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>
-                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"    >
-                                
-                            </dx:GridViewCommandColumn>                           
+                            <dx:GridViewDataTextColumn FieldName="" Width="40px" VisibleIndex="0" Name="chk">
+                                <Settings AllowCellMerge="True" />
+                                <DataItemTemplate>
+                                    <dx:ASPxCheckBox ID="ASPxCheckBox1" runat="server" ClientInstanceName='<%# "chk"+Container.VisibleIndex.ToString() %>'
+                                         ClientSideEvents-CheckedChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>'></dx:ASPxCheckBox>
+                                </DataItemTemplate>
+                            </dx:GridViewDataTextColumn>                         
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="80px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>
@@ -329,9 +333,13 @@
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>
-                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"    >
-                                
-                            </dx:GridViewCommandColumn>                           
+                            <dx:GridViewDataTextColumn FieldName="" Width="40px" VisibleIndex="0" Name="chk">
+                                <Settings AllowCellMerge="True" />
+                                <DataItemTemplate>
+                                    <dx:ASPxCheckBox ID="ASPxCheckBox1" runat="server" ClientInstanceName='<%# "chk"+Container.VisibleIndex.ToString() %>'
+                                         ClientSideEvents-CheckedChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>'></dx:ASPxCheckBox>
+                                </DataItemTemplate>
+                            </dx:GridViewDataTextColumn>                              
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="pgi_no" Width="80px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" /> 
                                 <DataItemTemplate>

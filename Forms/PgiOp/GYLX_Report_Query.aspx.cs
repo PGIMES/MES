@@ -22,7 +22,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
         if (this.gv.IsCallback == true || this.gv_yz.IsCallback == true)//页面搜索条件使用
         {
             QueryASPxGridView();
-            ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
+            ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
         }
     }
 
@@ -42,7 +42,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     protected void btn_search_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
     }
 
     public void QueryASPxGridView()
@@ -74,7 +74,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     protected void gv_PageIndexChanged(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "mergecells();setHeight();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
     }
 
     //protected void gv_tr_list_HtmlDataCellPrepared(object sender, DevExpress.Web.ASPxGridViewTableDataCellEventArgs e)
@@ -132,7 +132,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
     protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
     {
-        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
+        if (e.Column.Name == "chk" || e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
             var formno1 = gv.GetRowValues(e.RowVisibleIndex1, "formno"); 
@@ -149,7 +149,7 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
     protected void gv_yz_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
     {
-        if (e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
+        if (e.Column.Name == "chk" || e.Column.FieldName == "pgi_no" || e.Column.FieldName == "pt_status" || e.Column.FieldName == "pgi_no_t"
             || e.Column.FieldName == "ver" || e.Column.FieldName == "pn" || e.Column.FieldName == "domain" || e.Column.FieldName == "product_user" || e.Column.FieldName == "formno")
         {
             var formno1 = gv_yz.GetRowValues(e.RowVisibleIndex1, "formno");
