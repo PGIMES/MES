@@ -25,11 +25,11 @@ public class Wuliu_tr_hist
     /// <param name="domain">公司别</param>
     /// <param name="part_no">物料号</param>
     /// <returns></returns>
-    public DataTable Get_tr_list_query(string domain, string site, string part_no_start, string curmonth)
+    public DataTable Get_tr_list_query(string flag,string domain, string site, string part_no_start, string curmonth)
     {
         SqlParameter[] param = new SqlParameter[]
       {
-            new SqlParameter("@flag","2"),
+            new SqlParameter("@flag",flag),
            new SqlParameter("@domain",domain),
            new SqlParameter("@site",site),
            new SqlParameter("@part_no_start",part_no_start),

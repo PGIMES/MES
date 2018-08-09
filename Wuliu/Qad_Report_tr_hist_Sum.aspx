@@ -1,14 +1,14 @@
-﻿<%@ Page Title="【库龄明细报表】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Qad_Report_tr_hist.aspx.cs" Inherits="Wuliu_Qad_Report_tr_hist" %>
+﻿<%@ Page Title="【库龄汇总报表】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Qad_Report_tr_hist_Sum.aspx.cs" Inherits="Wuliu_Qad_Report_tr_hist_Sum" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mestitle").text("【库龄明细报表】");
+            $("#mestitle").text("【库龄汇总报表】");
             setHeight();
 
             $(window).resize(function () {
@@ -173,6 +173,5 @@
             </tr>
         </table>
     </div>
-
 </asp:Content>
 
