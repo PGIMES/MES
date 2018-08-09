@@ -854,6 +854,10 @@
                         }
                     });
                 }
+
+                if($.trim($("#MainContent_modifyremark").val())==""){
+                    msg+="【申请(变更)说明】不可为空.<br />";
+                }
             }
 
             if(msg!=""){  
@@ -1817,12 +1821,12 @@
         <div class="row row-container" >
             <div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-target="#bgjl"> 
-                    <%--<strong>变更说明</strong>--%>
+                    <%--<strong>申请(变更)说明</strong>--%>
                 </div>
                 <div class="panel-body " id="bgjl">
                     <table border="0"  width="100%"  >
                         <tr>
-                            <td width="100px" ><label>变更说明：</label></td>
+                            <td width="100px" ><font color="red">*</font><label>申请(变更)说明：</label></td>
                             <td>
                                 <%--<textarea id="modifyremark" cols="20" rows="2"  class="form-control" runat="server"></textarea>--%>
                                 <asp:TextBox ID="modifyremark" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>
