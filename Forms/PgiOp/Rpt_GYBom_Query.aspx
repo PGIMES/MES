@@ -50,6 +50,7 @@
                                     <asp:DropDownList ID="ddl_type" runat="server" class="form-control input-s-md " Width="80px">
                                         <asp:ListItem Value="GY">工艺</asp:ListItem>
                                         <asp:ListItem Value="BOM">BOM</asp:ListItem>
+                                         <asp:ListItem Value="part">物料</asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
                                     <td style="width:70px;">工厂:</td>
@@ -162,6 +163,55 @@
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="CreateByName" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                               <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="bom_currnode" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="approvetime" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
+                            
+                       
+                           
+                        </Columns>
+                        
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
+                    <br/>
+                               <dx:ASPxGridView ID="gv_Part" runat="server" 
+                        AutoGenerateColumns="False" Width="1100px" 
+                        oncustomcellmerge="gv_Part_CustomCellMerge" 
+                        onpageindexchanged="gv_Part_PageIndexChanged">
+                     
+                        <SettingsPager PageSize="100" ></SettingsPager>
+                        <Settings ShowFilterRow="True" ShowGroupPanel="false" 
+                            ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
+                            AutoFilterCondition="Contains" ShowFooter="True"  />
+                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" AllowCellMerge="True"  />
+                        <Columns>
+                                                      
+                             <dx:GridViewDataTextColumn Caption="申请单号" 
+                                 FieldName="formno" Width="120px" VisibleIndex="1" >
+                                <%--<Settings AllowCellMerge="True" />--%> 
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_FormNo0" runat="server" 
+                                        Text='<%# Eval("formno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=33C8FB5D-CB37-4667-AE06-69A87A23542E&domain="+ Eval("domain")+"&gc="+Eval("gc_version")+"&bz="+Eval("bz_version")+"&display=1&wlh="+Eval("wlh")+"&Instanceid="+ Eval("formno") %>'
+                                         Target="_blank"
+                                        >                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料编码" FieldName="part_no" Width="90px" VisibleIndex="2">  <Settings AllowCellMerge="True" /> </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="90px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工程版本" FieldName="gc_version" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="包装版本" FieldName="bz_version" Width="120px" VisibleIndex="5"> </dx:GridViewDataTextColumn>
+                             <dx:GridViewDataTextColumn Caption="物料状态" FieldName="status" Width="60px" VisibleIndex="6"> 
+                                 <CellStyle HorizontalAlign="Right">
+                                 </CellStyle>
+                             </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="80px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="createbyname" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                              <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="part_currnode" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="批准日期" FieldName="approvetime" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             
                        

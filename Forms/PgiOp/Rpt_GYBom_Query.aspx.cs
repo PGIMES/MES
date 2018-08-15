@@ -31,6 +31,7 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
         GYGS GYGS = new GYGS();
         gv_BOM.Visible = false;
         gv.Visible = false;
+        gv_Part.Visible = false;
         DataTable dt = DbHelperSQL.Query("exec  Rpt_GYBom_Query '" + txt_part.Text + "','"+ddl_comp .SelectedValue+"','"+ddl_type.SelectedValue+"'").Tables[0];
         if (ddl_type.SelectedValue == "BOM")
         {
@@ -38,11 +39,17 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
             gv_BOM.DataSource = dt;
             gv_BOM.DataBind();
         }
-        else
+        else if (ddl_type.SelectedValue == "GY")
         {
             gv.Visible = true;
             gv.DataSource = dt;
             gv.DataBind();
+        }
+        else
+        {
+            gv_Part.Visible = true;
+            gv_Part.DataSource = dt;
+            gv_Part.DataBind();
         }
 
        
@@ -85,5 +92,23 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
                 e.Handled = true;
             }
         }
+    }
+    protected void gv_Part_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
+    {
+        if (ddl_type.SelectedValue == "part")
+        {
+
+            var value1 = gv_Part.GetRowValues(e.RowVisibleIndex1, "formno");
+            var value2 = gv_Part.GetRowValues(e.RowVisibleIndex2, "formno");
+            if (value1.ToString() != value2.ToString())
+            {
+                e.Handled = true;
+            }
+        }
+    }
+    protected void gv_Part_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "", "setHeight() ;", true);
     }
 }
