@@ -881,12 +881,13 @@
                 var pgi_no=$("#CPXX input[id*='projectno']").val();
                 var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
                 var ver=$("#CPXX input[id*='ver']").val();
+                var domain=$("#CPXX input[id*='domain']").val();
 
                 $.ajax({
                     type: "post",
                     url: "GYLX.aspx/CheckData",
                     data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','pgi_no':'" + pgi_no 
-                        + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "'}",
+                        + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "','domain':'" + domain + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
