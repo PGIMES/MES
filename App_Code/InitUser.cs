@@ -81,6 +81,7 @@ public abstract class InitUser
             model.GroupName = dr["departmentname"].ToString();
             model.Domain= dr["domain"].ToString();
             model.DomainName= dr["gc"].ToString();
+            model.Telephone= dr["telephone"].ToString();
         }
         return model;
     }
