@@ -232,6 +232,8 @@
                                        财务部
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757" target="_blank">差旅申请单</a></li>
+                                        <li class="divider"></li> 
                                         <li><a href="/Fin/Fin_WG1_Report.aspx">完工报表一</a></li>
                                         <li><a href="/Fin/Fin_WG2_Report.aspx">完工报表二</a></li>
                                     </ul>
