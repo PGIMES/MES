@@ -442,6 +442,52 @@
             }
 
         }
+
+        function validate(action){
+            var flag=true;var msg="";
+            
+            <%=ValidScript%>
+
+            if($("#SQXX input[id*='ApplyId']").val()=="" || $("#SQXX input[id*='ApplyName']").val()==""){
+                msg+="【申请人】不可为空.<br />";
+            }
+            if($("#SQXX input[id*='ApplyDeptId']").val()=="" || $("#SQXX input[id*='ApplyDeptName']").val()==""){
+                msg+="【申请人部门】不可为空.<br />";
+            }
+
+            if($("#CJJH input[id*='PlanStartTime']").val()==""){
+                msg+="【预计出发日期】不可为空.<br />";
+            }
+            if($("#CJJH input[id*='PlanEndTime']").val()==""){
+                msg+="【预计结束日期】不可为空.<br />";
+            }
+            if($("#CJJH input[id*='PlanDays']").val()==""){
+                msg+="【预计出差天数】不可为空.<br />";
+            }
+            if($("#CJJH input[id*='PlanAttendant']").val()==""){
+                msg+="【随行人员】不可为空.<br />";
+            }
+            if($("#CJJH input[id*='TravelPlace']").val()==""){
+                msg+="【出差地点】不可为空.<br />";
+            }
+            if($("#CJJH input[id*='TravelReason']").val()==""){
+                msg+="【出差事由】不可为空.<br />";
+            }
+            
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+                return flag;
+            }
+
+            
+            if(!parent.checkSign()){
+                flag=false;return flag;
+            }
+
+            return flag;
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -470,13 +516,13 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <table style="width: 100%">
                             <tr>
-                                <td>表单编号</td>
+                                <td><font color="red">&nbsp;</font>表单编号</td>
                                 <td><asp:TextBox ID="FormNo" runat="server" class="lineread"  ReadOnly="true" placeholder="自动产生" Width="260px" /></td>
-                                <td>申请日期</td>
+                                <td><font color="red">&nbsp;</font>申请日期</td>
                                 <td><asp:TextBox ID="ApplyDate"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>
                             </tr>
                             <tr>
-                                <td>申请人</td>
+                                <td><font color="red">&nbsp;</font>申请人</td>
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="ApplyId" class="lineread" ReadOnly="True" Width="50px"></asp:TextBox>
@@ -484,18 +530,18 @@
                                         <asp:TextBox runat="server" ID="ApplyTelephone" class="lineread" Width="120px"/>
                                     </div>
                                 </td>
-                                <td>申请人职位</td>
+                                <td><font color="red">&nbsp;</font>申请人职位</td>
                                 <td><asp:TextBox runat="server" ID="ApplyJobTitleName" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox></td>
                             </tr>
                             <tr>
-                                <td>申请人公司</td>
+                                <td><font color="red">&nbsp;</font>申请人公司</td>
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="ApplyDomain" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
                                         <asp:TextBox runat="server" ID="ApplyDomainName"  class="lineread" ReadOnly="True" Width="196px"></asp:TextBox>
                                     </div>
                                 </td>
-                                <td>申请人部门</td>
+                                <td><font color="red">&nbsp;</font>申请人部门</td>
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="ApplyDeptId" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
@@ -518,41 +564,46 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <table style="width: 100%">
                             <tr>
-                                <td>预计出发日期</td>
+                                <td><font color="red">*</font>预计出发日期</td>
                                 <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})" /></td>
-                                <td>预计结束日期</td>
+                                <td><font color="red">*</font>预计结束日期</td>
                                 <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})" /></td>
                             </tr>
                             <tr>
-                                <td>预计出差天数</td>
+                                <td><font color="red">&nbsp;</font>预计出差天数</td>
                                 <td>
                                     <asp:TextBox ID="PlanDays" runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
-                                <td>随行人员</td>
+                                <td><font color="red">*</font>随行人员</td>
                                 <td><asp:TextBox runat="server" ID="PlanAttendant" class="lineread" Width="240px" ReadOnly="True"></asp:TextBox>
                                     <i id="PlanAttendant_i" class="fa fa-search" onclick="Get_PlanAttendant()"></i>
                                 </td>
                             </tr>
                             <tr>
-                                <td>出差类型</td>
+                                <td><font color="red">*</font>出差类型</td>
                                 <td>
                                     <asp:DropDownList ID="TravelType" runat="server" class="linewrite"  style="width:260px" Height="23px">
-                                        <asp:ListItem Text="" Value=""></asp:ListItem>
                                         <asp:ListItem Text="市内" Value="市内"></asp:ListItem>
                                         <asp:ListItem Text="国内" Value="国内"></asp:ListItem>
                                         <asp:ListItem Text="国外" Value="国外"></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td>出差地点</td>
+                                <td><font color="red">*</font>出差地点</td>
                                 <td>
                                     <asp:TextBox ID="TravelPlace" runat="server" class="linewrite" Width="260px" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>出差事由</td>
+                                <td><font color="red">*</font>出差事由</td>
                                 <td colspan="3">
                                     <asp:TextBox ID="TravelReason" runat="server" TextMode="MultiLine" class="form-control" Width="770px" Font-Size="12px" BackColor="#FDF7D9"></asp:TextBox>
                                 </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td><asp:TextBox ID="BudgetTotalCostByForm" runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>
+                                <td></td>
+                                <td><asp:TextBox ID="IsHrReserveByForm" runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>
                             </tr>
                         </table>
                     </div>
@@ -596,8 +647,8 @@
                                             ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Get_IsHrReserve("+Container.VisibleIndex+");}" %>'   
                                             ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>'>
                                             <Items>
-                                                <dx:ListEditItem Text="是"  Value="是"/>
-                                                <dx:ListEditItem Text="否"  Value="否"/>
+                                                <dx:ListEditItem Text="是"  Value="是" />
+                                                <dx:ListEditItem Text="否"  Value="否" />
                                             </Items>
                                         </dx:ASPxComboBox>
                                     </DataItemTemplate>

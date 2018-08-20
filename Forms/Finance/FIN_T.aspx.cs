@@ -355,6 +355,142 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
+
+        //定义总SQL LIST
+        List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
+
+        //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PGI_FIN_T_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+
+        string ApplyId = ((TextBox)this.FindControl("ctl00$MainContent$ApplyId")).Text.Trim();
+        string ApplyName = ((TextBox)this.FindControl("ctl00$MainContent$ApplyName")).Text.Trim();
+        string PlanStartTime = ((TextBox)this.FindControl("ctl00$MainContent$PlanStartTime")).Text.Trim();
+        string IsHrReserveByForm = ((TextBox)this.FindControl("ctl00$MainContent$IsHrReserveByForm")).Text.Trim();
+
+        if (this.m_sid == "")
+        {
+            //没有单号，自动生成
+            string lsid = "FIN_T_" + System.DateTime.Now.Year.ToString().Substring(3, 1) + System.DateTime.Now.Month.ToString("00");
+            this.m_sid = Pgi.Auto.Public.GetNo("FIN_T_", lsid, 0, 4);
+
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "formno")
+                {
+                    ls[i].Value = this.m_sid;
+                    ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = this.m_sid;
+                    break;
+                }
+
+            }
+        }
+
+        //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
+        DataTable ldt = new DataTable(); DataTable ldt_hr = new DataTable();
+        ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+        if (IsHrReserveByForm == "是")
+        {
+            ldt_hr = Pgi.Auto.Control.AgvToDt(this.gv_d_hr);
+        }
+
+        //主表相关字段值
+        string formno_main = "";
+        for (int j = 0; j < ls.Count; j++)
+        {
+            if (ls[j].Code.ToLower() == "formno") { formno_main = ls[j].Value; }
+        }
+
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            ldt.Rows[i]["FIN_T_No"] = formno_main;
+        }
+        if (ldt_hr != null)
+        {
+            for (int i = 0; i < ldt_hr.Rows.Count; i++)
+            {
+                ldt_hr.Rows[i]["FIN_T_No"] = formno_main;
+            }
+        }
+
+        //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
+        //获取的表头信息，自动生成SQL，增加到SUM中
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_FIN_T_Main_Form"));
+
+
+        if (ldt.Rows.Count > 0)//出差预算明细
+        {
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            string dtl_ids = "";
+            for (int i = 0; i < ldt.Rows.Count; i++)
+            {
+                if (ldt.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
+            }
+            if (dtl_ids != "")
+            {
+                dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
+                ls_del.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+            }
+            else
+            {
+                ls_del.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+            }
+            ls_sum.Add(ls_del);
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_FIN_T_Dtl_Form", "id", "Column1,numid,flag");
+            for (int i = 0; i < ls1.Count; i++)
+            {
+                ls_sum.Add(ls1[i]);
+            }
+        }
+
+        if (ldt_hr.Rows.Count > 0)//人事预定明细
+        {
+            Pgi.Auto.Common ls_del_hr = new Pgi.Auto.Common();
+            string dtl_ids_hr = "";
+            for (int i = 0; i < ldt_hr.Rows.Count; i++)
+            {
+                if (ldt_hr.Rows[i]["id"].ToString() != "") { dtl_ids_hr = dtl_ids_hr + ldt_hr.Rows[i]["id"].ToString() + ","; }
+            }
+            if (dtl_ids_hr != "")
+            {
+                dtl_ids_hr = dtl_ids_hr.Substring(0, dtl_ids_hr.Length - 1);
+                ls_del_hr.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids_hr + ")";    //删除数据库中的数据不在网页上暂时出来的        
+            }
+            else
+            {
+                ls_del_hr.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+            }
+            ls_sum.Add(ls_del_hr);
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> ls1_hr = Pgi.Auto.Control.GetList(ldt, "PGI_FIN_T_Dtl_HR_Form", "id", "Column1,numid,flag");
+            for (int i = 0; i < ls1_hr.Count; i++)
+            {
+                ls_sum.Add(ls1_hr[i]);
+            }
+        }
+
+        //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
+
+        //批量提交
+        int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+        if (ln > 0)
+        {
+            flag = true;
+
+            string title = "差旅申请-" + ApplyName + "(" + ApplyId + ")-预计出发时间" + PlanStartTime + "--" + this.m_sid;
+
+            script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
+                 "$('#customformtitle',parent.document).val('" + title + "');";
+
+        }
+        else
+        {
+            flag = false;
+        }
+
         return flag;
     }
 
