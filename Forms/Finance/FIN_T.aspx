@@ -352,7 +352,7 @@
         }
 
         #SQXX label{
-            font-weight:400;
+            font-weight:400;padding-bottom:3px;
         }
         #CJJH label{
             font-weight:400;
@@ -366,13 +366,48 @@
         .dxeTextBox_read{
             border:none !important ;
         }
-
+        #div_dtl td{
+             padding-bottom:3px;
+        }
+        #div_dtl_hr td{
+             padding-bottom:3px;
+        }
         .dxeButtonEdit td{
              padding-bottom:0px;
         }
     </style>
 
     <script type="text/javascript">
+
+        function Get_PlanAttendant(){
+           var url = "/select/select_PlanAttendant.aspx?ApplyId="+$("#SQXX input[id*='ApplyId']").val();
+
+            layer.open({
+                title:'随行人员选择',
+                type: 2,
+                area: ['450px', '550px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });         
+        }
+
+        function setvalue_PlanAttendant(values) {//新选择的为空，就为空；否则就是原来选择的，加上新选择的
+            var oldstr=$("input[id*='PlanAttendant']").val();
+            if(oldstr!=""){oldstr=oldstr+',';}
+
+            var newstr="";
+            for (var i = 0; i < values.length; i++) { 
+                newstr=newstr+values[i][0]+'('+values[i][1]+')';
+                if(i!=values.length-1){newstr=newstr+',';}
+            }
+            
+            var str="";
+            if(newstr!=""){str=oldstr+newstr;}
+
+            $("input[id*='PlanAttendant']").val(str);
+        }
+
         function Get_IsHrReserve(vi){
             var IsHrReserve = eval('IsHrReserve' + vi);
             var BudgetTotalCost = eval('BudgetTotalCost' + vi);
@@ -494,7 +529,9 @@
                                     <asp:TextBox ID="PlanDays" runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
                                 <td>随行人员</td>
-                                <td><asp:TextBox runat="server" ID="PlanAttendant" class="linewrite" Width="260px"></asp:TextBox></td>
+                                <td><asp:TextBox runat="server" ID="PlanAttendant" class="lineread" Width="240px" ReadOnly="True"></asp:TextBox>
+                                    <i id="PlanAttendant_i" class="fa fa-search" onclick="Get_PlanAttendant()"></i>
+                                </td>
                             </tr>
                             <tr>
                                 <td>出差类型</td>
@@ -589,7 +626,7 @@
                                 </dx:GridViewDataTextColumn>
                             </Columns>                      
                             <TotalSummary>
-                                <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetTotalCost" SummaryType="Sum" />
+                                <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetTotalCost" SummaryType="Sum" ShowInColumn="BudgetTotalCost" ShowInGroupFooterColumn="BudgetTotalCost" />
                             </TotalSummary>                          
                             <Styles>
                                 <Header BackColor="#E4EFFA"  ></Header>        
