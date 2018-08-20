@@ -303,7 +303,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
             if (ldt.Columns[j].ColumnName == "numid")
             {
-                ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 0 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
+                ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 1 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
             }
             else
             {

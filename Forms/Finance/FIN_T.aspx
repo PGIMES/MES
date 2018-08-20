@@ -366,6 +366,10 @@
         .dxeTextBox_read{
             border:none !important ;
         }
+
+        .dxeButtonEdit td{
+             padding-bottom:0px;
+        }
     </style>
 
     <script type="text/javascript">
@@ -395,7 +399,7 @@
                 }
             });
             if (bf) {
-                $("#div_dtl_hr").css("display","inline-block");
+                $("#div_dtl_hr").css("display","block");
                 gv_d_hr.PerformCallback("clear");
             }else {
                 $("#div_dtl_hr").css("display","none");
@@ -535,7 +539,7 @@
                             <Settings ShowFooter="True" />
                             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                             <Columns>
-                                <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="40px" VisibleIndex="0"></dx:GridViewDataTextColumn>
+                                <dx:GridViewDataTextColumn Caption="#" FieldName="numid" Width="40px" VisibleIndex="0"></dx:GridViewDataTextColumn>
                                 <dx:GridViewDataTextColumn Caption="费用类型" FieldName="CostCodeDesc" Width="220px" VisibleIndex="1"></dx:GridViewDataTextColumn>
                                 <dx:GridViewDataTextColumn Caption="预算金额合计" FieldName="BudgetTotalCost" Width="100px" VisibleIndex="2">
                                     <Settings AllowCellMerge="False"/>
@@ -583,7 +587,10 @@
                                         <CellStyle CssClass="hidden"></CellStyle>
                                         <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                 </dx:GridViewDataTextColumn>
-                            </Columns>                                                
+                            </Columns>                      
+                            <TotalSummary>
+                                <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetTotalCost" SummaryType="Sum" />
+                            </TotalSummary>                          
                             <Styles>
                                 <Header BackColor="#E4EFFA"  ></Header>        
                                 <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
@@ -657,26 +664,24 @@
                                         <dx:GridViewDataTextColumn Caption="出发日期" FieldName="StartDate" Width="100px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="StartDate" Width="100px" runat="server" Value='<%# Eval("StartDate")%>' 
+                                                <%--<dx:ASPxTextBox ID="StartDate" Width="100px" runat="server" Value='<%# Eval("StartDate")%>' 
                                                     ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true"
                                                     onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})">
-                                                </dx:ASPxTextBox>
+                                                </dx:ASPxTextBox>--%>
+                                                <dx:ASPxDateEdit ID="StartDate" runat="server" DisplayFormatString="yyyy/MM/dd" EditFormatString="yyyy/MM/dd"></dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="100px" VisibleIndex="5">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="StartTime" Width="100px" runat="server" Value='<%# Eval("StartTime")%>' 
-                                                    ClientInstanceName='<%# "StartTime"+Container.VisibleIndex.ToString() %>'  Border-BorderWidth="0"   ReadOnly="true"
-                                                    onclick="laydate({type: 'time',format: 'hh:mm'})">
-                                                </dx:ASPxTextBox>
+                                                <dx:ASPxTimeEdit ID="ASPxTimeEdit1" runat="server" DisplayFormatString="HH:mm" EditFormatString="HH:mm"></dx:ASPxTimeEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="100px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="BudgetCost" Width="120px" runat="server" Value='<%# Eval("BudgetCost")%>' 
-                                                    ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'>
+                                                    ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
@@ -711,7 +716,10 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ActualCost" Width="100px" runat="server" Value='<%# Eval("ActualCost")%>' 
-                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>'>
+                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
+                                                    </ValidationSettings>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -731,7 +739,11 @@
                                             <CellStyle CssClass="hidden"></CellStyle>
                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
-                                    </Columns>                                                
+                                    </Columns>       
+                                    <TotalSummary>
+                                        <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetCost" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="<b>实际合计:{0:N2}</b>" FieldName="ActualCost" SummaryType="Sum" />
+                                    </TotalSummary>                                            
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        
                                         <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
