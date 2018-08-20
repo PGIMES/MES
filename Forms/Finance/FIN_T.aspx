@@ -55,9 +55,38 @@
                 $("#btntaskEnd").hide();
             }
 
+            Ini_Set_IsHrReserve();//初始化部分行金额控件是否只读
         });
 
-        
+        function Ini_Set_IsHrReserve(){
+            var ini_bf=false;
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
+                    var IsHrReserve = eval('IsHrReserve' + index);                  
+                    if (IsHrReserve.GetValue()=="是") {
+                        //BudgetTotalCost.SetEnabled(false);
+
+                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).addClass("dxeTextBox_read");
+                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").attr("readOnly","readOnly").addClass("dxeTextBox_read");          
+                        
+                        ini_bf=true;      
+                    }else {
+                        //BudgetTotalCost.SetEnabled(true);
+
+                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).removeClass("dxeTextBox_read");
+                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").removeAttr("readOnly").removeClass("dxeTextBox_read");
+                    }                    
+                }
+            });
+            if (ini_bf) {
+                $("#div_dtl_hr").css("display","block");
+                gv_d_hr.PerformCallback("clear");
+            }else {
+                $("#div_dtl_hr").css("display","none");
+                gv_d_hr.PerformCallback("clear");
+            }
+
+        }
 
         //提出自定流程 JS 
         function setComment(val) {
@@ -647,7 +676,7 @@
                                             ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Get_IsHrReserve("+Container.VisibleIndex+");}" %>'   
                                             ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>'>
                                             <Items>
-                                                <dx:ListEditItem Text="是"  Value="是" />
+                                                <dx:ListEditItem Text="是"  Value="是" Selected="true" />
                                                 <dx:ListEditItem Text="否"  Value="否" />
                                             </Items>
                                         </dx:ASPxComboBox>
