@@ -54,14 +54,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         Session["LogUser"] = LogUserModel;
         Session["LogUser_CurPage"] = LogUserModel;
-
-        ////加载表头控件
-        //List<TableRow> ls = ShowControl("PGI_GYLX_Main_Form", "HEAD_NEW", 4, "", "", "lineread", "linewrite");//Pgi.Auto.Control.form-control input-s-sm
-        //for (int i = 0; i < ls.Count; i++)
-        //{
-        //    this.tblCPXX.Rows.Add(ls[i]);
-        //}
-
+        
 
         if (!IsPostBack)
         {
@@ -85,12 +78,12 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 lssql = @"select null id, null FIN_T_No, a.Cost_Code CostCode, null BudgetTotalCost, null IsHrReserve, null BudgetRemark
 	                        ,ROW_NUMBER() OVER (ORDER BY a.sort) numid   
 	                        ,a.cost_category+'/'+a.cost_item+'['+a.cost_code+']' as CostCodeDesc
-                        from [dbo].[PGI_BASE_FINANCE_CostCategory] a 
+                        from [dbo].[Fin_Base_CostCate] a 
                         where cost_type='T' order by sort";
             }
             else
             {
-                DataTable ldt = DbHelperSQL.Query("select * from [PGI_FIN_T_Main_Form] where formno='" + this.m_sid + "'").Tables[0];
+                DataTable ldt = DbHelperSQL.Query("select * from [Fin_T_Main_Form] where formno='" + this.m_sid + "'").Tables[0];
                 if (ldt.Rows.Count > 0)
                 {
                     //表头基本信息
@@ -98,7 +91,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                     //txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
                     //txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
                     //txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
-                    Pgi.Auto.Control.SetControlValue("PGI_FIN_T_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    Pgi.Auto.Control.SetControlValue("Fin_T_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     IsHrReserve = ldt.Rows[0]["IsHrReserve"].ToString();
                     //txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
                     //modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
@@ -111,8 +104,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 lssql = @"select a.id, a.FIN_T_No, a.CostCode, a.BudgetTotalCost, a.IsHrReserve, a.BudgetRemark
                             ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
                             ,b.cost_category+'/'+b.cost_item+'['+b.cost_code+']' as CostCodeDesc
-                        from[dbo].[PGI_FIN_T_Dtl_Form] a 
-                            left join [dbo].[PGI_BASE_FINANCE_CostCategory] b
+                        from[dbo].[Fin_T_Dtl_Form] a 
+                            left join [dbo].[Fin_Base_CostCate] b
                         where FIN_T_No='" + this.m_sid + "' order by a.id"; 
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
@@ -124,7 +117,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 lssql_hr = @"select a.id, a.FIN_T_No, a.TravelerId, a.TravelerName, a.StartFromPlace, a.EndToPlace
                                 , a.StartDate, a.StartTime, a.BudgetCost, a.Vehicle, a.Remark, a.ScheduledFlight, a.ActualCost 
                                 ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
-                            from [dbo].[PGI_FIN_T_Dtl_HR_Form]";
+                            from [dbo].[Fin_T_Dtl_HR_Form]";
                 ldt_detail_hr = DbHelperSQL.Query(lssql_hr).Tables[0];
                 this.gv_d_hr.DataSource = ldt_detail_hr;
                 this.gv_d_hr.DataBind();
@@ -355,12 +348,12 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
-
+        return false;
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PGI_FIN_T_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("Fin_T_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
         string ApplyId = ((TextBox)this.FindControl("ctl00$MainContent$ApplyId")).Text.Trim();
         string ApplyName = ((TextBox)this.FindControl("ctl00$MainContent$ApplyName")).Text.Trim();
@@ -414,7 +407,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
-        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_FIN_T_Main_Form"));
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "Fin_T_Main_Form"));
 
 
         if (ldt.Rows.Count > 0)//出差预算明细
@@ -428,16 +421,16 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             if (dtl_ids != "")
             {
                 dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
-                ls_del.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+                ls_del.Sql = "delete from Fin_T_Dtl_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
             }
             else
             {
-                ls_del.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+                ls_del.Sql = "delete from Fin_T_Dtl_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_FIN_T_Dtl_Form", "id", "Column1,numid,flag");
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_Form", "id", "Column1,numid,flag");
             for (int i = 0; i < ls1.Count; i++)
             {
                 ls_sum.Add(ls1[i]);
@@ -455,16 +448,16 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             if (dtl_ids_hr != "")
             {
                 dtl_ids_hr = dtl_ids_hr.Substring(0, dtl_ids_hr.Length - 1);
-                ls_del_hr.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids_hr + ")";    //删除数据库中的数据不在网页上暂时出来的        
+                ls_del_hr.Sql = "delete from Fin_T_Dtl_HR_Form where FIN_T_No='" + m_sid + "' and id not in(" + dtl_ids_hr + ")";    //删除数据库中的数据不在网页上暂时出来的        
             }
             else
             {
-                ls_del_hr.Sql = "delete from PGI_FIN_T_Dtl_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+                ls_del_hr.Sql = "delete from Fin_T_Dtl_HR_Form where FIN_T_No='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del_hr);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1_hr = Pgi.Auto.Control.GetList(ldt, "PGI_FIN_T_Dtl_HR_Form", "id", "Column1,numid,flag");
+            List<Pgi.Auto.Common> ls1_hr = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_HR_Form", "id", "Column1,numid,flag");
             for (int i = 0; i < ls1_hr.Count; i++)
             {
                 ls_sum.Add(ls1_hr[i]);

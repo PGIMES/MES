@@ -31,9 +31,12 @@ public partial class select_PlanAttendant : System.Web.UI.Page
    
     private void GetData()
     {
-      
+        string sql = @"select workcode,lastname,dept_name,ROW_NUMBER() OVER (ORDER BY workcode) numid  
+                    from [dbo].[HRM_EMP_MES] 
+                    where workcode + lastname+ dept_name like '%{0}%' and workcode<>'{1}'";
+        sql = string.Format(sql, this.txtKeywords.Text, Request["ApplyId"]);
         DataTable dt = new DataTable();
-        dt = DbHelperSQL.Query("select workcode,lastname,dept_name,ROW_NUMBER() OVER (ORDER BY workcode) numid  from [dbo].[HRM_EMP_MES] where workcode + lastname+ dept_name like '%" + this.txtKeywords.Text+"%' and workcode<>'"+ Request["ApplyId"] + "'").Tables[0];
+        dt = DbHelperSQL.Query(sql).Tables[0];
         if (dt == null || dt.Rows.Count <= 0)
         {
             lb_msg.Text = "No Data Found!";
@@ -41,21 +44,30 @@ public partial class select_PlanAttendant : System.Web.UI.Page
         gv.DataSource = dt;
         gv.DataBind();
 
+        SelectionState();
     }
 
-    
-    //protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //    string ctrl0 = Request["ctrl0"];
-    //    string ctrl1 = Request["ctrl1"];
-    //    string ctrl2 = Request["ctrl2"];
-    //    string keyValue0 = GridView1.SelectedRow.Cells[0].Text.Trim();
-    //    string keyValue1=  GridView1.SelectedRow.Cells[1].Text.Trim();
-    //    string keyValue2 = GridView1.SelectedRow.Cells[2].Text.Trim();
+    //设置选中
+    private void SelectionState()
+    {
+        string PlanAttendant = Request["PA"];
+        string[] sArray = PlanAttendant.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
 
-    //    string temp = @"<script>parent.setvalue_PlanAttendant('" + ctrl0 + "','" + keyValue0 + "','" + ctrl1 + "','" + keyValue1 + "','" + ctrl2 + "','" 
-    //        + keyValue2 + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        int count = 0;
+        for (int i = 0; i < gv.VisibleRowCount; i++)
+        {
+            DataRowView row = gv.GetRow(i) as DataRowView;
+            for (int j = 0; j < sArray.Length; j++)
+            {
+                if ((row["workcode"].ToString()+"("+ row["lastname"].ToString() + ")")== sArray[j])
+                {
+                    gv.Selection.SetSelection(i, true);
+                    count++;
+                }               
+            }
 
-    //    Response.Write(temp.Trim());
-    //}
+            if (count == sArray.Length) { break; }//已经全部设置好
+        }
+    }
+   
 }

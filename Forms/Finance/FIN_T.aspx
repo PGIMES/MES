@@ -11,12 +11,6 @@
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
 
     <script type="text/javascript">
-        function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = decodeURI(window.location.search).substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
-        }
-        var state = getQueryString("state");
 
         $(document).ready(function () {
             $("#mestitle").html("【差旅申请单】");
@@ -56,6 +50,11 @@
             }
 
             Ini_Set_IsHrReserve();//初始化部分行金额控件是否只读
+
+            $("#CJJH select[id*='TravelType']").change(function () {  
+                Auto_Calculate_T007();
+            });
+
         });
 
         function Ini_Set_IsHrReserve(){
@@ -77,6 +76,10 @@
                         $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").removeAttr("readOnly").removeClass("dxeTextBox_read");
                     }                    
                 }
+                if($(item).children("td:last-child").text()=="T007"){
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    BudgetTotalCost.SetText(0)
+                }
             });
             if (ini_bf) {
                 $("#div_dtl_hr").css("display","block");
@@ -85,6 +88,50 @@
                 $("#div_dtl_hr").css("display","none");
                 gv_d_hr.PerformCallback("clear");
             }
+
+        }
+
+        function Auto_Calculate(){//计算预计出差天数
+            var PlanStartTime=$("#CJJH input[id*='PlanStartTime']").val();
+            var PlanEndTime=$("#CJJH input[id*='PlanEndTime']").val();
+            var PlanDays=0;
+            if(PlanStartTime!="" && PlanEndTime!=""){
+                var s1 = new Date(PlanStartTime);
+                var s2 = new Date(PlanEndTime);
+
+                var days = s2.getTime() - s1.getTime();
+                PlanDays = parseInt(days / (1000 * 60 * 60 * 24));
+            } 
+            if(PlanDays<0){
+                layer.alert("【预计结束时间】必须大于等于【预计出发时间】.");
+            }
+            $("#CJJH input[id*='PlanDays']").val(PlanDays);
+            Auto_Calculate_T007();
+        }       
+        
+        function Auto_Calculate_T007(){
+            var BTC_T007=0;
+
+            var PlanDays=parseInt($("#CJJH input[id*='PlanDays']").val());
+            var PA_len=0;
+            if($("#CJJH input[id*='PlanAttendant']").val()!=""){
+                var PA_Arry=($("#CJJH input[id*='PlanAttendant']").val()).split(',');
+                PA_len=PA_Arry.length;
+            }
+
+            var TravelType=$("#CJJH select[id*='TravelType']").val();
+            var cost=0;
+            if(TravelType=="国内"){cost=100;}
+            if(TravelType=="国外"){cost=500;}
+
+            BTC_T007=PlanDays*(PA_len+1)*cost;//随行人员+申请人  *  天数 * 每天费用
+
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                if($(item).children("td:last-child").text()=="T007"){
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    BudgetTotalCost.SetText(BTC_T007)
+                }
+            });
 
         }
 
@@ -409,7 +456,7 @@
     <script type="text/javascript">
 
         function Get_PlanAttendant(){
-           var url = "/select/select_PlanAttendant.aspx?ApplyId="+$("#SQXX input[id*='ApplyId']").val();
+           var url = "/select/select_PlanAttendant.aspx?ApplyId="+$("#SQXX input[id*='ApplyId']").val()+"&PA="+$("#CJJH input[id*='PlanAttendant']").val();
 
             layer.open({
                 title:'随行人员选择',
@@ -421,8 +468,9 @@
             });         
         }
 
-        function setvalue_PlanAttendant(values) {//新选择的为空，就为空；否则就是原来选择的，加上新选择的
-            var oldstr=$("input[id*='PlanAttendant']").val();
+        function setvalue_PlanAttendant(values) {
+            /*//新选择的为空，就为空；否则就是原来选择的，加上新选择的
+            var oldstr=$("#CJJH input[id*='PlanAttendant']").val();
             if(oldstr!=""){oldstr=oldstr+',';}
 
             var newstr="";
@@ -435,6 +483,16 @@
             if(newstr!=""){str=oldstr+newstr;}
 
             $("input[id*='PlanAttendant']").val(str);
+            */
+
+            var str="";
+            for (var i = 0; i < values.length; i++) { 
+                str=str+values[i][0]+'('+values[i][1]+')';
+                if(i!=values.length-1){str=str+',';}
+            }
+            $("input[id*='PlanAttendant']").val(str);
+
+            Auto_Calculate_T007();
         }
 
         function Get_IsHrReserve(vi){
@@ -477,6 +535,7 @@
             
             <%=ValidScript%>
 
+            //--------------------------------------------------------------------------------------非空验证
             if($("#SQXX input[id*='ApplyId']").val()=="" || $("#SQXX input[id*='ApplyName']").val()==""){
                 msg+="【申请人】不可为空.<br />";
             }
@@ -508,8 +567,23 @@
                 layer.alert(msg);
                 return flag;
             }
-
             
+            //----------------------------------------------------------------------------逻辑验证
+            //验证 预计出发时间 预计结束时间 大小关系   
+            if((new Date())>(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
+                msg+="【预计出发时间】必须大于等于【当前时间】.<br />";
+            }
+            if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
+                msg+="【预计结束时间】必须大于等于【预计出发时间】.<br />";
+            }
+
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+                return flag;
+            }
+            
+            //---------------------------------------------------------------------------签核意见验证
             if(!parent.checkSign()){
                 flag=false;return flag;
             }
@@ -517,7 +591,12 @@
             return flag;
         }
 
+        function compareDate(s1,s2){
+            return ((new Date(s1.replace(/-/g,"\/")))>(new Date(s2.replace(/-/g,"\/"))));
+        }
+
     </script>
+
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -594,14 +673,16 @@
                         <table style="width: 100%">
                             <tr>
                                 <td><font color="red">*</font>预计出发日期</td>
-                                <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})" /></td>
+                                <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" 
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:laydate.now(),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                                 <td><font color="red">*</font>预计结束日期</td>
-                                <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})" /></td>
+                                <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" 
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:$('#CJJH input[id*=\'PlanStartTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                             </tr>
                             <tr>
                                 <td><font color="red">&nbsp;</font>预计出差天数</td>
                                 <td>
-                                    <asp:TextBox ID="PlanDays" runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                    <asp:TextBox ID="PlanDays" runat="server" class="lineread" ReadOnly="True" Width="260px" Text="0" />
                                 </td>
                                 <td><font color="red">*</font>随行人员</td>
                                 <td><asp:TextBox runat="server" ID="PlanAttendant" class="lineread" Width="240px" ReadOnly="True"></asp:TextBox>
