@@ -82,9 +82,13 @@
                 }
             });
             if (ini_bf) {
+                $("#CJJH input[id*='IsHrReserveByForm']").val("是");
+
                 $("#div_dtl_hr").css("display","block");
                 gv_d_hr.PerformCallback("clear");
             }else {
+                $("#CJJH input[id*='IsHrReserveByForm']").val("否");
+
                 $("#div_dtl_hr").css("display","none");
                 gv_d_hr.PerformCallback("clear");
             }
@@ -129,7 +133,8 @@
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                 if($(item).children("td:last-child").text()=="T007"){
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    BudgetTotalCost.SetText(BTC_T007)
+                    BudgetTotalCost.SetText(BTC_T007);
+                    RefreshRow(index);
                 }
             });
 
@@ -469,7 +474,7 @@
         }
 
         function setvalue_PlanAttendant(values) {
-            /*//新选择的为空，就为空；否则就是原来选择的，加上新选择的
+            /*//新选择的为空，就为空；否则就是原来选择的，加上新选择的：此种方法还需要去重，所以舍弃方法
             var oldstr=$("#CJJH input[id*='PlanAttendant']").val();
             if(oldstr!=""){oldstr=oldstr+',';}
 
@@ -493,6 +498,70 @@
             $("input[id*='PlanAttendant']").val(str);
 
             Auto_Calculate_T007();
+        }
+
+        function RefreshRow(vi) {
+            var BTC=0;
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                if (BudgetTotalCost.GetText()!="") {
+                    BTC=BTC+Number(BudgetTotalCost.GetText());
+                }
+            });
+            //grid底部total值更新
+            $("[id$=gv_d] tr[id*=DXFooterRow]").find('td').each(function () {
+                if($.trim($(this).text())!=""){
+                    $(this).html("<b>合计:"+fmoney(BTC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BTC,2)+"</b>");
+                    $("#CJJH input[id*='BudgetTotalCostByForm']").val(fmoney(BTC,2));
+                }   
+            });
+        }
+
+        function RefreshRow_HR(vi) {
+            var BC=0;
+            $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                var BudgetCost = eval('BudgetCost' + index);
+                if (BudgetCost.GetText()!="") {
+                    BC=BC+Number(BudgetCost.GetText());
+                }
+            });
+            //grid底部total值更新
+            $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
+                if(($.trim($(this).text())).indexOf("预算合计")>-1){
+                    $(this).html("<b>预算合计:"+fmoney(BC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BC,2)+"</b>");
+                }   
+            });
+        }
+
+        function RefreshRow_HR_AC(vi) {
+            var AC=0;
+            $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                var ActualCost = eval('ActualCost' + index);
+                if (ActualCost.GetText()!="") {
+                    AC=AC+Number(ActualCost.GetText());
+                }
+            });
+            //grid底部total值更新
+            $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
+                if(($.trim($(this).text())).indexOf("实际合计")>-1){
+                    $(this).html("<b>实际合计:"+fmoney(AC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(AC,2)+"</b>");
+                }   
+            });
+        }
+
+        //格式化千分位
+        function fmoney(s, n)   
+        {   
+            n = n > 0 && n <= 20 ? n : 2;   
+            s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";   
+            var l = s.split(".")[0].split("").reverse(),   
+            r = s.split(".")[1];   
+            t = "";   
+            for(i = 0; i < l.length; i ++ )   
+            {   
+                t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");   
+            }   
+            return t.split("").reverse().join("") + "." + r;   
         }
 
         function Get_IsHrReserve(vi){
@@ -521,9 +590,13 @@
                 }
             });
             if (bf) {
+                $("#CJJH input[id*='IsHrReserveByForm']").val("是");
+
                 $("#div_dtl_hr").css("display","block");
                 gv_d_hr.PerformCallback("clear");
             }else {
+                $("#CJJH input[id*='IsHrReserveByForm']").val("否");
+
                 $("#div_dtl_hr").css("display","none");
                 gv_d_hr.PerformCallback("clear");
             }
@@ -674,7 +747,7 @@
                             <tr>
                                 <td><font color="red">*</font>预计出发日期</td>
                                 <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" 
-                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:laydate.now(),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:laydate.now(1),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                                 <td><font color="red">*</font>预计结束日期</td>
                                 <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" 
                                     onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:$('#CJJH input[id*=\'PlanStartTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
@@ -743,6 +816,7 @@
                                     <Settings AllowCellMerge="False"/>
                                     <DataItemTemplate>
                                         <dx:ASPxTextBox ID="BudgetTotalCost" Width="100px" runat="server" Value='<%# Eval("BudgetTotalCost")%>'
+                                            ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                             ClientInstanceName='<%# "BudgetTotalCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
                                             <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                 <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
@@ -879,6 +953,7 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="BudgetCost" Width="120px" runat="server" Value='<%# Eval("BudgetCost")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
@@ -889,9 +964,13 @@
                                         <dx:GridViewDataTextColumn Caption="交通工具" FieldName="Vehicle" Width="100px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="Vehicle" Width="100px" runat="server" Value='<%# Eval("Vehicle")%>' 
+                                                <dx:ASPxComboBox ID="Vehicle" runat="server" ValueType="System.String" Width="100px" 
                                                     ClientInstanceName='<%# "Vehicle"+Container.VisibleIndex.ToString() %>'>
-                                                </dx:ASPxTextBox>
+                                                    <Items>
+                                                        <dx:ListEditItem Text="飞机"  Value="飞机" />
+                                                        <dx:ListEditItem Text="火车"  Value="火车" />
+                                                    </Items>
+                                                </dx:ASPxComboBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="备注" FieldName="Remark" Width="150px" VisibleIndex="8">
@@ -914,6 +993,7 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ActualCost" Width="100px" runat="server" Value='<%# Eval("ActualCost")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
