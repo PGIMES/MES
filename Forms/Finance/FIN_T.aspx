@@ -603,6 +603,24 @@
 
         }
 
+        function Get_Traveler(vi){
+            var url = "/select/select_PlanAttendant_dtl.aspx?vi="+vi+"&PA="+$("#CJJH input[id*='PlanAttendant']").val();
+
+            layer.open({
+                title:'随行人员明细选择',
+                type: 2,
+                area: ['450px', '550px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });  
+        }
+
+        function setvalue_Traveler(vi,workcode,workname){
+            var TravelerName= eval('TravelerName' + vi);var TravelerId= eval('TravelerId' + vi);
+            TravelerName.SetText(workcode);TravelerId.SetText(workname);
+        }
+
         function validate(action){
             var flag=true;var msg="";
             
@@ -892,20 +910,20 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
 
                                  <dx:aspxgridview ID="gv_d_hr" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback" >
+                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback"><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated" --%>
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="40px" VisibleIndex="0"></dx:GridViewDataTextColumn>    
-                                        <dx:GridViewDataTextColumn Caption="出行人[部门/工程]" FieldName="TravelerName" Width="100px" VisibleIndex="1">
+                                        <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>    
+                                        <dx:GridViewDataTextColumn Caption="出行人姓名" FieldName="TravelerName" Width="80px" VisibleIndex="1">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
                                                 <table>
                                                     <tr>
                                                         <td>
-                                                            <dx:ASPxTextBox ID="TravelerName" Width="100px" runat="server" Value='<%# Eval("TravelerName")%>' 
+                                                            <dx:ASPxTextBox ID="TravelerName" Width="80px" runat="server" Value='<%# Eval("TravelerName")%>' 
                                                                 ClientInstanceName='<%# "TravelerName"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
@@ -915,8 +933,19 @@
                                                         </td>
                                                     </tr>
                                                 </table>       
+                                                <%--<dx:ASPxComboBox ID="TravelerName" runat="server" ValueType="System.String" Width="100px"  
+                                                    ClientInstanceName='<%# "TravelerName"+Container.VisibleIndex.ToString() %>' >
+                                                </dx:ASPxComboBox>--%>
                                             </DataItemTemplate>
-                                        </dx:GridViewDataTextColumn>                                        
+                                        </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="出行人工号" FieldName="TravelerId" Width="80px" VisibleIndex="2">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="TravelerId" Width="80px" runat="server" Value='<%# Eval("TravelerId")%>' 
+                                                    ClientInstanceName='<%# "TravelerId"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>                                       
                                         <dx:GridViewDataTextColumn Caption="出发地" FieldName="StartFromPlace" Width="100px" VisibleIndex="2">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
@@ -940,19 +969,19 @@
                                                     ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true"
                                                     onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})">
                                                 </dx:ASPxTextBox>--%>
-                                                <dx:ASPxDateEdit ID="StartDate" runat="server" DisplayFormatString="yyyy/MM/dd" EditFormatString="yyyy/MM/dd"></dx:ASPxDateEdit>
+                                                <dx:ASPxDateEdit ID="StartDate" runat="server" Width="100px" DisplayFormatString="yyyy/MM/dd" EditFormatString="yyyy/MM/dd"></dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="100px" VisibleIndex="5">
+                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="80px" VisibleIndex="5">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTimeEdit ID="ASPxTimeEdit1" runat="server" DisplayFormatString="HH:mm" EditFormatString="HH:mm"></dx:ASPxTimeEdit>
+                                                <dx:ASPxTimeEdit ID="StartTime" runat="server" Width="80px" DisplayFormatString="HH:mm" EditFormatString="HH:mm"></dx:ASPxTimeEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="100px" VisibleIndex="6">
+                                        <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="80px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="BudgetCost" Width="120px" runat="server" Value='<%# Eval("BudgetCost")%>' 
+                                                <dx:ASPxTextBox ID="BudgetCost" Width="80px" runat="server" Value='<%# Eval("BudgetCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
@@ -961,10 +990,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="交通工具" FieldName="Vehicle" Width="100px" VisibleIndex="7">
+                                        <dx:GridViewDataTextColumn Caption="交通工具" FieldName="Vehicle" Width="60px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="Vehicle" runat="server" ValueType="System.String" Width="100px" 
+                                                <dx:ASPxComboBox ID="Vehicle" runat="server" ValueType="System.String" Width="60px" 
                                                     ClientInstanceName='<%# "Vehicle"+Container.VisibleIndex.ToString() %>'>
                                                     <Items>
                                                         <dx:ListEditItem Text="飞机"  Value="飞机" />
@@ -989,10 +1018,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="100px" VisibleIndex="10">
+                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="80px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="ActualCost" Width="100px" runat="server" Value='<%# Eval("ActualCost")%>' 
+                                                <dx:ASPxTextBox ID="ActualCost" Width="80px" runat="server" Value='<%# Eval("ActualCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC("+Container.VisibleIndex+");}" %>'
                                                     ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
@@ -1001,12 +1030,7 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                            
-                                        <dx:GridViewDataTextColumn FieldName="TravelerId" Width="0px">
-                                            <HeaderStyle CssClass="hidden" />
-                                            <CellStyle CssClass="hidden"></CellStyle>
-                                            <FooterCellStyle CssClass="hidden"></FooterCellStyle>
-                                        </dx:GridViewDataTextColumn>                                    
+                                                                             
                                         <dx:GridViewDataTextColumn FieldName="id" Width="0px">
                                             <HeaderStyle CssClass="hidden" />
                                             <CellStyle CssClass="hidden"></CellStyle>
