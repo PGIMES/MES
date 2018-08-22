@@ -214,7 +214,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
             if (ldt_detail.Rows[i]["CostCode"].ToString() != "T001" && ldt_detail.Rows[i]["CostCode"].ToString() != "T002")
             {
-                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Visible = false;
+                ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Visible = false;
+                ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Value = null;
             }
 
             if ((ldt_detail.Rows[i]["CostCode"].ToString() == "T001" || ldt_detail.Rows[i]["CostCode"].ToString() == "T002") && ldt_detail.Rows[i]["IsHrReserve"].ToString() == "是")
@@ -278,10 +279,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).BorderStyle = BorderStyle.None;
-
-        ViewState["IsHrReserve_i"] = "Y";
+        ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Enabled = false;
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).BorderStyle = BorderStyle.None;
@@ -573,7 +571,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         {
             flag = true;
 
-            string title = "差旅申请【" + ApplyName + "(" + ApplyId + ")" + PlanStartTime + "】-" + this.m_sid;
+            string title = "差旅申请【" + ApplyName + "(" + ApplyId + ")：" + PlanStartTime + "】--" + this.m_sid;
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";

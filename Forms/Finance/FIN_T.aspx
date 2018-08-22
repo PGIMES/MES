@@ -64,38 +64,45 @@
         });
 
         function Ini_Set_IsHrReserve(){
-            var ini_bf=false;
-            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
-                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
-                    var IsHrReserve = eval('IsHrReserve' + index);                  
-                    if (IsHrReserve.GetValue()=="是") {
-                        //BudgetTotalCost.SetEnabled(false);
-
-                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).addClass("dxeTextBox_read");
-                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").attr("readOnly","readOnly").addClass("dxeTextBox_read");          
-                        
-                        ini_bf=true;      
-                    }else {
-                        //BudgetTotalCost.SetEnabled(true);
-
-                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).removeClass("dxeTextBox_read");
-                        $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").removeAttr("readOnly").removeClass("dxeTextBox_read");
-                    }                    
-                }
-                if($(item).children("td:last-child").text()=="T007"){
-                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    BudgetTotalCost.SetText(0)
-                }
-            });
-            if (ini_bf) {
-                $("#CJJH input[id*='IsHrReserveByForm']").val("是");
-
+            if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是") {
                 $("#div_dtl_hr").css("display","block");
-            }else {
-                $("#CJJH input[id*='IsHrReserveByForm']").val("否");
-
+            }
+            else if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="否") {
                 $("#div_dtl_hr").css("display","none");
-                gv_d_hr.PerformCallback("clear");
+            }else{
+                var ini_bf=false;
+                $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                    if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
+                        var IsHrReserve = eval('IsHrReserve' + index);                  
+                        if (IsHrReserve.GetValue()=="是") {
+                            //BudgetTotalCost.SetEnabled(false);
+
+                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).addClass("dxeTextBox_read");
+                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").attr("readOnly","readOnly").addClass("dxeTextBox_read");          
+                        
+                            ini_bf=true;      
+                        }else {
+                            //BudgetTotalCost.SetEnabled(true);
+
+                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).removeClass("dxeTextBox_read");
+                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").removeAttr("readOnly").removeClass("dxeTextBox_read");
+                        }                    
+                    }
+                    if($(item).children("td:last-child").text()=="T007"){
+                        var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                        BudgetTotalCost.SetText(0)
+                    }
+                });
+                if (ini_bf) {
+                    $("#CJJH input[id*='IsHrReserveByForm']").val("是");
+
+                    $("#div_dtl_hr").css("display","block");
+                }else {
+                    $("#CJJH input[id*='IsHrReserveByForm']").val("否");
+
+                    $("#div_dtl_hr").css("display","none");
+                    gv_d_hr.PerformCallback("clear");
+                }
             }
 
         }
@@ -1011,27 +1018,14 @@
                                 <dx:GridViewDataTextColumn Caption="人事预定并结算" FieldName="IsHrReserve" Width="100px" VisibleIndex="3">
                                     <Settings AllowCellMerge="False" />
                                     <DataItemTemplate>       
-                                        <%--<dx:ASPxComboBox ID="IsHrReserve" runat="server" ValueType="System.String" Width="100px"
+                                        <dx:ASPxComboBox ID="IsHrReserve" runat="server" ValueType="System.String" Width="100px"
                                             ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Get_IsHrReserve("+Container.VisibleIndex+");}" %>'   
                                             ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>'>
                                             <Items>
                                                 <dx:ListEditItem Text="是"  Value="是" Selected="true" />
                                                 <dx:ListEditItem Text="否"  Value="否" />
                                             </Items>
-                                        </dx:ASPxComboBox>--%>
-                                        <table>
-                                            <tr>
-                                                <td>
-                                                    <dx:ASPxTextBox ID="IsHrReserve" Width="100px" runat="server" Value='<%# Eval("IsHrReserve")%>' 
-                                                        ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                    </dx:ASPxTextBox>
-                                                </td>
-                                                <td><i id="IsHrReserve_i_<%#Container.VisibleIndex.ToString() %>" 
-                                                    class="fa fa-search <% =ViewState["IsHrReserve_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                    onclick="Get_IsHrReserve(<%# Container.VisibleIndex %>,'')"></i>
-                                                </td>
-                                            </tr>
-                                        </table> 
+                                        </dx:ASPxComboBox>
                                     </DataItemTemplate>
                                 </dx:GridViewDataTextColumn>
                                 <dx:GridViewDataTextColumn Caption="预算说明" FieldName="BudgetRemark" Width="350px" VisibleIndex="4">
@@ -1247,6 +1241,23 @@
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ"> 
+                </div>
+                <div class="panel-body ">
+                    <table border="0"  width="100%"  >
+                        <tr>
+                            <td width="100px" ><label>处理意见：</label></td>
+                            <td>
+                                <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
