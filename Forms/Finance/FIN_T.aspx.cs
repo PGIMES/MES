@@ -25,6 +25,10 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (ViewState["PlanAttendant_i"] == null) { ViewState["PlanAttendant_i"] = ""; }
+
+        if (ViewState["IsHrReserve_i"] == null) { ViewState["IsHrReserve_i"] = ""; }
+
         if (ViewState["Traveler_i"] == null) { ViewState["Traveler_i"] = ""; }
         if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
         if (ViewState["Vehicle_i"] == null) { ViewState["Vehicle_i"] = ""; }
@@ -97,7 +101,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                     //txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
                     //txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
                     Pgi.Auto.Control.SetControlValue("Fin_T_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                    IsHrReserve = ldt.Rows[0]["IsHrReserve"].ToString();
+                    IsHrReserve = ldt.Rows[0]["IsHrReserveByForm"].ToString();
                     //txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
                     //modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
                 }
@@ -110,19 +114,20 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                             ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
                             ,b.cost_category+'/'+b.cost_item+'['+b.cost_code+']' as CostCodeDesc
                         from[dbo].[Fin_T_Dtl_Form] a 
-                            left join [dbo].[Fin_Base_CostCate] b
+                            left join [dbo].[Fin_Base_CostCate] b on a.CostCode=b.cost_code
                         where FIN_T_No='" + this.m_sid + "' order by a.id"; 
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             this.gv_d.DataSource = ldt_detail;
             this.gv_d.DataBind();
 
-            if (IsHrReserve == "Y")//人事预定信息
+            if (IsHrReserve == "是")//人事预定信息
             {
                 lssql_hr = @"select a.id, a.FIN_T_No, a.TravelerId, a.TravelerName, a.StartFromPlace, a.EndToPlace
                                 , a.StartDate, a.StartTime, a.BudgetCost, a.Vehicle, a.Remark, a.ScheduledFlight, a.ActualCost 
                                 ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
-                            from [dbo].[Fin_T_Dtl_HR_Form]";
+                            from [dbo].[Fin_T_Dtl_HR_Form] a
+                            where FIN_T_No='" + this.m_sid + "' order by a.id";
                 ldt_detail_hr = DbHelperSQL.Query(lssql_hr).Tables[0];
                 this.gv_d_hr.DataSource = ldt_detail_hr;
                 this.gv_d_hr.DataBind();
@@ -206,6 +211,12 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 this.btnflowSend.Text = "批准";
             }
+
+            if (ldt_detail.Rows[i]["CostCode"].ToString() != "T001" && ldt_detail.Rows[i]["CostCode"].ToString() != "T002")
+            {
+                ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Visible = false;
+            }
+
             if ((ldt_detail.Rows[i]["CostCode"].ToString() == "T001" || ldt_detail.Rows[i]["CostCode"].ToString() == "T002") && ldt_detail.Rows[i]["IsHrReserve"].ToString() == "是")
             {//差旅/机票费 差旅/火车票 人事预定选择“是”的情况下，预算金额只读
                 ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
@@ -215,10 +226,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
                 ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
-            }
-            if (ldt_detail.Rows[i]["CostCode"].ToString() != "T001" && ldt_detail.Rows[i]["CostCode"].ToString() != "T002")
-            {
-                ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Visible = false;
             }
             if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID != "A" && StepID != SQ_StepID)
             {
@@ -241,6 +248,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 }
                 if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
                 {
+                    ViewState["PlanAttendant_i"] = "Y";
+
                     setread_hr(i, ldt_flow_pro_hr);
                 }
             }
@@ -249,22 +258,30 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     public void setread(int i)
     {
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
+        ((TextBox)this.FindControl("ctl00$MainContent$PlanStartTime")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$PlanStartTime")).Attributes.Remove("onclick");
 
-        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
-        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
+        ((TextBox)this.FindControl("ctl00$MainContent$PlanEndTime")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$PlanEndTime")).Attributes.Remove("onclick");
 
-        ////((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-        ////((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+        ((TextBox)this.FindControl("ctl00$MainContent$PlanAttendant")).Width = Unit.Pixel(260);
 
-        ////modifyremark.ReadOnly = true;
+        ((TextBox)this.FindControl("ctl00$MainContent$TravelPlace")).CssClass = "lineread";
+        ((TextBox)this.FindControl("ctl00$MainContent$TravelPlace")).ReadOnly = true;
+
+        ((TextBox)this.FindControl("ctl00$MainContent$TravelReason")).BackColor = System.Drawing.ColorTranslator.FromHtml("#fff"); 
+        ((TextBox)this.FindControl("ctl00$MainContent$TravelReason")).ReadOnly = true;
+
+        ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).Enabled = false;
+        ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).CssClass = "lineread";
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
 
-        ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Enabled = false;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).BorderStyle = BorderStyle.None;
+
+        ViewState["IsHrReserve_i"] = "Y";
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).BorderStyle = BorderStyle.None;
@@ -274,47 +291,35 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     public void setread_hr(int i,DataTable ldt_flow_pro_hr)
     {
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
-
-        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
-        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
-
-        ////((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-        ////((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-
-        ////modifyremark.ReadOnly = true;
-
         ViewState["Traveler_i"] = "Y"; ViewState["Date_i"] = "Y"; ViewState["Vehicle_i"] = "Y";
 
         btnadd.Visible = false;
         btndel.Visible = false;
 
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelerName"], "TravelerName")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelerName"], "TravelerName")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["TravelerName"], "TravelerName")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["TravelerName"], "TravelerName")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["StartFromPlace"], "StartFromPlace")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["StartFromPlace"], "StartFromPlace")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["StartFromPlace"], "StartFromPlace")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["StartFromPlace"], "StartFromPlace")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EndToPlace"], "EndToPlace")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EndToPlace"], "EndToPlace")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["EndToPlace"], "EndToPlace")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["EndToPlace"], "EndToPlace")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["Remark"], "Remark")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["Remark"], "Remark")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["Remark"], "Remark")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["Remark"], "Remark")).BorderStyle = BorderStyle.None;
 
 
         if (ldt_flow_pro_hr.Rows.Count <= 0)//非人事签核
         {
-            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
 
-            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
         }
 
     }
@@ -442,7 +447,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
-        return false;
+        
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
@@ -457,7 +462,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         if (this.m_sid == "")
         {
             //没有单号，自动生成
-            string lsid = "FIN_T_" + System.DateTime.Now.Year.ToString().Substring(3, 1) + System.DateTime.Now.Month.ToString("00");
+            string lsid = "FIN_T_" + System.DateTime.Now.ToString("yyyyMMdd");
             this.m_sid = Pgi.Auto.Public.GetNo("FIN_T_", lsid, 0, 4);
 
             for (int i = 0; i < ls.Count; i++)
@@ -475,6 +480,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable(); DataTable ldt_hr = new DataTable();
         ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+
         if (IsHrReserveByForm == "是")
         {
             ldt_hr = Pgi.Auto.Control.AgvToDt(this.gv_d_hr);
@@ -524,7 +530,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             ls_sum.Add(ls_del);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_Form", "id", "Column1,numid,flag");
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_Form", "id", "Column1,numid,flag,CostCodeDesc");
             for (int i = 0; i < ls1.Count; i++)
             {
                 ls_sum.Add(ls1[i]);
@@ -551,7 +557,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             ls_sum.Add(ls_del_hr);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1_hr = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_HR_Form", "id", "Column1,numid,flag");
+            List<Pgi.Auto.Common> ls1_hr = Pgi.Auto.Control.GetList(ldt_hr, "Fin_T_Dtl_HR_Form", "id", "Column1,numid,flag");
             for (int i = 0; i < ls1_hr.Count; i++)
             {
                 ls_sum.Add(ls1_hr[i]);
@@ -567,7 +573,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         {
             flag = true;
 
-            string title = "差旅申请-" + ApplyName + "(" + ApplyId + ")-预计出发时间" + PlanStartTime + "--" + this.m_sid;
+            string title = "差旅申请【" + ApplyName + "(" + ApplyId + ")" + PlanStartTime + "】-" + this.m_sid;
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";

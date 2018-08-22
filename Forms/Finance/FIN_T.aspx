@@ -91,7 +91,6 @@
                 $("#CJJH input[id*='IsHrReserveByForm']").val("是");
 
                 $("#div_dtl_hr").css("display","block");
-                gv_d_hr.PerformCallback("clear");
             }else {
                 $("#CJJH input[id*='IsHrReserveByForm']").val("否");
 
@@ -465,6 +464,12 @@
         .hr{
             color:blue; font-weight:800;
         }
+        .i_hidden{
+            display:none;
+        }
+        .i_show{
+            display:inline-block;
+        }
     </style>
 
     <script type="text/javascript">
@@ -521,7 +526,7 @@
             $("[id$=gv_d] tr[id*=DXFooterRow]").find('td').each(function () {
                 if($.trim($(this).text())!=""){
                     $(this).html("<b>合计:"+fmoney(BTC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BTC,2)+"</b>");
-                    $("#CJJH input[id*='BudgetTotalCostByForm']").val(fmoney(BTC,2));
+                    $("#CJJH input[id*='BudgetTotalCostByForm']").val(BTC.toFixed(2));
                 }   
             });
         }
@@ -624,7 +629,6 @@
                 $("#CJJH input[id*='IsHrReserveByForm']").val("是");
 
                 $("#div_dtl_hr").css("display","block");
-                gv_d_hr.PerformCallback("clear");
             }else {
                 $("#CJJH input[id*='IsHrReserveByForm']").val("否");
 
@@ -635,12 +639,14 @@
         }
 
         function Get_Traveler(vi){
-            var url = "/select/select_PlanAttendant_dtl.aspx?vi="+vi+"&PA="+$("#CJJH input[id*='PlanAttendant']").val();
+            var pa=$("#SQXX input[id*='ApplyId']").val()+'('+$("#SQXX input[id*='ApplyName']").val()+'),'+$("#CJJH input[id*='PlanAttendant']").val();
+
+            var url = "/select/select_PlanAttendant_dtl.aspx?vi="+vi+"&PA="+pa;
 
             layer.open({
                 title:'随行人员明细选择',
                 type: 2,
-                area: ['450px', '550px'],
+                area: ['450px', '450px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
@@ -713,9 +719,9 @@
             if($("#CJJH input[id*='PlanDays']").val()==""){
                 msg+="【预计出差天数】不可为空.<br />";
             }
-            if($("#CJJH input[id*='PlanAttendant']").val()==""){
-                msg+="【随行人员】不可为空.<br />";
-            }
+            //if($("#CJJH input[id*='PlanAttendant']").val()==""){
+            //    msg+="【随行人员】不可为空.<br />";
+            //}
             if($("#CJJH input[id*='TravelPlace']").val()==""){
                 msg+="【出差地点】不可为空.<br />";
             }
@@ -760,8 +766,8 @@
                                 }
                             });
                             $("[id$=gv_d_hr] input[id*=StartTime]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【出发时间】不可为空.<br />";
+                                if( $(this).val()=="" || $(this).val()=="00:00"){
+                                    msg+="【出发时间】不可为 空/00:00.<br />";
                                     return false;
                                 }
                             });
@@ -935,9 +941,9 @@
                                 <td>
                                     <asp:TextBox ID="PlanDays" runat="server" class="lineread" ReadOnly="True" Width="260px" Text="0" />
                                 </td>
-                                <td><font color="red">*</font>随行人员</td>
+                                <td><font color="red">&nbsp;</font>随行人员</td>
                                 <td><asp:TextBox runat="server" ID="PlanAttendant" class="lineread" Width="240px" ReadOnly="True"></asp:TextBox>
-                                    <i id="PlanAttendant_i" class="fa fa-search" onclick="Get_PlanAttendant()"></i>
+                                    <i id="PlanAttendant_i" class="fa fa-search <% =ViewState["PlanAttendant_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_PlanAttendant()"></i>
                                 </td>
                             </tr>
                             <tr>
@@ -1005,14 +1011,27 @@
                                 <dx:GridViewDataTextColumn Caption="人事预定并结算" FieldName="IsHrReserve" Width="100px" VisibleIndex="3">
                                     <Settings AllowCellMerge="False" />
                                     <DataItemTemplate>       
-                                        <dx:ASPxComboBox ID="IsHrReserve" runat="server" ValueType="System.String" Width="100px"
+                                        <%--<dx:ASPxComboBox ID="IsHrReserve" runat="server" ValueType="System.String" Width="100px"
                                             ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Get_IsHrReserve("+Container.VisibleIndex+");}" %>'   
                                             ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>'>
                                             <Items>
                                                 <dx:ListEditItem Text="是"  Value="是" Selected="true" />
                                                 <dx:ListEditItem Text="否"  Value="否" />
                                             </Items>
-                                        </dx:ASPxComboBox>
+                                        </dx:ASPxComboBox>--%>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <dx:ASPxTextBox ID="IsHrReserve" Width="100px" runat="server" Value='<%# Eval("IsHrReserve")%>' 
+                                                        ClientInstanceName='<%# "IsHrReserve"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                    </dx:ASPxTextBox>
+                                                </td>
+                                                <td><i id="IsHrReserve_i_<%#Container.VisibleIndex.ToString() %>" 
+                                                    class="fa fa-search <% =ViewState["IsHrReserve_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                    onclick="Get_IsHrReserve(<%# Container.VisibleIndex %>,'')"></i>
+                                                </td>
+                                            </tr>
+                                        </table> 
                                     </DataItemTemplate>
                                 </dx:GridViewDataTextColumn>
                                 <dx:GridViewDataTextColumn Caption="预算说明" FieldName="BudgetRemark" Width="350px" VisibleIndex="4">
