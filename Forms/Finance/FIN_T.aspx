@@ -11,6 +11,12 @@
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
 
     <script type="text/javascript">
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = decodeURI(window.location.search).substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+        var stepid = getQueryString("stepid");
 
         $(document).ready(function () {
             $("#mestitle").html("【差旅申请单】");
@@ -134,7 +140,7 @@
                 if($(item).children("td:last-child").text()=="T007"){
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
                     BudgetTotalCost.SetText(BTC_T007);
-                    RefreshRow(index);
+                    RefreshRow();
                 }
             });
 
@@ -456,6 +462,9 @@
         .dxeButtonEdit td{
              padding-bottom:0px;
         }
+        .hr{
+            color:blue; font-weight:800;
+        }
     </style>
 
     <script type="text/javascript">
@@ -500,7 +509,7 @@
             Auto_Calculate_T007();
         }
 
-        function RefreshRow(vi) {
+        function RefreshRow() {
             var BTC=0;
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                 var BudgetTotalCost = eval('BudgetTotalCost' + index);
@@ -517,13 +526,23 @@
             });
         }
 
-        function RefreshRow_HR(vi) {
-            var BC=0;
+        function RefreshRow_HR() {
+            var BC=0;var BC_feiji=0;var BC_huoche=0;
             $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
                 var BudgetCost = eval('BudgetCost' + index);
+                var Vehicle = eval('Vehicle' + index);
+
                 if (BudgetCost.GetText()!="") {
                     BC=BC+Number(BudgetCost.GetText());
+
+                    if (Vehicle.GetText()=="飞机") {
+                        BC_feiji=BC_feiji+Number(BudgetCost.GetText());
+                    }
+                    if (Vehicle.GetText()=="火车") {
+                        BC_huoche=BC_huoche+Number(BudgetCost.GetText());
+                    }
                 }
+                
             });
             //grid底部total值更新
             $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
@@ -531,9 +550,21 @@
                     $(this).html("<b>预算合计:"+fmoney(BC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BC,2)+"</b>");
                 }   
             });
+
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                if($(item).children("td:last-child").text()=="T001"){
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    BudgetTotalCost.SetText(BC_feiji);                    
+                }
+                if($(item).children("td:last-child").text()=="T002"){
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    BudgetTotalCost.SetText(BC_huoche);                    
+                }
+            });
+            RefreshRow();
         }
 
-        function RefreshRow_HR_AC(vi) {
+        function RefreshRow_HR_AC() {
             var AC=0;
             $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
                 var ActualCost = eval('ActualCost' + index);
@@ -544,7 +575,7 @@
             //grid底部total值更新
             $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
                 if(($.trim($(this).text())).indexOf("实际合计")>-1){
-                    $(this).html("<b>实际合计:"+fmoney(AC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(AC,2)+"</b>");
+                    $(this).html("<b><font color=blue>实际合计:"+fmoney(AC,2)+"</font></b>");//$(this).text("<b>合计:"+fmoney(AC,2)+"</b>");
                 }   
             });
         }
@@ -621,6 +652,45 @@
             TravelerName.SetText(workcode);TravelerId.SetText(workname);
         }
 
+        function Auto_Time(vi,dates){
+            var StartDate= eval('StartDate' + vi);var StartTime= eval('StartTime' + vi);
+            StartDate.SetText(dates.substring(0,10));StartTime.SetText(dates.slice(11));
+            $("#Date_i_"+vi).text("");
+        }
+
+        function Get_Vehicle(vi){
+            layer.open({
+                title:'交通工具选择',
+                type: 1,
+                closeBtn: 0,//默认1，展示关闭
+                area: ['250px', '150px'],
+                content: $('#div_Vehicle'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                btn: ['确认', '取消'],
+                yes: function(index, layero){//按钮【确认】的回调    
+                    var Vehicle_value=$("#div_Vehicle input[id*='rdb_Vehicle']:checked").val();
+                    if (typeof(Vehicle_value)=="undefined") {
+                        layer.alert("请选择交通工具！");
+                        return false;
+                    }
+                    var Vehicle= eval('Vehicle' + vi);
+                    Vehicle.SetText(Vehicle_value);
+
+                    RefreshRow_HR();
+
+                    layer.close(index);
+
+                },btn2: function(index, layero){ //按钮【取消】的回调                   
+                    //alert(2);
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+                //,cancel: function(){ 
+                //    //右上角关闭回调
+                //    //alert(3);
+                //    //return false 开启该代码可禁止点击该按钮关闭
+                //}
+            });
+        }
+
         function validate(action){
             var flag=true;var msg="";
             
@@ -652,6 +722,80 @@
             if($("#CJJH input[id*='TravelReason']").val()==""){
                 msg+="【出差事由】不可为空.<br />";
             }
+            if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                msg+="【出差预算明细】格式必须正确.<br />";
+            } 
+
+            if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
+                if($("[id$=gv_d_hr] input[id*=TravelerName]").length==0){
+                    msg+="【人事预定明细】不可为空.<br />";
+                }else {
+                    if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup_HR")) {
+                        msg+="【人事预定明细】格式必须正确.<br />";
+                    }else {
+                        if(action=='submit'){
+
+                            $("[id$=gv_d_hr] input[id*=TravelerName]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【出行人】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=StartFromPlace]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【出发地】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=EndToPlace]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【目的地】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=StartDate]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【出发日期】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=StartTime]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【出发时间】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=BudgetCost]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【预算费用】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            $("[id$=gv_d_hr] input[id*=Vehicle]").each(function (){
+                                if( $(this).val()==""){
+                                    msg+="【交通工具】不可为空.<br />";
+                                    return false;
+                                }
+                            });
+                            if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
+                                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
+                                    if( $(this).val()==""){
+                                        msg+="【预定班次】不可为空.<br />";
+                                        return false;
+                                    }
+                                });
+                                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
+                                    if( $(this).val()==""){
+                                        msg+="【实际费用】不可为空.<br />";
+                                        return false;
+                                    }
+                                });
+                            }
+                        
+                        }
+                    } 
+                }
+            }
             
             if(msg!=""){  
                 flag=false;
@@ -665,7 +809,17 @@
                 msg+="【预计出发时间】必须大于等于【当前时间】.<br />";
             }
             if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
-                msg+="【预计结束时间】必须大于等于【预计出发时间】.<br />";
+                msg+="【预计结束时间】必须大于【预计出发时间】.<br />";
+            }
+            if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
+                if(action=='submit'){
+                    $("[id$=gv_d_hr] input[id*=StartDate]").each(function (){
+                        if((new Date(Date.parse($(this).val())))<(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
+                            msg+="【人事预定明细】-【出发日期】必须大于等于【预计出发时间】.<br />";
+                            return false;
+                        }
+                    });
+                }
             }
 
             if(msg!=""){  
@@ -683,7 +837,7 @@
         }
 
         function compareDate(s1,s2){
-            return ((new Date(s1.replace(/-/g,"\/")))>(new Date(s2.replace(/-/g,"\/"))));
+            return ((new Date(s1.replace(/-/g,"\/")))>=(new Date(s2.replace(/-/g,"\/"))));
         }
 
     </script>
@@ -702,6 +856,12 @@
                 <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
             </div>
         </div>
+    </div>
+    <div id="div_Vehicle" style="display:none;">
+        <asp:RadioButtonList ID="rdb_Vehicle" runat="server" RepeatDirection="Horizontal" Height="20px" Width="120px" style="margin-left:10px; margin-top:10px;">
+            <asp:ListItem Text="飞机" Value="飞机"></asp:ListItem>
+            <asp:ListItem Text="火车" Value="火车"></asp:ListItem>
+        </asp:RadioButtonList>
     </div>
 
     <div class="col-md-12" >  
@@ -765,10 +925,10 @@
                             <tr>
                                 <td><font color="red">*</font>预计出发日期</td>
                                 <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" 
-                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:laydate.now(1),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:laydate.now(1),min:laydate.now(1),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                                 <td><font color="red">*</font>预计结束日期</td>
                                 <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" 
-                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',min:$('#CJJH input[id*=\'PlanStartTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:$('#CJJH input[id*=\'PlanStartTime\']').val(),min:$('#CJJH input[id*=\'PlanStartTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                             </tr>
                             <tr>
                                 <td><font color="red">&nbsp;</font>预计出差天数</td>
@@ -834,7 +994,7 @@
                                     <Settings AllowCellMerge="False"/>
                                     <DataItemTemplate>
                                         <dx:ASPxTextBox ID="BudgetTotalCost" Width="100px" runat="server" Value='<%# Eval("BudgetTotalCost")%>'
-                                            ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
+                                            ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow();}" %>' 
                                             ClientInstanceName='<%# "BudgetTotalCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
                                             <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                 <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
@@ -910,7 +1070,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
 
                                  <dx:aspxgridview ID="gv_d_hr" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback"><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated" --%>
+                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback" ><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated"--%>
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -933,9 +1093,6 @@
                                                         </td>
                                                     </tr>
                                                 </table>       
-                                                <%--<dx:ASPxComboBox ID="TravelerName" runat="server" ValueType="System.String" Width="100px"  
-                                                    ClientInstanceName='<%# "TravelerName"+Container.VisibleIndex.ToString() %>' >
-                                                </dx:ASPxComboBox>--%>
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
                                         <dx:GridViewDataTextColumn Caption="出行人工号" FieldName="TravelerId" Width="80px" VisibleIndex="2">
@@ -965,26 +1122,36 @@
                                         <dx:GridViewDataTextColumn Caption="出发日期" FieldName="StartDate" Width="100px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <%--<dx:ASPxTextBox ID="StartDate" Width="100px" runat="server" Value='<%# Eval("StartDate")%>' 
-                                                    ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true"
-                                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD'})">
-                                                </dx:ASPxTextBox>--%>
-                                                <dx:ASPxDateEdit ID="StartDate" runat="server" Width="100px" DisplayFormatString="yyyy/MM/dd" EditFormatString="yyyy/MM/dd"></dx:ASPxDateEdit>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                           <dx:ASPxTextBox ID="StartDate" Width="80px" runat="server" Value='<%# Eval("StartDate")%>' 
+                                                                ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="Date_i_<%#Container.VisibleIndex.ToString() %>" 
+                                                            class="fa fa-search <% =ViewState["Date_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="laydate({istime: true,start:$('#CJJH input[id*=\'PlanStartTime\']').val(),min:$('#CJJH input[id*=\'PlanStartTime\']').val(),format: 'YYYY/MM/DD hh:mm',choose: function(dates){Auto_Time(<%#Container.VisibleIndex.ToString() %>,dates);}})"></i>
+                                                        </td>
+                                                    </tr>
+                                                </table> 
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="80px" VisibleIndex="5">
+                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="70px" VisibleIndex="5">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTimeEdit ID="StartTime" runat="server" Width="80px" DisplayFormatString="HH:mm" EditFormatString="HH:mm"></dx:ASPxTimeEdit>
+                                                <dx:ASPxTextBox ID="StartTime" Width="70px" runat="server" Value='<%# Eval("StartTime")%>' 
+                                                    ClientInstanceName='<%# "StartTime"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="80px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="BudgetCost" Width="80px" runat="server" Value='<%# Eval("BudgetCost")%>' 
-                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR("+Container.VisibleIndex+");}" %>'
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR();}" %>'
                                                     ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
-                                                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
                                                 </dx:ASPxTextBox>
@@ -993,13 +1160,19 @@
                                         <dx:GridViewDataTextColumn Caption="交通工具" FieldName="Vehicle" Width="60px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="Vehicle" runat="server" ValueType="System.String" Width="60px" 
-                                                    ClientInstanceName='<%# "Vehicle"+Container.VisibleIndex.ToString() %>'>
-                                                    <Items>
-                                                        <dx:ListEditItem Text="飞机"  Value="飞机" />
-                                                        <dx:ListEditItem Text="火车"  Value="火车" />
-                                                    </Items>
-                                                </dx:ASPxComboBox>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                           <dx:ASPxTextBox ID="Vehicle" Width="60px" runat="server" Value='<%# Eval("Vehicle")%>' 
+                                                                ClientInstanceName='<%# "Vehicle"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="Vehicle_i_<%#Container.VisibleIndex.ToString() %>" 
+                                                            class="fa fa-search <% =ViewState["Vehicle_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_Vehicle(<%# Container.VisibleIndex %>,'')"></i>
+                                                        </td>
+                                                    </tr>
+                                                </table> 
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="备注" FieldName="Remark" Width="150px" VisibleIndex="8">
@@ -1010,21 +1183,21 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="预定班次" FieldName="ScheduledFlight" Width="100px" VisibleIndex="9">
+                                        <dx:GridViewDataTextColumn Caption="预定班次" FieldName="ScheduledFlight" Width="100px" VisibleIndex="9" HeaderStyle-CssClass="hr">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ScheduledFlight" Width="100px" runat="server" Value='<%# Eval("ScheduledFlight")%>' 
-                                                    ClientInstanceName='<%# "ScheduledFlight"+Container.VisibleIndex.ToString() %>'>
+                                                    ClientInstanceName='<%# "ScheduledFlight"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="80px" VisibleIndex="10">
+                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="80px" VisibleIndex="10" HeaderStyle-CssClass="hr">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ActualCost" Width="80px" runat="server" Value='<%# Eval("ActualCost")%>' 
-                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC("+Container.VisibleIndex+");}" %>'
-                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
-                                                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC();}" %>'
+                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0"   ReadOnly="true">
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
                                                 </dx:ASPxTextBox>
@@ -1044,7 +1217,7 @@
                                     </Columns>       
                                     <TotalSummary>
                                         <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetCost" SummaryType="Sum" />
-                                        <dx:ASPxSummaryItem DisplayFormat="<b>实际合计:{0:N2}</b>" FieldName="ActualCost" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="<b><font color=blue>实际合计:{0:N2}</font></b>" FieldName="ActualCost" SummaryType="Sum" />
                                     </TotalSummary>                                            
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        

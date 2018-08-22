@@ -22,9 +22,14 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     string FlowID = "A";
     string StepID = "A";
     string m_sid = "";
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (ViewState["Traveler_i"] == null) { ViewState["Traveler_i"] = ""; }
+        if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
+        if (ViewState["Vehicle_i"] == null) { ViewState["Vehicle_i"] = ""; }
+
+        ViewState["dtl_hr"] = null;
 
         //接收
         if (Request.QueryString["instanceid"] != null)
@@ -121,6 +126,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 ldt_detail_hr = DbHelperSQL.Query(lssql_hr).Tables[0];
                 this.gv_d_hr.DataSource = ldt_detail_hr;
                 this.gv_d_hr.DataBind();
+
+                ViewState["dtl_hr"] = ldt_detail_hr;
             }
 
 
@@ -176,7 +183,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
 
-    public void setGridIsRead(DataTable ldt_detail,string IsHrReserve, DataTable ldt_detail_hr)
+    public void setGridIsRead(DataTable ldt_detail, string IsHrReserve, DataTable ldt_detail_hr)
     {
         //特殊处理，签核界面，明细的框框拿掉
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
@@ -184,6 +191,13 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                             and instanceid='{2}' and stepname='{3}'";
         string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请人");
         DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
+
+        //特殊处理，签核界面，明细的框框拿掉
+        string lssql_hr = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                        where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
+                            and instanceid='{2}' and stepname='{3}'";
+        string sql_pro_hr = string.Format(lssql_hr, StepID, FlowID, m_sid, "人事行政专员");
+        DataTable ldt_flow_pro_hr = DbHelperSQL.Query(sql_pro_hr).Tables[0];
 
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
@@ -206,11 +220,30 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Visible = false;
             }
-            if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+            if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID != "A" && StepID != SQ_StepID)
             {
                 setread(i);
             }
 
+        }
+
+        if (ldt_detail_hr == null)
+        {
+
+        }
+        else
+        {
+            for (int i = 0; i < ldt_detail_hr.Rows.Count; i++)
+            {
+                if (ldt_flow_pro.Rows.Count == 0)
+                {
+                    this.btnflowSend.Text = "批准";
+                }
+                if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                {
+                    setread_hr(i, ldt_flow_pro_hr);
+                }
+            }
         }
     }
 
@@ -228,53 +261,63 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         ////modifyremark.ReadOnly = true;
 
-        ViewState["Traveler_i"] = "Y";
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
 
-        ////btndel.Visible = false;
+        ((ASPxComboBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["IsHrReserve"], "IsHrReserve")).Enabled = false;
 
-        ////if (i == 0)
-        ////{
-        ////    gv_d.Columns[gv_d.VisibleColumns.Count - 1].Visible = false;
-        ////    gv_d.Columns[0].Visible = false;
-        ////}
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).BorderStyle = BorderStyle.None;
 
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgNum"], "JgNum")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgNum"], "JgNum")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgSec"], "JgSec")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JgSec"], "JgSec")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["WaitSec"], "WaitSec")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["WaitSec"], "WaitSec")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["ZjSecc"], "ZjSecc")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["ZjSecc"], "ZjSecc")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JtNum"], "JtNum")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["JtNum"], "JtNum")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col1"], "col1")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col1"], "col1")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col2"], "col2")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EquipmentRate"], "EquipmentRate")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EquipmentRate"], "EquipmentRate")).BorderStyle = BorderStyle.None;
-
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).ReadOnly = true;
-        ////((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
+       
     }
 
+    public void setread_hr(int i,DataTable ldt_flow_pro_hr)
+    {
+        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
+        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
+        ////((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
+
+        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
+        ////((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
+
+        ////((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
+        ////((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+
+        ////modifyremark.ReadOnly = true;
+
+        ViewState["Traveler_i"] = "Y"; ViewState["Date_i"] = "Y"; ViewState["Vehicle_i"] = "Y";
+
+        btnadd.Visible = false;
+        btndel.Visible = false;
+
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelerName"], "TravelerName")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelerName"], "TravelerName")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["StartFromPlace"], "StartFromPlace")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["StartFromPlace"], "StartFromPlace")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EndToPlace"], "EndToPlace")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["EndToPlace"], "EndToPlace")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["Remark"], "Remark")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["Remark"], "Remark")).BorderStyle = BorderStyle.None;
+
+
+        if (ldt_flow_pro_hr.Rows.Count <= 0)//非人事签核
+        {
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+        }
+
+    }
 
     protected void gv_d_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
     {
@@ -310,6 +353,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         this.gv_d_hr.DataSource = ldt;
         this.gv_d_hr.DataBind();
 
+        ViewState["dtl_hr"] = ldt;
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -329,6 +373,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ldt.AcceptChanges();
         gv_d_hr.DataSource = ldt;
         gv_d_hr.DataBind();
+
+        ViewState["dtl_hr"] = ldt;
     }
 
     protected void gv_d_hr_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
@@ -341,6 +387,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             ldt.AcceptChanges();
             gv_d_hr.DataSource = ldt;
             gv_d_hr.DataBind();
+
+            ViewState["dtl_hr"] = ldt;
         }
 
     }
@@ -351,6 +399,20 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     //    {
     //        return;
     //    }
+    //    DataTable dtl_hr = ((DataTable)ViewState["dtl_hr"]);
+    //    ASPxComboBox tb1 = ((ASPxComboBox)this.gv_d_hr.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["Vehicle"], "Vehicle"));
+
+    //    if (dtl_hr != null)
+    //    {
+    //        DataTable ldt_Vehicle = DbHelperSQL.Query(@"select '飞机' as Vehicle union all select '火车' as Vehicle ").Tables[0];
+    //        tb1.DataSource = ldt_Vehicle;
+    //        tb1.TextField = "Vehicle";
+    //        tb1.ValueField = "Vehicle";
+    //        tb1.DataBind();
+    //        tb1.Value = dtl_hr.Rows.Count > 0 ? dtl_hr.Rows[e.VisibleIndex]["Vehicle"].ToString() : "";
+    //    }
+
+
 
     //    ASPxComboBox tb1 = ((ASPxComboBox)this.gv_d_hr.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["TravelerName"], "TravelerName"));
     //    if (tb1 != null)
