@@ -18,6 +18,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     public string fieldStatus;
 
     public string SQ_StepID = "F882B5B3-78BE-4804-BB42-72C0D6B680AB";
+    public string is_hr_zy="";
 
     string FlowID = "A";
     string StepID = "A";
@@ -32,8 +33,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         if (ViewState["Traveler_i"] == null) { ViewState["Traveler_i"] = ""; }
         if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
         if (ViewState["Vehicle_i"] == null) { ViewState["Vehicle_i"] = ""; }
-
-        ViewState["dtl_hr"] = null;
 
         //接收
         if (Request.QueryString["instanceid"] != null)
@@ -311,13 +310,23 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["Remark"], "Remark")).BorderStyle = BorderStyle.None;
 
 
-        if (ldt_flow_pro_hr.Rows.Count <= 0)//非人事签核
-        {
-            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+        //if (ldt_flow_pro_hr.Rows.Count <= 0)//非人事签核
+        //{
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
 
-            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-            ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
+        //}
+        //else
+        //{
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = false;
+        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = false;
+        //}
+
+        if (ldt_flow_pro_hr.Rows.Count > 0)//人事签核
+        {
+            is_hr_zy = "Y";
         }
 
     }

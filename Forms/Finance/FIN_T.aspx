@@ -60,7 +60,7 @@
             $("#CJJH select[id*='TravelType']").change(function () {  
                 Auto_Calculate_T007();
             });
-
+            is_hr_yz_set();
         });
 
         function Ini_Set_IsHrReserve(){
@@ -150,6 +150,25 @@
                 }
             });
 
+        }
+
+        function is_hr_yz_set(){
+            var is_hr_zy = '<%=is_hr_zy%>';
+
+            if (is_hr_zy="Y") {
+                //$("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                //    var ActualCost = eval('ActualCost' + index);
+                //    //ActualCost
+                //});
+                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
+                    $(this).removeAttr("readonly");
+                    $(this).css("Border-BorderWidth","1");
+                });
+                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
+                    $(this).removeAttr("readonly");
+                });
+
+            }
         }
 
         //提出自定流程 JS 
