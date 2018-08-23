@@ -310,21 +310,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["Remark"], "Remark")).BorderStyle = BorderStyle.None;
 
 
-        //if (ldt_flow_pro_hr.Rows.Count <= 0)//非人事签核
-        //{
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
-
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
-        //}
-        //else
-        //{
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = false;
-        //    ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = false;
-        //}
-
-        if (ldt_flow_pro_hr.Rows.Count > 0)//人事签核
+        if (ldt_flow_pro_hr.Rows.Count > 0 && Request.QueryString["display"] == null)//人事签核
         {
             is_hr_zy = "Y";
         }

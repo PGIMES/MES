@@ -155,20 +155,22 @@
         function is_hr_yz_set(){
             var is_hr_zy = '<%=is_hr_zy%>';
 
-            if (is_hr_zy="Y") {
-                //$("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
-                //    var ActualCost = eval('ActualCost' + index);
-                //    //ActualCost
-                //});
-                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
-                    $(this).removeAttr("readonly");
-                    $(this).css("Border-BorderWidth","1");
+            if (is_hr_zy=="Y") {
+                $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                    $(item).find("table[id*=ScheduledFlight]").css("border-width","1px");
+                    $(item).find("input[id*=ScheduledFlight]").removeAttr("readonly");
+                    $(item).find("table[id*=ActualCost]").css("border-width","1px");
+                    $(item).find("input[id*=ActualCost]").removeAttr("readonly");
                 });
-                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
-                    $(this).removeAttr("readonly");
-                });
-
             }
+            //else {
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+            //        $(item).find("table[id*=ScheduledFlight]").css("border-width","0px");
+            //        $(item).find("input[id*=ScheduledFlight]").attr("readOnly","readOnly");
+            //        $(item).find("table[id*=ActualCost]").css("border-width","1px");
+            //        $(item).find("input[id*=ActualCost]").attr("readOnly","readOnly");
+            //    });
+            //}
         }
 
         //提出自定流程 JS 
@@ -837,9 +839,9 @@
             
             //----------------------------------------------------------------------------逻辑验证
             //验证 预计出发时间 预计结束时间 大小关系   
-            if((new Date())>(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
-                msg+="【预计出发时间】必须大于等于【当前时间】.<br />";
-            }
+            //if((new Date())>(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
+            //    msg+="【预计出发时间】必须大于等于【当前时间】.<br />";
+            //}
             if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
                 msg+="【预计结束时间】必须大于【预计出发时间】.<br />";
             }
@@ -889,6 +891,7 @@
             </div>
         </div>
     </div>
+
     <div id="div_Vehicle" style="display:none;">
         <asp:RadioButtonList ID="rdb_Vehicle" runat="server" RepeatDirection="Horizontal" Height="20px" Width="120px" style="margin-left:10px; margin-top:10px;">
             <asp:ListItem Text="飞机" Value="飞机"></asp:ListItem>
@@ -1177,10 +1180,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="80px" VisibleIndex="6">
+                                        <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="90px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="BudgetCost" Width="80px" runat="server" Value='<%# Eval("BudgetCost")%>' 
+                                                <dx:ASPxTextBox ID="BudgetCost" Width="90px" runat="server" Value='<%# Eval("BudgetCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR();}" %>'
                                                     ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
@@ -1223,10 +1226,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="80px" VisibleIndex="10" HeaderStyle-CssClass="hr">
+                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="90px" VisibleIndex="10" HeaderStyle-CssClass="hr">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="ActualCost" Width="80px" runat="server" Value='<%# Eval("ActualCost")%>' 
+                                                <dx:ASPxTextBox ID="ActualCost" Width="90px" runat="server" Value='<%# Eval("ActualCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC();}" %>'
                                                     ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0"   ReadOnly="true">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
