@@ -159,7 +159,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
-            if (ldt_flow_pro.Rows.Count == 0)
+            if (ldt_flow_pro.Rows.Count == 0 && (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID))
             {
                 this.btnflowSend.Text = "批准";
             }
