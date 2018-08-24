@@ -77,4 +77,5 @@ public class LoginUser
     public string Domain { get; set; }
     public string DomainName { get; set; }
     public string Telephone { get; set; }
+    public string Car { get; set; }
 }
