@@ -123,7 +123,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 this.gv_d_hr.DataSource = ldt_detail_hr;
                 this.gv_d_hr.DataBind();
 
-                ViewState["dtl_hr"] = ldt_detail_hr;
             }
 
 
@@ -286,7 +285,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         this.gv_d_hr.DataSource = ldt;
         this.gv_d_hr.DataBind();
 
-        ViewState["dtl_hr"] = ldt;
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -306,8 +304,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ldt.AcceptChanges();
         gv_d_hr.DataSource = ldt;
         gv_d_hr.DataBind();
-
-        ViewState["dtl_hr"] = ldt;
     }
 
     protected void gv_d_hr_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
@@ -321,7 +317,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             gv_d_hr.DataSource = ldt;
             gv_d_hr.DataBind();
 
-            ViewState["dtl_hr"] = ldt;
         }
 
     }
