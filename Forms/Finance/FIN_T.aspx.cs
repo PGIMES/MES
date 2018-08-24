@@ -151,8 +151,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         //特殊处理，签核界面，明细的框框拿掉
         string lssql_hr = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
                         where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
-                            and instanceid='{2}' and stepname='{3}'";
-        string sql_pro_hr = string.Format(lssql_hr, StepID, FlowID, m_sid, "人事行政专员");
+                            and instanceid='{2}' and stepname like '%{3}%'";
+        string sql_pro_hr = string.Format(lssql_hr, StepID, FlowID, m_sid, "行政专员");
         DataTable ldt_flow_pro_hr = DbHelperSQL.Query(sql_pro_hr).Tables[0];
 
 
@@ -162,10 +162,23 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 this.btnflowSend.Text = "批准";
             }
-            if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID != "A" && StepID != SQ_StepID)
+            //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID != "A" && StepID != SQ_StepID)
+            //{
+            //    ViewState["PlanAttendant_i"] = "Y";
+            //    setread(i);
+            //}
+            if (StepID != "A" && StepID != SQ_StepID)
             {
                 ViewState["PlanAttendant_i"] = "Y";
                 setread(i);
+            }
+            else
+            {
+                if (Request.QueryString["display"] != null)
+                {
+                    ViewState["PlanAttendant_i"] = "Y";
+                    setread(i);
+                }
             }
 
         }
