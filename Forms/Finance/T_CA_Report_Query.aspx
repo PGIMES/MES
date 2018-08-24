@@ -62,9 +62,9 @@
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>                        
-                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="formno" Width="140px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="140px" VisibleIndex="1" >
                                 <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_formno" runat="server" Text='<%# Eval("formno")%>' Cursor="pointer" ClientInstanceName='<%# "formno"+Container.VisibleIndex.ToString() %>'
+                                    <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757&display=1&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'  
                                          Target="_blank">                                        
                                     </dx:ASPxHyperLink>
@@ -102,17 +102,17 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1560px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
+                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="820px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>                        
-                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="formno" Width="120px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="表单单号" FieldName="FormNo" Width="140px" VisibleIndex="1" >
                                 <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_formno" runat="server" Text='<%# Eval("formno")%>' Cursor="pointer" ClientInstanceName='<%# "formno"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757&display=1&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'  
+                                    <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=3f8de2dd-9229-4517-90a6-c13cb10a5c07&appid=A9EE1086-F066-41FD-A5C5-0BF50F272EB2&display=1&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'  
                                          Target="_blank">                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
@@ -121,12 +121,7 @@
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>                            
                             <dx:GridViewDataTextColumn Caption="申请部门" FieldName="ApplyDept" Width="120px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="100px" VisibleIndex="5"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="差旅类型" FieldName="TravelType" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="差旅地点" FieldName="TravelPlace" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="差旅行程期间" FieldName="StartToEnd" Width="200px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="出差事由" FieldName="TravelReason" Width="200px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="随行人员" FieldName="PlanAttendant" Width="200px" VisibleIndex="10"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="BudgetTotalCostByForm" Width="100px" VisibleIndex="11"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请人车牌号" FieldName="CarNo" Width="100px" VisibleIndex="5"></dx:GridViewDataTextColumn>
 
                             <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13"></dx:GridViewDataTextColumn>
