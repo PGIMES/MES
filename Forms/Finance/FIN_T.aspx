@@ -1092,7 +1092,7 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
 
                         <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" EnableTheming="True" 
-                                ClientInstanceName="gv_d"  OnHtmlRowCreated="gv_d_HtmlRowCreated"> 
+                                ClientInstanceName="gv_d"> 
                             <SettingsPager PageSize="1000"></SettingsPager>
                             <Settings ShowFooter="True" />
                             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />

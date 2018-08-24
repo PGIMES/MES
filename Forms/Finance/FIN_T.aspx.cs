@@ -251,15 +251,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     }
 
-    protected void gv_d_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
-    {
-        if (e.RowType != DevExpress.Web.GridViewRowType.Data)
-        {
-            return;
-        }
-
-    }
-
     protected void btnadd_Click(object sender, EventArgs e)
     {
         //新增一行或一组
