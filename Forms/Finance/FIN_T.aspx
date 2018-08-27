@@ -627,11 +627,15 @@
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                 if($(item).children("td:last-child").text()=="T001"){
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    BudgetTotalCost.SetText(BC_feiji);                    
+                    BudgetTotalCost.SetText(BC_feiji);       
+                    if(BC_feiji>0){(eval('IsHrReserve' + index)).SetText("是")}
+                    else{(eval('IsHrReserve' + index)).SetText("否")}
                 }
                 if($(item).children("td:last-child").text()=="T002"){
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    BudgetTotalCost.SetText(BC_huoche);                    
+                    BudgetTotalCost.SetText(BC_huoche);      
+                    if(BC_huoche>0){(eval('IsHrReserve' + index)).SetText("是")}
+                    else{(eval('IsHrReserve' + index)).SetText("否")}
                 }
             });
             RefreshRow();
