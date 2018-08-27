@@ -62,7 +62,7 @@
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>                        
-                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="140px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="表单单号" FieldName="FormNo" Width="140px" VisibleIndex="1" >
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757&display=1&stepid="+ Eval("StepID")+"&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("FormNo") %>'  
