@@ -86,7 +86,6 @@
                 }
                 if($(item).children("td:last-child").text()=="T007"){
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    BudgetTotalCost.SetText(0);
                     $(item).find("table[id*=BudgetTotalCost]").addClass("dxeTextBox_read");
                     $(item).find("input[id*=BudgetTotalCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
                 }
@@ -750,7 +749,7 @@
 
         function setvalue_Traveler(vi,workcode,workname){
             var TravelerName= eval('TravelerName' + vi);var TravelerId= eval('TravelerId' + vi);
-            TravelerName.SetText(workcode);TravelerId.SetText(workname);
+            TravelerName.SetText(workname);TravelerId.SetText(workcode);
         }
 
         function Auto_Time(vi,dates){
