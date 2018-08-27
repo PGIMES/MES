@@ -718,9 +718,10 @@
                         return false;
                     }
                     var IsHrReserve= eval('IsHrReserve' + vi);
-                    IsHrReserve.SetText(YN_value);
-
-                    Get_IsHrReserve(vi);
+                    if(IsHrReserve.GetText()!=YN_value){
+                        IsHrReserve.SetText(YN_value);
+                        Get_IsHrReserve(vi);
+                    }
 
                     layer.close(index);
 
