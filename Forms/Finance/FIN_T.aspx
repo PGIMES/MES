@@ -1301,7 +1301,7 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="预定班次" FieldName="ScheduledFlight" Width="100px" VisibleIndex="9" HeaderStyle-CssClass="hr">
+                                        <dx:GridViewDataTextColumn Caption="预定班次(人事填写)" FieldName="ScheduledFlight" Width="100px" VisibleIndex="9" HeaderStyle-CssClass="hr">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ScheduledFlight" Width="100px" runat="server" Value='<%# Eval("ScheduledFlight")%>' 
@@ -1309,7 +1309,7 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="实际费用" FieldName="ActualCost" Width="90px" VisibleIndex="10" HeaderStyle-CssClass="hr">
+                                        <dx:GridViewDataTextColumn Caption="实际费用(人事填写)" FieldName="ActualCost" Width="90px" VisibleIndex="10" HeaderStyle-CssClass="hr">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ActualCost" Width="90px" runat="server" Value='<%# Eval("ActualCost")%>' 
