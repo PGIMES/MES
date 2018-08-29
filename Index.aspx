@@ -236,6 +236,7 @@
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3f8de2dd-9229-4517-90a6-c13cb10a5c07&appid=A9EE1086-F066-41FD-A5C5-0BF50F272EB2" target="_blank">私车公用申请单</a></li>
                                         <li class="divider"></li> 
                                         <li><a href="/Forms/Finance/T_CA_Report_Query.aspx" target="_blank">差旅/私车公用申请单查询</a></li>
+                                        <li><a href="/Forms/Finance/OES_Report_Query.aspx" target="_blank">费用报销单查询</a></li>
                                         <li><a href="/Fin/Fin_WG1_Report.aspx">完工报表一</a></li>
                                         <li><a href="/Fin/Fin_WG2_Report.aspx">完工报表二</a></li>
                                     </ul>
