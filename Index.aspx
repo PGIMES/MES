@@ -14,6 +14,61 @@
             width: 150px;
         }
     </style>
+    <style type="text/css">
+        .dropdown-submenu {
+            position: relative;
+        }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                -webkit-border-radius: 0 6px 6px 6px;
+                -moz-border-radius: 0 6px 6px;
+                border-radius: 0 6px 6px 6px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > a:after {
+                display: block;
+                content: " ";
+                float: right;
+                width: 0;
+                height: 0;
+                border-color: transparent;
+                border-style: solid;
+                border-width: 5px 0 5px 5px;
+                border-left-color: #ccc;
+                margin-top: 5px;
+                margin-right: -10px;
+            }
+
+            .dropdown-submenu:hover > a:after {
+                border-left-color: #fff;
+            }
+
+            .dropdown-submenu.pull-left {
+                float: none;
+            }
+
+                .dropdown-submenu.pull-left > .dropdown-menu {
+                    left: -100%;
+                    margin-left: 10px;
+                    -webkit-border-radius: 6px 0 6px 6px;
+                    -moz-border-radius: 6px 0 6px 6px;
+                    border-radius: 6px 0 6px 6px;
+                }
+
+        .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+            color: #262626;
+            text-decoration: none;
+            background-color: #red;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <script type="text/javascript">
@@ -232,11 +287,22 @@
                                        财务部
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757" target="_blank">差旅申请单</a></li>
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3f8de2dd-9229-4517-90a6-c13cb10a5c07&appid=A9EE1086-F066-41FD-A5C5-0BF50F272EB2" target="_blank">私车公用申请单</a></li>
+                                        <%--<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757" target="_blank">差旅申请单(测试)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3f8de2dd-9229-4517-90a6-c13cb10a5c07&appid=A9EE1086-F066-41FD-A5C5-0BF50F272EB2" target="_blank">私车公用申请单(测试)</a></li>
                                         <li class="divider"></li> 
-                                        <li><a href="/Forms/Finance/T_CA_Report_Query.aspx" target="_blank">差旅/私车公用申请单查询</a></li>
-                                        <li><a href="/Forms/Finance/OES_Report_Query.aspx" target="_blank">费用报销单查询</a></li>
+                                        <li><a href="/Forms/Finance/T_CA_Report_Query.aspx" target="_blank">差旅/私车公用申请单查询(测试)</a></li>
+                                        <li><a href="/Forms/Finance/OES_Report_Query.aspx" target="_blank">费用报销单查询(测试)</a></li>--%>
+                                        <li  class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">费用报销</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=24f321ee-b4e3-4c2c-a0a4-f51cafdf526f&appid=90A30D34-F40F-4A0B-BCFD-3AD9786FF757" target="_blank">差旅申请单(测试)</a></li>
+                                                <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3f8de2dd-9229-4517-90a6-c13cb10a5c07&appid=A9EE1086-F066-41FD-A5C5-0BF50F272EB2" target="_blank">私车公用申请单(测试)</a></li>
+                                                <li class="divider"></li> 
+                                                <li><a href="/Forms/Finance/T_CA_Report_Query.aspx" target="_blank">差旅/私车公用申请单查询(测试)</a></li>
+                                                <li><a href="/Forms/Finance/OES_Report_Query.aspx" target="_blank">费用报销单查询(测试)</a></li>                                        
+                                            </ul>
+                                        </li>
+                                        <li class="divider"></li> 
                                         <li><a href="/Fin/Fin_WG1_Report.aspx">完工报表一</a></li>
                                         <li><a href="/Fin/Fin_WG2_Report.aspx">完工报表二</a></li>
                                     </ul>
