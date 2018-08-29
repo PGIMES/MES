@@ -218,6 +218,145 @@
             $('#comment', parent.document).val(val);
         }
 
+        function gv_d_hr_SelectionChanged(s, e) {
+
+            gv_d_hr_color();
+
+            //if(e.isSelected){
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
+
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
+            //}else {
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
+
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
+            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
+            //}
+
+        }
+
+        function gv_d_hr_color(){
+            $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+
+                var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                    $(item).find("table[id*=TravelerName_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=TravelerName_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
+                }else {
+                    $(item).find("table[id*=TravelerName_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=TravelerName_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
+                }
+               
+                if($(item).find("input[id*=StartFromPlace_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=StartFromPlace_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=StartFromPlace_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=StartFromPlace_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=StartFromPlace_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+                if($(item).find("input[id*=EndToPlace_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=EndToPlace_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=EndToPlace_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=EndToPlace_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=EndToPlace_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+                if($(item).find("input[id*=BudgetCost_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=BudgetCost_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=BudgetCost_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=BudgetCost_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=BudgetCost_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+                if($(item).find("input[id*=Remark_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=Remark_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=Remark_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=Remark_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=Remark_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+
+                if($(item).find("input[id*=ScheduledFlight_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=ScheduledFlight_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=ScheduledFlight_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=ScheduledFlight_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=ScheduledFlight_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+                if($(item).find("input[id*=ActualCost_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=ActualCost_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=ActualCost_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=ActualCost_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=ActualCost_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+
+                
+            });
+        }
+
         //设定表字段状态（可编辑性）
         var tabName="pgi_fin_t_main_form";//表名
         function SetControlStatus(fieldStatus)
@@ -1188,7 +1327,8 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
 
                                  <dx:aspxgridview ID="gv_d_hr" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback" ><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated"--%>
+                                     ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback" OnDataBound="gv_d_hr_DataBound"><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated"--%>
+                                     <ClientSideEvents SelectionChanged="gv_d_hr_SelectionChanged" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />

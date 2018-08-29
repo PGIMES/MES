@@ -544,4 +544,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     #endregion
 
 
+    protected void gv_d_hr_DataBound(object sender, EventArgs e)
+    {
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_d_hr_color();", true);
+    }
 }
