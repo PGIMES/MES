@@ -144,7 +144,7 @@
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo0" runat="server" 
                                         Text='<%# Eval("aplno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=4a901bc7-ea83-43b1-80b6-5b14708dede9&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&state=edit&InstanceID="+ Eval("aplno") %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=4a901bc7-ea83-43b1-80b6-5b14708dede9&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4&display=1&GroupID="+ Eval("GroupID")+"&InstanceID="+ Eval("aplno") %>'
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
@@ -194,7 +194,7 @@
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo0" runat="server" 
                                         Text='<%# Eval("formno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=33C8FB5D-CB37-4667-AE06-69A87A23542E&domain="+ Eval("domain")+"&gc="+Eval("gc_version")+"&bz="+Eval("bz_version")+"&display=1&wlh="+Eval("wlh")+"&Instanceid="+ Eval("formno") %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=33C8FB5D-CB37-4667-AE06-69A87A23542E&GroupID="+ Eval("GroupID")+"&domain="+ Eval("domain")+"&gc="+Eval("gc_version")+"&bz="+Eval("bz_version")+"&display=1&wlh="+Eval("wlh")+"&Instanceid="+ Eval("formno") %>'
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
