@@ -49,4 +49,20 @@ public partial class Forms_Finance_OES_Report_Query : System.Web.UI.Page
         ASPxGridViewExporter1.WriteXlsToResponse("费用报销" + System.DateTime.Now.ToShortDateString());//导出到Excel
     }
 
+    protected void gv_CustomCellMerge(object sender, DevExpress.Web.ASPxGridViewCustomCellMergeEventArgs e)
+    {
+        if (e.Column.Name == "FormNo" || e.Column.FieldName == "ApplyDate" || e.Column.FieldName == "ApplyName" || e.Column.FieldName == "ApplyDept" || e.Column.FieldName == "ApplyDomainName"
+             || e.Column.FieldName == "GoDays" || e.Column.FieldName == "GoSatus" || e.Column.FieldName == "ApproveDate")
+        {
+            var formno1 = gv.GetRowValues(e.RowVisibleIndex1, "FormNo");
+            var formno2 = gv.GetRowValues(e.RowVisibleIndex2, "FormNo");
+
+            if (formno1.ToString() != formno2.ToString())
+            {
+                e.Handled = true;
+            }
+
+        }
+
+    }
 }
