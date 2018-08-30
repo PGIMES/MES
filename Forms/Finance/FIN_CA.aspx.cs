@@ -70,8 +70,18 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
                     ApplyId.Text = LogUserModel.UserId; ApplyName.Text = LogUserModel.UserName; ApplyTelephone.Text = LogUserModel.Telephone;
                     ApplyJobTitleName.Text = LogUserModel.JobTitleName;
                     ApplyDomain.Text = LogUserModel.Domain; ApplyDomainName.Text = LogUserModel.DomainName;
-                    ApplyDeptId.Text = "0000"; ApplyDeptName.Text = LogUserModel.DepartName;
+                    ApplyDeptId.Text = ""; ApplyDeptName.Text = LogUserModel.DepartName;
                     CarNo.Text = LogUserModel.Car;
+
+                    DataTable dt_costcenter = DbHelperSQL.Query("select * from [172.16.5.6].[eHR_DB].[dbo].[View_CostCenter] where [EMPLOYEEID]='" + LogUserModel.UserId + "'").Tables[0];
+                    if (dt_costcenter != null)
+                    {
+                        if (dt_costcenter.Rows.Count > 0)
+                        {
+                            ApplyDeptId.Text = dt_costcenter.Rows[0]["ITEMVALUE"].ToString();
+                        }
+                    }
+
                 }
 
                 lssql += @" where 1=0";
