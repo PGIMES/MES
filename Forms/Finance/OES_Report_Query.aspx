@@ -77,7 +77,14 @@
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="180px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="200px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="200px" VisibleIndex="7">
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_instanceid" runat="server" Text='<%# Eval("instanceid")%>' Cursor="pointer" ClientInstanceName='<%# "instanceid"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# Eval("budgetsour") %>'  
+                                         Target="_blank">                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用发生日期/期间" FieldName="feedate" Width="160px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用说明" FieldName="feenote" Width="250px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="limit" Width="100px" VisibleIndex="10"></dx:GridViewDataTextColumn>
