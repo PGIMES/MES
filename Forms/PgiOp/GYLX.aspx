@@ -326,7 +326,7 @@
             var formno=$("#CPXX input[id*='formno']").val();
 
             if(pgi_no!=pgi_no_t){
-                if(pgi_no_t.substr(pgi_no_t.length-3,3)!="-X1"){
+                if(pgi_no_t.substr(pgi_no_t.length-3,3)!="-X1" && pgi_no_t.substr(pgi_no_t.length-3,3)!="-X2"){
                     layer.alert("请填写正确的物料号、工艺流程代码");
                     $("#CPXX input[id*='pgi_no_t']").val("");
                     return false;
