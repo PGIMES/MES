@@ -47,7 +47,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1720px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1760px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -76,7 +76,7 @@
                             <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="80px" VisibleIndex="5">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="180px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="220px" VisibleIndex="6"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="200px" VisibleIndex="7">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_instanceid" runat="server" Text='<%# Eval("instanceid")%>' Cursor="pointer" ClientInstanceName='<%# "instanceid"+Container.VisibleIndex.ToString() %>'
