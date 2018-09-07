@@ -24,6 +24,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (ViewState["ApplyId_i"] == null) { ViewState["ApplyId_i"] = ""; }
         if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
         if (ViewState["E_Date_i"] == null) { ViewState["E_Date_i"] = ""; }
 
@@ -66,6 +67,11 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
             {
                 if (LogUserModel != null)
                 {
+                    CreateId.Text = LogUserModel.UserId; CreateName.Text = LogUserModel.UserName; CreateTelephone.Text = LogUserModel.Telephone;
+                    CreateJobTitleName.Text = LogUserModel.JobTitleName;
+                    CreateDomain.Text = LogUserModel.Domain; CreateDomainName.Text = LogUserModel.DomainName;
+                    CreateDeptId.Text = ""; CreateDeptName.Text = LogUserModel.DepartName;
+
                     ApplyDate.Text = System.DateTime.Now.ToString("yyyy/MM/dd");
                     ApplyId.Text = LogUserModel.UserId; ApplyName.Text = LogUserModel.UserName; ApplyTelephone.Text = LogUserModel.Telephone;
                     ApplyJobTitleName.Text = LogUserModel.JobTitleName;
@@ -78,6 +84,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
                     {
                         if (dt_costcenter.Rows.Count > 0)
                         {
+                            CreateDeptId.Text = dt_costcenter.Rows[0]["ITEMVALUE"].ToString();
                             ApplyDeptId.Text = dt_costcenter.Rows[0]["ITEMVALUE"].ToString();
                         }
                     }
@@ -143,7 +150,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
     public void setread(int i)
     {
-        ViewState["Date_i"] = "Y"; ViewState["E_Date_i"] = "Y";
+        ViewState["ApplyId_i"] = "Y"; ViewState["Date_i"] = "Y"; ViewState["E_Date_i"] = "Y";
 
         btnadd.Visible = false;
         btndel.Visible = false;

@@ -313,6 +313,33 @@
 
     <script type="text/javascript">
 
+        function Get_ApplyId(){
+            var url = "/select/select_ApplyId.aspx?para=car";
+
+            layer.open({
+                title:'申请人选择',
+                type: 2,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });         
+        }
+
+        function setvalue_ApplyId(workcode,lastname ,ITEMVALUE ,dept_name , domain ,gc ,jobtitlename ,telephone, car) {
+
+            $("#SQXX input[id*='ApplyId']").val(workcode);
+            $("#SQXX input[id*='ApplyName']").val(lastname);
+            $("#SQXX input[id*='ApplyTelephone']").val(telephone);
+            $("#SQXX input[id*='ApplyJobTitleName']").val(jobtitlename);
+            $("#SQXX input[id*='ApplyDomain']").val(domain);
+            $("#SQXX input[id*='ApplyDomainName']").val(gc);
+            $("#SQXX input[id*='ApplyDeptId']").val(ITEMVALUE);
+            $("#SQXX input[id*='ApplyDeptName']").val(dept_name);
+            $("#SQXX input[id*='CarNo']").val(car);
+            
+        }
+
         function RefreshRow() {
             var BTC=0;
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
@@ -463,6 +490,48 @@
     </div>
 
     <div class="col-md-12" >
+
+        <div class="row row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#DQXX">
+                    <strong>填单人信息</strong>
+                </div>
+                <div class="panel-body collapse" id="DQXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                        <table style="width: 100%">
+                            <tr>
+                                <td><font color="red">&nbsp;</font>填单人</td>
+                                <td>
+                                    <div class="form-inline">
+                                        <asp:TextBox runat="server" ID="CreateId" class="lineread" ReadOnly="True" Width="50px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="CreateName"  class="lineread" ReadOnly="True" Width="82px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="CreateTelephone" class="lineread" Width="120px"/>
+                                    </div>
+                                </td>
+                                <td><font color="red">&nbsp;</font>填单人职位</td>
+                                <td><asp:TextBox runat="server" ID="CreateJobTitleName" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td><font color="red">&nbsp;</font>填单人公司</td>
+                                <td>
+                                    <div class="form-inline">
+                                        <asp:TextBox runat="server" ID="CreateDomain" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="CreateDomainName"  class="lineread" ReadOnly="True" Width="196px"></asp:TextBox>
+                                    </div>
+                                </td>
+                                <td><font color="red">&nbsp;</font>填单人部门</td>
+                                <td>
+                                    <div class="form-inline">
+                                        <asp:TextBox runat="server" ID="CreateDeptId" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="CreateDeptName"  class="lineread" ReadOnly="True" Width="196px"></asp:TextBox>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
           
         <div class="row row-container">
             <div class="panel panel-info">
@@ -479,12 +548,13 @@
                                 <td><asp:TextBox ID="ApplyDate"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>
                             </tr>
                             <tr>
-                                <td><font color="red">&nbsp;</font>申请人</td>
+                                <td><font color="red">*</font>申请人</td>
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="ApplyId" class="lineread" ReadOnly="True" Width="50px"></asp:TextBox>
                                         <asp:TextBox runat="server" ID="ApplyName"  class="lineread" ReadOnly="True" Width="82px"></asp:TextBox>
                                         <asp:TextBox runat="server" ID="ApplyTelephone" class="lineread" Width="120px"/>
+                                        <i id="ApplyId_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_ApplyId()"></i>
                                     </div>
                                 </td>
                                 <td><font color="red">&nbsp;</font>申请人职位</td>
@@ -507,7 +577,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><font color="red">&nbsp;</font>申请人车牌号</td>
+                                <td><font color="red">*</font>申请人车牌号</td>
                                 <td><asp:TextBox ID="CarNo" runat="server" class="lineread"  ReadOnly="true" Width="260px" /></td>
                                 <td></td>
                                 <td></td>

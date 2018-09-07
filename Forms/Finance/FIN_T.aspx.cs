@@ -26,6 +26,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (ViewState["ApplyId_i"] == null) { ViewState["ApplyId_i"] = ""; }
         if (ViewState["PlanAttendant_i"] == null) { ViewState["PlanAttendant_i"] = ""; }
         if (ViewState["IsHrReserve_i"] == null) { ViewState["IsHrReserve_i"] = ""; }
         if (ViewState["Traveler_i"] == null) { ViewState["Traveler_i"] = ""; }
@@ -74,6 +75,11 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 if (LogUserModel != null)
                 {
+                    CreateId.Text = LogUserModel.UserId; CreateName.Text = LogUserModel.UserName; CreateTelephone.Text = LogUserModel.Telephone;
+                    CreateJobTitleName.Text = LogUserModel.JobTitleName;
+                    CreateDomain.Text = LogUserModel.Domain; CreateDomainName.Text = LogUserModel.DomainName;
+                    CreateDeptId.Text = ""; CreateDeptName.Text = LogUserModel.DepartName;
+
                     ApplyDate.Text = System.DateTime.Now.ToString("yyyy/MM/dd");
                     ApplyId.Text = LogUserModel.UserId; ApplyName.Text = LogUserModel.UserName; ApplyTelephone.Text = LogUserModel.Telephone;
                     ApplyJobTitleName.Text = LogUserModel.JobTitleName;
@@ -85,6 +91,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                     {
                         if (dt_costcenter.Rows.Count>0)
                         {
+                            CreateDeptId.Text = dt_costcenter.Rows[0]["ITEMVALUE"].ToString();
                             ApplyDeptId.Text = dt_costcenter.Rows[0]["ITEMVALUE"].ToString();
                         }
                     }
@@ -179,14 +186,14 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             //}
             if (StepID != "A" && StepID != SQ_StepID)
             {
-                ViewState["PlanAttendant_i"] = "Y";
+                ViewState["ApplyId_i"] = "Y"; ViewState["PlanAttendant_i"] = "Y";
                 setread(i);
             }
             else
             {
                 if (Request.QueryString["display"] != null)
                 {
-                    ViewState["PlanAttendant_i"] = "Y";
+                    ViewState["ApplyId_i"] = "Y"; ViewState["PlanAttendant_i"] = "Y";
                     setread(i);
                 }
             }
