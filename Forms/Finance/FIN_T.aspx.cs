@@ -184,7 +184,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             //    ViewState["PlanAttendant_i"] = "Y";
             //    setread(i);
             //}
-            if (StepID != "A" && StepID != SQ_StepID)
+            if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
             {
                 ViewState["ApplyId_i"] = "Y"; ViewState["PlanAttendant_i"] = "Y";
                 setread(i);
