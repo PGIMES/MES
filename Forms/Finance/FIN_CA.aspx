@@ -464,6 +464,32 @@
                 flag=false;return flag;
             }
 
+            if(flag){
+
+                var ApplyId=$("#SQXX input[id*='ApplyId']").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "FIN_T.aspx/CheckData",
+                    data: "{'appuserid':'" + ApplyId + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj=eval(data.d);
+
+                        if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
+
+                        if(msg!=""){  
+                            flag=false;
+                            layer.alert(msg);
+                            return flag;
+                        }
+                    }
+
+                });
+            }
+
             return flag;
         }
 

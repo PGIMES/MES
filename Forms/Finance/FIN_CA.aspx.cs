@@ -213,7 +213,30 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         gv_d.DataBind();
     }
 
-    
+    [WebMethod]
+    public static string CheckData(string appuserid)
+    {
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(appuserid, out dt_manager, out manager_flag);
+
+        string result = "[{\"manager_flag\":\"" + manager_flag + "\"}]";
+        return result;
+
+    }
+
+    public static void CheckData_manager(string appuserid, out DataTable dt_manager, out string manager_flag)
+    {
+        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        manager_flag = "";
+
+        dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + appuserid + "')").Tables[0];
+
+        if (dt_manager.Rows[0]["manager_id"].ToString() == "")
+        {
+            manager_flag += "申请人(" + appuserid + ")的部门经理不存在，不能提交!<br />";
+        }
+    }
+
     private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
@@ -223,6 +246,9 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
         List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("Fin_CA_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+
+        string ApplyId = ((TextBox)this.FindControl("ctl00$MainContent$ApplyId")).Text.Trim();
+        string ApplyName = ((TextBox)this.FindControl("ctl00$MainContent$ApplyName")).Text.Trim();
 
         if (this.m_sid == "")
         {
@@ -241,6 +267,17 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
             }
         }
+
+        //新增部门经理 字段值
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(ApplyId, out dt_manager, out manager_flag);
+
+        Pgi.Auto.Common lc_deptm = new Pgi.Auto.Common();
+        lc_deptm.Code = "deptm";
+        lc_deptm.Key = "";
+        lc_deptm.Value = "u_" + dt_manager.Rows[0]["manager_id"].ToString();
+        ls.Add(lc_deptm);
+
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable(); 
@@ -299,7 +336,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         {
             flag = true;
 
-            string title = "私车公用申请--" + this.m_sid;
+            string title = "私车公用申请【" + ApplyName + "(" + ApplyId + ")】--" + this.m_sid;
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";

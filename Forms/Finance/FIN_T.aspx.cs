@@ -388,6 +388,35 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     //    }
     //}
 
+    [WebMethod]
+    public static string CheckData(string appuserid)
+    {
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(appuserid, out dt_manager, out manager_flag);
+
+        string result = "[{\"manager_flag\":\"" + manager_flag+ "\"}]";
+        return result;
+
+    }
+
+    public static void CheckData_manager(string appuserid, out DataTable dt_manager, out string manager_flag)
+    {
+        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        manager_flag = "";
+
+        dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + appuserid + "')").Tables[0];
+
+        if (dt_manager.Rows[0]["manager_id"].ToString() == "")
+        {
+            manager_flag += "申请人(" + appuserid + ")的部门经理不存在，不能提交!<br />";
+        }
+        if (dt_manager.Rows[0]["fz_id"].ToString() == "")
+        {
+            manager_flag += "申请人(" + appuserid + ")的分管副总不存在，不能提交!<br />";
+        }
+
+    }
+
     private bool SaveData(string action)
     {
         bool flag = true;// 保存数据是否成功标识
@@ -420,6 +449,22 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
             }
         }
+
+        //新增部门经理，分管副总签核人字段值
+        DataTable dt_manager = null; string manager_flag = "";
+        CheckData_manager(ApplyId, out dt_manager, out manager_flag);
+
+        Pgi.Auto.Common lc_deptm = new Pgi.Auto.Common();
+        lc_deptm.Code = "deptm";
+        lc_deptm.Key = "";
+        lc_deptm.Value = "u_" + dt_manager.Rows[0]["manager_id"].ToString();
+        ls.Add(lc_deptm);
+
+        Pgi.Auto.Common lc_deptmfg = new Pgi.Auto.Common();
+        lc_deptmfg.Code = "deptmfg";
+        lc_deptmfg.Key = "";
+        lc_deptmfg.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
+        ls.Add(lc_deptmfg);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable(); DataTable ldt_hr = new DataTable();
