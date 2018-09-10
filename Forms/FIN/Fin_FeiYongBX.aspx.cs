@@ -72,8 +72,9 @@ public partial class Fin_FeiYongBX : PGIBasePage
                     apljob.Text = LogUserModel.JobTitleName;
                     apldomain.Text = LogUserModel.Domain;
 
-                    costcenter.Text = "";
-                    deptcode.Text = "";
+                    //var dtEmpinfo = DbHelperSQL.Query(" SELECT  [ITEMVALUE] costcenter   ,[deptcode]  FROM [172.16.5.6].[eHR_DB].[dbo].[View_CostCenter] where employeeid='" + LogUserModel.UserId + "'");
+                    //costcenter.Text = "";
+                    //deptcode.Text = "";
 
                     txt_LogUserId.Value = LogUserModel.UserId;
                     txt_LogUserName.Value = LogUserModel.UserName;
@@ -118,7 +119,7 @@ public partial class Fin_FeiYongBX : PGIBasePage
             }            
          // show grid data
             bindData();
-
+            ShowHZ();
         }
 
         #endregion
@@ -163,16 +164,9 @@ public partial class Fin_FeiYongBX : PGIBasePage
        
         grid.DataSource = dtDtl;
         grid.DataBind();
-
-        ShowHZ();
-        //var dtMst = DbHelperSQL.Query("select top 20 * from PGI_BASE_PART_DATA_form  ").Tables[0];
-        //string[] headers = {"key","物料号","物料名称","描述", "描述" };
-        //string[] fields = {"id", "wlh", "wlmc", "ms","ms" };
-        //string[] controltype = { "label", "textbox", "textbox", "dropdownlist" ,"label"};
-        //initGridview(gv_dtl,headers, fields, controltype, dtMst);
+            
     }
    
-
     
     public void loadControl(string formtype)
     {
@@ -188,12 +182,16 @@ public partial class Fin_FeiYongBX : PGIBasePage
       //  Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form"+mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable,2);
 
     }
-
-
-
+    
 
     #region "WebMethod"  
-    
+    /// <summary>
+    /// 获取时间区间
+    /// </summary>
+    /// <param name="domain"></param>
+    /// <param name="costcateid"></param>
+    /// <param name="aplid"></param>
+    /// <returns></returns>
     [System.Web.Services.WebMethod()]
     public static string getFindate(string domain,string costcateid,string aplid)
     {
@@ -204,6 +202,25 @@ public partial class Fin_FeiYongBX : PGIBasePage
         { result = value.ToJsonString(); }
         return result;
     }
+    /// <summary>
+    /// 获取人员成本中心，部门代码
+    /// </summary>
+    /// <param name="aplid"></param>
+    /// <returns></returns>
+    [System.Web.Services.WebMethod()]
+    public static string getEmpCost( string empid)
+    {
+        var dtEmpinfo = DbHelperSQL.Query(" ");
+         
+        string result = "";
+        var sql = string.Format("SELECT  [ITEMVALUE] costcenter   ,[deptcode]  FROM [172.16.5.6].[eHR_DB].[dbo].[View_CostCenter] where employeeid='{0}'", empid);
+        var value = DbHelperSQL.Query(sql).Tables[0];
+        if (value.Rows.Count > 0)
+        { result = value.ToJsonString(); }
+        return result;
+    }
+ 
+
     [System.Web.Services.WebMethod()]
     public static string getLimit(string domain, string costcateid, string aplid,string feedate,string aplno="")
     {
@@ -481,10 +498,10 @@ public partial class Fin_FeiYongBX : PGIBasePage
             var dr = dtl.Rows.Find((grid.Rows[i].FindControl("id2") as Label).Text);
             dr["costcateid"] = (grid.Rows[i].FindControl("costcateid") as TextBox).Text;
             dr["costcatename"] = Request[(grid.Rows[i].FindControl("costcatename") as TextBox).UniqueID]; //(grid.Rows[i].FindControl("costcatename") as TextBox).Text;
-            dr["instanceid"] = (grid.Rows[i].FindControl("instanceid") as TextBox).Text;
-            dr["budgetsour"] = (grid.Rows[i].FindControl("budgetsour") as TextBox).Text;
-            dr["feedate"] = (grid.Rows[i].FindControl("feedate") as TextBox).Text;
-            dr["feenote"] = (grid.Rows[i].FindControl("feenote") as TextBox).Text;
+            dr["instanceid"] = Request[(grid.Rows[i].FindControl("instanceid") as TextBox).UniqueID]; //(grid.Rows[i].FindControl("instanceid") as TextBox).Text;
+            dr["budgetsour"] = Request[(grid.Rows[i].FindControl("budgetsour") as TextBox).UniqueID]; //(grid.Rows[i].FindControl("budgetsour") as TextBox).Text;
+            dr["feedate"] = Request[(grid.Rows[i].FindControl("feedate") as TextBox).UniqueID]; 
+            dr["feenote"] = Request[(grid.Rows[i].FindControl("feenote") as TextBox).UniqueID];// (grid.Rows[i].FindControl("feenote") as TextBox).Text;
             dr["limit"] = Request[(grid.Rows[i].FindControl("limit") as TextBox).UniqueID]; 
             var _amount = (grid.Rows[i].FindControl("amount") as TextBox).Text == "" ? "0" : (grid.Rows[i].FindControl("amount") as TextBox).Text;
             dr["amount"] = _amount;
@@ -500,26 +517,44 @@ public partial class Fin_FeiYongBX : PGIBasePage
         }
         else
             onlyflag.Text = "0";//0:标识含非日常报销（手机，油费）以外费用
-        //显示差旅汇总表
-        ShowHZ();
+      ;
     }
     //show汇总
     protected void ShowHZ()
     {
         var dtl = Session["dtl"] as DataTable;
-        var dthz = dtl.Copy();
-
-        SQLHelper SQLHelper = new SQLHelper();
-        SqlParameter[] param = new SqlParameter[]
+        DataTable dthz =  dtl.Clone();
+        DataTable cdt = dtl.GetChanges();
+        if (cdt != null)
         {
-            new SqlParameter("@tmptable",dthz),           
-        };
-        var s= SQLHelper.GetDataTable("Fin_FeiYongValid", param);
+            for (int i = 0; i < cdt.Rows.Count; i++)
+            {
+                DataRow dr = cdt.Rows[i];
+                if (dr.RowState != DataRowState.Deleted)
+                {
+                    DataRow drNew = dthz.NewRow();
+                    drNew.ItemArray= dr.ItemArray;
+                    dthz.Rows.Add(drNew);
+                }
+            }
+        }
+        else
+        {            
+            dthz = dtl;
+        }
         
-        HZgrid.DataSource = s;
-        HZgrid.DataBind();
+
+       SQLHelper SQLHelper = new SQLHelper();
+       SqlParameter[] param = new SqlParameter[]
+       {
+           new SqlParameter("@tmptable",dthz),           
+       };
+       var s= SQLHelper.GetDataTable("Fin_FeiYongValid", param);
+        
+       HZgrid.DataSource = s;
+       HZgrid.DataBind();
          
-        if (HZgrid.Rows.Count > 0) MergeRow(HZgrid, 0, 1, HZgrid.Rows.Count-1  );
+       if (HZgrid.Rows.Count > 0) MergeRow(HZgrid, 0, 1, HZgrid.Rows.Count-1  );
     }
 
     private static void MergeRow(GridView gv, int currentCol, int startRow, int endRow)
@@ -654,12 +689,21 @@ public partial class Fin_FeiYongBX : PGIBasePage
   
     protected void HZgrid_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        //if (e.Row.RowType == DataControlRowType.DataRow)
-        //{
-        //    e.Row.Cells[1].Text = (e.Row.RowIndex + 1).ToString();
-             
-        //}    
-        
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            if((e.Row.DataItem as System.Data.DataRowView)["costcatename"].ToString() == "合计")
+            {
+                e.Row.Style.Value=("background-color:silver");
+                e.Row.Font.Bold = true;
+            }
+            //超支亮红色
+            if (Convert.ToSingle((e.Row.DataItem as System.Data.DataRowView)["chayi"])<0)
+            {
+                e.Row.ForeColor=System.Drawing.Color.Tomato;
+                //e.Row.Font.Bold = true;
+            }
+        }
+
     }
      
     
@@ -684,12 +728,11 @@ public partial class Fin_FeiYongBX : PGIBasePage
             var _id = (grid.Rows[_rowindex].FindControl("id2") as Label).Text;
           //  dtl.Select("id2='"+_id+"'").
             dtl.Rows.Find(_id).Delete();
-
             
         }
 
         bindData(false);
-        
+        ShowHZ();
     }
 
     protected void grid_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -709,6 +752,13 @@ public partial class Fin_FeiYongBX : PGIBasePage
                 (e.Row.FindControl("lnkbudgetsour") as HyperLink).Style.Add("display", "none");
             }
         }
+    }
+
+    protected void refresh_Click(object sender, EventArgs e)
+    {
+        updateGridData();
+        bindData(false);
+        ShowHZ();
     }
 }
 

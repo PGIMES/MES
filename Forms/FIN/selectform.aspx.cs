@@ -14,13 +14,14 @@ using Maticsoft.DBUtility;
 
 public partial class selectform : System.Web.UI.Page
 { 
+    public string sql = string.Format(" select  '24F321EE-B4E3-4C2C-A0A4-F51CAFDF526F' as flowno, FormNo 申请单号, ApplyDate 申请日期,ApplyName 申请人,ApplyDomainName 申请工厂,ApplyDeptName  申请部门, PlanStartTime 开始时间, PlanEndTime 结束时间,PlanAttendant 随行人员, TravelType, TravelPlace 地点, TravelReason 事由,BudgetTotalCostByForm 总预算 from [dbo].[Fin_T_Main_Form] ");
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
              
             var _domain = Request["domain"] == null ? "" : Request["domain"].ToString();
-            string sql = string.Format(" select  '24F321EE-B4E3-4C2C-A0A4-F51CAFDF526F' as flowno, FormNo, ApplyDate,ApplyName,ApplyDomainName,ApplyDeptName, PlanStartTime, PlanEndTime,PlanAttendant, TravelType, TravelPlace, TravelReason,BudgetTotalCostByForm from [dbo].[Fin_T_Main_Form] ");
+           
             sql = sql + " where iscomplete=1 and applyid='" + Request["aplid"]+"'";
             ViewState["sql"] = sql;
             GetData(sql);
@@ -37,9 +38,8 @@ public partial class selectform : System.Web.UI.Page
     }
     protected void BtnStartSearch_Click(object sender, EventArgs e)
     {
-        var _domain = Request["domain"] == null ? "" : Request["domain"].ToString();
-        string sql = string.Format(" select   '24F321EE-B4E3-4C2C-A0A4-F51CAFDF526F' as flowno, FormNo, ApplyDate,ApplyName,ApplyDomainName,ApplyDeptName, PlanStartTime, PlanEndTime,PlanAttendant, TravelType, TravelPlace, TravelReason,BudgetTotalCostByForm from [dbo].[Fin_T_Main_Form]  ");
-        sql = sql + " where iscomplete=1  and applyid='" + Request["aplid"] + "'";
+        var _domain = Request["domain"] == null ? "" : Request["domain"].ToString();        
+        sql = sql + " where iscomplete=1  and applyid='" + Request["aplid"] + "' and FormNo like '%"+txtKeywords.Text.Trim().Replace("'","")+"%' ";
         ViewState["sql"] = sql;
         lb_msg.Text = "";
         GetData(ViewState["sql"].ToString());

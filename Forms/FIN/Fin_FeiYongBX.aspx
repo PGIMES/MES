@@ -60,7 +60,10 @@
             }       
             //初始化主管
             if(paramMap.instanceid==undefined){
-                getDeptLeaderbyEmp();
+                getDeptLeaderbyEmp();                
+            }
+            if($("#costcenter").val()==""||$("#deptcode").val()==""){
+                getEmpCost($("#aplid").val());
             }
             //初始化明细总价 
             getTotalMoney();
@@ -68,11 +71,12 @@
 
         })// end ready
         
-        function validUpdate(value){
-            if($("[id*=pt_part]").val()=="")
-                alert(value);
+        //function validUpdate(value){
+        //    if($("[id*=pt_part]").val()=="")
+        //        alert(value);
             
-        }
+        //}
+
         //设定表字段状态（可编辑性）       
         function SetControlStatus(fieldStatus,tabName)
         {  // tabName_columnName:1_0
@@ -175,40 +179,61 @@
         });
 
         //验证
-        function validate(id){             
+        function validate(){             
             if($("#deptm").val()==""){
-                layer.alert("直属主管未获取到，请尝试重新打开申请单。请联系IT设定.");
+                layer.alert("部门主管未获取到，请尝试重新打开申请单。请联系IT设定.");
                 return false;
             }
-            if($("#projector").val()==""){
-                layer.alert("项目负责人未获取到，请尝试重新打开申请单。请联系IT设定.");
+            if($("#deptmfg").val()==""){
+                layer.alert("分管副总未获取到，请尝试重新打开申请单。请联系IT设定.");
                 return false;
             }
             <%=ValidScript%>
             var flag=true;
-            var msg="";             
-            // 费用说明
-            $("#input[id*=pgino]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【项目号】不可为空.";
+            var msg="";
+            //validate 费用代码
+            $.each($("input[id*=grid_costcateid]"), function (i,obj){
+                if( $(obj).val()==""){
+                    msg="【费用代码】不可为空.";
+                    layer.tips(msg,$(obj));                  
+                    flag=false;
+                    return false;
+                }
+            }) 
+
+            //validate 费用发生日期/区间
+            $.each($("input[id*=grid_feedate]"),function (i,obj){
+                if( $(obj).val()==""){
+                    msg="【费用发生日期/区间】不可为空.";
+                    layer.tips(msg,$(obj));                    
                     flag=false;
                     return false;
                 }
             })          
             
-            //validate qty
-            $("#gvdtl input[id*=qty]").each(function (){
+            //validate 费用说明
+            $.each($("input[id*=grid_feenote]"),function (i,obj){
                 if( $(this).val()==""){
-                    msg+="【数量】不可为空.";
+                    msg="【费用说明】不可为空.";
+                    layer.tips(msg,$(obj));
+                   // $(this).focus();
                     flag=false;
                     return false;
                 }
-            })         
-
-            if(flag==false){  
+            })
+            //valid 处理意见
+            if($("#comment").val()==""){
+                msg="请填写处理意见";
                 layer.alert(msg);
                 return false;
             }
+
+            //if(flag==false){  
+            //    layer.alert(msg);
+            //    return false;
+            //}            
+
+
             if($("#upload").val()==""&& $("#link_upload").text()==""){
                 layer.alert("请选择【附件】");
                 return false;
@@ -305,7 +330,7 @@
                 shade: [0.5, '#000', false],
                 type: 2,
                 offset: '100px',
-                area: ['700px', '450px'],
+                area: ['900px', '500px'],
                 fix: false, //不固定
                 maxmin: false,
                 title: ['<i class="fa fa-dedent"></i> 选择预算来源', false],
@@ -338,7 +363,7 @@
             var ul=$("#"+objid)[0].nextElementSibling;
             setdate(ul,_domain,_costcateid,_aplid,_acptctrl);
         }
-
+        //根据费用发生区间（针对H,Q）自动解析费用说明
         function setFeenote(obj){               
             var objid=$(obj).attr("id");  //feedateid  
             var feenoteid=objid.replace("feedate","feenote");           
@@ -467,8 +492,37 @@
                             
                     }
                     else {     
-                        alert(data.d);
+                       // alert(data.d);
                         $("[id*=deptmfg]").val(data.d)
+                    }                   
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+
+        }
+        //获取部门领导和分管副总
+        function getEmpCost(empid){           
+                         
+            $.ajax({
+                type: "Post",async: false,
+                url: "fin_feiyongbx.aspx/getEmpCost" , 
+                //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                //P1:wlh P2： 
+                data: "{'empid':'"+empid+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {//返回的数据用data.d获取内容// 
+                    var arr=eval(data.d);
+                    if (arr == undefined) {                      
+                        layer.alert("未获取到申请人成本中心");
+                    }
+                    else {                         
+                        //var arr=eval(data.d)
+                        $("#costcenter").val(arr[0].costcenter);
+                        $("#deptcode").val(arr[0].deptcode);
+
                     }                   
                 },
                 error: function (err) {
@@ -707,15 +761,15 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="预算来源">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="instanceid" runat="server" Text='<%# Bind("instanceid") %>'  onclick="selBudgetSource(this)"></asp:TextBox>
-                                                            <asp:TextBox ID="budgetsour" runat="server" Text='<%# Bind("budgetsour") %>' Width="0px" ></asp:TextBox>
+                                                            <asp:TextBox ID="instanceid" runat="server" Text='<%# Bind("instanceid") %>'  onclick="selBudgetSource(this)"  ReadOnly="true"></asp:TextBox>
+                                                            <asp:TextBox ID="budgetsour" runat="server" Text='<%# Bind("budgetsour") %>' Width="0px" Style="display:none"></asp:TextBox>
                                                             <asp:hyperlink  NavigateUrl='<%# Eval("budgetsour")%>' id="lnkbudgetsour" runat="server" target="_blank"  Text="查看"></asp:hyperlink>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="费用发生日期/区间">
                                                         <ItemTemplate>
                                                             <div class="btn-group" >
-                                                                <asp:TextBox ID="feedate" runat="server" data-toggle="dropdown" Text='<%# Bind("feedate") %>' onfocus="setFeeDate(this);" onchange="setLimit(this);setFeenote(this);" ></asp:TextBox>
+                                                                <asp:TextBox ID="feedate" runat="server" data-toggle="dropdown" ReadOnly="true" Text='<%# Bind("feedate") %>' onfocus="setFeeDate(this);" onchange="setLimit(this);setFeenote(this);" ></asp:TextBox>
                                                                 <ul id="ulfeedate" class="dropdown-menu">                                                                    
                                                                 </ul>
                                                             </div>
@@ -733,7 +787,8 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="报销金额">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="amount" runat="server" Text='<%# Bind("amount") %>' onchange="getTotalMoney();setBackColor(this);" ></asp:TextBox>
+                                                            <asp:TextBox ID="amount" runat="server" Text='<%# Bind("amount") %>' onchange="getTotalMoney();setBackColor(this);$('#refresh').click();" ></asp:TextBox>
+                                                           <%-- --%>
                                                         </ItemTemplate>
                                                         <FooterTemplate>
                                                            <asp:label ID="total" runat="server" ></asp:label>
@@ -761,9 +816,9 @@
                                                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                                             </asp:GridView>
-
-                                            <asp:GridView ID="HZgrid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" ShowFooter="True" 
-                                                EmptyDataText="无差旅费用报销记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" Caption="差旅费汇总"  Width="500px" >
+                                            <asp:button ID="refresh" runat="server" Text="刷新汇总数据" OnClick="refresh_Click" style="display:none"></asp:button>
+                                            <asp:GridView ID="HZgrid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="both" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" 
+                                                EmptyDataText="无差旅费用报销记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" Caption="差旅费汇总"  Width="500px"  OnRowDataBound="HZgrid_RowDataBound">
                                                 <AlternatingRowStyle BackColor="White" />
                                                 <Columns>                                                    
                                                     <asp:TemplateField HeaderText="预算来源">                                                        
@@ -777,14 +832,14 @@
                                                              <asp:label ID="costcatename" runat="server" Text='<%# Bind("costcatename") %>'></asp:label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>                                                    
-                                                    <asp:TemplateField HeaderText="预算合计">
+                                                    <asp:TemplateField HeaderText="预算金额">
                                                         <ItemTemplate>                                                            
                                                             <asp:label ID="limit" runat="server" Text='<%# Bind("limit") %>'></asp:label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="报销金额">                                                        
                                                         <ItemTemplate>
-                                                            <asp:label ID="amount" runat="server" Text='<%# Bind("amount") %>' onchange="getTotalMoney()" ></asp:label>
+                                                            <asp:label ID="amount" runat="server" Text='<%# Bind("amount") %>'   ></asp:label>
                                                         </ItemTemplate>                                                        
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="差异金额">
@@ -793,12 +848,12 @@
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                 </Columns>
-                                                <EditRowStyle BackColor="#2461BF" />
+                                                
                                                 <EmptyDataRowStyle HorizontalAlign="left" />
                                                 <FooterStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
                                                 <HeaderStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
                                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
-                                                <RowStyle BackColor="#EFF3FB" />
+                                                
                                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333" />
                                                 <SortedAscendingCellStyle BackColor="#F5F7FB" />
                                                 <SortedAscendingHeaderStyle BackColor="#6D95E1" />
