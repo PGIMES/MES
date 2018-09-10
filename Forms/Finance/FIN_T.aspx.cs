@@ -526,7 +526,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             }
         }
 
-        if (ldt_hr.Rows.Count > 0)//人事预定明细
+        if (ldt_hr.Rows.Count > 0 && IsHrReserveByForm == "是")//人事预定明细
         {
             Pgi.Auto.Common ls_del_hr = new Pgi.Auto.Common();
             string dtl_ids_hr = "";

@@ -81,7 +81,7 @@
                 <tr style="height:30px;">
                     <td></td>
                     <td align="right">
-                        <button id="btn_cj" type="button" class="btn btn-primary btn-large"><font color="blue"<i class="fa fa-send"></i>&nbsp;传送</font></button>
+                        <button id="btn_cj" type="button" class="btn btn-primary btn-large"><font color="blue"<i class="fa fa-send"></i>&nbsp;确定</font></button>
                     </td>
                 </tr>
             </table>

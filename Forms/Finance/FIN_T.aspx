@@ -680,6 +680,12 @@
     </style>
 
     <script type="text/javascript">
+        function con_sure(){
+            if (gv_d_hr.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
+            //询问框
+            return confirm('确认要删除吗？');
+        }
+
         function Get_ApplyId(){
             var url = "/select/select_ApplyId.aspx?para=travel";
 
@@ -1046,19 +1052,21 @@
                                     return false;
                                 }
                             });
-                            if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
-                                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
-                                    if( $(this).val()==""){
-                                        msg+="【预定班次】不可为空.<br />";
-                                        return false;
-                                    }
-                                });
-                                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
-                                    if( $(this).val()==""){
-                                        msg+="【实际费用】不可为空.<br />";
-                                        return false;
-                                    }
-                                });
+                            if(stepid!=null){
+                                if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
+                                    $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
+                                        if( $(this).val()==""){
+                                            msg+="【预定班次】不可为空.<br />";
+                                            return false;
+                                        }
+                                    });
+                                    $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
+                                        if( $(this).val()==""){
+                                            msg+="【实际费用】不可为空.<br />";
+                                            return false;
+                                        }
+                                    });
+                                }
                             }
                         
                         }
@@ -1416,7 +1424,7 @@
                             <ContentTemplate>
                                 
                                 <asp:Button ID="btnadd" runat="server" Text="新增" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btnadd_Click" />
-                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
+                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv_d_hr" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
                                      ClientInstanceName="gv_d_hr"  EnableTheming="True" OnCustomCallback="gv_d_hr_CustomCallback" OnDataBound="gv_d_hr_DataBound"><%--OnHtmlRowCreated="gv_d_hr_HtmlRowCreated"--%>

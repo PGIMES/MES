@@ -312,6 +312,11 @@
     </style>
 
     <script type="text/javascript">
+        function con_sure(){
+            if (gv_d.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
+            //询问框
+            return confirm('确认要删除吗？');
+        }
 
         function Get_ApplyId(){
             var url = "/select/select_ApplyId.aspx?para=car";
@@ -628,7 +633,7 @@
                             <ContentTemplate>
                                 
                                 <asp:Button ID="btnadd" runat="server" Text="新增" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btnadd_Click" />
-                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" />
+                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
                                      ClientInstanceName="gv_d"  EnableTheming="True">
