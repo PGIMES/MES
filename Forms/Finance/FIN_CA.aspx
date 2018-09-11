@@ -499,7 +499,7 @@
         }
 
         function compareDate(s1,s2){
-            return ((new Date(s1.replace(/-/g,"\/")))>(new Date(s2.replace(/-/g,"\/"))));
+            return ((new Date(s1.replace(/-/g,"\/")))>=(new Date(s2.replace(/-/g,"\/"))));
         }
 
     </script>
