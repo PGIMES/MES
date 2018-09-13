@@ -65,7 +65,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         if (!IsPostBack)
         {
             DataTable ldt_detail = null;
-            string lssql = "";string IsHrReserve = "";
+            string lssql = "";string str_IsHrReserve = "";
 
             DataTable ldt_detail_hr = null;
             string lssql_hr = @"";
@@ -97,7 +97,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
                 }
 
-                lssql = @"select null id, null FIN_T_No, a.Cost_Code CostCode, null BudgetTotalCost, case when a.Cost_Code='T001' or a.Cost_Code='T002' then '是' else null end IsHrReserve, null BudgetRemark
+                lssql = @"select null id, null FIN_T_No, a.Cost_Code CostCode, null BudgetTotalCost, case when a.Cost_Code='T001' or a.Cost_Code='T002' then '否' else null end IsHrReserve, null BudgetRemark
 	                        ,ROW_NUMBER() OVER (ORDER BY a.sort) numid   
 	                        ,a.cost_category+'/'+a.cost_item+'['+a.cost_code+']' as CostCodeDesc
                         from [dbo].[Fin_Base_CostCate] a 
@@ -110,7 +110,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 {
                     //表头基本信息
                     Pgi.Auto.Control.SetControlValue("Fin_T_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                    IsHrReserve = ldt.Rows[0]["IsHrReserveByForm"].ToString();
+                    str_IsHrReserve = ldt.Rows[0]["IsHrReserveByForm"].ToString();
                 }
                 else
                 {
@@ -128,7 +128,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             this.gv_d.DataSource = ldt_detail;
             this.gv_d.DataBind();
 
-            if (IsHrReserve == "是")//人事预定信息
+             if (str_IsHrReserve == "是")//人事预定信息
             {
                 lssql_hr = @"select a.id, a.FIN_T_No, a.TravelerId, a.TravelerName, a.StartFromPlace, a.EndToPlace
                                 , a.StartDateTime, a.BudgetCost, a.Vehicle, a.Remark, a.ScheduledFlight, a.ActualCost 
@@ -140,11 +140,10 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 this.gv_d_hr.DataBind();
 
                 GetGrid(ldt_detail_hr);
-
             }
 
 
-            setGridIsRead(ldt_detail, IsHrReserve, ldt_detail_hr);
+            setGridIsRead(ldt_detail, ldt_detail_hr);
 
         }
         else
@@ -172,7 +171,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         }
     }
 
-    public void setGridIsRead(DataTable ldt_detail, string IsHrReserve, DataTable ldt_detail_hr)
+    public void setGridIsRead(DataTable ldt_detail, DataTable ldt_detail_hr)
     {
         //特殊处理，签核界面，明细的框框拿掉
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
@@ -195,11 +194,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             {
                 this.btnflowSend.Text = "批准";
             }
-            //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID != "A" && StepID != SQ_StepID)
-            //{
-            //    ViewState["PlanAttendant_i"] = "Y";
-            //    setread(i);
-            //}
             if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
             {
                 ViewState["ApplyId_i"] = "Y"; ViewState["PlanAttendant_i"] = "Y";
@@ -301,31 +295,38 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     protected void btnadd_Click(object sender, EventArgs e)
     {
+        add_row(1);
+    }
+
+    protected void add_row(int lnadd_rows)
+    {
         //新增一行或一组
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_hr);
 
-        DataRow ldr = ldt.NewRow();
-        for (int j = 0; j < ldt.Columns.Count; j++)
+        for (int i = 0; i < lnadd_rows; i++)
         {
-
-            if (ldt.Columns[j].ColumnName == "numid")
+            DataRow ldr = ldt.NewRow();
+            for (int j = 0; j < ldt.Columns.Count; j++)
             {
-                ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 1 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
-            }
-            else
-            {
-                ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
-            }
 
+                if (ldt.Columns[j].ColumnName == "numid")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 1 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
+                }
+                else
+                {
+                    ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
+                }
+
+            }
+            ldt.Rows.Add(ldr);
         }
-        ldt.Rows.Add(ldr);
 
         ldt.AcceptChanges();
         this.gv_d_hr.DataSource = ldt;
         this.gv_d_hr.DataBind();
 
         GetGrid(ldt);
-
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -360,6 +361,10 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             gv_d_hr.DataSource = ldt;
             gv_d_hr.DataBind();
             GetGrid(ldt);
+        }
+        if (param == "add")
+        {
+            add_row(2);
         }
 
     }

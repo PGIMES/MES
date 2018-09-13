@@ -105,50 +105,6 @@
             
         }
 
-        /*function Ini_Set_IsHrReserve(){
-            if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是") {
-                $("#div_dtl_hr").css("display","block");
-            }
-            else if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="否") {
-                $("#div_dtl_hr").css("display","none");
-            }else{
-                var ini_bf=false;
-                $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
-                    if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
-                        var IsHrReserve = eval('IsHrReserve' + index);                  
-                        if (IsHrReserve.GetText()=="是") {
-                            //BudgetTotalCost.SetEnabled(false);
-
-                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).addClass("dxeTextBox_read");
-                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").attr("readOnly","readOnly").addClass("dxeTextBox_read");          
-                        
-                            ini_bf=true;      
-                        }else {
-                            //BudgetTotalCost.SetEnabled(true);
-
-                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index).removeClass("dxeTextBox_read");
-                            $("#MainContent_gv_d_cell"+index+"_2_BudgetTotalCost_"+index+"_I").removeAttr("readOnly").removeClass("dxeTextBox_read");
-                        }                    
-                    }
-                    if($(item).children("td:last-child").text()=="T007"){
-                        var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                        BudgetTotalCost.SetText(0);
-                    }
-                });
-                if (ini_bf) {
-                    $("#CJJH input[id*='IsHrReserveByForm']").val("是");
-
-                    $("#div_dtl_hr").css("display","block");
-                }else {
-                    $("#CJJH input[id*='IsHrReserveByForm']").val("否");
-
-                    $("#div_dtl_hr").css("display","none");
-                    gv_d_hr.PerformCallback("clear");
-                }
-            }
-
-        }*/
-
         function Auto_Calculate(){//计算预计出差天数
             var PlanStartTime=$("#CJJH input[id*='PlanStartTime']").val();
             var PlanEndTime=$("#CJJH input[id*='PlanEndTime']").val();
@@ -233,20 +189,6 @@
 
             gv_d_hr_color();
 
-            //if(e.isSelected){
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
-
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FDF7D9");
-            //}else {
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ScheduledFlight_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
-
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("table[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
-            //    $("[id$=gv_d_hr] tr[class*=DataRow]").find("input[id*=ActualCost_"+e.visibleIndex+"]").css("background-color","#FFFFFF");
-            //}
-
         }
 
         function gv_d_hr_color(){
@@ -260,12 +202,6 @@
                     $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
                     $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
 
-                    //$(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
-                    //$(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
-
-                    //$(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
-                    //$(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
-
                     $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
                     $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
                 }else {
@@ -275,14 +211,21 @@
                     $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
                     $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
 
-                    //$(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
-                    //$(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
-
-                    //$(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
-                    //$(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
-
                     $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
                     $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
+                }
+
+                if($(item).find("input[id*=StartDateTime_"+index+"]").attr("disabled")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=StartDateTime_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=StartDateTime_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=StartDateTime_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=StartDateTime_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
                 }
                
                 if($(item).find("input[id*=StartFromPlace_"+index+"]").attr("readOnly")){
@@ -876,6 +819,7 @@
             if (bf) {
                 $("#CJJH input[id*='IsHrReserveByForm']").val("是");
                 $("#div_dtl_hr").css("display","block");
+                gv_d_hr.PerformCallback("add");
             }else {
                 $("#CJJH input[id*='IsHrReserveByForm']").val("否");
                 $("#div_dtl_hr").css("display","none");
