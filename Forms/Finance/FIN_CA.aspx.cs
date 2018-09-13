@@ -25,8 +25,6 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (ViewState["ApplyId_i"] == null) { ViewState["ApplyId_i"] = ""; }
-        if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
-        if (ViewState["E_Date_i"] == null) { ViewState["E_Date_i"] = ""; }
 
         //接收
         if (Request.QueryString["instanceid"] != null)
@@ -59,9 +57,9 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         if (!IsPostBack)
         {
             DataTable ldt_detail = null;
-            string lssql = @"select a.id, a.FIN_CA_No, a.StartDate, a.StartTime, a.EndDate, a.EndTime, a.TravelRoute, a.Mileage, a.Remark
+            string lssql = @"select a.id, a.FIN_CA_No, a.StartDateTime, a.EndDateTime, a.TravelRoute, a.Mileage, a.Remark
                                 ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
-                            from[dbo].[Fin_CA_Dtl_Form] a "; 
+                            from[dbo].[Fin_CA_Dtl_Form] a ";
 
             if (this.m_sid == "")
             {
@@ -113,7 +111,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
             this.gv_d.DataBind();
 
             setGridIsRead(ldt_detail);
-
+            GetGrid(ldt_detail);
         }
         else
         {
@@ -150,10 +148,13 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
     public void setread(int i)
     {
-        ViewState["ApplyId_i"] = "Y"; ViewState["Date_i"] = "Y"; ViewState["E_Date_i"] = "Y";
+        ViewState["ApplyId_i"] = "Y"; 
 
         btnadd.Visible = false;
         btndel.Visible = false;
+
+        ((DevExpress.Web.ASPxDateEdit)gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d.Columns["StartDateTime"], "StartDateTime")).Enabled = false;
+        ((DevExpress.Web.ASPxDateEdit)gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d.Columns["EndDateTime"], "EndDateTime")).Enabled = false;;
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelRoute"], "TravelRoute")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["TravelRoute"], "TravelRoute")).BorderStyle = BorderStyle.None;
@@ -191,7 +192,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         ldt.AcceptChanges();
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
-
+        GetGrid(ldt);
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -211,6 +212,7 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         ldt.AcceptChanges();
         gv_d.DataSource = ldt;
         gv_d.DataBind();
+        GetGrid(ldt);
     }
 
     [WebMethod]
@@ -350,7 +352,26 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
         return flag;
     }
 
+    protected void GetGrid(DataTable DT)
+    {
+        DataTable ldt = DT;
+        int index = gv_d.VisibleRowCount;
+        for (int i = 0; i < gv_d.VisibleRowCount; i++)
+        {
 
+            DevExpress.Web.ASPxDateEdit tb1 = (DevExpress.Web.ASPxDateEdit)gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d.Columns["StartDateTime"], "StartDateTime");
+            DevExpress.Web.ASPxDateEdit tb2 = (DevExpress.Web.ASPxDateEdit)gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d.Columns["EndDateTime"], "EndDateTime");
+            if (ldt.Rows[i]["StartDateTime"].ToString() != "")
+            {
+                tb1.Date = Convert.ToDateTime(ldt.Rows[i]["StartDateTime"].ToString());
+            }
+            
+            if (ldt.Rows[i]["EndDateTime"].ToString()!="")
+            {
+                tb2.Date = Convert.ToDateTime(ldt.Rows[i]["EndDateTime"].ToString());
+            }
+        }
+    }
 
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script

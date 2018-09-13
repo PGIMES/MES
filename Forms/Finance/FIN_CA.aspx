@@ -48,7 +48,22 @@
                 $("#btntaskEnd").hide();
             }
 
+            SetGirdDateDrop_Read();
+
         });
+
+        function SetGirdDateDrop_Read(){
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                var StartDateTime = eval('StartDateTime' + index);
+                var EndDateTime = eval('EndDateTime' + index);
+                if (!StartDateTime.GetEnabled()) {
+                    $(item).find("td[id*=StartDateTime]").css("display","none");
+                }
+                if (!EndDateTime.GetEnabled()) {
+                    $(item).find("td[id*=EndDateTime]").css("display","none");
+                }
+            });
+        }
 
         //提出自定流程 JS 
         function setComment(val) {
@@ -361,17 +376,6 @@
             });
         }
 
-        function Auto_Time(vi,dates){
-            var StartDate= eval('StartDate' + vi);var StartTime= eval('StartTime' + vi);
-            StartDate.SetText(dates.substring(0,10));StartTime.SetText(dates.slice(11));
-            $("#Date_i_"+vi).text("");
-        }
-        function Auto_Time_E(vi,dates){
-            var EndDate= eval('EndDate' + vi);var EndTime= eval('EndTime' + vi);
-            EndDate.SetText(dates.substring(0,10));EndTime.SetText(dates.slice(11));
-            $("#E_Date_i_"+vi).text("");
-        }
-
         function validate(action){
             var flag=true;var msg="";
             
@@ -389,7 +393,7 @@
                 msg+="【申请人车牌号】不可为空.<br />";
             }           
 
-            if($("[id$=gv_d] input[id*=StartDate]").length==0){
+            if($("[id$=gv_d] input[id*=StartDateTime]").length==0){
                 msg+="【申请明细】不可为空.<br />";
             }else {
                 if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
@@ -397,41 +401,21 @@
                 }else {
                     if(action=='submit'){
 
-                        $("[id$=gv_d] input[id*=StartDate]").each(function (){
-                            if( $(this).val()==""){
-                                msg+="【开始日期】不可为空.<br />";
+                        $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                            var StartDateTime = eval('StartDateTime' + index);
+                            var EndDateTime = eval('EndDateTime' + index);
+                            var TravelRoute = eval('TravelRoute' + index);
+                            var Mileage = eval('Mileage' + index);
+
+                            if (StartDateTime.GetText()=="0100/01/01 00:00") { msg+="【开始时间】不可为空.<br />"; }
+                            if (EndDateTime.GetText()=="0100/01/01 00:00") { msg+="【结束时间】不可为空.<br />"; }
+                            if (TravelRoute.GetText()=="") { msg+="【行程路线】不可为空.<br />"; }
+                            if (Mileage.GetText()=="") { msg+="【用车公里数】不可为空.<br />"; }
+
+                            if (msg!="") {
                                 return false;
                             }
-                        });
-                        $("[id$=gv_d] input[id*=StartTime]").each(function (){
-                            if( $(this).val()=="" || $(this).val()=="00:00"){
-                                msg+="【开始时间】不可为 空/00:00.<br />";
-                                return false;
-                            }
-                        });
-                        $("[id$=gv_d] input[id*=EndDate]").each(function (){
-                            if( $(this).val()==""){
-                                msg+="【结束日期】不可为空.<br />";
-                                return false;
-                            }
-                        });
-                        $("[id$=gv_d] input[id*=EndTime]").each(function (){
-                            if( $(this).val()=="" || $(this).val()=="00:00"){
-                                msg+="【结束时间】不可为 空/00:00.<br />";
-                                return false;
-                            }
-                        });
-                        $("[id$=gv_d] input[id*=TravelRoute]").each(function (){
-                            if( $(this).val()==""){
-                                msg+="【行程路线】不可为空.<br />";
-                                return false;
-                            }
-                        });
-                        $("[id$=gv_d] input[id*=Mileage]").each(function (){
-                            if( $(this).val()==""){
-                                msg+="【用车公里数】不可为空.<br />";
-                                return false;
-                            }
+
                         });
                         
                     }
@@ -449,8 +433,8 @@
             if(action=='submit'){
 
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
-                    var start_date_time= $(item).find("input[id*=StartDate]").val()+" "+$(item).find("input[id*=StartTime]").val();
-                    var end_date_time= $(item).find("input[id*=EndDate]").val()+" "+$(item).find("input[id*=EndTime]").val();
+                    var start_date_time= $(item).find("input[id*=StartDateTime]").val();
+                    var end_date_time= $(item).find("input[id*=EndDateTime]").val();
                     if(compareDate(start_date_time,end_date_time)){
                         msg+="【结束时间】必须大于【开始时间】.<br />";
                     }
@@ -638,72 +622,46 @@
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
                                      ClientInstanceName="gv_d"  EnableTheming="True">
                                     <SettingsPager PageSize="1000"></SettingsPager>
-                                    <Settings ShowFooter="True" />
-                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <Settings ShowFooter="True"  />
+                                    <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
                                         <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="1"></dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="开始日期" FieldName="StartDate" Width="100px" VisibleIndex="2">
+                                        <dx:GridViewDataTextColumn Caption="开始时间" FieldName="StartDateTime" Width="130px" VisibleIndex="2">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <table>
-                                                    <tr>
-                                                        <td>
-                                                           <dx:ASPxTextBox ID="StartDate" Width="80px" runat="server" Value='<%# Eval("StartDate")%>' 
-                                                                ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                            </dx:ASPxTextBox>
-                                                        </td>
-                                                        <td><i id="Date_i_<%#Container.VisibleIndex.ToString() %>" 
-                                                            class="fa fa-search <% =ViewState["Date_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                            onclick="laydate({istime: true,format: 'YYYY/MM/DD hh:mm',choose: function(dates){Auto_Time(<%#Container.VisibleIndex.ToString() %>,dates);}})"></i>
-                                                        </td>
-                                                    </tr>
-                                                </table> 
+                                                <dx:ASPxDateEdit ID="StartDateTime" runat="server" EditFormat="Custom" Width="130"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd HH:mm"
+                                                    ClientInstanceName='<%# "StartDateTime"+Container.VisibleIndex.ToString() %>'
+                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black">
+                                                    <TimeSectionProperties Visible="true">
+                                                        <TimeEditProperties EditFormatString="HH:mm" />
+                                                    </TimeSectionProperties>
+                                                    <CalendarProperties><FastNavProperties DisplayMode="Inline" /></CalendarProperties>
+                                                </dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="开始时间" FieldName="StartTime" Width="70px" VisibleIndex="3">
+                                        <dx:GridViewDataTextColumn Caption="结束时间" FieldName="EndDateTime" Width="130px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="StartTime" Width="70px" runat="server" Value='<%# Eval("StartTime")%>' 
-                                                    ClientInstanceName='<%# "StartTime"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                </dx:ASPxTextBox>
+                                                <dx:ASPxDateEdit ID="EndDateTime" runat="server" EditFormat="Custom" Width="130"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd HH:mm"
+                                                    ClientInstanceName='<%# "EndDateTime"+Container.VisibleIndex.ToString() %>'
+                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black" >
+                                                    <TimeSectionProperties Visible="true">
+                                                        <TimeEditProperties EditFormatString="HH:mm" />
+                                                    </TimeSectionProperties>
+                                                    <CalendarProperties><FastNavProperties DisplayMode="Inline" /></CalendarProperties>
+                                                </dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="结束日期" FieldName="EndDate" Width="100px" VisibleIndex="4">
+                                        <dx:GridViewDataTextColumn Caption="行程路线" FieldName="TravelRoute" Width="190px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <table>
-                                                    <tr>
-                                                        <td>
-                                                           <dx:ASPxTextBox ID="EndDate" Width="80px" runat="server" Value='<%# Eval("EndDate")%>' 
-                                                                ClientInstanceName='<%# "EndDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                            </dx:ASPxTextBox>
-                                                        </td>
-                                                        <td><i id="E_Date_i_<%#Container.VisibleIndex.ToString() %>" 
-                                                            class="fa fa-search <% =ViewState["E_Date_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                            onclick="laydate({istime: true,format: 'YYYY/MM/DD hh:mm',choose: function(dates){Auto_Time_E(<%#Container.VisibleIndex.ToString() %>,dates);}})"></i>
-                                                        </td>
-                                                    </tr>
-                                                </table> 
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="结束时间" FieldName="EndTime" Width="70px" VisibleIndex="5">
-                                            <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="EndTime" Width="70px" runat="server" Value='<%# Eval("EndTime")%>' 
-                                                    ClientInstanceName='<%# "EndTime"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                </dx:ASPxTextBox>
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="行程路线" FieldName="TravelRoute" Width="200px" VisibleIndex="6">
-                                            <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="TravelRoute" Width="200px" runat="server" Value='<%# Eval("TravelRoute")%>' 
+                                                <dx:ASPxTextBox ID="TravelRoute" Width="180px" runat="server" Value='<%# Eval("TravelRoute")%>' 
                                                     ClientInstanceName='<%# "TravelRoute"+Container.VisibleIndex.ToString() %>'>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="用车公里数" FieldName="Mileage" Width="90px" VisibleIndex="7">
+                                        <dx:GridViewDataTextColumn Caption="用车公里数" FieldName="Mileage" Width="100px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="Mileage" Width="90px" runat="server" Value='<%# Eval("Mileage")%>' 
@@ -715,10 +673,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="备注" FieldName="Remark" Width="150px" VisibleIndex="8">
+                                        <dx:GridViewDataTextColumn Caption="备注" FieldName="Remark" Width="230px" VisibleIndex="8">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="Remark" Width="150px" runat="server" Value='<%# Eval("Remark")%>' 
+                                                <dx:ASPxTextBox ID="Remark" Width="220px" runat="server" Value='<%# Eval("Remark")%>' 
                                                     ClientInstanceName='<%# "Remark"+Container.VisibleIndex.ToString() %>'>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
