@@ -61,6 +61,8 @@
                 Auto_Calculate_T007();
             });
             is_hr_yz_set();
+
+            SetGirdDateDrop_Read();
         });
 
         function Ini_Set_IsHrReserve(){
@@ -213,6 +215,15 @@
             //}
         }
 
+        function SetGirdDateDrop_Read(){
+            $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                var StartDateTime = eval('StartDateTime' + index);
+                if (!StartDateTime.GetEnabled()) {
+                    $(item).find("td[id*=StartDateTime]").css("display","none");
+                }
+            });
+        }
+
         //提出自定流程 JS 
         function setComment(val) {
             $('#comment', parent.document).val(val);
@@ -249,11 +260,11 @@
                     $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
                     $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
 
-                    $(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
+                    //$(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
+                    //$(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FDF7D9");
 
-                    $(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
+                    //$(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
+                    //$(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FDF7D9");
 
                     $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
                     $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
@@ -264,11 +275,11 @@
                     $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
                     $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
 
-                    $(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
+                    //$(item).find("table[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
+                    //$(item).find("input[id*=StartDate_"+index+"]").css("background-color","#FFFFFF");
 
-                    $(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
+                    //$(item).find("table[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
+                    //$(item).find("input[id*=StartTime_"+index+"]").css("background-color","#FFFFFF");
 
                     $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
                     $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
@@ -926,13 +937,7 @@
             var TravelerName= eval('TravelerName' + vi);var TravelerId= eval('TravelerId' + vi);
             TravelerName.SetText(workname);TravelerId.SetText(workcode);
         }
-
-        function Auto_Time(vi,dates){
-            var StartDate= eval('StartDate' + vi);var StartTime= eval('StartTime' + vi);
-            StartDate.SetText(dates.substring(0,10));StartTime.SetText(dates.slice(11));
-            $("#Date_i_"+vi).text("");
-        }
-
+        
         function Get_Vehicle(vi){
             layer.open({
                 title:'交通工具选择',
@@ -1010,48 +1015,69 @@
                     }else {
                         if(action=='submit'){
 
-                            $("[id$=gv_d_hr] input[id*=TravelerName]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【出行人】不可为空.<br />";
+                            //$("[id$=gv_d_hr] input[id*=TravelerName]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【出行人】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=StartFromPlace]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【出发地】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=EndToPlace]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【目的地】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=StartDate]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【出发日期】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=StartTime]").each(function (){
+                            //    if( $(this).val()=="" || $(this).val()=="00:00"){
+                            //        msg+="【出发时间】不可为 空/00:00.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=BudgetCost]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【预算费用】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+                            //$("[id$=gv_d_hr] input[id*=Vehicle]").each(function (){
+                            //    if( $(this).val()==""){
+                            //        msg+="【交通工具】不可为空.<br />";
+                            //        return false;
+                            //    }
+                            //});
+
+                            $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                                var TravelerName = eval('TravelerName' + index);var TravelerId = eval('TravelerId' + index);
+                                var StartFromPlace = eval('StartFromPlace' + index);var EndToPlace = eval('EndToPlace' + index);
+                                var StartDateTime = eval('StartDateTime' + index);
+                                var BudgetCost = eval('BudgetCost' + index);
+                                var Vehicle = eval('Vehicle' + index);
+                                
+                                if (TravelerName.GetText()=="" || TravelerId.GetText()=="") { msg+="【出行人】不可为空.<br />"; }
+                                if (StartFromPlace.GetText()=="") { msg+="【出发地】不可为空.<br />"; }
+                                if (EndToPlace.GetText()=="") { msg+="【目的地】不可为空.<br />"; }
+                                if (StartDateTime.GetText()=="0100/01/01 00:00") { msg+="【出发时间】不可为空.<br />"; }
+                                if (BudgetCost.GetText()=="") { msg+="【预算费用】不可为空.<br />"; }
+                                if (Vehicle.GetText()=="") { msg+="【交通工具】不可为空.<br />"; }
+
+                                if (msg!="") {
                                     return false;
                                 }
+
                             });
-                            $("[id$=gv_d_hr] input[id*=StartFromPlace]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【出发地】不可为空.<br />";
-                                    return false;
-                                }
-                            });
-                            $("[id$=gv_d_hr] input[id*=EndToPlace]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【目的地】不可为空.<br />";
-                                    return false;
-                                }
-                            });
-                            $("[id$=gv_d_hr] input[id*=StartDate]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【出发日期】不可为空.<br />";
-                                    return false;
-                                }
-                            });
-                            $("[id$=gv_d_hr] input[id*=StartTime]").each(function (){
-                                if( $(this).val()=="" || $(this).val()=="00:00"){
-                                    msg+="【出发时间】不可为 空/00:00.<br />";
-                                    return false;
-                                }
-                            });
-                            $("[id$=gv_d_hr] input[id*=BudgetCost]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【预算费用】不可为空.<br />";
-                                    return false;
-                                }
-                            });
-                            $("[id$=gv_d_hr] input[id*=Vehicle]").each(function (){
-                                if( $(this).val()==""){
-                                    msg+="【交通工具】不可为空.<br />";
-                                    return false;
-                                }
-                            });
+
                             if(stepid!=null){
                                 if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
                                     $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
@@ -1090,8 +1116,10 @@
             }
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
                 if(action=='submit'){
-                    $("[id$=gv_d_hr] input[id*=StartDate]").each(function (){
-                        if((new Date(Date.parse($(this).val())))<(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
+                    $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) {
+                        var StartDateTime = eval('StartDateTime' + index);
+                        var StartDate=(StartDateTime.GetText()).substring(0,10);
+                        if((new Date(Date.parse(StartDate)))<(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
                             msg+="【人事预定明细】-【出发日期】必须大于等于【预计出发时间】.<br />";
                             return false;
                         }
@@ -1431,7 +1459,7 @@
                                      <ClientSideEvents SelectionChanged="gv_d_hr_SelectionChanged" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
-                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
                                         <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>    
@@ -1477,30 +1505,17 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="出发日期" FieldName="StartDate" Width="100px" VisibleIndex="4">
+                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartDateTime" Width="130px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <table>
-                                                    <tr>
-                                                        <td>
-                                                           <dx:ASPxTextBox ID="StartDate" Width="80px" runat="server" Value='<%# Eval("StartDate")%>' 
-                                                                ClientInstanceName='<%# "StartDate"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                            </dx:ASPxTextBox>
-                                                        </td>
-                                                        <td><i id="Date_i_<%#Container.VisibleIndex.ToString() %>" 
-                                                            class="fa fa-search <% =ViewState["Date_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                            onclick="laydate({istime: true,start:$('#CJJH input[id*=\'PlanStartTime\']').val(),min:$('#CJJH input[id*=\'PlanStartTime\']').val(),format: 'YYYY/MM/DD hh:mm',choose: function(dates){Auto_Time(<%#Container.VisibleIndex.ToString() %>,dates);}})"></i>
-                                                        </td>
-                                                    </tr>
-                                                </table> 
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="出发时间" FieldName="StartTime" Width="70px" VisibleIndex="5">
-                                            <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="StartTime" Width="70px" runat="server" Value='<%# Eval("StartTime")%>' 
-                                                    ClientInstanceName='<%# "StartTime"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"  ReadOnly="true">
-                                                </dx:ASPxTextBox>
+                                                <dx:ASPxDateEdit ID="StartDateTime" runat="server" EditFormat="Custom" Width="130"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd HH:mm"
+                                                    ClientInstanceName='<%# "StartDateTime"+Container.VisibleIndex.ToString() %>'
+                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black">
+                                                    <TimeSectionProperties Visible="true">
+                                                        <TimeEditProperties EditFormatString="HH:mm" />
+                                                    </TimeSectionProperties>
+                                                    <CalendarProperties><FastNavProperties DisplayMode="Inline" /></CalendarProperties>
+                                                </dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="预算费用" FieldName="BudgetCost" Width="90px" VisibleIndex="6">

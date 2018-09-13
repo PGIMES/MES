@@ -30,7 +30,6 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         if (ViewState["PlanAttendant_i"] == null) { ViewState["PlanAttendant_i"] = ""; }
         if (ViewState["IsHrReserve_i"] == null) { ViewState["IsHrReserve_i"] = ""; }
         if (ViewState["Traveler_i"] == null) { ViewState["Traveler_i"] = ""; }
-        if (ViewState["Date_i"] == null) { ViewState["Date_i"] = ""; }
         if (ViewState["Vehicle_i"] == null) { ViewState["Vehicle_i"] = ""; }
 
         //接收
@@ -132,13 +131,15 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             if (IsHrReserve == "是")//人事预定信息
             {
                 lssql_hr = @"select a.id, a.FIN_T_No, a.TravelerId, a.TravelerName, a.StartFromPlace, a.EndToPlace
-                                , a.StartDate, a.StartTime, a.BudgetCost, a.Vehicle, a.Remark, a.ScheduledFlight, a.ActualCost 
+                                , a.StartDateTime, a.BudgetCost, a.Vehicle, a.Remark, a.ScheduledFlight, a.ActualCost 
                                 ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
                             from [dbo].[Fin_T_Dtl_HR_Form] a
                             where FIN_T_No='" + this.m_sid + "' order by a.id";
                 ldt_detail_hr = DbHelperSQL.Query(lssql_hr).Tables[0];
                 this.gv_d_hr.DataSource = ldt_detail_hr;
                 this.gv_d_hr.DataBind();
+
+                GetGrid(ldt_detail_hr);
 
             }
 
@@ -154,6 +155,21 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+    }
+
+    protected void GetGrid(DataTable DT)
+    {
+        DataTable ldt = DT;
+        int index = gv_d_hr.VisibleRowCount;
+        for (int i = 0; i < gv_d_hr.VisibleRowCount; i++)
+        {
+
+            DevExpress.Web.ASPxDateEdit tb1 = (DevExpress.Web.ASPxDateEdit)gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d_hr.Columns["StartDateTime"], "StartDateTime");
+            if (ldt.Rows[i]["StartDateTime"].ToString() != "")
+            {
+                tb1.Date = Convert.ToDateTime(ldt.Rows[i]["StartDateTime"].ToString());
+            }
+        }
     }
 
     public void setGridIsRead(DataTable ldt_detail, string IsHrReserve, DataTable ldt_detail_hr)
@@ -252,7 +268,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
     public void setread_hr(int i,DataTable ldt_flow_pro_hr)
     {
-        ViewState["Traveler_i"] = "Y"; ViewState["Date_i"] = "Y"; ViewState["Vehicle_i"] = "Y";
+        ViewState["Traveler_i"] = "Y"; ViewState["Vehicle_i"] = "Y";
 
         btnadd.Visible = false;
         btndel.Visible = false;
@@ -266,6 +282,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["EndToPlace"], "EndToPlace")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["EndToPlace"], "EndToPlace")).BorderStyle = BorderStyle.None;
+
+        ((DevExpress.Web.ASPxDateEdit)gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)gv_d_hr.Columns["StartDateTime"], "StartDateTime")).Enabled = false;
 
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_hr.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_hr.Columns["BudgetCost"], "BudgetCost")).BorderStyle = BorderStyle.None;
@@ -306,6 +324,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         this.gv_d_hr.DataSource = ldt;
         this.gv_d_hr.DataBind();
 
+        GetGrid(ldt);
+
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -325,6 +345,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ldt.AcceptChanges();
         gv_d_hr.DataSource = ldt;
         gv_d_hr.DataBind();
+
+        GetGrid(ldt);
     }
 
     protected void gv_d_hr_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
@@ -337,7 +359,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             ldt.AcceptChanges();
             gv_d_hr.DataSource = ldt;
             gv_d_hr.DataBind();
-
+            GetGrid(ldt);
         }
 
     }
