@@ -161,7 +161,7 @@
                 PlanDays = parseInt(days / (1000 * 60 * 60 * 24));
             } 
             if(PlanDays<0){
-                layer.alert("【预计结束时间】必须大于等于【预计出发时间】.");
+                layer.alert("【预计结束日期】必须大于等于【预计出发日期】.");
             }
             $("#CJJH input[id*='PlanDays']").val(PlanDays);
             Auto_Calculate_T007();
@@ -1109,10 +1109,10 @@
             //----------------------------------------------------------------------------逻辑验证
             //验证 预计出发时间 预计结束时间 大小关系   
             //if((new Date())>(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
-            //    msg+="【预计出发时间】必须大于等于【当前时间】.<br />";
+            //    msg+="【预计出发日期】必须大于等于【当前日期】.<br />";
             //}
             if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
-                msg+="【预计结束时间】必须大于【预计出发时间】.<br />";
+                msg+="【预计结束日期】必须大于【预计出发日期】.<br />";
             }
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
                 if(action=='submit'){
@@ -1120,7 +1120,7 @@
                         var StartDateTime = eval('StartDateTime' + index);
                         var StartDate=(StartDateTime.GetText()).substring(0,10);
                         if((new Date(Date.parse(StartDate)))<(new Date(Date.parse($("#CJJH input[id*='PlanStartTime']").val())))){
-                            msg+="【人事预定明细】-【出发日期】必须大于等于【预计出发时间】.<br />";
+                            msg+="【人事预定明细】-【出发日期】必须大于等于【预计出发日期】.<br />";
                             return false;
                         }
                     });
