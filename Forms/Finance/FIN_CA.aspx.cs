@@ -90,6 +90,9 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
                 }
 
                 lssql += @" where 1=0";
+
+                ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
+                add_row(1);
             }
             else
             {
@@ -105,13 +108,14 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
                 }
 
                 lssql += @" where a.FIN_CA_No='" + this.m_sid + "' order by a.id";
+
+                ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
+                this.gv_d.DataSource = ldt_detail;
+                this.gv_d.DataBind();
+                GetGrid(ldt_detail);
             }
-            ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
-            this.gv_d.DataSource = ldt_detail;
-            this.gv_d.DataBind();
 
             setGridIsRead(ldt_detail);
-            GetGrid(ldt_detail);
         }
         else
         {
@@ -170,30 +174,37 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
 
     protected void btnadd_Click(object sender, EventArgs e)
     {
+        add_row(1);
+    }
+    protected void add_row(int lnadd_rows)
+    {
         //新增一行或一组
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
-
-        DataRow ldr = ldt.NewRow();
-        for (int j = 0; j < ldt.Columns.Count; j++)
+        for (int i = 0; i < lnadd_rows; i++)
         {
-
-            if (ldt.Columns[j].ColumnName == "numid")
+            DataRow ldr = ldt.NewRow();
+            for (int j = 0; j < ldt.Columns.Count; j++)
             {
-                ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 1 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
-            }
-            else
-            {
-                ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
-            }
 
+                if (ldt.Columns[j].ColumnName == "numid")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = ldt.Rows.Count <= 0 ? 1 : (Convert.ToInt32(ldt.Rows[ldt.Rows.Count - 1]["numid"]) + 1);
+                }
+                else
+                {
+                    ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
+                }
+
+            }
+            ldt.Rows.Add(ldr);
         }
-        ldt.Rows.Add(ldr);
 
         ldt.AcceptChanges();
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
         GetGrid(ldt);
     }
+
 
     protected void btndel_Click(object sender, EventArgs e)
     {
