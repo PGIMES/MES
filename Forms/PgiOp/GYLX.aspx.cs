@@ -491,6 +491,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     if (isop700) { ldr[ldt.Columns[j].ColumnName] = "OP700"; }
                     else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
                 }
+                else if (ldt.Columns[j].ColumnName == "op_desc")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
+                }
+                else if (ldt.Columns[j].ColumnName == "op_remark")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
+                }
                 else if (ldt.Columns[j].ColumnName == "numid")
                 {
                     ldr[ldt.Columns[j].ColumnName] = dt_o.Rows.Count <= 0 ? 0 : (Convert.ToInt32(dt_o.Rows[0]["numid"]) + 1);
@@ -511,6 +521,19 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ldt.AcceptChanges();
         this.gv_d.DataSource = ldt;
         this.gv_d.DataBind();
+
+        if (isop700)
+        {
+            int k = lnindex + 1;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op"], "op")).BorderStyle = BorderStyle.None;
+
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_desc"], "op_desc")).BorderStyle = BorderStyle.None;
+
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["op_remark"], "op_remark")).BorderStyle = BorderStyle.None;
+        }
 
     }
 
@@ -889,6 +912,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     if (isop700) { ldr[ldt.Columns[j].ColumnName] = "OP700"; }
                     else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
                 }
+                else if (ldt.Columns[j].ColumnName == "op_desc")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
+                }
+                else if (ldt.Columns[j].ColumnName == "op_remark")
+                {
+                    if (isop700) { ldr[ldt.Columns[j].ColumnName] = "GP12"; }
+                    else { ldr[ldt.Columns[j].ColumnName] = DBNull.Value; }
+                }
                 else if (ldt.Columns[j].ColumnName.ToLower() == "equipmentrate")
                 {
                     ldr[ldt.Columns[j].ColumnName] = "1";
@@ -918,7 +951,18 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         this.gv_d_yz.DataSource = ldt;
         this.gv_d_yz.DataBind();
 
+        if (isop700)
+        {
+            int k = lnindex + 1;
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op"], "op")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op"], "op")).BorderStyle = BorderStyle.None;
 
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_desc"], "op_desc")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_desc"], "op_desc")).BorderStyle = BorderStyle.None;
+
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_remark"], "op_remark")).ReadOnly = true;
+            ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(k, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["op_remark"], "op_remark")).BorderStyle = BorderStyle.None;
+        }
 
     }
 
