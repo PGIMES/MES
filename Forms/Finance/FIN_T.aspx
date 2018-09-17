@@ -171,7 +171,10 @@
 
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                 if($(item).children("td:last-child").text()=="T007"){
+                    var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
+
+                    BudgetStandardCost.SetText(cost);BudgetCount.SetText(PlanDays);BudgetPersonCount.SetText(PA_len+1);
                     BudgetTotalCost.SetText(BTC_T007);
                     RefreshRow();
                 }
