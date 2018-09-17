@@ -1175,6 +1175,35 @@
                 msg+="【预计结束日期】必须大于【预计出发日期】.<br />";
             }
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
+                
+                var Vehicle_feiji=false;var Vehicle_huoche=false;
+                $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
+                    var Vehicle = eval('Vehicle' + index);
+                    if (Vehicle.GetText()=="飞机") {
+                        Vehicle_feiji=true;
+                    }
+                    if (Vehicle.GetText()=="火车") {
+                        Vehicle_huoche=true;
+                    }                               
+                });
+                            
+                $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                    var IsHrReserve = eval('IsHrReserve' + index);                  
+                    if (IsHrReserve.GetText()=="否") {    
+                        if ($(item).children("td:last-child").text()=="T001") {
+                            if (Vehicle_feiji) {
+                                msg+="【机票费】人事预定为“否”，请删除【人事预定明细】中【交通工具】为“飞机”的信息.<br />";    
+                            }
+                        }
+                        if ($(item).children("td:last-child").text()=="T002") {
+                            if (Vehicle_huoche) {
+                                msg+="【火车票】人事预定为“否”，请删除【人事预定明细】中【交通工具】为“火车”的信息.<br />";    
+                            }
+                        }
+                    }
+                });
+
+
                 if(action=='submit'){
                     $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) {
                         var StartDateTime = eval('StartDateTime' + index);
