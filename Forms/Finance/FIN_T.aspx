@@ -944,7 +944,10 @@
                         //$(item).find("table[id*=BudgetTotalCost]").removeClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
                     }
-                    BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");
+                    if (vi==index) {//清除当前行
+                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");
+                    }
+                    
                 }  
             });
             if (bf) {
