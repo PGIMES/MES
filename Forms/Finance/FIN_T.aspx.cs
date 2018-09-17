@@ -98,8 +98,9 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 }
 
                 lssql = @"select null id, null FIN_T_No, a.Cost_Code CostCode, null BudgetTotalCost, case when a.Cost_Code='T001' or a.Cost_Code='T002' then '否' else null end IsHrReserve, null BudgetRemark
+                            , null StandardlimitCost, null BudgetStandardCost, null BudgetCount, null BudgetPersonCount
 	                        ,ROW_NUMBER() OVER (ORDER BY a.sort) numid   
-	                        ,a.cost_category+'/'+a.cost_item+'['+a.cost_code+']' as CostCodeDesc
+                            ,a.cost_item as CostCodeDesc,Standardlimit
                         from [dbo].[Fin_Base_CostCate] a 
                         where cost_type='T' order by sort";
             }
@@ -118,10 +119,11 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                 }
 
                 lssql = @"select a.id, a.FIN_T_No, a.CostCode, a.BudgetTotalCost, a.IsHrReserve, a.BudgetRemark
+                            , a.StandardlimitCost, a.BudgetStandardCost, a.BudgetCount, a.BudgetPersonCount
                             ,ROW_NUMBER() OVER (ORDER BY a.id) numid 
-                            ,b.cost_category+'/'+b.cost_item+'['+b.cost_code+']' as CostCodeDesc
+                            ,b.cost_item as CostCodeDesc,b.Standardlimit
                         from[dbo].[Fin_T_Dtl_Form] a 
-                            left join [dbo].[Fin_Base_CostCate] b on a.CostCode=b.cost_code
+                            left join (select * from [dbo].[Fin_Base_CostCate] where cost_type='T') b on a.CostCode=b.cost_code
                         where FIN_T_No='" + this.m_sid + "' order by a.id"; 
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
@@ -251,8 +253,17 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).Enabled = false;
         ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).CssClass = "lineread";
 
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
-        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetStandardCost"], "BudgetStandardCost")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetStandardCost"], "BudgetStandardCost")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCount"], "BudgetCount")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetCount"], "BudgetCount")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetPersonCount"], "BudgetPersonCount")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetPersonCount"], "BudgetPersonCount")).BorderStyle = BorderStyle.None;
+
+        //((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
+        //((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
         
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).BorderStyle = BorderStyle.None;
@@ -364,7 +375,11 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         }
         if (param == "add")
         {
-            add_row(2);
+            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_hr);
+            if (ldt.Rows.Count<=0)
+            {
+                add_row(2);
+            }
         }
 
     }
@@ -546,7 +561,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             ls_sum.Add(ls_del);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_Form", "id", "Column1,numid,flag,CostCodeDesc");
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "Fin_T_Dtl_Form", "id", "Column1,numid,flag,CostCodeDesc,Standardlimit");
             for (int i = 0; i < ls1.Count; i++)
             {
                 ls_sum.Add(ls1[i]);
