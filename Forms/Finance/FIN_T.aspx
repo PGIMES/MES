@@ -866,7 +866,7 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-                        if ($.trim(BudgetStandardCost.GetText()) != "" || $.trim(BudgetCount.GetText()) != "" || $.trim(BudgetPersonCount.GetText()) != "") {
+                        if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
                             BudgetTotalCost.SetText("");  
                         }
                     } 
