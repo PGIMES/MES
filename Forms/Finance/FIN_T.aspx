@@ -178,7 +178,7 @@
         function Auto_Calculate_T007(){
             var BTC_T007=0;
 
-            var PlanDays=parseInt($("#CJJH input[id*='PlanDays']").val());
+            var PlanDays=parseFloat($("#CJJH input[id*='PlanDays']").val())+0.5;
             var PA_len=0;
             if($("#CJJH input[id*='PlanAttendant']").val()!=""){
                 var PA_Arry=($("#CJJH input[id*='PlanAttendant']").val()).split(',');
