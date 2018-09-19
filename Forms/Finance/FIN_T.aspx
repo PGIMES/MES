@@ -153,7 +153,6 @@
                 $("#CJJH input[id*='IsHrReserveByForm']").val("否");
 
                 $("#div_dtl_hr").css("display","none");
-                gv_d_hr.PerformCallback("clear");
             }
             
         }
