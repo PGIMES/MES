@@ -262,9 +262,12 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetPersonCount"], "BudgetPersonCount")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetPersonCount"], "BudgetPersonCount")).BorderStyle = BorderStyle.None;
 
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetOtherCost"], "BudgetOtherCost")).ReadOnly = true;
+        ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetOtherCost"], "BudgetOtherCost")).BorderStyle = BorderStyle.None;
+
         //((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).ReadOnly = true;
         //((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetTotalCost"], "BudgetTotalCost")).BorderStyle = BorderStyle.None;
-        
+
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetRemark"], "BudgetRemark")).BorderStyle = BorderStyle.None;
 
