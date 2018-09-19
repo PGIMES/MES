@@ -1260,7 +1260,7 @@
                         if ($.trim(BudgetCount.GetText()) != "") { is_a++; }
                         if ($.trim(BudgetPersonCount.GetText()) != "") { is_a++; }
                         
-                        if ($(item).children("td:last-child").text()=="T003") {//出租车/公交/地铁等
+                        if ($(item).children("td:last-child").text()=="T003" || $(item).children("td:last-child").text()=="T008") {//出租车/公交/地铁等  自驾费用
                                 if (is_a!=3 && is_a!=1) {
                                 msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量1、预算数量2 不可为空.<br />";
                             }
