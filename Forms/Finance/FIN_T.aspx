@@ -103,8 +103,8 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
-                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                        $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
                         //$(item).find("table[id*=BudgetTotalCost]").removeClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
@@ -915,8 +915,8 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
-                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                        $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
                         if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
                             if ($.trim(BudgetOtherCost.GetText()) == "") {    
@@ -962,8 +962,8 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
-                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                        $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
                         if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
                             if ($.trim(BudgetOtherCost.GetText()) == "") {    
@@ -1009,8 +1009,8 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
-                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                        $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
                         if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
                             if ($.trim(BudgetOtherCost.GetText()) == "") {    
@@ -1095,8 +1095,8 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
-                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                        $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
                         //$(item).find("table[id*=BudgetTotalCost]").removeClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
