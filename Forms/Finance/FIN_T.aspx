@@ -69,12 +69,12 @@
             var ini_bf=false;
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
 
-                if($(item).children("td:last-child").text()!="T001" && $(item).children("td:last-child").text()!="T002"){
+                if($(item).children("td:last-child").text()!="T001" && $(item).children("td:last-child").text()!="T002" && $(item).children("td:last-child").text()!="T000"){
                     $(item).find("table[id*=IsHrReserve]").css("display","none");
                     $("#IsHrReserve_i_"+index).css("display","none");
                 }
 
-                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
+                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002" || $(item).children("td:last-child").text()=="T000"){
                     var IsHrReserve = eval('IsHrReserve' + index);                  
                     if (IsHrReserve.GetText()=="是") {                   
                         $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
@@ -85,6 +85,9 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
                         //$(item).find("table[id*=BudgetTotalCost]").addClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
@@ -99,6 +102,9 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
                         //$(item).find("table[id*=BudgetTotalCost]").removeClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
@@ -117,9 +123,27 @@
                     $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
                     $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
+                    $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                    $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
                     //$(item).find("table[id*=BudgetTotalCost]").addClass("dxeTextBox_read");
                     //$(item).find("input[id*=BudgetTotalCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
                 }
+                if($(item).children("td:last-child").text()=="T003"){
+                    var BudgetPersonCount = eval('BudgetPersonCount' + index);
+                    BudgetPersonCount.SetText(1);
+
+                    $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read_2");
+                    $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read_2");
+                } 
+                if($(item).children("td:last-child").text()=="T008"){
+                    var BudgetStandardCost = eval('BudgetStandardCost' + index);
+                    BudgetStandardCost.SetText(1);
+
+                    $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
+                    $(item).find("input[id*=BudgetStandardCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+                }
+
             });
             if (ini_bf) {
                 $("#CJJH input[id*='IsHrReserveByForm']").val("是");
@@ -645,6 +669,9 @@
         .dxeTextBox_read{
             border:none !important ;
         }
+        .dxeTextBox_read_2{
+            border:none !important ;color:white !important;
+        }
         #div_dtl td{
              padding-bottom:3px;
         }
@@ -662,6 +689,10 @@
         }
         .i_show{
             display:inline-block;
+        }
+        #div_T004 td{
+            border:1px Solid #c0c0c0;
+            width:25%
         }
     </style>
 
@@ -738,13 +769,48 @@
             Auto_Calculate_T007();
         }
 
+        /*function Show_limit(vi){
+            var bf_T004=false;
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                if(vi==index){
+                    if($(item).children("td:last-child").text()=="T004"){
+                        bf_T004=true;
+                        return;
+                    }
+                }
+            });
+
+            if(bf_T004){
+                //页面层
+                layer.open({
+                    title:'<font color="red">附表S 国内旅行住宿标准（人民币）</font>',
+                    type: 1,
+                    area: ['550px', '260px'], //宽高
+                    content: $('#div_T004'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            }
+
+        }*/
+
+        function Show_limit(){
+            //页面层
+            layer.open({
+                title:'<font color="red">附表S 国内旅行住宿标准（人民币）</font>',
+                type: 1,
+                area: ['550px', '260px'], //宽高
+                content: $('#div_T004'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        }
+
         function RefreshRow_vi(vi){
             var BudgetStandardCost = eval('BudgetStandardCost' + vi); var BudgetCount = eval('BudgetCount' + vi); var BudgetPersonCount = eval('BudgetPersonCount' + vi);
+            var BudgetOtherCost= eval('BudgetOtherCost' + vi);
             var BudgetTotalCost = eval('BudgetTotalCost' + vi);
 
             //var BudgetStandardCost_value = Number($.trim(BudgetStandardCost.GetText()) == "" ? 0 : $.trim(BudgetStandardCost.GetText()));
             //var BudgetCount_value = Number($.trim(BudgetCount.GetText()) == "" ? 0 : $.trim(BudgetCount.GetText()));
             //var BudgetPersonCount_value = Number($.trim(BudgetPersonCount.GetText()) == "" ? 0 : $.trim(BudgetPersonCount.GetText()));
+            var BudgetOtherCost_value = Number($.trim(BudgetOtherCost.GetText()) == "" ? 0 : $.trim(BudgetOtherCost.GetText()));
 
             //var BudgetTotalCost_value=BudgetStandardCost_value*BudgetCount_value*BudgetPersonCount_value;
             //BudgetTotalCost.SetText(BudgetTotalCost_value);
@@ -754,9 +820,16 @@
                 var BudgetCount_value = Number($.trim(BudgetCount.GetText()));
                 var BudgetPersonCount_value = Number($.trim(BudgetPersonCount.GetText()));
 
-                var BudgetTotalCost_value=BudgetStandardCost_value*BudgetCount_value*BudgetPersonCount_value;
+                var BudgetTotalCost_value=BudgetStandardCost_value*BudgetCount_value*BudgetPersonCount_value+BudgetOtherCost_value;
                 BudgetTotalCost.SetText(BudgetTotalCost_value);
-            }
+            }else {
+                if($.trim(BudgetOtherCost.GetText()) == ""){
+                    BudgetTotalCost.SetText("");
+                }else {
+                    BudgetTotalCost.SetText(BudgetOtherCost_value);
+                }
+                
+            }   
 
             RefreshRow();
         }
@@ -779,7 +852,7 @@
         }
 
         function RefreshRow_HR() {
-            var BC=0;var BC_feiji=0;var BC_huoche=0;
+            var BC=0;var BC_feiji=0;var BC_huoche=0;var BC_qiche=0;
             $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
                 var BudgetCost = eval('BudgetCost' + index);
                 var Vehicle = eval('Vehicle' + index);
@@ -792,6 +865,9 @@
                     }
                     if (Vehicle.GetText()=="火车") {
                         BC_huoche=BC_huoche+Number(BudgetCost.GetText());
+                    }
+                    if (Vehicle.GetText()=="长途汽车") {
+                        BC_qiche=BC_qiche+Number(BudgetCost.GetText());
                     }
                 }
                 
@@ -806,6 +882,7 @@
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                 if($(item).children("td:last-child").text()=="T001"){
                     var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
+                    var BudgetOtherCost = eval('BudgetOtherCost' + index);
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
                     
                     if(BC_feiji>0){
@@ -820,7 +897,10 @@
                         $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
-                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
                         BudgetTotalCost.SetText(BC_feiji);  
                     }
                     else{
@@ -834,13 +914,22 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
                         if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
-                            BudgetTotalCost.SetText("");  
+                            if ($.trim(BudgetOtherCost.GetText()) == "") {    
+                                BudgetTotalCost.SetText("");  
+                            }else {    
+                                BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
+                            }
                         }
                     }
                 }
                 if($(item).children("td:last-child").text()=="T002"){
                     var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
+                    var BudgetOtherCost = eval('BudgetOtherCost' + index);
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
                     
                     if(BC_huoche>0){
@@ -855,7 +944,10 @@
                         $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
-                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
                         BudgetTotalCost.SetText(BC_huoche);  
                     }
                     else{
@@ -869,8 +961,63 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
                         if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
-                            BudgetTotalCost.SetText("");  
+                            if ($.trim(BudgetOtherCost.GetText()) == "") {    
+                                BudgetTotalCost.SetText("");  
+                            }else {    
+                                BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
+                            }
+                        }
+                    } 
+                }
+                if($(item).children("td:last-child").text()=="T000"){
+                    var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
+                    var BudgetOtherCost = eval('BudgetOtherCost' + index);
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    
+                    if(BC_qiche>0){
+                        (eval('IsHrReserve' + index)).SetText("是");
+                    
+                        $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetStandardCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetCount]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
+                        BudgetTotalCost.SetText(BC_qiche);  
+                    }
+                    else{
+                        (eval('IsHrReserve' + index)).SetText("否");
+
+                        $(item).find("table[id*=BudgetStandardCost]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetStandardCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetCount]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
+                            if ($.trim(BudgetOtherCost.GetText()) == "") {    
+                                BudgetTotalCost.SetText("");  
+                            }else {    
+                                BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
+                            }
                         }
                     } 
                 }
@@ -915,9 +1062,10 @@
 
             var bf=false;
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
-                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002"){
+                if($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002" || $(item).children("td:last-child").text()=="T000"){
                     var IsHrReserve = eval('IsHrReserve' + index);
                     var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
+                    var BudgetOtherCost = eval('BudgetOtherCost' + index);
                     var BudgetTotalCost = eval('BudgetTotalCost' + index);
 
                     if (IsHrReserve.GetText()=="是") {    
@@ -929,6 +1077,9 @@
 
                         $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
 
                         //$(item).find("table[id*=BudgetTotalCost]").addClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
@@ -944,11 +1095,14 @@
                         $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
                         $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
 
+                        $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
                         //$(item).find("table[id*=BudgetTotalCost]").removeClass("dxeTextBox_read");
                         //$(item).find("input[id*=BudgetTotalCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
                     }
                     if (vi==index) {//清除当前行
-                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");
+                        BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetTotalCost.SetText("");BudgetTotalCost.SetText("");
                     }
                     
                 }  
@@ -1088,12 +1242,11 @@
             }else {
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                     var is_cal=false;//标记：是否自动计算每行金额统计
-
-                
-                    if($(item).children("td:last-child").text()!="T007" && $(item).children("td:last-child").text()!="T001" && $(item).children("td:last-child").text()!="T002"){                    
+                                    
+                    if($(item).children("td:last-child").text()!="T007" && $(item).children("td:last-child").text()!="T001" && $(item).children("td:last-child").text()!="T002" && $(item).children("td:last-child").text()!="T000"){                    
                         is_cal=true;
                     }
-                    if ($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002") {
+                    if ($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002" || $(item).children("td:last-child").text()=="T000") {
                         var IsHrReserve = eval('IsHrReserve' + index);                  
                         if (IsHrReserve.GetText()=="否") {    
                             is_cal=true;
@@ -1106,7 +1259,17 @@
                         if ($.trim(BudgetCount.GetText()) != "") { is_a++; }
                         if ($.trim(BudgetPersonCount.GetText()) != "") { is_a++; }
                         if (is_a!=3 && is_a!=0) {
-                            msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量(次/顿/间/天等)、人数不可为空.<br />";
+                            msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量1、预算数量2 不可为空.<br />";
+                        }
+                    }
+
+                    if ($(item).children("td:last-child").text()=="T007"){//除了 补贴以外，都有其他金额
+                        var BudgetOtherCost = eval('BudgetOtherCost' + index); 
+                        var BudgetRemark = eval('BudgetRemark' + index); 
+                        if ($.trim(BudgetOtherCost.GetText()) != "") {
+                            if(Number($.trim(BudgetOtherCost.GetText())) != 0 && $.trim(BudgetRemark.GetText()) == ""){
+                                msg+="【出差预算明细】第"+(index+1)+"行，预算其他金额 不为0时，预算说明 不可为空.<br />";
+                            }                            
                         }
                     }
                     
@@ -1179,7 +1342,7 @@
             }
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
                 
-                var Vehicle_feiji=false;var Vehicle_huoche=false;
+                var Vehicle_feiji=false;var Vehicle_huoche=false;var Vehicle_qiche=false;
                 $("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
                     var Vehicle = eval('Vehicle' + index);
                     if (Vehicle.GetText()=="飞机") {
@@ -1187,7 +1350,10 @@
                     }
                     if (Vehicle.GetText()=="火车") {
                         Vehicle_huoche=true;
-                    }                               
+                    } 
+                    if (Vehicle.GetText()=="长途汽车") {
+                        Vehicle_qiche=true;
+                    } 
                 });
                             
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
@@ -1201,6 +1367,11 @@
                         if ($(item).children("td:last-child").text()=="T002") {
                             if (Vehicle_huoche) {
                                 msg+="【火车票】人事预定为“否”，请删除【人事预定明细】中【交通工具】为“火车”的信息.<br />";    
+                            }
+                        }
+                        if ($(item).children("td:last-child").text()=="T000") {
+                            if (Vehicle_huoche) {
+                                msg+="【长途汽车票】人事预定为“否”，请删除【人事预定明细】中【交通工具】为“长途汽车”的信息.<br />";    
                             }
                         }
                     }
@@ -1287,10 +1458,40 @@
     </div>
 
     <div id="div_Vehicle" style="display:none;">
-        <asp:RadioButtonList ID="rdb_Vehicle" runat="server" RepeatDirection="Horizontal" Height="20px" Width="120px" style="margin-left:10px; margin-top:10px;">
+        <asp:RadioButtonList ID="rdb_Vehicle" runat="server" RepeatDirection="Horizontal" Height="20px" Width="180px" style="margin-left:10px; margin-top:10px;">
             <asp:ListItem Text="飞机" Value="飞机"></asp:ListItem>
             <asp:ListItem Text="火车" Value="火车"></asp:ListItem>
+            <asp:ListItem Text="长途汽车" Value="长途汽车"></asp:ListItem>
         </asp:RadioButtonList>
+    </div>   
+    
+    <div id="div_T004" style="display:none;"> 
+        <table style=" margin:15px 15px; border:1px solid #c0c0c0; line-height:25px; font-size:12px;">
+            <tr style="background-color:#D9EDF7;">
+                <td>职别</td>
+                <td>北京</td>
+                <td>其他自治区、沿海城市、<br />经济特区、省会城市、<br />直辖市</td>
+                <td>其他地区</td>
+            </tr>
+            <tr style="border:1px solid #c0c0c0;">
+                <td>总经理\副总经理 <font color="red">L0</font></td>
+                <td>700</td>
+                <td>600</td>
+                <td>500</td>
+            </tr>
+            <tr style="border:1px solid #c0c0c0;">
+                <td>部门经理 <font color="red">L1</font></td>
+                <td>600</td>
+                <td>500</td>
+                <td>400</td>
+            </tr>
+            <tr style="border:1px solid #c0c0c0;">
+                <td>其他员工 <font color="red">L2-L5</font></td>
+                <td>400</td>
+                <td>400</td>
+                <td>300</td>
+            </tr>
+        </table>
     </div>    
 
     <div class="col-md-12" >  
@@ -1462,16 +1663,7 @@
                             <Columns>
                                 <dx:GridViewDataTextColumn Caption="#" FieldName="numid" Width="20px" VisibleIndex="0"></dx:GridViewDataTextColumn>
                                 <dx:GridViewDataTextColumn Caption="费用类型" FieldName="CostCodeDesc" Width="120px" VisibleIndex="1"></dx:GridViewDataTextColumn>
-                                <dx:GridViewDataTextColumn Caption="标准限额" FieldName="Standardlimit" Width="130px" VisibleIndex="1" CellStyle-ForeColor="Red"></dx:GridViewDataTextColumn>
-                                <dx:GridViewDataTextColumn Caption="标准额度" FieldName="StandardlimitCost" Width="60px" VisibleIndex="2">
-                                    <Settings AllowCellMerge="False"/>
-                                    <DataItemTemplate>
-                                        <dx:ASPxTextBox ID="StandardlimitCost" Width="60px" runat="server" Value='<%# Eval("StandardlimitCost")%>'
-                                            ClientInstanceName='<%# "StandardlimitCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0" ReadOnly="true">
-                                        </dx:ASPxTextBox>
-                                    </DataItemTemplate>        
-                                </dx:GridViewDataTextColumn> 
-                                <dx:GridViewDataTextColumn Caption="人事预定<br />并结算" FieldName="IsHrReserve" Width="50px" VisibleIndex="3">
+                                <dx:GridViewDataTextColumn Caption="人事预定<br />并结算" FieldName="IsHrReserve" Width="50px" VisibleIndex="2">
                                     <Settings AllowCellMerge="False" />
                                     <DataItemTemplate>       
                                         <table>
@@ -1489,54 +1681,115 @@
                                         </table> 
                                     </DataItemTemplate>
                                 </dx:GridViewDataTextColumn>
-                                <dx:GridViewDataTextColumn Caption="预算标准" FieldName="BudgetStandardCost" Width="60px" VisibleIndex="3">
+                                <dx:GridViewDataTextColumn Caption="预算标准限额政策" FieldName="Standardlimit" Width="190px" VisibleIndex="3" CellStyle-ForeColor="Red">
                                     <Settings AllowCellMerge="False"/>
                                     <DataItemTemplate>
-                                        <dx:ASPxTextBox ID="BudgetStandardCost" Width="60px" runat="server" Value='<%# Eval("BudgetStandardCost")%>'
+                                        <%--<dx:ASPxLabel ID="Standardlimit" Width="190px" runat="server" Value='<%# Eval("Standardlimit")%>' EncodeHtml="false"
+                                            ClientInstanceName='<%# "Standardlimit"+Container.VisibleIndex.ToString() %>'
+                                            ClientSideEvents-Click='<%# "function(s,e){Show_limit("+Container.VisibleIndex.ToString()+");}" %>'>
+                                        </dx:ASPxLabel>--%>
+                                        <dx:ASPxLabel ID="Standardlimit" Width="190px" runat="server" Value='<%# Eval("Standardlimit")%>' EncodeHtml="false">
+                                        </dx:ASPxLabel>
+                                    </DataItemTemplate>    
+                                </dx:GridViewDataTextColumn>
+                                <dx:GridViewDataTextColumn Caption="预算标准" FieldName="BudgetStandardCost" Width="125px" VisibleIndex="4">
+                                    <Settings AllowCellMerge="False"/>
+                                    <DataItemTemplate>
+                                         <table>
+                                            <tr>
+                                                <td>
+                                                    <dx:ASPxTextBox ID="BudgetStandardCost" Width="60px" runat="server" Value='<%# Eval("BudgetStandardCost")%>'
+                                                        ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>'  
+                                                        ClientInstanceName='<%# "BudgetStandardCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                            <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
+                                                        </ValidationSettings>
+                                                    </dx:ASPxTextBox>
+                                                </td>
+                                                <td>
+                                                    <%--<dx:ASPxTextBox ID="cost_unit" Width="80px" runat="server" Value='<%# Eval("cost_unit")%>'  Border-BorderWidth="0"  ReadOnly="true">
+                                                    </dx:ASPxTextBox>--%>
+                                                    <dx:ASPxLabel ID="cost_unit" Width="65px" runat="server" Value='<%# Eval("cost_unit")%>'>
+                                                    </dx:ASPxLabel>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </DataItemTemplate>        
+                                </dx:GridViewDataTextColumn> 
+                                <dx:GridViewDataTextColumn Caption="预算数量1(次/顿/<br />间/天/公里等)" FieldName="BudgetCount" Width="90px" VisibleIndex="5">
+                                    <Settings AllowCellMerge="False"/>
+                                    <DataItemTemplate>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <dx:ASPxTextBox ID="BudgetCount" Width="60px" runat="server" Value='<%# Eval("BudgetCount")%>'
+                                                        ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
+                                                        ClientInstanceName='<%# "BudgetCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                            <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
+                                                        </ValidationSettings>
+                                                    </dx:ASPxTextBox>
+                                                </td>
+                                                <td>
+                                                   <%-- <dx:ASPxTextBox ID="BudgetCount_1_unit" Width="30px" runat="server" Value='<%# Eval("BudgetCount_1_unit")%>'  Border-BorderWidth="0"  ReadOnly="true">
+                                                    </dx:ASPxTextBox>--%>
+                                                    <dx:ASPxLabel ID="BudgetCount_1_unit" Width="30px" runat="server" Value='<%# Eval("BudgetCount_1_unit")%>'>
+                                                    </dx:ASPxLabel>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </DataItemTemplate>        
+                                </dx:GridViewDataTextColumn> 
+                                <dx:GridViewDataTextColumn Caption="预算数量2(人数/<br />房间数/趟数等)" FieldName="BudgetPersonCount" Width="90px" VisibleIndex="6">
+                                    <Settings AllowCellMerge="False"/>
+                                    <DataItemTemplate>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <dx:ASPxTextBox ID="BudgetPersonCount" Width="60px" runat="server" Value='<%# Eval("BudgetPersonCount")%>'
+                                                        ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
+                                                        ClientInstanceName='<%# "BudgetPersonCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                            <RegularExpression ErrorText="请输入正整数或0！" ValidationExpression="^[1-9]\d*$|[0]" />
+                                                        </ValidationSettings>
+                                                    </dx:ASPxTextBox>
+                                                </td>
+                                                <td>
+                                                    <%--<dx:ASPxTextBox ID="BudgetCount_2_unit" Width="30px" runat="server" Value='<%# Eval("BudgetCount_2_unit")%>'  Border-BorderWidth="0"  ReadOnly="true">
+                                                    </dx:ASPxTextBox>--%>
+                                                    <dx:ASPxLabel ID="BudgetCount_2_unit" Width="30px" runat="server" Value='<%# Eval("BudgetCount_2_unit")%>'>
+                                                    </dx:ASPxLabel>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </DataItemTemplate>        
+                                </dx:GridViewDataTextColumn> 
+                                <dx:GridViewDataTextColumn Caption="预算<br />其他金额" FieldName="BudgetOtherCost" Width="60px" VisibleIndex="7">
+                                    <Settings AllowCellMerge="False"/>
+                                    <DataItemTemplate>
+                                        <dx:ASPxTextBox ID="BudgetOtherCost" Width="60px" runat="server" Value='<%# Eval("BudgetOtherCost")%>'
                                             ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>'  
-                                            ClientInstanceName='<%# "BudgetStandardCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                            ClientInstanceName='<%# "BudgetOtherCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
                                             <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                 <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
                                             </ValidationSettings>
                                         </dx:ASPxTextBox>
                                     </DataItemTemplate>        
                                 </dx:GridViewDataTextColumn> 
-                                <dx:GridViewDataTextColumn Caption="预算数量<br />(次/顿/间/天等)" FieldName="BudgetCount" Width="90px" VisibleIndex="4">
+                                <dx:GridViewDataTextColumn Caption="预算金额合计<br />(前三列相乘+其他)" FieldName="BudgetTotalCost" Width="60px" VisibleIndex="8">
                                     <Settings AllowCellMerge="False"/>
                                     <DataItemTemplate>
-                                        <dx:ASPxTextBox ID="BudgetCount" Width="90px" runat="server" Value='<%# Eval("BudgetCount")%>'
-                                            ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
-                                            ClientInstanceName='<%# "BudgetCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
-                                            <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
-                                            </ValidationSettings>
-                                        </dx:ASPxTextBox>
-                                    </DataItemTemplate>        
-                                </dx:GridViewDataTextColumn> 
-                                <dx:GridViewDataTextColumn Caption="人数" FieldName="BudgetPersonCount" Width="40px" VisibleIndex="5">
-                                    <Settings AllowCellMerge="False"/>
-                                    <DataItemTemplate>
-                                        <dx:ASPxTextBox ID="BudgetPersonCount" Width="40px" runat="server" Value='<%# Eval("BudgetPersonCount")%>'
-                                            ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
-                                            ClientInstanceName='<%# "BudgetPersonCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
-                                            <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                <RegularExpression ErrorText="请输入正整数或0！" ValidationExpression="^[1-9]\d*$|[0]" />
-                                            </ValidationSettings>
-                                        </dx:ASPxTextBox>
-                                    </DataItemTemplate>        
-                                </dx:GridViewDataTextColumn> 
-                                <dx:GridViewDataTextColumn Caption="预算金额合计" FieldName="BudgetTotalCost" Width="80px" VisibleIndex="6">
-                                    <Settings AllowCellMerge="False"/>
-                                    <DataItemTemplate>
-                                        <dx:ASPxTextBox ID="BudgetTotalCost" Width="80px" runat="server" Value='<%# Eval("BudgetTotalCost")%>'
+                                        <dx:ASPxTextBox ID="BudgetTotalCost" Width="60px" runat="server" Value='<%# Eval("BudgetTotalCost")%>'
                                             ClientInstanceName='<%# "BudgetTotalCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0" ReadOnly="true">
                                         </dx:ASPxTextBox>
                                     </DataItemTemplate>        
                                 </dx:GridViewDataTextColumn>    
-                                <dx:GridViewDataTextColumn Caption="预算说明" FieldName="BudgetRemark" Width="300px" VisibleIndex="7">
+                                <dx:GridViewDataTextColumn Caption="预算说明" FieldName="BudgetRemark" Width="200px" VisibleIndex="9">
                                     <Settings AllowCellMerge="False" />
                                     <DataItemTemplate>                
-                                        <dx:ASPxTextBox ID="BudgetRemark" Width="300px" runat="server" Value='<%# Eval("BudgetRemark")%>' ></dx:ASPxTextBox>                
+                                        <dx:ASPxTextBox ID="BudgetRemark" Width="200px" runat="server" Value='<%# Eval("BudgetRemark")%>' 
+                                             ClientInstanceName='<%# "BudgetRemark"+Container.VisibleIndex.ToString() %>'>
+                                        </dx:ASPxTextBox>                
                                     </DataItemTemplate>        
                                 </dx:GridViewDataTextColumn>
 
