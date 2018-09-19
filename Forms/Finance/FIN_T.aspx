@@ -129,14 +129,14 @@
                     //$(item).find("table[id*=BudgetTotalCost]").addClass("dxeTextBox_read");
                     //$(item).find("input[id*=BudgetTotalCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
                 }
-                if($(item).children("td:last-child").text()=="T003"){
+                if($(item).children("td:last-child").text()=="T003"){//出租车/公交/地铁等
                     var BudgetPersonCount = eval('BudgetPersonCount' + index);
                     BudgetPersonCount.SetText(1);
 
                     $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read_2");
                     $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read_2");
                 } 
-                if($(item).children("td:last-child").text()=="T008"){
+                if($(item).children("td:last-child").text()=="T008"){//自驾费用
                     var BudgetStandardCost = eval('BudgetStandardCost' + index);
                     BudgetStandardCost.SetText(1);
 
@@ -1243,7 +1243,8 @@
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
                     var is_cal=false;//标记：是否自动计算每行金额统计
                                     
-                    if($(item).children("td:last-child").text()!="T007" && $(item).children("td:last-child").text()!="T001" && $(item).children("td:last-child").text()!="T002" && $(item).children("td:last-child").text()!="T000"){                    
+                    if($(item).children("td:last-child").text()!="T007" && $(item).children("td:last-child").text()!="T001" 
+                        && $(item).children("td:last-child").text()!="T002" && $(item).children("td:last-child").text()!="T000"){                    
                         is_cal=true;
                     }
                     if ($(item).children("td:last-child").text()=="T001" || $(item).children("td:last-child").text()=="T002" || $(item).children("td:last-child").text()=="T000") {
@@ -1258,9 +1259,16 @@
                         if ($.trim(BudgetStandardCost.GetText()) != "") { is_a++; }
                         if ($.trim(BudgetCount.GetText()) != "") { is_a++; }
                         if ($.trim(BudgetPersonCount.GetText()) != "") { is_a++; }
-                        if (is_a!=3 && is_a!=0) {
-                            msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量1、预算数量2 不可为空.<br />";
-                        }
+                        
+                        if ($(item).children("td:last-child").text()=="T003") {//出租车/公交/地铁等
+                                if (is_a!=3 && is_a!=1) {
+                                msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量1、预算数量2 不可为空.<br />";
+                            }
+                        }else{
+                            if (is_a!=3 && is_a!=0) {
+                                msg+="【出差预算明细】第"+(index+1)+"行，预算标准、预算数量1、预算数量2 不可为空.<br />";
+                            }
+                        }                        
                     }
 
                     if ($(item).children("td:last-child").text()=="T007"){//除了 补贴以外，都有其他金额
