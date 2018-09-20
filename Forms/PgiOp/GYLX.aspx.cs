@@ -130,12 +130,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     }
                     else
                     {
-                        string sql_head = @"select a.id, a.FormNo, a.projectno, a.pn, a.pn_desc, a.domain, a.typeno, a.state
+                        string sql_head = @"select a.id, a.FormNo, a.projectno,d.pt_desc1 pn,d.pt_desc2 pn_desc, a.domain, a.typeno, a.state
                                             , a.containgp, nchar(ascii(isnull(ver,'A'))+1) ver, a.pgi_no_t
                                             , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate 
                                             ,c.product_user,c.zl_user,c.yz_user
                                     from PGI_GYLX_Main a 
                                         left join form3_Sale_Product_MainTable c on left(a.projectno,5)=c.pgino 
+                                        left join qad_pt_mstr d on a.projectno=d.pt_part and a.domain=d.pt_domain
                                     where formno='" + Request.QueryString["formno"] + "'";
                         DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
 
@@ -155,8 +156,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
 
                         lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
-                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver, pn
-                                ,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
+                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver
+                                , '"+ ldt.Rows[0]["pn"].ToString() + @"' pn,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
                     }
@@ -170,9 +171,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
             else
             {
-                DataTable ldt = DbHelperSQL.Query("select * from PGI_GYLX_Main_Form where formno='" + this.m_sid + "'").Tables[0];
+                DataTable ldt = DbHelperSQL.Query(@"select a.*,d.pt_desc1,d.pt_desc2 
+                                                    from PGI_GYLX_Main_Form a 
+                                                        left join qad_pt_mstr d on a.projectno=d.pt_part and a.domain=d.pt_domain 
+                                                    where formno='" + this.m_sid + "'").Tables[0];
                 if (ldt.Rows.Count > 0)
                 {
+                    ldt.Rows[0]["pn"] = ldt.Rows[0]["pt_desc1"]; ldt.Rows[0]["pn_desc"] = ldt.Rows[0]["pt_desc2"];
                     //表头基本信息
                     txt_CreateById.Value = ldt.Rows[0]["CreateById"].ToString();
                     txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
