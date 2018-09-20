@@ -648,6 +648,76 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
             Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
         }
     }
+    ////终止按钮
+    //protected void btnStopFlow_Click(object sender, EventArgs e)
+    //{
+    //    string taskid = Request.QueryString["taskid"];
+    //    //string msg = taskid.IsGuid() ? new RoadFlow.Platform.WorkFlowTask().EndTask(taskid.ToGuid()) : "参数错误";
+    //    string msg = taskid.IsGuid() ? EndTask(taskid.ToGuid()) : "参数错误";
+    //    if ("1" != msg)
+    //    {
+    //        Page.ClientScript.RegisterStartupScript(Page.GetType(), "err", "alert('" + msg + "')", true);
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        Page.ClientScript.RegisterStartupScript(Page.GetType(), "err", "alert('终止成功!'); try{top.mainDialog.close();}catch(e){} try{top.mainTab.closeTab();}catch(e){parent.close();}", true);
+    //        return;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 终止一个任务所在的流程
+    ///// </summary>
+    ///// <param name="taskID"></param>
+    //public string EndTask(Guid taskID)
+    //{
+    //    RoadFlow.Platform.WorkFlowTask wft = new RoadFlow.Platform.WorkFlowTask();
+    //    RoadFlow.Data.Model.WorkFlowInstalled wfInstalled = null;
+
+    //    var task = wft.Get(taskID);
+    //    if (task == null)
+    //    {
+    //        return "未找到当前任务";
+    //    }
+    //    var tasks = wft.GetTaskList(task.FlowID, task.GroupID);
+    //    using (System.Transactions.TransactionScope scope = new System.Transactions.TransactionScope())
+    //    {
+    //        try
+    //        {
+    //            foreach (var t in tasks)
+    //            {
+    //                if (t.Status < 2)
+    //                {
+    //                    t.Status = t.ID == task.ID ? 6 : 7;
+    //                    t.CompletedTime1 = DateTime.Now;
+    //                    wft.Update(t);
+    //                }
+    //            }
+    //            #region 更新业务表标识字段的值为2
+    //            if (wfInstalled == null)
+    //            {
+    //                wfInstalled = new RoadFlow.Platform.WorkFlow().GetWorkFlowRunModel(task.FlowID);
+    //            }
+    //            if (wfInstalled.TitleField != null && wfInstalled.TitleField.LinkID != Guid.Empty && !wfInstalled.TitleField.Table.IsNullOrEmpty()
+    //                && !wfInstalled.TitleField.Field.IsNullOrEmpty() && wfInstalled.DataBases.Count() > 0)
+    //            {
+    //                var firstDB = wfInstalled.DataBases.First();
+
+    //                string sql = string.Format("UPDATE {0} SET {1}='{2}' WHERE {3}", firstDB.LinkName+".dbo."+ wfInstalled.TitleField.Table, wfInstalled.TitleField.Field,
+    //               "2", string.Format("{0}='{1}'", firstDB.PrimaryKey, task.InstanceID));
+    //                RoadFlow.Data.Factory.Factory.GetDBHelper().Execute(sql);
+    //            }
+    //            #endregion
+    //            scope.Complete();
+    //        }
+    //        catch (Exception err)
+    //        {
+    //            RoadFlow.Platform.Log.Add(err);
+    //        }
+    //    }
+    //    return "1";
+    //}
     #endregion
 
 
