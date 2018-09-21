@@ -55,7 +55,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1500px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1620px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -83,7 +83,7 @@
 
                             <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="80px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
@@ -102,7 +102,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="820px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
+                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="920px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 

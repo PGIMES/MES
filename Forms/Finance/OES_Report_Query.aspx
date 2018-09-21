@@ -47,7 +47,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1760px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1780px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -96,7 +96,7 @@
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="80px" VisibleIndex="14">
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="100px" VisibleIndex="14">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                         </Columns>
