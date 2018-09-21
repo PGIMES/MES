@@ -1274,7 +1274,7 @@
                         }                        
                     }
 
-                    if ($(item).children("td:last-child").text()=="T007"){//除了 补贴以外，都有其他金额
+                    if ($(item).children("td:last-child").text()!="T007"){//除了 补贴以外，都有其他金额
                         var BudgetOtherCost = eval('BudgetOtherCost' + index); 
                         var BudgetRemark = eval('BudgetRemark' + index); 
                         if ($.trim(BudgetOtherCost.GetText()) != "") {
@@ -1301,13 +1301,15 @@
                                 var StartDateTime = eval('StartDateTime' + index);
                                 var BudgetCost = eval('BudgetCost' + index);
                                 var Vehicle = eval('Vehicle' + index);
+                                var Remark = eval('Remark' + index);
                                 
-                                if (TravelerName.GetText()=="" || TravelerId.GetText()=="") { msg+="【出行人】不可为空.<br />"; }
-                                if (StartFromPlace.GetText()=="") { msg+="【出发地】不可为空.<br />"; }
-                                if (EndToPlace.GetText()=="") { msg+="【目的地】不可为空.<br />"; }
-                                if (StartDateTime.GetText()=="0100/01/01 00:00") { msg+="【出发时间】不可为空.<br />"; }
-                                if (BudgetCost.GetText()=="") { msg+="【预算费用】不可为空.<br />"; }
-                                if (Vehicle.GetText()=="") { msg+="【交通工具】不可为空.<br />"; }
+                                if (TravelerName.GetText()=="" || TravelerId.GetText()=="") { msg+="【人事预定明细】-【出行人】不可为空.<br />"; }
+                                if (StartFromPlace.GetText()=="") { msg+="【人事预定明细】-【出发地】不可为空.<br />"; }
+                                if (EndToPlace.GetText()=="") { msg+="【人事预定明细】-【目的地】不可为空.<br />"; }
+                                if (StartDateTime.GetText()=="0100/01/01 00:00") { msg+="【人事预定明细】-【出发时间】不可为空.<br />"; }
+                                if (BudgetCost.GetText()=="") { msg+="【人事预定明细】-【预算费用】不可为空.<br />"; }
+                                if (Vehicle.GetText()=="") { msg+="【人事预定明细】-【交通工具】不可为空.<br />"; }
+                                if (Remark.GetText()=="") { msg+="【人事预定明细】-【备注】不可为空.<br />"; }
 
                                 if (msg!="") {
                                     return false;
@@ -1349,7 +1351,7 @@
             //    msg+="【预计出发日期】必须大于等于【当前日期】.<br />";
             //}
             if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
-                msg+="【预计结束日期】必须大于【预计出发日期】.<br />";
+                msg+="【预计结束日期】必须大于等于【预计出发日期】.<br />";
             }
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
                 
@@ -1381,7 +1383,7 @@
                             }
                         }
                         if ($(item).children("td:last-child").text()=="T000") {
-                            if (Vehicle_huoche) {
+                            if (Vehicle_qiche) {
                                 msg+="【长途汽车票】人事预定为“否”，请删除【人事预定明细】中【交通工具】为“长途汽车”的信息.<br />";    
                             }
                         }
@@ -1440,7 +1442,7 @@
         }
 
         function compareDate(s1,s2){
-            return ((new Date(s1.replace(/-/g,"\/")))>=(new Date(s2.replace(/-/g,"\/"))));
+            return ((new Date(s1.replace(/-/g,"\/")))>(new Date(s2.replace(/-/g,"\/"))));
         }
 
     </script>
@@ -1608,9 +1610,9 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <table style="width: 100%">
                             <tr>
-                                <td><font color="red">*</font>预计出发日期</td>
+                                <td><font color="red">*</font>预计出发日期</td><%--laydate.now(1)--%>
                                 <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" 
-                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:laydate.now(1),min:laydate.now(1),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
+                                    onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:laydate.now(),min:laydate.now(),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
                                 <td><font color="red">*</font>预计结束日期</td>
                                 <td><asp:TextBox ID="PlanEndTime"  runat="server" class="linewrite" ReadOnly="True" Width="260px" 
                                     onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:$('#CJJH input[id*=\'PlanStartTime\']').val(),min:$('#CJJH input[id*=\'PlanStartTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
