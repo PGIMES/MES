@@ -55,7 +55,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1620px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1640px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -75,7 +75,7 @@
                             <dx:GridViewDataTextColumn Caption="申请部门" FieldName="ApplyDept" Width="120px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="差旅类型" FieldName="TravelType" Width="70px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="差旅地点" FieldName="TravelPlace" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="差旅地点" FieldName="TravelPlace" Width="100px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="差旅行程期间" FieldName="StartToEnd" Width="160px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="出差事由" FieldName="TravelReason" Width="250px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="随行人员" FieldName="PlanAttendant" Width="200px" VisibleIndex="10"></dx:GridViewDataTextColumn>
