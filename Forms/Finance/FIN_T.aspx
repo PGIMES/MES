@@ -1948,7 +1948,7 @@
                                                 </table> 
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="备注" FieldName="Remark" Width="150px" VisibleIndex="8">
+                                        <dx:GridViewDataTextColumn Caption="备注(班次信息)" FieldName="Remark" Width="150px" VisibleIndex="8">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="Remark" Width="150px" runat="server" Value='<%# Eval("Remark")%>' 
