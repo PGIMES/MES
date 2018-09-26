@@ -87,9 +87,12 @@
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用发生日期/期间" FieldName="feedate" Width="160px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用说明" FieldName="feenote" Width="250px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="limit" Width="100px" VisibleIndex="10"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="报销金额" FieldName="amount" Width="100px" VisibleIndex="11"></dx:GridViewDataTextColumn>
-
+                            <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="limit" Width="100px" VisibleIndex="10">
+                                <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="报销金额" FieldName="amount" Width="100px" VisibleIndex="11">
+                                <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="80px" VisibleIndex="12">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
