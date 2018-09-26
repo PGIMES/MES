@@ -1714,7 +1714,7 @@
                                                 <td>
                                                     <dx:ASPxTextBox ID="BudgetStandardCost" Width="60px" runat="server" Value='<%# Eval("BudgetStandardCost")%>'
                                                         ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>'  
-                                                        ClientInstanceName='<%# "BudgetStandardCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        ClientInstanceName='<%# "BudgetStandardCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N1}">
                                                         <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                             <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
                                                         </ValidationSettings>
@@ -1738,7 +1738,7 @@
                                                 <td>
                                                     <dx:ASPxTextBox ID="BudgetCount" Width="60px" runat="server" Value='<%# Eval("BudgetCount")%>'
                                                         ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
-                                                        ClientInstanceName='<%# "BudgetCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        ClientInstanceName='<%# "BudgetCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N1}">
                                                         <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                             <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
                                                         </ValidationSettings>
@@ -1762,7 +1762,7 @@
                                                 <td>
                                                     <dx:ASPxTextBox ID="BudgetPersonCount" Width="60px" runat="server" Value='<%# Eval("BudgetPersonCount")%>'
                                                         ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>' 
-                                                        ClientInstanceName='<%# "BudgetPersonCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                                        ClientInstanceName='<%# "BudgetPersonCount"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N0}">
                                                         <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                             <RegularExpression ErrorText="请输入正整数或0！" ValidationExpression="^[1-9]\d*$|[0]" />
                                                         </ValidationSettings>
@@ -1783,7 +1783,7 @@
                                     <DataItemTemplate>
                                         <dx:ASPxTextBox ID="BudgetOtherCost" Width="60px" runat="server" Value='<%# Eval("BudgetOtherCost")%>'
                                             ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_vi("+Container.VisibleIndex.ToString()+");}" %>'  
-                                            ClientInstanceName='<%# "BudgetOtherCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right">
+                                            ClientInstanceName='<%# "BudgetOtherCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N1}">
                                             <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                 <RegularExpression ErrorText="请输入正数或0！" ValidationExpression="^([1-9]\d*|0)(\.\d*[1-9])?$" />
                                             </ValidationSettings>
@@ -1794,7 +1794,7 @@
                                     <Settings AllowCellMerge="False"/>
                                     <DataItemTemplate>
                                         <dx:ASPxTextBox ID="BudgetTotalCost" Width="60px" runat="server" Value='<%# Eval("BudgetTotalCost")%>'
-                                            ClientInstanceName='<%# "BudgetTotalCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0" ReadOnly="true">
+                                            ClientInstanceName='<%# "BudgetTotalCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N1}" Border-BorderWidth="0" ReadOnly="true">
                                         </dx:ASPxTextBox>
                                     </DataItemTemplate>        
                                 </dx:GridViewDataTextColumn>    

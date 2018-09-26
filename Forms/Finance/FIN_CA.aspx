@@ -661,12 +661,12 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="用车公里数<br /><font color=red>仅填写公里数，停车过路费在费用申请单实报实销</font>" FieldName="Mileage" Width="100px" VisibleIndex="7">
+                                        <dx:GridViewDataTextColumn Caption="用车公里数<br /><font color=red>仅填写公里数，停车过路费在费用申请单实报实销</font>" FieldName="Mileage" Width="290px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="Mileage" Width="90px" runat="server" Value='<%# Eval("Mileage")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow();}" %>'
-                                                    ClientInstanceName='<%# "Mileage"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
+                                                    ClientInstanceName='<%# "Mileage"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right" DisplayFormatString="{0:N1}">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
