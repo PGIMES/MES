@@ -653,15 +653,15 @@
                                                 </dx:ASPxDateEdit>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="行程路线" FieldName="TravelRoute" Width="190px" VisibleIndex="6">
+                                        <dx:GridViewDataTextColumn Caption="行程路线" FieldName="TravelRoute" Width="290px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="TravelRoute" Width="180px" runat="server" Value='<%# Eval("TravelRoute")%>' 
+                                                <dx:ASPxTextBox ID="TravelRoute" Width="280px" runat="server" Value='<%# Eval("TravelRoute")%>' 
                                                     ClientInstanceName='<%# "TravelRoute"+Container.VisibleIndex.ToString() %>'>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="用车公里数" FieldName="Mileage" Width="100px" VisibleIndex="7">
+                                        <dx:GridViewDataTextColumn Caption="用车公里数<br /><font color=red>仅填写公里数，停车过路费在费用申请单实报实销</font>" FieldName="Mileage" Width="100px" VisibleIndex="7">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="Mileage" Width="90px" runat="server" Value='<%# Eval("Mileage")%>' 
