@@ -697,6 +697,10 @@
             border:1px Solid #c0c0c0;
             width:25%
         }
+        #div_T td{
+            border:1px Solid #c0c0c0;
+            width:25%
+        }
     </style>
 
     <script type="text/javascript">
@@ -802,6 +806,16 @@
                 type: 1,
                 area: ['550px', '260px'], //宽高
                 content: $('#div_T004'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        }
+
+        function Show_Standard(){
+            //页面层
+            layer.open({
+                title:'<font color="red">附表S 出差界定标准</font>',
+                type: 1,
+                area: ['450px', '200px'], //宽高
+                content: $('#div_T'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
 
@@ -1353,6 +1367,19 @@
             if(compareDate($("#CJJH input[id*='PlanStartTime']").val(),$("#CJJH input[id*='PlanEndTime']").val())){
                 msg+="【预计结束日期】必须大于等于【预计出发日期】.<br />";
             }
+
+            //20180926 新增 只有出差一天以内（0天）的只有自驾费的，限制不保存
+            var TotalCost_cal=0;
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
+                if ($(item).children("td:last-child").text()!="T008" && $(item).children("td:last-child").text()!="T007"){
+                    var BudgetTotalCost = eval('BudgetTotalCost' + index);
+                    TotalCost_cal =TotalCost_cal + Number($.trim(BudgetTotalCost.GetText()) == "" ? 0 : $.trim(BudgetTotalCost.GetText()));
+                }
+            });
+            if (TotalCost_cal<=0) {
+                msg+="一天以下的只有私车公用，请填写【私车公用申请单】.<br />";
+            }
+
             if ($("#CJJH input[id*='IsHrReserveByForm']").val()=="是" || $('#div_dtl_hr').css('display')=='inline-block') {
                 
                 var Vehicle_feiji=false;var Vehicle_huoche=false;var Vehicle_qiche=false;
@@ -1506,7 +1533,23 @@
                 <td>300</td>
             </tr>
         </table>
-    </div>    
+    </div> 
+    
+    <div id="div_T" style="display:none;"> 
+        <table style=" margin:15px 15px; border:1px solid #c0c0c0; line-height:25px; font-size:12px;">
+            <tr style="border:1px solid #c0c0c0;">
+                <td rowspan="2">出差</td>
+                <td>一天以上</td>
+            </tr>
+            <tr style="border:1px solid #c0c0c0;">
+                <td>一天以下且除私车公用费用以外有其他费用</td>
+            </tr>
+            <tr style="border:1px solid #c0c0c0;">
+                <td>私车公用</td>
+                <td>一天以下只有私车公用</td>
+            </tr>
+        </table>
+    </div>     
 
     <div class="col-md-12" >  
 
@@ -1668,7 +1711,7 @@
                 </div>
                 <div class="panel-body " id="fin_t_dtl">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
-
+                        <a style='text-decoration:underline; color:red;' onclick="Show_Standard()"><strong>出差界定标准</strong></a>
                         <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" EnableTheming="True" 
                                 ClientInstanceName="gv_d"> 
                             <SettingsPager PageSize="1000"></SettingsPager>
