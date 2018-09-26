@@ -862,7 +862,7 @@
             //grid底部total值更新
             $("[id$=gv_d] tr[id*=DXFooterRow]").find('td').each(function () {
                 if($.trim($(this).text())!=""){
-                    $(this).html("<b>合计:"+fmoney(BTC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BTC,2)+"</b>");
+                    $(this).html("<b>合计:"+fmoney(BTC,1)+"</b>");//$(this).text("<b>合计:"+fmoney(BTC,1)+"</b>");
                     $("#CJJH input[id*='BudgetTotalCostByForm']").val(BTC.toFixed(2));
                 }   
             });
@@ -892,7 +892,7 @@
             //grid底部total值更新
             $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
                 if(($.trim($(this).text())).indexOf("预算合计")>-1){
-                    $(this).html("<b>预算合计:"+fmoney(BC,2)+"</b>");//$(this).text("<b>合计:"+fmoney(BC,2)+"</b>");
+                    $(this).html("<b>预算合计:"+fmoney(BC,1)+"</b>");//$(this).text("<b>合计:"+fmoney(BC,1)+"</b>");
                 }   
             });
 
@@ -1053,7 +1053,7 @@
             //grid底部total值更新
             $("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
                 if(($.trim($(this).text())).indexOf("实际合计")>-1){
-                    $(this).html("<b><font color=blue>实际合计:"+fmoney(AC,2)+"</font></b>");//$(this).text("<b>合计:"+fmoney(AC,2)+"</b>");
+                    $(this).html("<b><font color=blue>实际合计:"+fmoney(AC,1)+"</font></b>");//$(this).text("<b>合计:"+fmoney(AC,1)+"</b>");
                 }   
             });
         }
@@ -1867,7 +1867,7 @@
                                 </dx:GridViewDataTextColumn>
                             </Columns>                      
                             <TotalSummary>
-                                <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetTotalCost" SummaryType="Sum" ShowInColumn="BudgetTotalCost" ShowInGroupFooterColumn="BudgetTotalCost" />
+                                <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N1}</b>" FieldName="BudgetTotalCost" SummaryType="Sum" ShowInColumn="BudgetTotalCost" ShowInGroupFooterColumn="BudgetTotalCost" />
                             </TotalSummary>                          
                             <Styles>
                                 <Header BackColor="#E4EFFA"  ></Header>        
@@ -1966,7 +1966,7 @@
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="BudgetCost" Width="90px" runat="server" Value='<%# Eval("BudgetCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR();}" %>'
-                                                    ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right">
+                                                    ClientInstanceName='<%# "BudgetCost"+Container.VisibleIndex.ToString() %>'  HorizontalAlign="Right" DisplayFormatString="{0:N1}">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
@@ -2012,7 +2012,7 @@
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="ActualCost" Width="90px" runat="server" Value='<%# Eval("ActualCost")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_HR_AC();}" %>'
-                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" Border-BorderWidth="0"   ReadOnly="true">
+                                                    ClientInstanceName='<%# "ActualCost"+Container.VisibleIndex.ToString() %>' HorizontalAlign="Right" DisplayFormatString="{0:N1}" Border-BorderWidth="0"   ReadOnly="true">
                                                     <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
                                                         <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
                                                     </ValidationSettings>
@@ -2032,8 +2032,8 @@
                                         </dx:GridViewDataTextColumn>
                                     </Columns>       
                                     <TotalSummary>
-                                        <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N2}</b>" FieldName="BudgetCost" SummaryType="Sum" />
-                                        <dx:ASPxSummaryItem DisplayFormat="<b><font color=blue>实际合计:{0:N2}</font></b>" FieldName="ActualCost" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="<b>预算合计:{0:N1}</b>" FieldName="BudgetCost" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="<b><font color=blue>实际合计:{0:N1}</font></b>" FieldName="ActualCost" SummaryType="Sum" />
                                     </TotalSummary>                                            
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        

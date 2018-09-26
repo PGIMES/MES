@@ -694,7 +694,7 @@
                                         </dx:GridViewDataTextColumn>
                                     </Columns>       
                                     <TotalSummary>
-                                        <dx:ASPxSummaryItem DisplayFormat="<b>合计:{0:N2}</b>" FieldName="Mileage" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="<b>合计:{0:N1}</b>" FieldName="Mileage" SummaryType="Sum" />
                                     </TotalSummary>                                            
                                     <Styles>
                                         <Header BackColor="#E4EFFA"  ></Header>        
