@@ -57,8 +57,18 @@ public partial class Forms_PgiOp_Rpt_GYBom_Query : System.Web.UI.Page
     protected void btn_import_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ASPxGridViewExporter1.WriteXlsToResponse(ddl_type.SelectedValue+ System.DateTime.Now.ToShortDateString());//导出到Excel
-
+        if (ddl_type.SelectedValue == "GY")
+        {
+            ASPxGridViewExporter1.WriteXlsToResponse(ddl_type.SelectedValue + System.DateTime.Now.ToShortDateString());
+        }//导出到Excel
+        if (ddl_type.SelectedValue == "BOM")
+        {
+            ASPxGridViewExporter2.WriteXlsToResponse(ddl_type.SelectedValue + System.DateTime.Now.ToShortDateString());
+        }//导出到Excel
+        if (ddl_type.SelectedValue == "part")
+        {
+            ASPxGridViewExporter3.WriteXlsToResponse(ddl_type.SelectedValue + System.DateTime.Now.ToShortDateString());
+        }//导出到Excel
     }
     protected void gv_PageIndexChanged(object sender, EventArgs e)
     {

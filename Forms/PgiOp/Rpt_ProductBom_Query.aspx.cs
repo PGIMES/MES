@@ -35,10 +35,10 @@ public partial class Product_Rpt_ProductBom_Query : System.Web.UI.Page
             //ddl_ljh.SelectedValue =  Request["pgino_pn"].ToString();
             ddl_ljh.Text = Request["pgino_pn"].ToString();
             ddl_comp.SelectedValue = Request["domain"].ToString();
-
+           // hideTab();
             Button1_Click(sender, e);
 
-            hideTab();
+            
         }
       
         if (Session["dt"]!= null)

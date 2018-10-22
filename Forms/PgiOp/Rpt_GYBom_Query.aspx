@@ -124,7 +124,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server" GridViewID="gv">
                     </dx:ASPxGridViewExporter>
                     <br />
                     <dx:ASPxGridView ID="gv_BOM" runat="server" 
@@ -175,6 +175,8 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
+                     <dx:ASPxGridViewExporter ID="ASPxGridViewExporter2" runat="server" GridViewID="gv_BOM">
+                    </dx:ASPxGridViewExporter>
                     <br/>
                                <dx:ASPxGridView ID="gv_Part" runat="server" 
                         AutoGenerateColumns="False" Width="1100px" 
@@ -224,6 +226,8 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter3" runat="server" GridViewID="gv_Part">
+                    </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>
