@@ -658,7 +658,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     protected void gv_d_DataBound(object sender, EventArgs e)
     {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();grid_read_700();", true);
     }
 
     protected void gv_d_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
@@ -1072,7 +1072,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     protected void gv_d_yz_DataBound(object sender, EventArgs e)
     {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();grid_yz_read_700();", true);
     }
     
     protected void gv_d_yz_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)

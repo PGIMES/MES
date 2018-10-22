@@ -154,6 +154,32 @@
 
         });
 
+        function grid_read_700(){
+            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {
+
+                if($(item).find("input[id*=op]").val()=="OP700"){//工序号，工序名称，工序说明
+                    $(item).find("table[id*=op]").addClass("dxeTextBox_read");
+                    $(item).find("input[id*=op]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                    $(item).find("input[id*=op_desc]").val('GP12');
+                    $(item).find("input[id*=op_remark]").val('GP12');
+                }
+            });
+        }
+
+        function grid_yz_read_700(){
+            $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {
+
+                if($(item).find("input[id*=op]").val()=="OP700"){//工序号，工序名称，工序说明
+                    $(item).find("table[id*=op]").addClass("dxeTextBox_read");
+                    $(item).find("input[id*=op]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                    $(item).find("input[id*=op_desc]").val('GP12');
+                    $(item).find("input[id*=op_remark]").val('GP12');
+                }
+            });
+        }
+
         function gird_keycode(){
             //add keydown事件
             $("#div_product input:text").not("[readonly]").bind("keydown",function(e){
@@ -619,11 +645,22 @@
                     if((eval('op' + index)).GetText()=="OP700"){
                         op700_flag=true;
                     }
-                    if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
-                        msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    //if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
+                    //    msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    //}
+                    if((eval('op' + index)).GetText()=="OP700"){                        
+                        if ((eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12") {
+                            msg+="【工序号】OP700对应的【工艺流程】必须是"+pgi_no_t+"-GP12.<br />";
+                        }
+                        if ($(item).find("input[id*=op_desc]").val()!="GP12") {
+                            msg+="【工序号】OP700对应的【工序名称】必须是GP12.<br />";
+                        }
+                        if ($(item).find("input[id*=op_remark]").val()!="GP12") {
+                            msg+="【工序号】OP700对应的【工序说明】必须是GP12.<br />";
+                        }
                     }
                     if((eval('op' + index)).GetText()!="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t){
-                        msg+="工序号"+(eval('op' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                        msg+="【工序号】"+(eval('op' + index)).GetText()+"对应的【工艺流程】必须是"+pgi_no_t+".<br />";
                     }
                 });
             }
@@ -632,11 +669,22 @@
                     if((eval('op_yz' + index)).GetText()=="OP700"){
                         op700_flag=true;
                     }
-                    if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
-                        msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    //if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
+                    //    msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
+                    //}
+                    if((eval('op_yz' + index)).GetText()=="OP700"){
+                        if ((eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12") {
+                            msg+="【工序号】OP700对应的【工艺流程】必须是"+pgi_no_t+"-GP12.<br />";
+                        }
+                        if ($(item).find("input[id*=op_desc]").val()!="GP12") {
+                            msg+="【工序号】OP700对应的【工序名称】必须是GP12.<br />";
+                        }
+                        if ($(item).find("input[id*=op_remark]").val()!="GP12") {
+                            msg+="【工序号】OP700对应的【工序说明】必须是GP12.<br />";
+                        }
                     }
                     if((eval('op_yz' + index)).GetText()!="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t){
-                        msg+="工序号"+(eval('op_yz' + index)).GetText()+"对应的工艺流程必须是"+pgi_no_t+".<br />";
+                        msg+="【工序号"+(eval('op_yz' + index)).GetText()+"对应的【工艺流程】必须是"+pgi_no_t+".<br />";
                     }
                 });
             }   
@@ -912,6 +960,9 @@
     </script>
 
     <style type="text/css">
+        .dxeTextBox_read{
+            border:none !important ;
+        }
         .row {
             margin-right: 2px;
             margin-left: 2px;
@@ -1177,7 +1228,7 @@
 
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
                                       OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  OnDataBound="gv_d_DataBound" OnHtmlRowCreated="gv_d_HtmlRowCreated"> 
-                                     <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();}"  />  
+                                     <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();grid_read_700();}"  />  
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -1491,7 +1542,7 @@
 
                                 <dx:aspxgridview ID="gv_d_yz" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_yz_CustomCallback" 
                                       OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  OnDataBound="gv_d_yz_DataBound" OnHtmlRowCreated="gv_d_yz_HtmlRowCreated">    
-                                    <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();}"  />                                                                 
+                                    <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();grid_yz_read_700();}"  />                                                                 
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
