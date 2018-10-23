@@ -307,20 +307,23 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
         }
-
-        if (this.m_sid != "")
+        if (bf_modifygp)
         {
-            string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
-                  + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
-            if (stepname_gp == "申请人")//申请步骤
+            if (this.m_sid != "")
             {
-                bf_modifygp = true;
-            }
-            else
-            {
-                bf_modifygp = false;
+                string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                      + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                if (stepname_gp == "申请人")//申请步骤
+                {
+                    bf_modifygp = true;
+                }
+                else
+                {
+                    bf_modifygp = false;
+                }
             }
         }
+        
 
         if (bf_modifygp)//修改申请 且 在申请步骤 且 填单人是数据库管理员
         {
