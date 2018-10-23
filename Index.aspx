@@ -551,15 +551,15 @@
                                 <div class="btn-group">
                                     <div class="btn btn-primary " data-toggle="dropdown"  name="btn_GC">
                                         工艺数据</div>
-                                    <ul class="dropdown-menu" style="color: Black" role="menu"> 
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=" target="_blank">生产性物料申请</a></li>
 										<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4" target="_blank">工艺路线申请</a></li>
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=4A901BC7-EA83-43B1-80B6-5B14708DEDE9&appid=" target="_blank">BOM申请(测试)</a></li>
-                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=" target="_blank">生产性物料申请(测试)</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=4A901BC7-EA83-43B1-80B6-5B14708DEDE9&appid=" target="_blank">BOM申请</a></li>
                                         <li class="divider"></li>
+                                        <li><a href="/Forms/MaterialBase/WuLiao_Report_Query.aspx" target="_blank">生产性物料查询</a></li>
 										<li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询</a></li>
-                                        <li><a href="/Forms/Bom/bom_query.aspx" target="_blank">BOM查询(测试)</a></li>
-                                        <li><a href="/Forms/PgiOp/Rpt_GYBom_Query.aspx" target="_blank">工艺数据状态查询</a></li>
-                                        <li><a href="/Forms/MaterialBase/WuLiao_Report_Query.aspx" target="_blank">生产性物料查询(测试)</a></li>
+                                        <li><a href="/Forms/Bom/bom_query.aspx" target="_blank">BOM查询</a></li>
+                                        <li><a href="/Forms/PgiOp/Rpt_GYBom_Query.aspx" target="_blank">物料.工艺.BOM流程状态查询</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_GC">
