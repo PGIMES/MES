@@ -151,8 +151,30 @@
                 }
 
             }); 
-
+           
+            set_modifygp_read();
         });
+
+        function set_modifygp_read(){      
+            if($("#CPXX input[id*='modifygp']:checked").val()=="Y"){
+                if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
+                    $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {
+                        if($(item).find("input[id*=op]").val()!="OP700" && $(item).find("input[id*=op]").val()!="OP600"){                    
+                            $("#gzzx_i_"+index).removeClass("i_show");$("#gzzx_i_"+index).addClass("i_hidden");  
+                            $("#IsBg_i_"+index).removeClass("i_show");$("#IsBg_i_"+index).addClass("i_hidden");
+                        }
+                    });
+                }
+                if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
+                    $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {
+                        if($(item).find("input[id*=op]").val()!="OP700" && $(item).find("input[id*=op]").val()!="OP600"){                    
+                            $("#gzzx_i_yz_"+index).removeClass("i_show"); $("#gzzx_i_yz_"+index).addClass("i_hidden");   
+                            $("#IsBg_i_yz_"+index).removeClass("i_show"); $("#IsBg_i_yz_"+index).addClass("i_hidden");
+                        }
+                    });
+                }
+            }
+        }
 
         function grid_read_700(){
             $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {
@@ -960,9 +982,6 @@
     </script>
 
     <style type="text/css">
-        .dxeTextBox_read{
-            border:none !important ;
-        }
         .row {
             margin-right: 2px;
             margin-left: 2px;
@@ -1135,6 +1154,12 @@
         }
          .i_show{
             display:inline-block;
+        }         
+        .dxeTextBox_read{
+            border:none !important ;
+        }
+        input[type=checkbox], input[type=radio]{
+            margin:7px 0px 0px;
         }
     </style>
 </asp:Content>
@@ -1231,7 +1256,7 @@
                                      <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();grid_read_700();}"  />  
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
-                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <SettingsBehavior AllowSelectByRowClick="False" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="110px" VisibleIndex="3">
@@ -1274,9 +1299,10 @@
                                                                 ClientInstanceName='<%# "gzzx_desc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
-                                                        <td><i id="gzzx_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["gzzx_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_wkzx(<%# Container.VisibleIndex %>,'')"></i></td>
+                                                        <td><i id="gzzx_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["gzzx_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_wkzx(<%# Container.VisibleIndex %>,'')"></i></td>
                                                     </tr>
-                                                </table>       
+                                                </table>      
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="工作中<br />心代码" FieldName="gzzx" Width="40px" VisibleIndex="8">
@@ -1545,7 +1571,7 @@
                                     <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();grid_yz_read_700();}"  />                                                                 
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
-                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <SettingsBehavior AllowSelectByRowClick="False" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="1"></dx:GridViewCommandColumn>                                        
                                         <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="110px" VisibleIndex="3">
