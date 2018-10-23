@@ -18,7 +18,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     public string fieldStatus;
     public string IsRead = "N"; public string IsRead_yz = "N"; public string IsGrid_pro = "N"; public string IsGrid_yz = "N";
     public string SQ_StepID ="B29B6624-485B-40EB-9481-87375BEE0C1F";
-    public Guid groupid = new Guid("8BD05578-60E7-4D81-83C3-029B00C9814E");//工程数据管理员1A5277E2-41AF-4AA5-AA7F-C5FAA4E9BB23
+    public Guid groupid = new Guid("1A5277E2-41AF-4AA5-AA7F-C5FAA4E9BB23");//工程数据管理员
 
     string FlowID = "A";
     string StepID = "A";
