@@ -904,7 +904,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             gv_d_yz.Columns[gv_d_yz.VisibleColumns.Count - 1].Visible = false;
             gv_d_yz.Columns[0].Visible = false;
         }
-        
+        setread_grid_yz(i);
     }
 
     public void setread_grid_yz(int i)
