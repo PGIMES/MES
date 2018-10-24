@@ -361,6 +361,43 @@
     </table>
    
     </div>
+
+    <div id="div_copyfor" title="&nbsp;&nbsp;抄送&nbsp;&nbsp;">
+        <div style="height:8px;"></div>
+        <table cellpadding="0" cellspacing="1" border="0" width="99%" class="formtable">
+            <tr>
+                <th style="width:100px;">指定人员：</th>
+                <td><input type="text" id="copyfor_memberid" class="mymember" style="width:75%" /></td>
+            </tr>
+            <tr>
+                <th style="width:100px;">类型：</th>
+                <td><label><input type="checkbox" value="0" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者</label>
+                    <label><input type="checkbox" value="1" name="copyfor_type" style="vertical-align:text-bottom;"/>前一步骤处理者</label>
+                    <label><input type="checkbox" value="2" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者部门领导</label>
+                    <label><input type="checkbox" value="3" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者分管领导</label>
+                    <label><input type="checkbox" value="4" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者上级部门领导</label>
+                    <label><input type="checkbox" value="5" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者部门所有成员</label>
+                    <label><input type="checkbox" value="6" name="copyfor_type" style="vertical-align:text-bottom;"/>发起者所有上级部门领导</label>
+                    <label><input type="checkbox" value="7" name="copyfor_type" style="vertical-align:text-bottom;"/>前一步处理者部门领导</label>
+                    <label><input type="checkbox" value="8" name="copyfor_type" style="vertical-align:text-bottom;"/>前一步处理者分管领导</label>
+                    <label><input type="checkbox" value="9" name="copyfor_type" style="vertical-align:text-bottom;"/>前一步处理者上级部门领导</label>
+                    <label><input type="checkbox" value="10" name="copyfor_type" style="vertical-align:text-bottom;"/>前一步处理者部门所有成员</label>
+                </td>
+            </tr>
+            <tr>
+                <th style="width:100px;">步骤处理人员：</th>
+                <td><div id="copyfor_stepdiv"></div></td>
+            </tr>
+            <tr>
+                <th style="width:100px;">SQL或方法：</th>
+                <td>
+                    <textarea id="copyfor_methodorsql" name="copyfor_methodorsql" style="width:95%;height:80px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
     </div>
     <div style="width:100%; margin:10px auto 10px auto; text-align:center;">
         <input type="button" class="mybutton" value=" 确 定 " onclick="confirm1();" />
@@ -458,6 +495,7 @@
             if(json && json.steps && json.steps.length>0)
             {
                 var stepOptions='<option value=""></option>';//初始化行为里面的处理者步骤和退回步骤选择
+                var stepCheckbox='';//抄送里面的步骤选择 added by fish
                 for(var i=0;i<json.steps.length;i++)
                 {
                     if(json.steps[i].id==stepid)
@@ -468,9 +506,13 @@
                     {
                         stepOptions+='<option value="'+json.steps[i].id+'">'+json.steps[i].name+'</option>';
                     }
+                    //added by fish
+                    stepCheckbox+='<label><input type="checkbox" value="'+json.steps[i].id+'" name="copyfor_step" style="vertical-align:text-bottom;"/>'+json.steps[i].name+'</label>';
                 }
                 $("#behavior_HandlerStep").html(stepOptions);
                 $("#behavior_BackStep").html(stepOptions);
+                //added by fish
+                $("#copyfor_stepdiv").html(stepCheckbox);
             }
 
             initStep(step);
@@ -700,6 +742,36 @@
                 $("#event_BackBefore").val(step.event.backBefore);
                 $("#event_BackAfter").val(step.event.backAfter);
             }
+            //初始化抄送
+            if(step.copyFor)
+            {
+                if(step.copyFor.memberId && step.copyFor.memberId.length>0)
+                {
+                    $("#copyfor_memberid").val(step.copyFor.memberId);
+                    new RoadUI.Member().setValue($("#copyfor_memberid"));
+                }
+                if(step.copyFor.handlerType && step.copyFor.handlerType.length>0)
+                {
+                    var handlerArray = step.copyFor.handlerType.split(',');
+                    for(var i=0;i<handlerArray.length;i++)
+                    {
+                        $("input[name='copyfor_type'][value='"+handlerArray[i]+"']").prop("checked",true);
+                    }
+                }
+                if(step.copyFor.steps && step.copyFor.steps.length>0)
+                {
+                    var stepArray = step.copyFor.steps.split(',');
+                    for(var i=0;i<stepArray.length;i++)
+                    {
+                        $("input[name='copyfor_step'][value='"+stepArray[i]+"']").prop("checked",true);
+                    }
+                }
+                if(step.copyFor.methodOrSql && step.copyFor.methodOrSql.length>0)
+                {
+                    $("#copyfor_methodorsql").val(step.copyFor.methodOrSql);
+                }
+            }
+
         }
 
         function initDataFiledStatus(fields)//初始化字段状态列表
@@ -805,12 +877,29 @@
                 var check=$("#data_check_check_"+index).val();
                 step.fieldStatus.push({field:fields,status:status,check:check});
             });
+            //抄送
+            var copyForhandlerTypes = [];
+            $(":checked[name='copyfor_type']").each(function(){
+                copyForhandlerTypes.push($(this).val());
+            });
+            var copyForSteps = [];
+            $(":checked[name='copyfor_step']").each(function(){
+                copyForSteps.push($(this).val());
+            });
+            step.copyFor = {
+                memberId:$("#copyfor_memberid").val()||"",
+                handlerType:copyForhandlerTypes.join(','),
+                steps:copyForSteps.join(','),
+                methodOrSql:$("#copyfor_methodorsql").val()||""
+            };
 
             step.event = { submitBefore: $("#event_SubmitBefore").val()||"",
                 submitAfter: $("#event_SubmitAfter").val() || "",
                 backBefore: $("#event_BackBefore").val() || "",
                 backAfter: $("#event_BackAfter").val() || ""
             };
+
+
 
             frame.addStep1(step);
             frame.setStepText(step.id,step.name);

@@ -81,7 +81,7 @@
         <tr>
             <td style="padding:2px 0 2px 0;">
             <input type="hidden" name="nextstepid" value="" />
-            <input type="checkbox" value="<%=step.Key %>" <%=checked1 %> <%=disabled %> name="stepid" id="step_<%=step.Key %>" style="vertical-align:middle;" />
+            <input type="checkbox" value="<%=step.Key %>" <%=checked1 %> <%=disabled %> name="stepid" id="step_<%=step.Key %>"  onclick="selectone(this)"  style="vertical-align:middle;" />
             <label for="step_<%=step.Key %>" style="vertical-align:middle;"><%=step.Value %></label>
             </td>
         </tr>
@@ -152,6 +152,16 @@
                 frame.formSubmit(opts);
                 new RoadUI.Window().close();
             }
+        }
+
+        function selectone(obj) {
+            // var val = obj.id;               
+            $("input[name='stepid']").each(function (i, item) {
+                $(item).prop("checked", false);
+
+            })
+            $(obj).prop("checked", "checked");
+
         }
     </script>
 </form>

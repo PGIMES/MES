@@ -247,7 +247,7 @@
     </table>
     <div style="width:99%; margin:16px auto 0 auto; text-align:center;">
         <input type="button" class="mybutton" onclick="return confirm1();" value="&nbsp;确&nbsp;定&nbsp;" style="margin-right:5px;" />
-        <input type="button" class="mybutton" value="&nbsp;取&nbsp;消&nbsp;" onclick="new RoadUI.Window().close();" />
+        <input type="button" class="mybutton" value="&nbsp;取&nbsp;消&nbsp;" onclick="new RoadUI.Window().close();" style="display:none"/>
     </div>
     <script type="text/javascript">
         var frame = null;
@@ -300,6 +300,10 @@
             {
                 $("#steptd").hide();
             }
+
+
+            //added by fish:2018.05.15  自动递交
+            confirm1();
         });
         function confirm1()
         {
