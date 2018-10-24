@@ -286,7 +286,7 @@ function taskEnd()
     showProcessing("taskend");
     var f = document.forms[0];
     window.setTimeout('', 100);
-    f.action = RoadUI.Core.rooturl() + + "/Platform/WorkFlowRun/TaskEnd.aspx?" + query;
+    f.action = RoadUI.Core.rooturl() + "/Platform/WorkFlowRun/TaskEnd.aspx?" + query;
     f.submit();
 }
 
