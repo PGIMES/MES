@@ -1110,7 +1110,7 @@
             	}
     </style>
     <style>
-          .btnSave{ background:url(/Images/ico/save.gif) no-repeat  0.3em;
+        .btnSave{ background:url(/Images/ico/save.gif) no-repeat  0.3em;
                   padding-left:24px;
                   border:0
         }
@@ -1134,7 +1134,10 @@
                   padding-left:24px;
                   border:0
         }     
-
+        .btntaskEnd{ background:url(/Images/ico/del.gif) no-repeat  0.3em;
+                  padding-left:24px;
+                  border:0
+        }
     </style>
     <style>
         #CPXX label{
@@ -1173,6 +1176,7 @@
                 <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                 <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                 <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
+                <input id="btntaskEnd" type="button" value="终止" onclick="parent.taskEnd(true);" class="btn btn-default btn-xs btntaskEnd" />
                 <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
             </div>
         </div>
