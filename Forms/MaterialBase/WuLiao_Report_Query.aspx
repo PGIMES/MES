@@ -199,7 +199,7 @@
             	                   // window.alert('Page changed!');
                                     mergecells();setHeight();
         	                    }"  />
-                        <SettingsPager PageSize="20" ></SettingsPager>
+                        <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
@@ -209,7 +209,7 @@
                             </dx:GridViewCommandColumn>   
            
                                            
-                            <dx:GridViewDataTextColumn Caption="表单号" FieldName="formno" Width="80px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="表单号" FieldName="formno" Width="130px" VisibleIndex="1"   >
                                 <Settings AllowCellMerge="True" /> 
                           <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
@@ -225,7 +225,7 @@
                                 <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="80px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="状态" FieldName="status" Width="80px" VisibleIndex="4">
+                            <dx:GridViewDataTextColumn Caption="状态" FieldName="status" Width="60px" VisibleIndex="4">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                              <dx:GridViewDataTextColumn Caption="工程版本" FieldName="gc_version" Width="60px" VisibleIndex="5">
@@ -245,16 +245,22 @@
                             <dx:GridViewDataTextColumn Caption="组" FieldName="cpgroup" Width="65px" VisibleIndex="11">
                                 <Settings AllowCellMerge="True" />  
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="发运重量" FieldName="fyweight" Width="80px" VisibleIndex="12"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="发运重量" FieldName="fyweight" Width="80px" VisibleIndex="12">
+                              <PropertiesTextEdit DisplayFormatString="{0:N6}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="发运单位" FieldName="fyunit" Width="60px" VisibleIndex="13"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="净重" FieldName="jzweight" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="净重" FieldName="jzweight" Width="80px" VisibleIndex="14">
+                            <PropertiesTextEdit DisplayFormatString="{0:N6}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="净重单位" FieldName="jzunit" Width="60px" VisibleIndex="15"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="订货方法" FieldName="dhff" Width="65px" VisibleIndex="16"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="订单数量" FieldName="ddsl" Width="65px" VisibleIndex="17"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="订单数量" FieldName="ddsl" Width="65px" VisibleIndex="17">
+                            <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="订货周期" FieldName="dhperiod" Width="65px" VisibleIndex="18"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="采购提前期" FieldName="purchase_days" Width="80px" VisibleIndex="19"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="制造提前期" FieldName="make_days" Width="80px" VisibleIndex="20"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="采购员/计划员" FieldName="buyer_planner" Width="110px" VisibleIndex="21"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="采购提前期" FieldName="purchase_days" Width="70px" VisibleIndex="19"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="制造提前期" FieldName="make_days" Width="70px" VisibleIndex="20"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="采购员/计划员" FieldName="buyer_planner" Width="100px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="采购/制造" FieldName="pt_pm_code" Width="60px" VisibleIndex="22"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="最小订单量" FieldName="quantity_min" Width="75px" VisibleIndex="23">
                                <%-- <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>--%>

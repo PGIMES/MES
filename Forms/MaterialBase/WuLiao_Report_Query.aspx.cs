@@ -30,9 +30,9 @@ public partial class Forms_MaterialBase_WuLiao_Report_Query : System.Web.UI.Page
 
     public void Setddl_p_leibie()
     {
-        string strSQL = @"	SELECT CLASS_NAME as  status_id,CLASS_NAME as status  from form3_Sale_Product_BASE
-                            where base_name='DDL_product_leibie'
-                            order by CLASS_ID";
+        string strSQL = @"	select distinct case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
+when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
+ end as text from qad.dbo.qad_pl_mstr  where left(pl_prod_line,1) in ('1','2','3') ";
         DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
 
         ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).TextField = dt.Columns[0].ColumnName;

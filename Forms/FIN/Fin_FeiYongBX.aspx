@@ -12,6 +12,8 @@
     <script src="../../../Content/js/bootstrap.min.js"></script>    
     <script src="../../Content/js/layer/layer.js"></script>
     <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
+    <script src="../../Content/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../Content/js/plugins/validate/messages_zh.min.js"></script>
     <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <link href="../../Content/css/custom.css" rel="stylesheet" />
@@ -27,6 +29,7 @@
         .bordernone{border:none; }
         .alpha100{ background:rgba(0, 0, 0, 0); }
         .width100 { width:100px  }.width50 { width:50px  }
+        table[id=grid] tbody tr td input[type=text]{ border:1px solid gray ;height:20px; background-color:#FDF7D9 }
     </style>
     <script src="../../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
     <%--<script src="../Content/js/plugins/layer/laydate/laydate.js"></script>--%>
@@ -60,22 +63,19 @@
             }       
             //初始化主管
             if(paramMap.instanceid==undefined){
-                getDeptLeaderbyEmp();                
+                getDeptLeaderbyEmp();  
             }
             if($("#costcenter").val()==""||$("#deptcode").val()==""){
                 getEmpCost($("#aplid").val());
             }
             //初始化明细总价 
             getTotalMoney();
-             
+            //取工厂名称
+            setDomainName();
 
         })// end ready
         
-        //function validUpdate(value){
-        //    if($("[id*=pt_part]").val()=="")
-        //        alert(value);
-            
-        //}
+       
 
         //设定表字段状态（可编辑性）       
         function SetControlStatus(fieldStatus,tabName)
@@ -99,7 +99,7 @@
 
                     var statu=fieldStatus[item];
                     if(  ( paramMap.display==1||statu.indexOf("1_")!="-1") && (ctype=="text"||ctype=="textarea") ){
-                        $("#"+id).attr("readonly","readonly");
+                        $("#"+id).attr("readonly","readonly").removeAttr("onclick").removeAttr("ondblclick").removeAttr("onfocus").attr("data-toggle","");
                     }
                     else if( ( paramMap.display==1||statu.indexOf("1_")!="-1") && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file" ) ){
                         $("#"+id).attr("disabled","disabled");                 
@@ -127,8 +127,8 @@
             var flag=true;
             for(var item in fieldStatus){
                 var id=""+item.replace(tabName2.toLowerCase()+"_","");
-                
-                $.each($("[id*="+id+"]"), function (i, obj) {                
+                var objs=$("table[id=grid]").find("input[id*="+id+"]");
+                $.each(objs, function (i, obj) {                
                     
                     var ctype="";
                     if( $(obj).prop("tagName").toLowerCase()=="select"){
@@ -160,11 +160,24 @@
             }
         }
 
+        function validInputData(){
+            // 在键盘按下并释放及提交后验证提交表单
+            $("#").validate({
+                rules: {                                        
+                    amount: {
+                        required: true,                        
+                        number:true
+                    },     
+                },
+                messages: {                     
+                    amount: {
+                        required: "请输入数字"	                         
+                    } 
+                }
+            });
+        }
     </script>
-
-
-
-
+    
 </head>
 <body>
     <script type="text/javascript">
@@ -191,49 +204,64 @@
             <%=ValidScript%>
             var flag=true;
             var msg="";
-            //validate 费用代码
-            $.each($("input[id*=grid_costcateid]"), function (i,obj){
-                if( $(obj).val()==""){
-                    msg="【费用代码】不可为空.";
-                    layer.tips(msg,$(obj));                  
-                    flag=false;
-                    return false;
-                }
-            }) 
-
-            //validate 费用发生日期/区间
-            $.each($("input[id*=grid_feedate]"),function (i,obj){
-                if( $(obj).val()==""){
-                    msg="【费用发生日期/区间】不可为空.";
-                    layer.tips(msg,$(obj));                    
-                    flag=false;
-                    return false;
-                }
-            })          
-            
-            //validate 费用说明
-            $.each($("input[id*=grid_feenote]"),function (i,obj){
-                if( $(this).val()==""){
-                    msg="【费用说明】不可为空.";
-                    layer.tips(msg,$(obj));
-                   // $(this).focus();
-                    flag=false;
-                    return false;
-                }
-            })
-            //valid 处理意见
-            if($("#comment").val()==""){
-                msg="请填写处理意见";
+            //validate 不可无明细           
+            if( $("input[id*=grid_costcateid]").length ==0){
+                msg="请添加报销费用项目.";
                 layer.alert(msg);
                 return false;
             }
 
-            //if(flag==false){  
+             //validate 费用代码
+            $.each($("input[id*=grid_costcateid]"), function (i,obj){
+                var id=$(obj).attr("id");
+                if( $(obj).val()==""){
+                    //msg+="【费用代码】";                                      
+                    //flag=false;
+                    //return false;
+                }  
+                else{
+                    var _instanceid= $("#"+id.replace("costcateid","instanceid"));
+                    var _feedate= $("#"+id.replace("costcateid","feedate"));
+                    var _feenote= $("#"+id.replace("costcateid","feenote"));
+                    var _amount= $("#"+id.replace("costcateid","amount"));
+                    if( $(_instanceid).val()=="-"||$(_instanceid).val()==""||$(_instanceid).val()=="."){
+                        msg+="【预算来源】"; 
+                        flag=false; 
+                        $(_instanceid).css("background-color","orange")                       
+                    }
+                    if( $(_feedate).val()==""){
+                        msg+="【费用发生日期/区间】";                  
+                        flag=false;
+                        $(_feedate).css("background-color","orange")                        
+                    }
+                    if( $(_feenote).val()==""){
+                        msg+="【费用说明】";                                     
+                        flag=false;     
+                        $(_feenote).css("background-color","orange")
+                    } 
+                    if( $(_amount).val()==""){
+                        msg+="【报销金额】";                                     
+                        flag=false;
+                        $(_amount).css("background-color","orange")                  
+                    } 
+                    if(msg!=""){
+                        //$($(obj)[0].parentNode.parentNode).css("background-color","red");
+                        layer.alert(msg+"不可为空");
+                        return false
+                    }
+                }
+            })      
+            
+            if(msg!=""){layer.alert(msg+"不可为空");return false}
+
+            //valid 处理意见
+            //if($("#comment").val()==""){
+            //    msg="【处理意见】请填写";             
+            //    flag=false;
             //    layer.alert(msg);
-            //    return false;
-            //}            
-
-
+            //    return false;                
+            //}
+              
             if($("#upload").val()==""&& $("#link_upload").text()==""){
                 layer.alert("请选择【附件】");
                 return false;
@@ -241,9 +269,10 @@
 
         }
 
+        
     
     </script>
-
+   <%-- funcitons--%>
     <script type="text/javascript">
         function setvalue(ctrl0, keyValue0, ctrl1, keyValue1, ctrl2, keyValue2) {
 
@@ -273,7 +302,7 @@
                 closeBtn: 1,
                 content: '/forms/open/select.aspx?windowid=emp&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2+"&ctrl3="+ctrl3+"&ctrl4="+ctrl4 ,
                 end: function(e) {
-                    
+                    setDomainName();//取工厂名称
                 }
             });
 
@@ -282,15 +311,19 @@
 
         //选择费用项目
         function selCostCate(obj){               
-            var clickid=$(obj).attr("id");             
-            var ctrl0=clickid.replace("costcateid","costcateid");
-            var ctrl1=clickid.replace("costcateid","costcatename");
-            var ctrl2=clickid.replace("costcateid","instanceid");
+            var clickid=$(obj).attr("id");  
+            var arr=$(obj).attr("id").split("_");//获取选中目标ctrl的id
+           // var _costcateid=$(obj).attr("id").replace(arr[1],"costcateid");
+
+            var ctrl0=clickid.replace(arr[1],"costcateid");
+            var ctrl1=clickid.replace(arr[1],"costcatename");
+            var ctrl2=clickid.replace(arr[1],"instanceid");
             var ctrl3="apldomain";      
             var _aplid=$("#aplid").val();
             var _domain=$("#apldomain").val();
             var _costcateid=$("#"+ctrl0).val();
-            var _acptctrl=clickid.replace("costcateid","feedate");
+            var _acptctrl=clickid.replace(arr[1],"feedate");
+            var hiddenColoums="1";//隐藏列
             layer.open({
                 shade: [0.5, '#000', false],
                 type: 2,
@@ -300,12 +333,16 @@
                 maxmin: false,
                 title: ['<i class="fa fa-dedent"></i> 选择费用项目', false],
                 closeBtn: 1,
-                content: '/forms/open/select.aspx?windowid=fin_feiyongbx_form&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2+'&ctrl3='+ctrl3,
+                content: '/forms/open/select.aspx?windowid=fin_feiyongbx_form&hiddenColoums='+hiddenColoums+'&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2+'&ctrl3='+ctrl3,
                 end: function () {
                     if($(obj).val()!=""){
-                        var _feedateid=clickid.replace("costcateid","feedate");
+                        var _feedateid=clickid.replace(arr[1],"feedate");
                         var ul=$("#"+_feedateid)[0].nextElementSibling;
-                        setdate(ul,_domain,_costcateid,_aplid,_acptctrl);                     
+                        setdate(ul,_domain,_costcateid,_aplid,_acptctrl); 
+                        //如果是出差申请单,私车公用申请，则改为空
+                        if($("#"+ctrl2).val().indexOf("申请")>=0){
+                            $("#"+ctrl2).val("").attr("placeholder","点此选择预算来源");
+                        }
                     }
 
                 }
@@ -313,19 +350,35 @@
         }
         //选择预算来源
         function selBudgetSource(obj){       //obj 是 instanceid   
-            if("部门预算，个人额度".indexOf($(obj).val()) != -1){
+            var instanceValue=$(obj).val()==""?".":$(obj).val();
+
+            var id=$(obj).attr("id"); 
+            var _costcateid=$("#"+id.replace("instanceid","costcateid")).val();            
+            if("部门预算，个人额度".indexOf(instanceValue) != -1|| _costcateid==""){
                 return false
-            }
-            var id=$(obj).attr("id");             
+            }        
             var ctrl0=id.replace("instanceid","budgetsour"); 
             var ctrl1=id
             var ctrl2=""
             var ctrl3="";//apldomain
+            var ctrlN=id.replace("instanceid","limit"); ;//额度控件id
+            var ctrlN2=id.replace("instanceid","feenote"); ;//说明id
             var _domain=$("#apldomain").val();
             var flag=$("#"+ctrl0).val();
             var _aplid=$("#aplid").val();
-            //var _costcateid=$("#"+ctrl0).val();
+
+            var aplno=$("#aplno").val();
             // var _acptctrl=id.replace("costcateid","feedate");
+            //汇总私车公用单号
+            var formno="";
+            $.each($("input[id*=grid_costcateid]"), function (i,obj){
+                if( $(obj).val()=="T009"){                                                       
+                    var instanceCtrlid=$(obj).attr("id").replace("costcateid","instanceid");
+                    formno=formno+$("#"+instanceCtrlid).val()+",";
+                }               
+            })              
+
+
             layer.open({
                 shade: [0.5, '#000', false],
                 type: 2,
@@ -335,7 +388,7 @@
                 maxmin: false,
                 title: ['<i class="fa fa-dedent"></i> 选择预算来源', false],
                 closeBtn: 1,
-                content: '/forms/fin/selectform.aspx?windowid=fin_feiyongbx_form&aplid='+_aplid+'&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2+'&ctrl3='+ctrl3,
+                content: '/forms/fin/selectform.aspx?windowid=fin_feiyongbx_form&aplno='+aplno+'&formno='+formno+'&costcateid='+_costcateid+'&aplid='+_aplid+'&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2+'&ctrl3='+ctrl3+'&ctrlN='+ctrlN+'&ctrlN2='+ctrlN2,
                 end: function () {
                     if($(obj).val()!=""){  
                         var wfid=$("#"+ctrl0).val() ; //budgetsour val
@@ -345,12 +398,52 @@
                             $("#"+ctrl0).val(src);
                             var link=$("#"+ctrl0)[0].nextElementSibling;
                             $(link).attr("href",src);
+                            //如果是差旅单，号临存txt
+                            if(_costcateid=="T009"){
+                                $("#txtFin_CA_No").val($(obj).val());
+                                $("#btnCar").click();
+                            }
                         }
                                             
                     }
 
                 }
             });
+        }
+        
+        //机票费，火车票如果人事预定则不可报销
+        function validTicket(obj){
+            var arr=$(obj).attr("id").split("_");//获取选中目标ctrl的id
+            var _costcateid=$(obj).attr("id").replace(arr[1],"costcateid"); 
+            var _instanceid=$(obj).attr("id").replace(arr[1],"instanceid");
+            var costid=$("#"+_costcateid).val();
+            var instanceid=$("#"+_instanceid).val();
+            if("T001，T002".indexOf($("#"+_costcateid).val()) == -1||instanceid=="."||instanceid==""){
+                return false
+            }
+
+            $.ajax({
+                type: "Post",async: false,
+                url: "Fin_FeiYongBX.aspx/ValidTicket" , 
+                //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                //P1:wlh P2： 
+                data: "{'costcateid':'"+costid+"','aplno':'"+instanceid+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {//返回的数据用data.d获取内容//                                      
+                    if (data.d == "1") {                       
+                        layer.alert("预算单【"+instanceid+"】的["+costid+"]票务已由人事代为购买，不可再次报销."); 
+                        $("#"+_costcateid).val("");
+                        $("#"+_instanceid).val("");
+                    }
+                    else {                             
+                    }                   
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+            
         }
         //费用发生日期、区间选择
         function setFeeDate(obj){               
@@ -365,21 +458,27 @@
         }
         //根据费用发生区间（针对H,Q）自动解析费用说明
         function setFeenote(obj){               
-            var objid=$(obj).attr("id");  //feedateid  
-            var feenoteid=objid.replace("feedate","feenote");           
-            var showmsg="";
-
-            if($(obj).val().indexOf("Q")>=0){
-                showmsg="L4(含L4)以上人员"+$(obj).val().replace("Q","-")+"季度团建费";                
+            var objid=$(obj).attr("id");  //feedateid 
+            var arr=objid.split("_");//获取选中目标ctrl的id
+            var _costcateid=objid.replace(arr[1],"costcateid");
+            var _feedate=objid.replace(arr[1],"feedate");
+            var feenoteid=objid.replace(arr[1],"feenote");   
+            var showmsg="";            
+            if("D001".indexOf( $("#"+_costcateid).val() )>=0){
+                if($("#"+_feedate).val().indexOf("Q")>=0){
+                    showmsg="L4(含L4)以上人员"+$(obj).val().replace("Q","-")+"季度团建费";                
+                }
+                else if($("#"+_feedate).val().indexOf("H")>=0){
+                    showmsg="L5人员"+$(obj).val().replace("H1","上半").replace("H2","下半")+"年度团建费";
+                }            
+                $("#"+feenoteid).val(showmsg);        
+            }else if("P001,P002".indexOf( $("#"+_costcateid).val() )>=0){// costcateid Change event
+                var _costcatename=objid.replace(arr[1],"costcatename");
+                showmsg=$("#"+_feedate).val()+$("#"+_costcatename).val()                          
+                $("#"+feenoteid).val(showmsg);
             }
-            else if($(obj).val().indexOf("H")>=0){
-                showmsg="L5人员"+$(obj).val().replace("H1","上半").replace("H2","下半")+"年度团建费";
-            }
-            //alert(showmsg)
-            $("#"+feenoteid).val(showmsg);        
-             
-        }
-        
+            
+        }        
         //费用发生日期、区间选择
         function setdate(ul,_domain,_costcateid,_aplid,_acptctrl){
             $.ajax({
@@ -401,7 +500,7 @@
                         //var arr=eval(data.d)
                         $(ul).find("li").remove();
                         for(var i = 0; i<arr.length; i++){
-                            $(ul).append(" <li value='"+arr[i].dateT+"' onclick=\"$('#"+_acptctrl+"').val('"+arr[i].dateT+"');$('#"+_acptctrl+"').change();\"   >"+arr[i].dateT+"</li>");                            
+                            $(ul).append(" <li value='"+arr[i].dateT+"' onclick=\"$('#"+_acptctrl+"').val('"+arr[i].dateT+"');$('#"+_acptctrl+"').change();\"  style=\"background-color:wheat\" >"+arr[i].dateT+"</li>");                            
                         }
                     }                   
                 },
@@ -440,6 +539,7 @@
                             $("#"+strid).val(data.d);
                             $("#"+strbxje).val(data.d);
                             $("#"+strbxje).css("color","");//取消文字样式
+                            getTotalMoney();//重新计算合计
                         }                   
                     },
                     error: function (err) {
@@ -448,13 +548,24 @@
                 });
             }
         }
+        //清除行填资料
+        function clearRowData(obj){
+            var objid=$(obj).attr("id");  //feedateid 
+            var arr=objid.split("_");//获取选中目标ctrl的id
+            
+            $("#"+objid.replace(arr[1],"feedate")).val("");
+            $("#"+objid.replace(arr[1],"feenote")).val("");            
+            $("#"+objid.replace(arr[1],"limit")).val("");
+            $("#"+objid.replace(arr[1],"amount")).val("");        
+        }
         //获取部门领导和分管副总
         function getDeptLeaderbyEmp(){
             var _emp=$("#aplid").val();
             var _domain=$("#apldomain").val();
             // 部门主管
             $.ajax({
-                type: "Post",async: false,
+                type: "Post",
+                async: false,
                 url: "Fin_FeiYongBX.aspx/getDeptLeaderByEmp" , 
                 //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
                 //P1:wlh P2： 
@@ -506,7 +617,8 @@
         function getEmpCost(empid){           
                          
             $.ajax({
-                type: "Post",async: false,
+                type: "Post",
+                async: false,
                 url: "fin_feiyongbx.aspx/getEmpCost" , 
                 //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
                 //P1:wlh P2： 
@@ -546,7 +658,7 @@
         function getTotalMoney(){                       
             var totalMoney=0;
             $("#grid").find("tr td input[id*=amount]").each(function (i) {
-                var rowval=$("tr td input[id*=amount_"+i+"]").val();
+                var rowval=$("tr td input[id*=amount_"+i+"]").val().replace(",","");
                 rowval= (rowval==""||rowval=="NaN")? 0 : rowval;                
                 totalMoney=totalMoney+parseFloat(rowval)
                 $("#totalfee").val(totalMoney);
@@ -555,7 +667,7 @@
             //grid底部total值更新
             $('table[id*=grid] tr td span[id*=total]').each(function (i) {
                // if($.trim($(this).text())==""){
-                    $(this).text("合计:"+fmoney(totalMoney,2));
+                    $(this).text("合计:"+fmoney(totalMoney,1));
                // }   
             });
         }
@@ -573,10 +685,25 @@
             }   
             return t.split("").reverse().join("") + "." + r;   
         }
+        //清除grid input 内容
+        function clearDetail(){
+            $("input[id*=grid_][type=text]").val("");
+            $("table[id*=HZgrid]").css("display","none");
+            $("table[id*=HZ_UnGrid]").css("display","none");
+        }
+        function setDomainName(){
+            var domain=$("#apldomain").val();
+            if(domain=="200"){
+                $("#apldomainname").val("昆山工厂");
+            }
+            else if(domain=="100"){
+                $("#apldomainname").val("上海工厂");
+            }
+        }
     </script>
 
     <form id="form1" runat="server"  >
-       
+        
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <div class="h4" style="margin-left: 10px" id="headTitle">
             PGI管理系统<div class="btn-group">
@@ -613,6 +740,7 @@
                             
                             <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
                             <input id="btntaskEnd" type="button" value="终止流程" onclick="parent.taskEnd(true);" class="btn btn-default btn-xs btntaskEnd" />
+                            <input id="btnPrint" type="button" value="打印" onclick="parent.formPrint(true);" class="btn btn-default btn-xs btnPrint" style="display:none" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
 
@@ -670,7 +798,7 @@
                                                     <td>申请人：</td>
                                                     <td>
                                                         <div class="form-inline">
-                                                            <asp:TextBox runat="server" ID="aplid" class="input input-edit"   Style=" width: 70px" ReadOnly="True" onchange="getDeptLeaderbyEmp()"></asp:TextBox>
+                                                            <asp:TextBox runat="server" ID="aplid" class="input input-edit"   Style=" width: 70px" ReadOnly="True" onchange="getDeptLeaderbyEmp();getEmpCost($('#aplid').val());clearDetail();"></asp:TextBox>
                                                             <asp:TextBox runat="server" ID="aplname"  class="input input-readonly" Style=" width: 70px" ReadOnly="True"></asp:TextBox>
                                                             <asp:TextBox runat="server" ID="apljob" class="input input-readonly"  Style=" width: 100px" ReadOnly="True" />
                                                         </div>
@@ -685,13 +813,13 @@
                                                     <td>申请人公司：</td>
                                                     <td>
                                                         <div class="form-inline">
-                                                            <asp:TextBox ID="apldomain" runat="server" class="input input-readonly" Style=" width: 100px" ReadOnly="True" />
-                                                                                                                    
+                                                            <asp:TextBox ID="apldomain" runat="server" class="input input-readonly" Style=" width: 70px" ReadOnly="True" />
+                                                            <asp:TextBox ID="apldomainname" runat="server" class="input input-readonly" Style=" width: 100px" ReadOnly="True" />
                                                         </div>
                                                     </td>
-                                                    <td style="display: ">申请人部门：
+                                                    <td >申请人部门：
                                                     </td>
-                                                    <td style="display: ">
+                                                    <td ><asp:TextBox ID="costcenter" runat="server"  class="input input-readonly readonly "  Width="80px"  ReadOnly="True" ></asp:TextBox>
                                                         <asp:TextBox ID="apldept" runat="server" class="input input-readonly readonly" Style=" width: 200px"  ReadOnly="True"/>
                                                     </td>
                                                 </tr>
@@ -706,7 +834,7 @@
                                                         <asp:TextBox ID="supervisor"  runat="server" />
                                                         <asp:TextBox ID="totalfee" runat="server"   Text="0"></asp:TextBox>
                                                         <asp:TextBox ID="onlyflag" runat="server"   Text="0"></asp:TextBox>
-                                                        <asp:TextBox ID="costcenter" runat="server"   Text="0"></asp:TextBox>
+                                                        
                                                         <asp:TextBox ID="deptcode" runat="server"   Text="0"></asp:TextBox>
                                                     </td>
                                                 </tr>
@@ -719,7 +847,63 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="row  row-container">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading" data-toggle="collapse" data-target="#un">
+                            <strong style="padding-right: 100px">未报销明细（不包括在流程中的）</strong>
+                        </div>
+                        <div class="panel-body  collapse in" id="un">
+                            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" >
+                                <div>
+                                    <asp:UpdatePanel ID="UpdatePanel3" runat="server" UpdateMode="Conditional">
+                                        <ContentTemplate>
+                                            <script type="text/jscript">
+                                                var prm = Sys.WebForms.PageRequestManager.getInstance();
+                                                prm.add_endRequest(function () {                                               
+                                                    
+                                                    
+                                                });
+                                            </script>
+                                            <asp:Button ID="btnSearchReImbursed" runat="server" Text="点此查看未报销项"  OnClick="btnSearchReImbursed_Click" CssClass="btn btn-link"/>
+                                            <asp:GridView ID="HZ_UnGrid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="both" BorderColor="#F0F0F0" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" 
+                                                EmptyDataText="无尚未报销记录"  EmptyDataRowStyle-HorizontalAlign="Center"    Width="500px"                                                  
+                                                >
+                                                <AlternatingRowStyle BackColor="White" />
+                                                <Columns> 
+                                                    <asp:BoundField  HeaderText="未报销项目" DataField="typedesc" />
+                                                                                                                                                           
+                                                    <asp:TemplateField HeaderText="预算来源">                                                        
+                                                        <ItemTemplate>                                           
+                                                            <asp:HyperLink ID="col2" runat="server" NavigateUrl='<%# Eval("linkaddress") %>' Target="_blank" Text='<%# Eval("con_desc") %>'></asp:HyperLink>                                                            
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>                                                     
+                                                </Columns>
+                                                
+                                                <EmptyDataRowStyle HorizontalAlign="left" />
+                                                <FooterStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
+                                                <HeaderStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
+                                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                                <RowStyle  BorderColor="#F0F0f0"/>
+                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333" />
+                                                <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                                                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                                                <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                                                <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                                            </asp:GridView>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                    <div>
+                                    </div>
+                                </div>
+                                                              
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
             <div class="row  row-container">
                 <div class="col-md-12">
                     <div class="panel panel-info">
@@ -735,11 +919,13 @@
                                                 var prm = Sys.WebForms.PageRequestManager.getInstance();
                                                 prm.add_endRequest(function () {
                                                
-                                                   SetControlStatus2(<%=fieldStatus%>,"fin_feiyongbx_dtl_form");
+                                                    SetControlStatus2(<%=fieldStatus%>,"fin_feiyongbx_dtl_form");
+                                                    
                                                 });
                                             </script>
+                                            <span style="color:red;font-weight:bold">注意:已请人事预定的机票,火车票，汽车票请勿重复申请报销.</span>
                                             <asp:GridView ID="grid" runat="server" CellPadding="4" ForeColor="black" GridLines="None" ShowHeaderWhenEmpty="True" Width="100%" AutoGenerateColumns="False" ShowFooter="True" 
-                                                EmptyDataText="请点添加增加记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" OnRowDataBound="grid_RowDataBound">
+                                                EmptyDataText="请点添加增加记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" OnRowDataBound="grid_RowDataBound" class="table- table-condensed-">
                                                 <AlternatingRowStyle BackColor="White" />
                                                 <Columns>                                                    
                                                     <asp:TemplateField Visible="false">                                                         
@@ -749,27 +935,28 @@
                                                     </asp:TemplateField>
                                                     <asp:BoundField DataField="aplno" Visible="false"/>
                                                     <asp:BoundField DataField="rowno"  HeaderText="序号"/>
-                                                    <asp:TemplateField HeaderText="费用代码">                                                        
+                                                    <asp:TemplateField HeaderText="">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="costcateid" runat="server" Text='<%# Bind("costcateid") %>' onclick="selCostCate(this);" onchange="setLimit(this);" Width="60"></asp:TextBox>
+                                                            <asp:TextBox ID="costcateid"    runat="server" Text='<%# Bind("costcateid") %>'   onclick="selCostCate(this);" onchange="setLimit(this);clearRowData(this);" Width="60" style="display:none"></asp:TextBox>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="类别和费用项目">                                                        
                                                         <ItemTemplate>
-                                                             <asp:TextBox ID="costcatename" runat="server" Text='<%# Bind("costcatename") %>'  ReadOnly="true"></asp:TextBox>
+                                                             <asp:TextBox ID="costcatename" runat="server" Text='<%# Bind("costcatename") %>' onclick="selCostCate(this);" onchange="setLimit(this);clearRowData(this);"  readonly="true"  ></asp:TextBox>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="预算来源">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="instanceid" runat="server" Text='<%# Bind("instanceid") %>'  onclick="selBudgetSource(this)"  ReadOnly="true"></asp:TextBox>
-                                                            <asp:TextBox ID="budgetsour" runat="server" Text='<%# Bind("budgetsour") %>' Width="0px" Style="display:none"></asp:TextBox>
+                                                            <asp:TextBox ID="instanceid" runat="server" Text='<%# Bind("instanceid") %>'  onclick="selBudgetSource(this)"   ReadOnly="true"></asp:TextBox>
+                                                            <asp:TextBox ID="budgetsour" runat="server" Text='<%# Bind("budgetsour") %>' onchange="" Width="0px" Style="display:none"></asp:TextBox>
                                                             <asp:hyperlink  NavigateUrl='<%# Eval("budgetsour")%>' id="lnkbudgetsour" runat="server" target="_blank"  Text="查看"></asp:hyperlink>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="费用发生日期/区间">
                                                         <ItemTemplate>
                                                             <div class="btn-group" >
-                                                                <asp:TextBox ID="feedate" runat="server" data-toggle="dropdown" ReadOnly="true" Text='<%# Bind("feedate") %>' onfocus="setFeeDate(this);" onchange="setLimit(this);setFeenote(this);" ></asp:TextBox>
+                                                                <asp:TextBox ID="feedate" runat="server" CssClass="dropdown-toggle" data-toggle="dropdown" ReadOnly="true" Text='<%# Bind("feedate") %>' onfocus="setFeeDate(this);" onchange="setLimit(this);setFeenote(this);"  Width="120px"></asp:TextBox>
+                                                                
                                                                 <ul id="ulfeedate" class="dropdown-menu">                                                                    
                                                                 </ul>
                                                             </div>
@@ -777,18 +964,19 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="费用说明">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="feenote" runat="server" Text='<%# Bind("feenote") %>'></asp:TextBox>
+                                                            <asp:TextBox ID="feenote" runat="server" Text='<%# Bind("feenote") %>' Width="300px"></asp:TextBox>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="额度">
                                                         <ItemTemplate>                                                            
-                                                            <asp:TextBox ID="limit" runat="server" Text='<%# Bind("limit") %>' Width="80px" ReadOnly="true"></asp:TextBox>
+                                                            <asp:TextBox ID="limit"   runat="server" Text='<%# Eval("limit").ToString()==""? "":string.Format("{0:n1}",Convert.ToDecimal(Eval("limit")) ) %>' Width="80px"  style="text-align:right"  ></asp:TextBox>
+                                                            
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="报销金额">                                                        
+                                                    <asp:TemplateField HeaderText="报销金额" HeaderStyle-HorizontalAlign="Right">                                                        
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="amount" runat="server" Text='<%# Bind("amount") %>' onchange="getTotalMoney();setBackColor(this);$('#refresh').click();" ></asp:TextBox>
-                                                           <%-- --%>
+                                                            <asp:TextBox ID="amount"  runat="server" Text='<%# string.Format("{0:n1}",Eval("amount")) %>' onchange="getTotalMoney();setBackColor(this);$('#refresh').click();"  Width="60px" style="text-align:right"></asp:TextBox>
+                                                           
                                                         </ItemTemplate>
                                                         <FooterTemplate>
                                                            <asp:label ID="total" runat="server" ></asp:label>
@@ -806,7 +994,7 @@
                                                 </Columns>
                                                 <EditRowStyle BackColor="#2461BF" />  
                                                 <EmptyDataRowStyle HorizontalAlign="Center" />
-                                                <FooterStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" /> <%--#507CD1--%>
+                                                <FooterStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
                                                 <HeaderStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="#333" />
                                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
                                                 <RowStyle BackColor="#F0F0F0"  />
@@ -817,13 +1005,17 @@
                                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                                             </asp:GridView>
                                             <asp:button ID="refresh" runat="server" Text="刷新汇总数据" OnClick="refresh_Click" style="display:none"></asp:button>
-                                            <asp:GridView ID="HZgrid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="both" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" 
-                                                EmptyDataText="无差旅费用报销记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" Caption="差旅费汇总"  Width="500px"  OnRowDataBound="HZgrid_RowDataBound">
+                                            <asp:HiddenField ID="txtFin_CA_No" Value="临时存放私车公用单号" runat="server"></asp:HiddenField>                                             
+                                            <asp:button ID="btnCar" runat="server" Text="获取选择私车公用单号下所有记录写入grid" OnClick="btnCar_Click" style="display:none"></asp:button>
+                                            <asp:GridView ID="HZgrid" runat="server" CellPadding="4" ForeColor="#333333" GridLines="both" BorderColor="#F0F0F0" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" 
+                                                EmptyDataText="无差旅费用报销记录"  EmptyDataRowStyle-HorizontalAlign="Center" OnRowCommand="grid_RowCommand" Caption="差旅费汇总"  Width="500px"  OnRowDataBound="HZgrid_RowDataBound"
+                                                  
+                                                >
                                                 <AlternatingRowStyle BackColor="White" />
                                                 <Columns>                                                    
                                                     <asp:TemplateField HeaderText="预算来源">                                                        
                                                         <ItemTemplate>                                           
-                                                            <asp:HyperLink ID="budgetsour" runat="server" NavigateUrl='<%# Eval("budgetsour") %>' Target="_blank" Text='<%# Eval("instanceid") %>'></asp:HyperLink>
+                                                            <asp:HyperLink ID="budgetsour" runat="server" NavigateUrl='<%# Bind("budgetsour") %>' Target="_blank" Text='<%# Eval("instanceid") %>'></asp:HyperLink>
                                                             <%--<a href='<%# Eval("budgetsour") %>' id="a" ><%# Eval("instanceid") %></a>--%>
                                                         </ItemTemplate>
                                                     </asp:TemplateField> 
@@ -832,19 +1024,19 @@
                                                              <asp:label ID="costcatename" runat="server" Text='<%# Bind("costcatename") %>'></asp:label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>                                                    
-                                                    <asp:TemplateField HeaderText="预算金额">
+                                                    <asp:TemplateField HeaderText="预算金额" ItemStyle-HorizontalAlign="right">
                                                         <ItemTemplate>                                                            
-                                                            <asp:label ID="limit" runat="server" Text='<%# Bind("limit") %>'></asp:label>
+                                                            <asp:label ID="limit" runat="server" Text='<%# String.Format("{0:n1}",Eval("limit")) %>' ></asp:label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="报销金额">                                                        
+                                                    <asp:TemplateField HeaderText="报销金额" ItemStyle-HorizontalAlign="right">                                                        
                                                         <ItemTemplate>
-                                                            <asp:label ID="amount" runat="server" Text='<%# Bind("amount") %>'   ></asp:label>
+                                                            <asp:label ID="amount" runat="server" Text='<%# String.Format("{0:n1}",Eval("amount")) %>'   ></asp:label>
                                                         </ItemTemplate>                                                        
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="差异金额">
+                                                    <asp:TemplateField HeaderText="差异金额" ItemStyle-HorizontalAlign="right">
                                                         <ItemTemplate>                                                            
-                                                            <asp:Label ID="chayi" runat="server" Text='<%# Bind("chayi") %>'></asp:Label>
+                                                            <asp:Label ID="chayi" runat="server" Text='<%# String.Format("{0:n1}",Eval("chayi")) %>'></asp:Label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                 </Columns>
@@ -853,7 +1045,7 @@
                                                 <FooterStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
                                                 <HeaderStyle BackColor="#E4EFFA" Font-Bold="True" ForeColor="" />
                                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
-                                                
+                                                <RowStyle  BorderColor="#F0F0f0"/>
                                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333" />
                                                 <SortedAscendingCellStyle BackColor="#F5F7FB" />
                                                 <SortedAscendingHeaderStyle BackColor="#6D95E1" />
@@ -873,9 +1065,7 @@
                                         </div>
                                     </asp:Panel>
 
-                                </div>
-
-                                
+                                </div>                               
 
 
                             </div>
@@ -883,7 +1073,8 @@
                     </div>
                 </div>
             </div>
-            
+
+
 
             <div class="row  row-container" style="display: ">
                 <div class="col-md-12">

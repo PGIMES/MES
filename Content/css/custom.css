@@ -1,0 +1,162 @@
+﻿/*签核按钮*/
+.btnSave {
+    background: url(/Images/ico/save.gif) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btnflowSend {
+    background: url(/Images/ico/arrow_medium_right.png) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btnaddWrite {
+    background: url(/Images/ico/edit.gif) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btnflowBack {
+    background: url(/Images/ico/arrow_medium_left.png) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btnflowCompleted {
+    background: url(/Images/ico/arrow_medium_lower_right.png) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btnshowProcess {
+    background: url(/Images/ico/search.png) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+
+.btntaskEnd {
+    background: url(/Images/ico/topic_del.gif) no-repeat 0.3em;
+    padding-left: 24px;
+    border: 0;
+}
+/*画面自定义*/
+ .row {
+            margin-right: 2px;
+            margin-left: 2px;
+        }
+
+        .textalign {
+            text-align: right;
+        }
+
+        .alignRight {
+            padding-right: 4px;
+            text-align: right;
+        }
+
+        .row-container {
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        fieldset {
+            background: rgba(255,255,255,.3);
+            border-color: lightblue;
+            border-style: solid;
+            border-width: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            border-radius: 5px;
+            /*line-height: 30px;*/
+            list-style: none;
+            padding: 5px 10px;
+            margin-bottom: 2px;
+        }
+
+        legend {
+            color: #302A2A;
+            font: bold 16px/2 Verdana, Geneva, sans-serif;
+            font-weight: bold;
+            text-align: left;
+            /*text-shadow: 2px 2px 2px rgb(88, 126, 156);*/
+        }
+
+        fieldset {
+            padding: .35em .625em .75em;
+            margin: 0 2px;
+            border: 1px solid lightblue;
+        }
+
+        legend {
+            padding: 5px;
+            border: 0;
+            width: auto;
+            margin-bottom: 2px;
+        }
+
+        .panel {
+            margin-bottom: 3px;
+        }
+
+        .panel-heading {
+            padding: 5px 5px 5px 5px;
+        }
+
+        .panel-body {
+            padding: 5px 5px 5px 5px;
+        }
+
+        body {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 1px;
+            padding-left: 1px;
+            margin-top: 0px;
+            top: 0px;
+            left: 0px;
+        }
+
+        td {
+            /* vertical-align: top;
+            font-weight: 600;*/
+            font-size: 12px;
+            padding-bottom: 2px;
+            padding-left: 3px;
+            white-space: nowrap;
+        }
+
+        p.MsoListParagraph {
+            margin-bottom: .0001pt;
+            text-align: justify;
+            text-justify: inter-ideograph;
+            text-indent: 21.0pt;
+            font-size: 10.5pt;
+            font-family: "Calibri","sans-serif";
+            margin-left: 0cm;
+            margin-right: 0cm;
+            margin-top: 0cm;
+        }
+
+        .his {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .tbl td {
+            border: 1px solid black;
+            padding-left: 3px;
+            padding-right: 3px;
+            padding-top: 3px;
+        }
+
+        .wrap {
+            word-break: break-all;
+            white-space: normal;
+        }
