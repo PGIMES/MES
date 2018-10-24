@@ -296,7 +296,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //------------------------------------------------------------------------------仅修改GP12权限 begin
         bool bf_modifygp = false;
 
-        if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请 且 填单人是 数据库管理员
+        if (Request.QueryString["display"] == null && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请 且 填单人是 数据库管理员
         {
             List<RoadFlow.Data.Model.Users> ls_users = GetWorkGroupByGroupID(groupid);
             foreach (RoadFlow.Data.Model.Users item in ls_users)
