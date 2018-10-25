@@ -1444,6 +1444,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         DataTable dt_manager = null;DataTable dt_vg_manager = null; string manager_flag = "";
         CheckData_manager(lstypeno, product_user, yz_user, txt_domain.Text, out dt_manager, out dt_vg_manager, out manager_flag);
 
+        string modifygp = ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue;
+
         if (this.m_sid == "")
         {
             //没有单号，自动生成
@@ -1496,6 +1498,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             if (ls[i].Code.ToLower() == "containgp")
             {
                 ls[i].Value = lscontaingp;
+            }
+            if (ls[i].Code.ToLower() == "modifygp")
+            {
+                ls[i].Value = modifygp;
             }
         }
        
