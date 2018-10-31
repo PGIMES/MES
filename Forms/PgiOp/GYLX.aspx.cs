@@ -294,6 +294,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
 
         //------------------------------------------------------------------------------仅修改GP12权限 begin
+        /*
         bool bf_modifygp = false;
 
         if (Request.QueryString["display"] == null && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请 且 填单人是 数据库管理员
@@ -307,6 +308,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
         }
+
         if (bf_modifygp)
         {
             if (this.m_sid != "")
@@ -324,7 +326,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
         }
         
-
         if (bf_modifygp)//修改申请 且 在申请步骤 且 填单人是数据库管理员
         {
             ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = true;
@@ -351,7 +352,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         }
                     }
                 }
-                
+
             }
             if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "压铸")
             {
@@ -372,13 +373,105 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                             setread_grid_yz(i);
                         }
                     }
-                }                
+                }
             }
-            
+
         }
         else
         {
             ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).ClearSelection();
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = false;
+        }
+        */
+
+        bool bf_modifygp_step = false;
+
+        if (Request.QueryString["display"] == null && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请  且 在申请步骤
+        {
+            if (this.m_sid != "")
+            {
+                string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                      + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                if (stepname_gp == "申请人")//申请步骤
+                {
+                    bf_modifygp_step = true;
+                }
+            }
+            else
+            {
+                bf_modifygp_step = true;
+            }
+        }
+
+        bool bf_modifygp = false;//标记 填单人 是否是 数据库管理员
+
+        List<RoadFlow.Data.Model.Users> ls_users = GetWorkGroupByGroupID(groupid);
+        foreach (RoadFlow.Data.Model.Users item in ls_users)
+        {
+            if (item.Account == txt_CreateById.Value)
+            {
+                bf_modifygp = true;//填单人是数据库管理员
+            }
+        }
+
+        if (bf_modifygp_step == true && bf_modifygp == true)//修改申请 且 在申请步骤 且 填单人是数据库管理员
+        {
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = true;
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue = "Y";//默认选中
+
+
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
+            {
+                btndel.Visible = false;//隐藏删除
+
+                DataTable dt_jj = (DataTable)gv_d.DataSource;
+                if (dt_jj != null)
+                {
+                    for (int i = 0; i < dt_jj.Rows.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            gv_d.Columns[gv_d.VisibleColumns.Count - 1].Visible = false;
+                            gv_d.Columns[0].Visible = false;
+                        }
+                        if (dt_jj.Rows[i]["op"].ToString() != "OP600" && dt_jj.Rows[i]["op"].ToString() != "OP700")
+                        {
+                            setread_grid(i);
+                        }
+                    }
+                }
+
+            }
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "压铸")
+            {
+                btn_del_yz.Visible = false;//隐藏删除
+
+                DataTable dt_yz = (DataTable)gv_d_yz.DataSource;
+                if (dt_yz != null)
+                {
+                    for (int i = 0; i < dt_yz.Rows.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            gv_d_yz.Columns[gv_d_yz.VisibleColumns.Count - 1].Visible = false;
+                            gv_d_yz.Columns[0].Visible = false;
+                        }
+                        if (dt_yz.Rows[i]["op"].ToString() != "OP600" && dt_yz.Rows[i]["op"].ToString() != "OP700")
+                        {
+                            setread_grid_yz(i);
+                        }
+                    }
+                }
+            }
+
+        }
+        else if(bf_modifygp_step == true && bf_modifygp == false)//修改申请 且 在申请步骤 且 填单人不是数据库管理员
+        {
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).ClearSelection();
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = false;
+        }
+        else
+        {
             ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = false;
         }
         //------------------------------------------------------------------------------仅修改GP12权限 end
