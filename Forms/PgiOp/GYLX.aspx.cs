@@ -378,6 +378,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
         else
         {
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).ClearSelection();
             ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = false;
         }
         //------------------------------------------------------------------------------仅修改GP12权限 end
