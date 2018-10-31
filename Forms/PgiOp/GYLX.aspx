@@ -453,6 +453,7 @@
         }
 
         function RefreshRow(vi) {
+            var op = eval('op' + vi);
             var JgNum = eval('JgNum' + vi); var JgSec = eval('JgSec' + vi); var WaitSec = eval('WaitSec' + vi); var ZjSecc = eval('ZjSecc' + vi);var JtNum = eval('JtNum' + vi); 
             var col1 = eval('col1' + vi); var col2 = eval('col2' + vi);var EquipmentRate = eval('EquipmentRate' + vi);var col6 = eval('col6' + vi);
 
@@ -503,7 +504,15 @@
             col5.SetText(col5_value.toFixed(0));
             
             //单人产出工时
-            var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+            //var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+
+            var col7_value=0;
+            if (op.GetText() == "OP600" || op.GetText() == "OP700") {
+                col7_value=(TjOpSec_value*col6_value)/3600;
+            }else {
+                col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+            }
+
             col7.SetText(col7_value.toFixed(2));
         }
 
@@ -598,8 +607,15 @@
             if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
 
-            //单人产出工时
-            var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+            //单人产出工时            
+            //var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+
+            var col7_value=0;
+            if (op.GetText() == "OP600" || op.GetText() == "OP700") {
+                col7_value=(TjOpSec_value*col6_value)/3600;
+            }else {
+                col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
+            }
             col7.SetText(col7_value.toFixed(2));
 
             if(op20_vi!=-1){RefreshRow_yz(op20_vi);}
