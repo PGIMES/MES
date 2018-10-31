@@ -1501,7 +1501,7 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单人产<br />出工时" FieldName="col7" Width="40px" VisibleIndex="24">
+                                        <dx:GridViewDataTextColumn Caption="产出<br />工时" FieldName="col7" Width="40px" VisibleIndex="24">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col7" Width="40px" runat="server" Value='<%# Eval("col7")%>' 
                                                     ClientInstanceName='<%# "col7"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
@@ -1846,7 +1846,7 @@
                                                 </dx:ASPxTextBox>                                                    
                                             </DataItemTemplate>   
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单人产<br />出工时" FieldName="col7" Width="40px" VisibleIndex="24">
+                                        <dx:GridViewDataTextColumn Caption="产出<br />工时" FieldName="col7" Width="40px" VisibleIndex="24">
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="col7" Width="40px" runat="server" Value='<%# Eval("col7")%>' 
                                                     ClientInstanceName='<%# "col7_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">

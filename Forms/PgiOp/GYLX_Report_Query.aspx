@@ -292,7 +292,7 @@
                             <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="55px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人报<br />工数量" FieldName="col6" Width="50px" VisibleIndex="23"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单人产<br />出工时" FieldName="col7" Width="50px" VisibleIndex="24">
+                            <dx:GridViewDataTextColumn Caption="产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="产品工程师" FieldName="product_user" Width="90px" VisibleIndex="25">
@@ -392,7 +392,7 @@
                             <dx:GridViewDataTextColumn Caption="一人83%<br />产量" FieldName="col4" Width="55px" VisibleIndex="21"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="83%班<br />产量" FieldName="col5" Width="50px" VisibleIndex="22"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单人报<br />工数量" FieldName="col6" Width="50px" VisibleIndex="23"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单人产<br />出工时" FieldName="col7" Width="50px" VisibleIndex="24">
+                            <dx:GridViewDataTextColumn Caption="产出<br />工时" FieldName="col7" Width="50px" VisibleIndex="24">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="压铸工程师" FieldName="yz_user" Width="90px" VisibleIndex="25">
