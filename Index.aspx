@@ -306,6 +306,8 @@
                                         <li class="divider"></li> 
                                         <li><a href="/Fin/Fin_WG1_Report.aspx">完工报表一</a></li>
                                         <li><a href="/Fin/Fin_WG2_Report.aspx">完工报表二</a></li>
+                                        <li><a href="/Fin/WorkOrder_Report.aspx" target="_blank">工单 会计事务/发料会计事务/历史记录 查询</a></li>
+                                        <li><a href="/Fin/InventoryAccount_Report.aspx" target="_blank">库存会计事务浏览</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_Fin" name="div_Fin">
