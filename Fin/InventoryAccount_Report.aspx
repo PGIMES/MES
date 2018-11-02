@@ -9,7 +9,7 @@
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mestitle").text("【库存会计事务浏览】");
+            $("#mestitle").html("【库存会计事务浏览】<a href='/Fin/透视表VBA.xlsm' target='_blank' class='h5' style='color:red'>透视表VBA</a>");
             setHeight();
 
             $(window).resize(function () {
@@ -190,6 +190,7 @@
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button> 
                     <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
                     <%--<button id="btn_export_t" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_t_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出透视表</button>--%>
+                    
                 </td>
             </tr>                      
         </table>                   
