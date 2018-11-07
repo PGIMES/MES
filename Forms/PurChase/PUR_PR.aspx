@@ -283,11 +283,11 @@
                 success: function (data) {//返回的数据用data.d获取内容//                        
                     //alert(data.d)
                     if (data.d == "") {
-                        layer.msg("未获取到该物料信息.");                            
+                        layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");                            
                     }
                     $.each(eval(data.d), function (i, item) {                                
                         if (data.d == "") {
-                            layer.msg("未获取到该物料信息.");                            
+                            layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");                            
                         }
                         else {
                             if(item.ispodsched=="1"){
