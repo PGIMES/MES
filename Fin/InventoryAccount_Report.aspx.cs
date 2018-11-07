@@ -124,7 +124,7 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
         DataTable dt2 = null;
         sql = @"select a.[si_site] ,b.[si_desc],b.[si_entity],b.[si_status],a.[si_type] 
                     from [dbo].[Fin_si_mstr_type] a
-                        left join qad.dbo.qad_si_mstr b on a.si_domain=b.si_domain and a.si_site=b.si_site
+                        left join dbo.qad_si_mstr b on a.si_domain=b.si_domain and a.si_site=b.si_site
                     where a.si_domain='" + ddl_domain.SelectedValue + @"'";
         dt2 = DbHelperSQL.Query(sql).Tables[0];
         ASPxGridView2.DataSource = dt2;
