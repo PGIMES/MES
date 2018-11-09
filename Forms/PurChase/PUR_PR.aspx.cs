@@ -57,7 +57,10 @@ public partial class PUR_PR : PGIBasePage
                 }
 
                 BaseFun fun = new BaseFun();
-                var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
+                //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
+                //20181107 add heguiqin 新增采购类别
+                var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text").Tables[0];
+
                 fun.initDropDownList(prtype, tbltype, "value", "text");
                  //申请部门
                 BaseFun.loadDepartment(applydept, domain.SelectedValue);
@@ -67,12 +70,6 @@ public partial class PUR_PR : PGIBasePage
             //  this.bindData();
 
 
-        }else
-        {
-            //DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
-            //this.gvdtl.Columns.Clear();
-
-            //Pgi.Auto.Control.SetGrid("PUR_Pr_dtl_Form", "dtl", this.gvdtl, ldt, 2);
         }
         #endregion
                
@@ -238,7 +235,7 @@ public partial class PUR_PR : PGIBasePage
         gvdtl.Columns.Clear();
         var mode = Request["mode"] == null ? "" : "_"+Request["mode"].ToString();
         Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form"+mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable,2);
-
+        GetGrid(ViewState["dtl"] as DataTable, formtype);
     }
  
  
@@ -276,8 +273,9 @@ public partial class PUR_PR : PGIBasePage
         return result;
     }
     [System.Web.Services.WebMethod()]
-    public static string GetDaoJuMatInfo(string P1, string P2)
+    public static string GetDaoJuMatInfo(string P1, string P2, string P3)
     {
+        /*
         string result = "";
         StringBuilder sb = new StringBuilder();
         sb.Append("  select wlh,wlmc,ms,class,type,upload, ");
@@ -285,6 +283,39 @@ public partial class PUR_PR : PGIBasePage
         sb.Append("  from dbo.PGI_BASE_PART_DATA a where  wlh='{0}' and domain='{1}' ");
         //var sql = string.Format(" select wlh,wlmc,ms,class,type,upload from dbo.PGI_BASE_PART_DATA where  wlh='{0}' and domain='{1}' ", P1,P2);
         var value = DbHelperSQL.Query(string.Format(sb.ToString(),P1,P2)).Tables[0];
+        if (value.Rows.Count > 0)
+        { result = value.ToJsonString(); }
+        return result;
+        */
+
+        //20181108 modify heguiqin
+        string result = "";
+        string sql = "";
+        if (P3 == "存货(刀具类)")
+        {
+            sql = @"select wlh,wlmc,ms,class,type,upload
+	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.domain and [pod_sched]=1 and [pod_part]=a.wlh  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                    from dbo.PGI_BASE_PART_DATA a 
+                    where wlh='{0}' and domain='{1}' ";
+        }
+        else
+        {
+            sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
+	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                    from dbo.qad_pt_mstr a
+	                    left join(
+		                    select distinct pl_domain, PL_PROD_LINE 
+			                    ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
+				                    when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
+				                    end as pt_prod_line_mc 
+		                    from qad.dbo.qad_pl_mstr
+		                    where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
+		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
+                    where pt_part like 'z%' and pt_prod_line<>'4010' and (pt_status<>'DEAD' and pt_status<>'OBS') 
+                        and pt_part='{0}' and pt_domain='{1}' ";
+        }
+        
+        var value = DbHelperSQL.Query(string.Format(sql, P1, P2)).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
         return result;
@@ -635,6 +666,54 @@ public partial class PUR_PR : PGIBasePage
     //    applydept.DataBind();
     //    applydept.Items.Insert(0, "");
     //}
+
+
+    //20181108 add by heguiqin
+    protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ViewState["PRNo"] != null && ViewState["PRNo"].ToString() != "")
+        {
+            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where prno='" + ViewState["PRNo"].ToString() + "' order by rowid asc").Tables[0];
+            ViewState["dtl"] = dtl;
+        }
+        else
+        {
+            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=2 order by rowid asc").Tables[0];
+            ViewState["dtl"] = dtl; ;
+        }
+        gvdtl.Columns.Clear();
+        var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        GetGrid(ViewState["dtl"] as DataTable, prtype.SelectedValue);
+    }
+
+
+    protected void GetGrid(DataTable DT, string prtype_v)
+    {
+        DataTable ldt = DT;
+        int index = gvdtl.VisibleRowCount;
+        string sql = @"select ''  value";
+        if (prtype_v!="存货(刀具类)")
+        {
+            sql += @" union all select '无'  value";
+        }
+        sql += @" union all SELECT replace(pgino+[version]+'/'+productcode,' ','')   FROM [dbo].[form3_Sale_Product_DetailTable]";
+
+        DataTable ldt_usefor = DbHelperSQL.Query(sql).Tables[0];
+
+        for (int i = 0; i < gvdtl.VisibleRowCount; i++)
+        {
+
+            DevExpress.Web.ASPxComboBox tb1 = (DevExpress.Web.ASPxComboBox)gvdtl.FindRowCellTemplateControl(i, gvdtl.DataColumns[8], gvdtl.DataColumns[8].FieldName);
+            tb1.DataSource = ldt_usefor;
+            tb1.TextField = "value";
+            tb1.ValueField = "value";
+            tb1.DataBind();
+            tb1.Value = ldt.Rows[i]["usefor"].ToString();
+
+        }
+    }
+
 }
 
 public class GridViewTemplate : ITemplate

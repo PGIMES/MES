@@ -54,11 +54,10 @@
                 SetControlStatus(fieldSet);
                 
             }       
+            
+        });// end ready
 
-           
-
-        })// end ready
-
+        
 
         function enableGroup(oname)
         {   
@@ -268,8 +267,9 @@
                 }
             });
         }
-        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh){
+        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,historyprice){
             var p2=$("#domain").val();
+            var p3=$("#prtype").val();
             if(p2==""){layer.alert("请选择【申请工厂】");return false;}
             $.ajax({
                 type: "Post",
@@ -277,17 +277,25 @@
                 async: false,
                 //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
                 //P1:wlh P2： domaim
-                data: "{'P1':'"+p1+"','P2':'"+p2+"'}",
+                data: "{'P1':'"+p1+"','P2':'"+p2+"','P3':'"+p3+"'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {//返回的数据用data.d获取内容//                        
                     //alert(data.d)
                     if (data.d == "") {
-                        layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");                            
+                        layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");   
+                        $(wlh).val("");
+                        $(wlmc).val(""); 
+                        $(wlms).val("");
+                        $(historyprice).val("");//add heguiqin
                     }
                     $.each(eval(data.d), function (i, item) {                                
                         if (data.d == "") {
-                            layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");                            
+                            layer.msg("未获取到该物料信息,请确认是否有此物料且状态为AC.");   
+                            $(wlh).val("");
+                            $(wlmc).val(""); 
+                            $(wlms).val("");
+                            $(historyprice).val("");//add heguiqin
                         }
                         else {
                             if(item.ispodsched=="1"){
@@ -295,6 +303,7 @@
                                 $(wlh).val("");
                                 $(wlmc).val(""); 
                                 $(wlms).val("");
+                                $(historyprice).val("");//add heguiqin
                                 return false;
                             }
                             else{
@@ -303,15 +312,21 @@
                                     $(wlh).val("");
                                     $(wlmc).val(""); 
                                     $(wlms).val("");
+                                    $(historyprice).val("");//add heguiqin
                                     return false;
                                 }else{
-                                $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
-                                $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
-                                $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
-                                $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
-                                $(attachments).val(item.upload);//$(attachments).attr("readonly","readonly");
+                                    $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
+                                    $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
+                                    $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
+                                    $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
+                                    $(attachments).val(item.upload);//$(attachments).attr("readonly","readonly");
 
-                                $(attachments_name[0]).prop("href",item.upload); }
+                                    if(p3 == "存货(刀具类)"){
+                                        $(attachments_name[0]).prop("href",item.upload); 
+                                    }else {
+                                        $(attachments_name[0]).text("无");
+                                    }
+                                }
                             }
                         } 
                     })                  
@@ -397,9 +412,19 @@
         }
         
         function Getdaoju(e)
-        {            
+        {   
+            //var ss = e.id.split("_");// 在每个逗号(,)处进行分解。
+            //var url = "../../select/sz_report_dev_select.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val()           
+            //popupwindow = window.open(url, '_blank', 'height=500,width=1000,resizable=yes,menubar=no,scrollbars =yes,location=no');
+            
             var ss = e.id.split("_");// 在每个逗号(,)处进行分解。
-            var url = "../../select/sz_report_dev_select.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val()           
+            var url="";
+            var prtype=$("#prtype").val();
+            if (prtype=="存货(刀具类)") {
+                url = "/select/sz_report_dev_select.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val();
+            }else {
+                url = "/select/select_pt_mstr.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val();
+            }                      
             popupwindow = window.open(url, '_blank', 'height=500,width=1000,resizable=yes,menubar=no,scrollbars =yes,location=no');
         }
         function setvalue_dj(id, wlh, ms, lx, js, sm, pp, gys,wlmc)
@@ -478,9 +503,23 @@
                     var wlms= $(this).parent().parent().find("input[id*=wlms]");
                     var attachments= $(this).parent().parent().find("input[id*=attachments]");
                     var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");
-                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this));                                                       
+                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);                                                       
                 }); 
             });
+        }
+    </script>
+
+    <script>//20181108 add heguiqin
+        function Add_check(){
+            var domain=$("#domain").val();
+            var dept=$("#applydept").val();
+
+            if (domain=="" || dept=="") {
+                layer.alert("请选择【申请公司】");
+                return false;
+            }
+
+            return true;
         }
     </script>
     
@@ -621,8 +660,8 @@
                                         <tr>
                                             <td>采购类别</td>
                                             <td >
-                                                <asp:DropDownList ID="prtype" runat="server" CssClass="form-control" ToolTip="0|1" AutoPostBack="True"  Width="200px"></asp:DropDownList>
-
+                                                <asp:DropDownList ID="prtype" runat="server" CssClass="form-control" ToolTip="0|1" Width="200px"
+                                                     AutoPostBack="True"  OnSelectedIndexChanged="prtype_SelectedIndexChanged" ></asp:DropDownList>
                                             </td>
                                         </tr>                                        
                                         <tr>
@@ -664,7 +703,7 @@
                                         </script>
                                         
                                                                                       
-                                    <asp:Button ID="btnAddDetl" runat="server" Text="添加" CssClass="btn btn-primary btn-sm"  OnClick="btnAddDetl_Click"/>
+                                    <asp:Button ID="btnAddDetl" runat="server" Text="添加" CssClass="btn btn-primary btn-sm" OnClientClick="return Add_check()"  OnClick="btnAddDetl_Click"/>
                                     <asp:Button ID="btnDelete" runat="server" Text="删除"  CssClass="btn btn-primary btn-sm"   OnClick="btnDelete_Click"/>
                                     
                                         <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue">
