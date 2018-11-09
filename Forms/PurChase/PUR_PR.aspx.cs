@@ -10,19 +10,197 @@ using System.Linq;
 
 public partial class PUR_PR : PGIBasePage
 {
+    string m_sid = "";
     public string fieldStatus;    
     public string DisplayModel;
     public string ValidScript="";
+
+    /*
+protected void Page_Load(object sender, EventArgs e)
+{
+    Page.MaintainScrollPositionOnPostBack = true;
+    //      WebForm.Common.DataTransfer.PaoZiLiao                                        02128  00404      00076  01968  
+    LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+    Session["LogUser"] = LogUserModel;
+    Session["UserAD"] = LogUserModel.ADAccount;
+    Session["UserId"] = LogUserModel.UserId;
+
+    #region "IsPostBack"
+    if (!IsPostBack)
+    {   //文件上传在updatepanel需用此方法+enctype = "multipart/form-data" ，否则无法上传文件
+        PostBackTrigger trigger = new PostBackTrigger();
+        trigger.ControlID = btnflowSend.UniqueID;
+        UpdatePanel1.Triggers.Add(trigger);
+        PostBackTrigger trigger2 = new PostBackTrigger();
+        trigger2.ControlID = btnSave.UniqueID;
+        UpdatePanel1.Triggers.Add(trigger2);
+        if (LogUserModel != null)
+        {
+            //当前登陆人员
+            txt_LogUserId.Value = LogUserModel.UserId;
+            txt_LogUserName.Value = LogUserModel.UserName;
+           // txt_LogUserJob.Value = LogUserModel.JobTitleName;
+            txt_LogUserDept.Value = LogUserModel.DepartName;
+
+            if (Request["instanceid"] != null)//页面加载
+            {                                           
+                //日志加载                     
+               // bindrz2_log(requestid, gv_rz2);
+            }
+            else//新建
+            {                             
+                CreateDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                CreateById.Text = LogUserModel.UserId;
+                CreateByName.Text = LogUserModel.UserName;                    
+                this.domain.Text = LogUserModel.DomainName;
+                DeptName.Text = LogUserModel.DepartName;
+                this.phone.Text = LogUserModel.Telephone;
+                txt_LogUserId.Value = LogUserModel.UserId;
+                txt_LogUserName.Value = LogUserModel.UserName;                                    
+            }
+
+            BaseFun fun = new BaseFun();
+            //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
+            //20181107 add heguiqin 新增采购类别
+            var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text").Tables[0];
+
+            fun.initDropDownList(prtype, tbltype, "value", "text");
+             //申请部门
+            BaseFun.loadDepartment(applydept, domain.SelectedValue);
+            applydept.Items.Insert(0,"");
+        }
+
+        //  this.bindData();
+
+
+    }
+    #endregion
+
+    DataTable dtMst =new DataTable();
+    var strType = "";
+    string id = Request["instanceid"]; // get instanceid
+    if(ViewState["PRNo"] == null) { ViewState["PRNo"] = ""; }
+
+    //--==第1步：Get instance Data=======================================================================================================      
+    if (id!=""&&id!=null ) 
+    {   
+        ViewState["PRNo"] = id==null?"":id;
+        PRNo.Text = ViewState["PRNo"].ToString();                          
+        dtMst = DbHelperSQL.Query("select * from pur_pr_main_form where prno='" + id.ToString() + "' ").Tables[0];                
+    }
+    if (dtMst.Rows.Count > 0)
+    {
+        PRNo.Text = dtMst.Rows[0]["PRNo"].ToString();
+        strType = dtMst.Rows[0]["PRType"].ToString();
+        var item = prtype.Items.FindByText(strType);
+        if (item != null)
+        {
+            strType = item.Value;
+        }
+
+        CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
+        CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
+        CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
+       // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
+    }
+    else
+    {
+      //  strType = prtype.SelectedItem.Value;
+    }
+
+
+    //--== 第 步:装载控件========================================================================================================
+    loadControl(strType);
+    //将表单主表值给页面
+    if (dtMst!=null && dtMst.Rows.Count > 0)
+    {   
+        Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main", this, dtMst.Rows[0]);
+        var item = prtype.Items.FindByText(dtMst.Rows[0]["prtype"].ToString());
+        if (item != null)
+        {
+            prtype.ClearSelection();
+            item.Selected=true;
+        }
+        //显示文件
+        ShowFile(dtMst.Rows[0]["files"]==null? "": dtMst.Rows[0]["files"].ToString(),'|');
+
+    }
+
+
+    DataTable dtscript =new DataTable();
+    var sqlScript = "";
+
+    //Load Check Script  （不需修改）      
+    sqlScript ="select control_event as script from auto_form where form_type='" + prtype.SelectedValue + "' and isnull(control_id,'')<>'' and isnull(control_event,'')<>'' order by form_div, control_order;";
+    dtscript = DbHelperSQL.Query(sqlScript).Tables[0];
+    for (int i = 0; i < dtscript.Rows.Count; i++)
+    {
+        ValidScript = ValidScript + dtscript.Rows[i]["script"].ToString();
+    }
+
+
+
+    //获取每步骤栏位状态设定值，方便前端控制其可编辑性（不需修改）
+    string FlowID = Request.QueryString["flowid"]; 
+    string StepID = Request.QueryString["stepid"];
+    DisplayModel = Request.QueryString["display"] ?? "0"; 
+    RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+    fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+    ViewState["fieldStatus"] = fieldStatus;
+
+    //特殊处理
+    if (Request["mode"] == null )
+    {
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='" + this.PRNo.Text + "'").Tables[0];
+
+        if (ldt_flow.Rows.Count >0)
+        {
+            for(int row = 0; row <gvdtl.VisibleRowCount;row++ )
+            {
+                if (ldt_flow.Rows[0]["stepname"].ToString() != "申请" )
+                {                 
+                    ((DevExpress.Web.ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
+                    ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
+                    ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
+
+
+                    //  ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$$recmdvendorname")).Enabled = false;
+                    // ((DevExpress.Web.ASPxComboBox)this.FindControl("gvdtl$cell0_9$TC$usefor")).Enabled = false;
+                    // ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
+                    // ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
+
+
+                }
+                else
+                {
+                    btnflowSend.Text = "提交";
+                }
+            }        
+        }
+        else
+        {
+            btnflowSend.Text = "提交";
+        }
+    }
+
+}
+*/
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
-        //      WebForm.Common.DataTransfer.PaoZiLiao                                        02128  00404      00076  01968  
+
+        //接收
+        if (Request.QueryString["instanceid"] != null)
+        {
+            this.m_sid = Request.QueryString["instanceid"].ToString();
+        }
+
         LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         Session["LogUser"] = LogUserModel;
         Session["UserAD"] = LogUserModel.ADAccount;
         Session["UserId"] = LogUserModel.UserId;
 
-        #region "IsPostBack"
         if (!IsPostBack)
         {   //文件上传在updatepanel需用此方法+enctype = "multipart/form-data" ，否则无法上传文件
             PostBackTrigger trigger = new PostBackTrigger();
@@ -31,148 +209,125 @@ public partial class PUR_PR : PGIBasePage
             PostBackTrigger trigger2 = new PostBackTrigger();
             trigger2.ControlID = btnSave.UniqueID;
             UpdatePanel1.Triggers.Add(trigger2);
+
+
+            BaseFun fun = new BaseFun();
+
+            //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
+            //20181107 add heguiqin 新增采购类别
+            var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text").Tables[0];
+            fun.initDropDownList(prtype, tbltype, "value", "text");
+
+            BaseFun.loadDepartment(applydept, domain.SelectedValue);//申请部门
+            applydept.Items.Insert(0, "");
+
             if (LogUserModel != null)
             {
                 //当前登陆人员
                 txt_LogUserId.Value = LogUserModel.UserId;
                 txt_LogUserName.Value = LogUserModel.UserName;
-               // txt_LogUserJob.Value = LogUserModel.JobTitleName;
                 txt_LogUserDept.Value = LogUserModel.DepartName;
+            }
 
-                if (Request["instanceid"] != null)//页面加载
-                {                                           
-                    //日志加载                     
-                   // bindrz2_log(requestid, gv_rz2);
-                }
-                else//新建
-                {                             
+            DataTable ldt_detail = null;
+            string lssql = @"select *,'查看' attachments_name from pur_pr_dtl_form";
+
+            if (this.m_sid == "")//新建
+            {
+                if (LogUserModel != null)
+                {
                     CreateDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     CreateById.Text = LogUserModel.UserId;
-                    CreateByName.Text = LogUserModel.UserName;                    
+                    CreateByName.Text = LogUserModel.UserName;
                     this.domain.Text = LogUserModel.DomainName;
                     DeptName.Text = LogUserModel.DepartName;
                     this.phone.Text = LogUserModel.Telephone;
                     txt_LogUserId.Value = LogUserModel.UserId;
-                    txt_LogUserName.Value = LogUserModel.UserName;                                    
+                    txt_LogUserName.Value = LogUserModel.UserName;
                 }
 
-                BaseFun fun = new BaseFun();
-                //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
-                //20181107 add heguiqin 新增采购类别
-                var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text").Tables[0];
-
-                fun.initDropDownList(prtype, tbltype, "value", "text");
-                 //申请部门
-                BaseFun.loadDepartment(applydept, domain.SelectedValue);
-                applydept.Items.Insert(0,"");
+                lssql += " where 1=0";
+                ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             }
-
-            //  this.bindData();
-
-
-        }
-        #endregion
-               
-        DataTable dtMst =new DataTable();
-        var strType = "";
-        string id = Request["instanceid"]; // get instanceid
-        if(ViewState["PRNo"] == null) { ViewState["PRNo"] = ""; }
-
-        //--==第1步：Get instance Data=======================================================================================================      
-        if (id!=""&&id!=null ) 
-        {   
-            ViewState["PRNo"] = id==null?"":id;
-            PRNo.Text = ViewState["PRNo"].ToString();                          
-            dtMst = DbHelperSQL.Query("select * from pur_pr_main_form where prno='" + id.ToString() + "' ").Tables[0];                
-        }
-        if (dtMst.Rows.Count > 0)
-        {
-            PRNo.Text = dtMst.Rows[0]["PRNo"].ToString();
-            strType = dtMst.Rows[0]["PRType"].ToString();
-            var item = prtype.Items.FindByText(strType);
-            if (item != null)
+            else
             {
-                strType = item.Value;
+                DataTable dtMst = new DataTable();
+                dtMst = DbHelperSQL.Query("select * from pur_pr_main_form where prno='" + m_sid + "' ").Tables[0];
+
+                string prtype_value = "";
+                if (dtMst.Rows.Count > 0)
+                {
+                    PRNo.Text = dtMst.Rows[0]["PRNo"].ToString(); prtype_value = dtMst.Rows[0]["PRType"].ToString();
+                    var item = prtype.Items.FindByText(prtype_value);
+
+                    CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
+                    CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
+                    CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
+                    // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
+
+                    //将表单主表值给页面
+                    Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main", this, dtMst.Rows[0]);
+
+                    if (item != null)
+                    {
+                        prtype.ClearSelection();
+                        item.Selected = true;
+                    }
+                    //显示文件
+                    ShowFile(dtMst.Rows[0]["files"] == null ? "" : dtMst.Rows[0]["files"].ToString(), '|');
+                }
+
+                if (prtype_value != "存货(刀具类)" && prtype_value != "")
+                {
+                    lssql = @"select *,'无' attachments_name from pur_pr_dtl_form";
+                }
+                lssql += @" where prno = '" + m_sid + "' order by rowid asc";
+
+                ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
+                
             }
-            
-            CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
-            CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
-            CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
-           // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
+
+            PRNo.Text = m_sid;
+            ViewState["PRNo"] = m_sid;
+            ViewState["dtl"] = ldt_detail;
+            loadControl();
+
         }
         else
         {
-          //  strType = prtype.SelectedItem.Value;
+            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
+            ViewState["dtl"] = ldt;
+            loadControl();
         }
-
-         
-        //--== 第 步:装载控件========================================================================================================
-        loadControl(strType);
-        //将表单主表值给页面
-        if (dtMst!=null && dtMst.Rows.Count > 0)
-        {   
-            Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main", this, dtMst.Rows[0]);
-            var item = prtype.Items.FindByText(dtMst.Rows[0]["prtype"].ToString());
-            if (item != null)
-            {
-                prtype.ClearSelection();
-                item.Selected=true;
-            }
-            //显示文件
-            ShowFile(dtMst.Rows[0]["files"]==null? "": dtMst.Rows[0]["files"].ToString(),'|');
-            
-        }
-         
-
-        DataTable dtscript =new DataTable();
-        var sqlScript = "";
-         
-        //Load Check Script  （不需修改）      
-        sqlScript ="select control_event as script from auto_form where form_type='" + prtype.SelectedValue + "' and isnull(control_id,'')<>'' and isnull(control_event,'')<>'' order by form_div, control_order;";
-        dtscript = DbHelperSQL.Query(sqlScript).Tables[0];
-        for (int i = 0; i < dtscript.Rows.Count; i++)
-        {
-            ValidScript = ValidScript + dtscript.Rows[i]["script"].ToString();
-        }
-       
-        
 
         //获取每步骤栏位状态设定值，方便前端控制其可编辑性（不需修改）
-        string FlowID = Request.QueryString["flowid"]; 
+        string FlowID = Request.QueryString["flowid"];
         string StepID = Request.QueryString["stepid"];
-        DisplayModel = Request.QueryString["display"] ?? "0"; 
+        DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
         ViewState["fieldStatus"] = fieldStatus;
 
         //特殊处理
-        if (Request["mode"] == null )
+        if (Request["mode"] == null)
         {
             DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='" + this.PRNo.Text + "'").Tables[0];
 
-            if (ldt_flow.Rows.Count >0)
+            if (ldt_flow.Rows.Count > 0)
             {
-                for(int row = 0; row <gvdtl.VisibleRowCount;row++ )
+                for (int row = 0; row < gvdtl.VisibleRowCount; row++)
                 {
-                    if (ldt_flow.Rows[0]["stepname"].ToString() != "申请" )
-                    {                 
+                    if (ldt_flow.Rows[0]["stepname"].ToString() != "申请")
+                    {
                         ((DevExpress.Web.ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
                         ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
                         ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
-
-                        
-                        //  ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$$recmdvendorname")).Enabled = false;
-                        // ((DevExpress.Web.ASPxComboBox)this.FindControl("gvdtl$cell0_9$TC$usefor")).Enabled = false;
-                        // ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
-                        // ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
-
-
                     }
                     else
                     {
                         btnflowSend.Text = "提交";
                     }
-                }        
+                }
             }
             else
             {
@@ -181,63 +336,6 @@ public partial class PUR_PR : PGIBasePage
         }
 
     }
-
-    void bindData()
-    {
-        //var dtMst = DbHelperSQL.Query("select top 20 * from PGI_BASE_PART_DATA_form  ").Tables[0];
-        //string[] headers = {"key","物料号","物料名称","描述", "描述" };
-        //string[] fields = {"id", "wlh", "wlmc", "ms","ms" };
-        //string[] controltype = { "label", "textbox", "textbox", "dropdownlist" ,"label"};
-        //initGridview(gv_dtl,headers, fields, controltype, dtMst);
-    }
-    void initGridview(GridView gv,string[] headers,string[] fields,string[] controltype, DataTable dt)
-    {
-         
-        for (int i = 0; i < headers.Length; i++)
-        {
-            var tf = new TemplateField() { HeaderText = headers[i] };
-           
-            GridViewTextTemplate gvt=null;
-            if (controltype[i] == "textbox" || controltype[i] == "label")
-            {
-                gvt = new GridViewTextTemplate(DataControlRowType.DataRow, fields[i], dt.Columns[1].DataType.Name, controltype[i]);
-            }
-            else if (  controltype[i] == "dropdownlist")
-            {
-                DataTable dtitems = DbHelperSQL.Query("select '-'  as value,'-'as text union select '825-87TC11-C6','825-87TC11-C6'  union select 'M6*1*100L*RH7 2P ' as value,'M6*1*100L*RH7 2P ' as text   ").Tables[0];
-                gvt = new GridViewTextTemplate(DataControlRowType.DataRow, fields[i], dt.Columns[1].DataType.Name, controltype[i],dtitems);
-            }
-
-
-            tf.ItemTemplate = gvt;
-            gv.Columns.Add(tf);
-
-        }
-        gv.AutoGenerateColumns = false;
-        gv.DataSource = dt;
-        gv.DataBind();
-
-       // gv_dtl0.DataSource = dt;
-       // gv_dtl0.DataBind();
-       
-    }
-
-    
-    public void loadControl(string formtype)
-    {
-        //--== 第一步:装载控件========================================================================================================
-        //==Detail
-        if (ViewState["dtl"] == null)
-        {   
-            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where prno='" + ViewState["PRNo"].ToString() + "' order by rowid asc").Tables[0];
-            ViewState["dtl"] = dtl;
-        }
-        gvdtl.Columns.Clear();
-        var mode = Request["mode"] == null ? "" : "_"+Request["mode"].ToString();
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form"+mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable,2);
-        GetGrid(ViewState["dtl"] as DataTable, formtype);
-    }
- 
  
     public  string GetDanHao()
     {
@@ -346,29 +444,12 @@ public partial class PUR_PR : PGIBasePage
 
     #endregion
 
-    public bool Check()
-    {
-        bool result = true;
 
-       // if()
-
-        return result;
-    }
-    /// <summary>
-    /// 保存Data
-    /// </summary>
-    /// <param name="formtype">表单对应的设定</param>
-    /// <param name="flag">输出参数是否保存成功</param>
+    /*
     protected void SaveData(string formtype,out bool flag)
     {   //保存数据是否成功标识
         flag = true;
-        //验证
-        Check(); 
-        //string sformsate = "";        
-        //{                   
-        //    Pgi.Auto.Common comformstate = new Pgi.Auto.Common() { Code = "formstate", Key = "1", Value = sformsate };
-        //    ls.Add(comformstate);           
-        //}
+       
         //保存主数据1.插入的返回实例Id, 2.更新的返回受影响行数，需取Request["instanceid"]
         string instanceid = "0";
         var strprno = "";
@@ -487,6 +568,147 @@ public partial class PUR_PR : PGIBasePage
             flag = false;
         }
     }
+    */
+
+    /// <summary>
+    /// 保存Data
+    /// </summary>
+    /// <param name="formtype">表单对应的设定</param>
+    /// <param name="flag">输出参数是否保存成功</param>
+
+    protected void SaveData(string formtype, out bool flag)
+    {
+        flag = true;//保存数据是否成功标识
+        List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();//定义总SQL LIST
+
+        try
+        {
+            //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
+            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "", this);
+            formtype = prtype.SelectedValue;
+
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "prtype")
+                {
+                    ls[i].Value = formtype;
+                }
+            }
+
+            //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
+            DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
+
+            //获取单号
+            this.m_sid = ViewState["PRNo"].ToString();
+            if (this.m_sid == "")//产生请购单号
+            {
+                this.m_sid = GetDanHao();
+                for (int i = 0; i < ls.Count; i++)
+                {
+                    if (ls[i].Code.ToLower() == "prno")
+                    {
+                        ls[i].Value = this.m_sid;
+                        PRNo.Text = this.m_sid;
+                        ViewState["PRNo"] = this.m_sid;
+                    }
+                }
+                
+            }
+
+            //自定义，上传文件Save file
+            var fileup = (FileUpload)this.FindControl("file");
+            
+            if (fileup != null)
+            {
+                if (fileup.HasFile)
+                {
+                    var filename = fileup.FileName;
+                    var filepath = "";
+
+                    SaveFile(fileup, this.m_sid, out filepath, filename, filename);
+
+                    //增加上传文件列
+                    Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+                    lcfile.Code = "files";
+                    lcfile.Key = "";
+                    lcfile.Value = filepath;
+                    ls.Add(lcfile);
+                }
+            }
+
+
+            //主表相关字段赋值到明细表
+            string formno_main = "";
+            for (int j = 0; j < ls.Count; j++)
+            {
+                if (ls[j].Code.ToLower() == "prno") { formno_main = ls[j].Value; }
+            }
+            for (int i = 0; i < dtl.Rows.Count; i++)
+            {
+                dtl.Rows[i]["prno"] = formno_main;
+            }
+
+            //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
+            //获取的表头信息，自动生成SQL，增加到SUM中
+            ls_sum.Add(Pgi.Auto.Control.GetList(ls, "pur_pr_main_form"));
+
+            //明细删除增加到list中
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            string dtl_ids = "";
+            for (int i = 0; i < dtl.Rows.Count; i++)
+            {
+                if (dtl.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + dtl.Rows[i]["id"].ToString() + ","; }
+            }
+            if (dtl_ids != "")
+            {
+                dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
+                ls_del.Sql = "delete from PUR_Pr_Dtl_Form where prno='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+            }
+            else
+            {
+                ls_del.Sql = "delete from PUR_Pr_Dtl_Form where prno='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+            }
+            ls_sum.Add(ls_del);
+
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> lsdtl = Pgi.Auto.Control.GetList(dtl, "pur_pr_dtl_form", "id", "attachments_name,flag");
+            for (int i = 0; i < lsdtl.Count; i++)
+            {
+                ls_sum.Add(lsdtl[i]);
+            }
+
+            //批量提交
+            int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+            if (ln > 0)
+            {
+                flag = true;
+
+                var titletype = "请购申请";
+                string title = titletype + "[" + this.m_sid + "][" + CreateByName.Text + "]"; //设定表单标题
+
+                //将实例id,表单标题给流程script
+                script += "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
+                     "$('#customformtitle',parent.document).val('" + title + "');" +
+                     "if($('#txtInstanceID').val()==''){$('#txtInstanceID').val('" + this.m_sid + "');$('#PRNo').val('" + this.m_sid + "');}";
+            }
+            else
+            {
+                flag = false;
+            }
+
+            return;
+
+        }
+        catch (Exception e)
+        {
+            string err = e.Message.Replace("'", "").Replace("\r\n", "").Replace("nvarchar", "<字符串>").Replace("varchar", "<字符串>").Replace("numeric", "<数字>").Replace("int", "<数字>");
+            ScriptManager.RegisterStartupScript(Page, this.GetType(), "ok", script + "layer.alert('保存表单数据失败，请确认。ErrorMessage:" + err + "');", true);
+            flag = false;
+            return;
+        }
+    }
 
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script
@@ -576,11 +798,39 @@ public partial class PUR_PR : PGIBasePage
     #endregion
 
 
+    public void loadControl()
+    {
+        string formtype = prtype.SelectedValue;
+
+        gvdtl.Columns.Clear();
+        var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        GetGrid(ViewState["dtl"] as DataTable, formtype);
+    }
+
+    protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string formtype = prtype.SelectedValue;
+
+        if (ViewState["PRNo"] != null && ViewState["PRNo"].ToString() != "")
+        {
+            var dtl = DbHelperSQL.Query(@"select *,'查看' attachments_name from pur_pr_dtl_form 
+                                        where prno=(select prno from PUR_PR_Main_Form where prno='" + ViewState["PRNo"].ToString() + "' and PRType='" + formtype + @"') 
+                                        order by rowid asc").Tables[0];
+            ViewState["dtl"] = dtl;
+        }
+        else
+        {
+            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
+            ViewState["dtl"] = dtl; ;
+        }
+        loadControl();
+    }
 
     protected void btnAddDetl_Click(object sender, EventArgs e)
     {
-        DataTable dtl;//= ViewState["dtl"] as DataTable;
-        dtl=Pgi.Auto.Control.AgvToDt(gvdtl);
+        DataTable dt2 = ViewState["dtl"] as DataTable;
+        DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
         var dr= dtl.NewRow();
         dr["prno"] = PRNo.Text;
 
@@ -588,8 +838,8 @@ public partial class PUR_PR : PGIBasePage
         maxObject = dtl.Compute("max(rowid)", "");
         if (maxObject.ToString() == "") { maxObject = 0; }
         dr["rowid"] = (Convert.ToInt16(maxObject) + 1).ToString();
-        //dr["rowid"] = dtl.Rows.Count + 1;
-        dr["attachments_name"] = "查看";
+
+        dr["attachments_name"] = prtype.SelectedValue == "存货(刀具类)" ? "查看" : "无";
         dtl.Rows.Add(dr);
         var sortrowid = 0;
         for(int  row=0;row<dtl.Rows.Count;row++)
@@ -608,19 +858,28 @@ public partial class PUR_PR : PGIBasePage
         }
 
         ViewState["dtl"] = dtl;
-        loadControl( "");
+        loadControl();
     }
 
     protected void btnDelete_Click(object sender, EventArgs e)
     {
-        //DataTable dtl;//= ViewState["dtl"] as DataTable;
-        //dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
-        //var dr = dtl.NewRow();        
-        //dr["rowid"] = gvdtl.;
-        //dtl.Rows.Add(dr);
-        //ViewState["dtl"] = dtl;
-        //loadControl("");
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
+        for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+        {
+            if (ldt.Rows[i]["flag"].ToString() == "1")
+            {
+                ldt.Rows[i].Delete();
+            }
+        }
+        ldt.AcceptChanges();
+        ViewState["dtl"] = ldt;       
+        loadControl();
+        Pgi.Auto.Public.MsgBox(this.Page, "alert", "删除成功!");
+    }
 
+    /*
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
         DataTable ldt_del = ldt.Clone();
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
@@ -649,44 +908,11 @@ public partial class PUR_PR : PGIBasePage
             }
             Session["del"] = ldt_del;
         }
-         
-        loadControl("");
+
+        loadControl();
         Pgi.Auto.Public.MsgBox(this.Page, "alert", "删除成功!");
-
     }
-
-    //protected void domain_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //    var P1 = domain.SelectedValue;
-    //    var sql = string.Format(" select distinct dept_name as value,dept_name as text from  HR_EMP_MES   where domain='{0}' or gc='{1}' ", P1, P1);
-    //    var value = DbHelperSQL.Query(sql).Tables[0];
-    //    this.applydept.DataSource = value;
-    //    applydept.DataValueField = "value";
-    //    applydept.DataTextField = "text";
-    //    applydept.DataBind();
-    //    applydept.Items.Insert(0, "");
-    //}
-
-
-    //20181108 add by heguiqin
-    protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (ViewState["PRNo"] != null && ViewState["PRNo"].ToString() != "")
-        {
-            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where prno='" + ViewState["PRNo"].ToString() + "' order by rowid asc").Tables[0];
-            ViewState["dtl"] = dtl;
-        }
-        else
-        {
-            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=2 order by rowid asc").Tables[0];
-            ViewState["dtl"] = dtl; ;
-        }
-        gvdtl.Columns.Clear();
-        var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        GetGrid(ViewState["dtl"] as DataTable, prtype.SelectedValue);
-    }
-
+    */
 
     protected void GetGrid(DataTable DT, string prtype_v)
     {

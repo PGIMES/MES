@@ -660,8 +660,8 @@
                                         <tr>
                                             <td>采购类别</td>
                                             <td >
-                                                <asp:DropDownList ID="prtype" runat="server" CssClass="form-control" ToolTip="0|1" Width="200px"
-                                                     AutoPostBack="True"  OnSelectedIndexChanged="prtype_SelectedIndexChanged" ></asp:DropDownList>
+                                                <asp:DropDownList ID="prtype" runat="server" CssClass="form-control" ToolTip="0|1" Width="200px" 
+                                                    AutoPostBack="True" OnSelectedIndexChanged="prtype_SelectedIndexChanged"></asp:DropDownList>
                                             </td>
                                         </tr>                                        
                                         <tr>
