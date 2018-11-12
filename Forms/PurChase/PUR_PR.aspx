@@ -48,8 +48,8 @@
             if(paramMap.mode!=NaN&&paramMap.mode!=""&&paramMap.mode!=undefined)
             {
                 viewmode=paramMap.mode; 
-                $("#btnAddDetl").css("display","none");
-                $("#btnDelete").css("display","none");                
+                //$("#btnAddDetl").css("display","none");
+                //$("#btnDelete").css("display","none");                
                 DisableButtons();//禁用流程按钮
                 SetControlStatus(fieldSet);
                 
@@ -152,9 +152,17 @@
 
     </script>
    
-
-    
-     
+    <style>
+        #SQXX label{
+            font-weight:400;
+        }
+        .lineread{
+            font-size:9px; border:none; border-bottom:1px solid #ccc;
+        }
+        .linewrite{
+            font-size:9px; border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+        }
+    </style>
 </head>
 <body>
     <script type="text/javascript">
@@ -554,7 +562,7 @@
                                 });
                             </script>
                             <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="" OnClick="btnSave_Click" ToolTip="临时保存此流程"  UseSubmitBehavior="false"   />
-                            <asp:Button ID="btnflowSend" runat="server" Text="批准" CssClass="btn btn-default btn-xs btnflowSend" OnClientClick="if(validate()==false)return false;" OnClick="btnflowSend_Click" UseSubmitBehavior="false"  />
+                            <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend" OnClientClick="if(validate()==false)return false;" OnClick="btnflowSend_Click" UseSubmitBehavior="false"  />
                             <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                             <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                             <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
@@ -575,7 +583,7 @@
                             <strong>申请记录基础信息</strong>
                         </div>
                         <div class="panel-body collapse in" id="SQXX">
-                            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                                 <div class="">
                                     <asp:UpdatePanel ID="UpdatePanel_request" runat="server" UpdateMode="Conditional">
                                         <ContentTemplate>
@@ -591,48 +599,51 @@
                                         </script>
                                             <table style="height: 35px; width: 100%">
                                                 <tr>
-                                                    <td>请购单号</td>
-                                                    <td>
-                                                        <asp:TextBox ID="PRNo" runat="server" CssClass="form-control input-s-sm  " readonly="true" Width="247px" ToolTip="1|0"   />
+                                                    <td>请购单号：</td>
+                                                    <td><%--CssClass="form-control input-s-sm"--%>
+                                                        <asp:TextBox ID="PRNo" runat="server" CssClass="lineread" readonly="true" Width="247px" ToolTip="1|0"   />
                                                     </td>
                                                     <td>申请日期：</td>
-                                                    <td>
-                                                        <asp:TextBox ID="CreateDate" CssClass="form-control input-s-sm" Style="height: 30px; width: 200px" runat="server" ReadOnly="True" />
+                                                    <td><%--CssClass="form-control input-s-sm"--%>
+                                                        <asp:TextBox ID="CreateDate" CssClass="lineread" Style="height: 27px; width: 200px" runat="server" ReadOnly="True" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>申请人：</td>
                                                     <td>
-                                                        <div class="form-inline">
-                                                            <asp:TextBox runat="server" ID="CreateById" CssClass="form-control input-s-sm" Style="height: 35px; width: 70px" ReadOnly="True"></asp:TextBox>
-                                                            <asp:TextBox runat="server" ID="CreateByName" CssClass="form-control input-s-sm" Style="height: 35px; width: 70px" ReadOnly="True"></asp:TextBox>                                                           
-                                                            <asp:TextBox runat="server" id="DeptName" cssclass="form-control input-s-sm" style="height: 35px; width: 100px" readonly="True" />
+                                                        <div class="form-inline"><%--CssClass="form-control input-s-sm"--%>
+                                                            <asp:TextBox runat="server" ID="CreateById" CssClass="lineread" Style="height: 27px; width: 70px" ReadOnly="True"></asp:TextBox>
+                                                            <asp:TextBox runat="server" ID="CreateByName" CssClass="lineread" Style="height: 27px; width: 70px" ReadOnly="True"></asp:TextBox>                                                           
+                                                            <asp:TextBox runat="server" id="DeptName" cssclass="lineread" style="height: 27px; width: 100px" readonly="True" />
                                                         </div>
                                                     </td>                                                    
-                                                    <td style="display:">电话（分机）：
+                                                    <td>电话（分机）：
                                                     </td>
-                                                    <td style="display:">                                                        
-                                                            <asp:TextBox id="phone" class="form-control input-s-sm" style="height: 35px; width: 200px" runat="server"  />                                                            
+                                                    <td><%--CssClass="form-control input-s-sm"--%>                                                        
+                                                        <asp:TextBox id="phone" class="linewrite" style="height: 27px; width: 200px" runat="server"  />                                                            
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>当前登陆人</td>
+                                                    <td>当前登陆人：</td>
                                                     <td>
-                                                        <div class="form-inline">
-                                                            <input id="txt_LogUserId" class="form-control input-s-sm" style="height: 35px; width: 70px" runat="server" readonly="True" />
-                                                            <input id="txt_LogUserName" class="form-control input-s-sm" style="height: 35px; width: 70px" runat="server" readonly="True" />
-                                                            <input id="txt_LogUserDept" class="form-control input-s-sm" style="height: 35px; width: 100px" runat="server" readonly="True" />                                                           
+                                                        <div class="form-inline"><%--CssClass="form-control input-s-sm"--%>
+                                                            <input id="txt_LogUserId" class="lineread" style="height: 27px; width: 70px" runat="server" readonly="True" />
+                                                            <input id="txt_LogUserName" class="lineread" style="height: 27px; width: 70px" runat="server" readonly="True" />
+                                                            <input id="txt_LogUserDept" class="lineread" style="height: 27px; width: 100px" runat="server" readonly="True" />                                                           
                                                         </div>
                                                     </td>                                                    
-                                                    <td>申请公司</td>
+                                                    <td>申请公司：</td>
                                                     <td>   
-                                                        <div style="float:left"><asp:DropDownList ID="domain" CssClass="form-control input-s-sm" runat="server" Width="100px" ToolTip="0|1"  >
-                                                            <asp:ListItem Value="" Text=""></asp:ListItem>
-                                                            <asp:ListItem Value="200" Text="昆山工厂"></asp:ListItem>
-                                                            <asp:ListItem Value="100" Text="上海工厂"></asp:ListItem>
-                                                        </asp:DropDownList></div>  
-                                                        <div style="float:left"><asp:DropDownList ID="applydept" CssClass="form-control input-s-sm" runat="server" Width="100px" ToolTip="0|1" >
-                                                        </asp:DropDownList> </div>
+                                                        <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
+                                                            <asp:DropDownList ID="domain" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1"  >
+                                                                <asp:ListItem Value="" Text=""></asp:ListItem>
+                                                                <asp:ListItem Value="200" Text="昆山工厂"></asp:ListItem>
+                                                                <asp:ListItem Value="100" Text="上海工厂"></asp:ListItem>
+                                                            </asp:DropDownList></div>  
+                                                        <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
+                                                            <asp:DropDownList ID="applydept" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1" >
+                                                            </asp:DropDownList>
+                                                        </div>
 
                                                          <asp:TextBox id="deptm"  style=" width: 20px;display:none" runat="server"  />
                                                          <asp:TextBox id="deptmfg"  style=" width: 20px;display:none" runat="server"  />                                              
@@ -654,20 +665,20 @@
                             <strong>用途信息</strong>
                         </div>
                         <div class="panel-body " id="PA">
-                            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                                 <div>
-                                    <table style="" border="0" runat="server" id="tblWLLeibie" >
+                                    <table style="" border="0" runat="server" id="tblWLLeibie">
                                         <tr>
-                                            <td>采购类别</td>
-                                            <td >
-                                                <asp:DropDownList ID="prtype" runat="server" CssClass="form-control" ToolTip="0|1" Width="200px" 
+                                            <td>采购类别：</td>
+                                            <td ><%--CssClass="form-control"--%>
+                                                <asp:DropDownList ID="prtype" runat="server" CssClass="linewrite" ToolTip="0|1" Width="200px" Height="27px"
                                                     AutoPostBack="True" OnSelectedIndexChanged="prtype_SelectedIndexChanged"></asp:DropDownList>
                                             </td>
                                         </tr>                                        
                                         <tr>
-                                            <td>申请原因描述</td>
-                                            <td style="width:800px">
-                                                <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="form-control input-s-sm" Width="100%" ToolTip="0|0"   />                                               
+                                            <td>申请原因描述：</td>
+                                            <td style="width:800px"><%--CssClass="form-control input-s-sm"--%>
+                                                <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="linewrite" Width="100%" ToolTip="0|0"   />                                               
                                             </td>
                                         </tr>
                                     </table>

@@ -7,6 +7,7 @@ using System.Data;
 using Maticsoft.DBUtility;
 using System.Text;
 using System.Linq;
+using DevExpress.Web;
 
 public partial class PUR_PR : PGIBasePage
 {
@@ -14,6 +15,11 @@ public partial class PUR_PR : PGIBasePage
     public string fieldStatus;    
     public string DisplayModel;
     public string ValidScript="";
+
+    public string SQ_StepID = "6F4C466E-6673-4C18-A541-333565FBF545";
+
+    string FlowID = "A";
+    string StepID = "A";
 
     /*
 protected void Page_Load(object sender, EventArgs e)
@@ -195,6 +201,14 @@ protected void Page_Load(object sender, EventArgs e)
         {
             this.m_sid = Request.QueryString["instanceid"].ToString();
         }
+        if (Request.QueryString["flowid"] != null)
+        {
+            FlowID = Request.QueryString["flowid"].ToString();
+        }
+        if (Request.QueryString["stepid"] != null)
+        {
+            StepID = Request.QueryString["stepid"].ToString();
+        }
 
         LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         Session["LogUser"] = LogUserModel;
@@ -292,51 +306,89 @@ protected void Page_Load(object sender, EventArgs e)
             ViewState["dtl"] = ldt_detail;
             loadControl();
 
+            setGridIsRead(ldt_detail);
+
         }
         else
         {
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
-            ViewState["dtl"] = ldt;
+            //ViewState["dtl"] = ldt;
             loadControl();
         }
 
-        //获取每步骤栏位状态设定值，方便前端控制其可编辑性（不需修改）
-        string FlowID = Request.QueryString["flowid"];
-        string StepID = Request.QueryString["stepid"];
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
-        ViewState["fieldStatus"] = fieldStatus;
 
-        //特殊处理
-        if (Request["mode"] == null)
+    }
+
+    public void setGridIsRead(DataTable ldt_detail)
+    {
+        //特殊处理，签核界面，明细的框框拿掉
+        string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                        where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
+                            and instanceid='{2}' and stepname='{3}'";
+        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请");
+        DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
+
+        for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
-            DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='" + this.PRNo.Text + "'").Tables[0];
-
-            if (ldt_flow.Rows.Count > 0)
+            if (ldt_flow_pro.Rows.Count == 0 && (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID))
             {
-                for (int row = 0; row < gvdtl.VisibleRowCount; row++)
-                {
-                    if (ldt_flow.Rows[0]["stepname"].ToString() != "申请")
-                    {
-                        ((DevExpress.Web.ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
-                        ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
-                        ((DevExpress.Web.ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(row, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
-                    }
-                    else
-                    {
-                        btnflowSend.Text = "提交";
-                    }
-                }
+                this.btnflowSend.Text = "批准";
+            }
+            if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
+            {
+                setread(i);
             }
             else
             {
-                btnflowSend.Text = "提交";
+                if (Request.QueryString["display"] != null)
+                {
+                    setread(i);
+                }
             }
         }
-
     }
- 
+
+    public void setread(int i)
+    {
+        btnAddDetl.Visible = false;
+        btnDelete.Visible = false;
+
+        phone.CssClass = "lineread";
+        domain.CssClass = "lineread";
+        applydept.CssClass = "lineread";
+        prtype.CssClass = "lineread";
+        prreason.CssClass = "lineread";
+
+
+        domain.Enabled = false;
+        applydept.Enabled = false;
+
+        //file.Visible = false;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
+
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).BorderStyle = BorderStyle.None;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
+    }
+
     public  string GetDanHao()
     {
         string result = "";        
@@ -580,7 +632,7 @@ protected void Page_Load(object sender, EventArgs e)
     {
         flag = true;//保存数据是否成功标识
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();//定义总SQL LIST
-
+        //flag = false;return;
         try
         {
             //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
@@ -829,7 +881,6 @@ protected void Page_Load(object sender, EventArgs e)
 
     protected void btnAddDetl_Click(object sender, EventArgs e)
     {
-        DataTable dt2 = ViewState["dtl"] as DataTable;
         DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
         var dr= dtl.NewRow();
         dr["prno"] = PRNo.Text;
@@ -866,6 +917,7 @@ protected void Page_Load(object sender, EventArgs e)
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
+            ldt.Rows[i]["attachments_name"] = prtype.SelectedValue == "存货(刀具类)" ? "查看" : "无";
             if (ldt.Rows[i]["flag"].ToString() == "1")
             {
                 ldt.Rows[i].Delete();
