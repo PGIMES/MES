@@ -730,11 +730,12 @@
                                             <SettingsFilterControl AllowHierarchicalColumns="True">
                                             </SettingsFilterControl>
                                             <Styles>
-                                                <Header BackColor="#1e82cd" ForeColor="White">
-                                                </Header>                                                 
-                                                <Footer HorizontalAlign="Right">
-                                                </Footer>
+                                                <Header BackColor="#E4EFFA"></Header>   
+                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow>                                               
+                                                <Footer HorizontalAlign="Right"></Footer>
                                             </Styles>
+                                            <Styles>   
+                                    </Styles> 
                                             <Columns>
                                                 <dx:GridViewDataTextColumn FieldName="SelectAll" VisibleIndex="0" Caption="选择">
                                                     <Settings AllowCellMerge="False" />
