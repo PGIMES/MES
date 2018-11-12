@@ -12,10 +12,22 @@ public partial class Select_select_Pr : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        string lsdomain = "200";
+        string lsdomain = "200"; string lspotype = ""; string lsbuyername = "";
         if (Request.QueryString["domain"] != null)
         {
             lsdomain = Request.QueryString["domain"];
+        }
+        if (Request.QueryString["potype"] != null)
+        {
+            lspotype = Request.QueryString["potype"];
+        }
+        if (Request.QueryString["buyername"] != null)
+        {
+            lsbuyername = Request.QueryString["buyername"];
+            if (lsbuyername.IndexOf('|')>0)
+            {
+                lsbuyername = lsbuyername.Substring(0, lsbuyername.IndexOf('|'));
+            }
         }
         if (!IsPostBack)
         {
@@ -25,7 +37,7 @@ public partial class Select_select_Pr : System.Web.UI.Page
             //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
             //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
             //lssql += " order by pr.prno,pr.rowid";
-            DataTable ldt = GetData(lsdomain);
+            DataTable ldt = GetData(lsdomain, lspotype, lsbuyername);
             Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT", this.gv, ldt,2);
         }
         else
@@ -35,7 +47,7 @@ public partial class Select_select_Pr : System.Web.UI.Page
             //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
             //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
             //lssql += " order by pr.prno,pr.rowid";
-            DataTable ldt = GetData(lsdomain);
+            DataTable ldt = GetData(lsdomain, lspotype, lsbuyername);
             this.gv.DataSource = ldt;
             this.gv.DataBind();
 
@@ -51,12 +63,20 @@ public partial class Select_select_Pr : System.Web.UI.Page
     }
 
 
-    private DataTable GetData(string lsdomain)
+    private DataTable GetData(string lsdomain, string lspotype, string lsbuyername)
     {
-        string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
-        lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
-        lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
-        lssql += " order by pr.prno,pr.rowid";
+        //string lssql = "select pr.*,'0' as taxrate,pt_status from PUR_PR_Dtl_Form pr left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
+        //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
+        //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
+        //lssql += " order by pr.prno,pr.rowid";
+        string lssql = @"select pr.*,'0' as taxrate,pt_status 
+                        from PUR_PR_Dtl_Form pr 
+	                        left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
+	                        inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain
+                        where pr_main.domain='{0}' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')
+	                        and pr_main.PRType like '{1}%' and LEFT(pr.wltype,4) in(select CP_Line from MES.dbo.pgi_base_part_ddl where purchaser_id='{2}')
+                        order by pr.prno,pr.rowid";
+        lssql = string.Format(lssql, lsdomain, lspotype, lsbuyername);
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
         return ldt;
     }

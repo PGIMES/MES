@@ -328,7 +328,7 @@
             //    return;
             //}
             
-            var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"";
+            var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"&buyername="+$("input[type!=hidden][id*='buyername']").val()+"&potype="+$("[id*='potype']").val();
 
             layer.open({
                 type: 2,
