@@ -677,36 +677,31 @@
                             <div> 
                                 <div style="padding: 2px 5px 5px 0px">
                 
-                                     <input runat="server" id="btnadd" type="button" value="新增" class="btn btn-default" style="width:60px; height:32px;"  onclick="openSelect()"/>
-                                     <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default" style="width:60px; height:32px;" OnClick="btndel_Click"  />
+                                     <input runat="server" id="btnadd" type="button" value="新增" class="btn btn-primary btn-sm" onclick="openSelect()"/><%--class="btn btn-default" style="width:60px; height:32px;"  --%>
+                                     <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-primary btn-sm" OnClick="btndel_Click"  /><%--style="width:60px; height:32px;"  class="btn btn-default"--%>
                                 </div>
                                
                               
                                 <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
                                      ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" >
                                    
-            <SettingsPager PageSize="1000">
-            </SettingsPager>
+                                    <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
-            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Columns>
-            </Columns>
+                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <Columns>
+                                    </Columns>
                                     <TotalSummary>
-                                        
-                                         <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="targetTotalPrice" ShowInColumn="targetTotalPrice" ShowInGroupFooterColumn="targetTotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="targetTotalPrice" ShowInColumn="targetTotalPrice" ShowInGroupFooterColumn="targetTotalPrice" SummaryType="Sum" />
                                         <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
-                                         
                                     </TotalSummary>
-            <Styles>
-                <Header BackColor="#1E82CD" ForeColor="White" >
-                </Header>
-              
-            </Styles>
-                     <Columns>
-           <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>
-                         </Columns>   
-                                          
-        </dx:aspxgridview>
+                                    <Styles>
+                                        <Header BackColor="#E4EFFA"></Header>   
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
+                                    </Styles>
+                                    <Columns>
+                                        <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>
+                                    </Columns> 
+                                </dx:aspxgridview>
                                 
                                     
                                  <table style="width:100%;"><tr style="display: block; margin: 10px 0; text-align:right;" >
