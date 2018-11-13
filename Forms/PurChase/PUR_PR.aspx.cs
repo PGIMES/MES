@@ -855,8 +855,9 @@ protected void Page_Load(object sender, EventArgs e)
         string formtype = prtype.SelectedValue;
 
         gvdtl.Columns.Clear();
-        var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        //var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
+        //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
         GetGrid(ViewState["dtl"] as DataTable, formtype);
     }
 
@@ -981,8 +982,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         for (int i = 0; i < gvdtl.VisibleRowCount; i++)
         {
-
-            DevExpress.Web.ASPxComboBox tb1 = (DevExpress.Web.ASPxComboBox)gvdtl.FindRowCellTemplateControl(i, gvdtl.DataColumns[8], gvdtl.DataColumns[8].FieldName);
+            ASPxComboBox tb1 = ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor"));
             tb1.DataSource = ldt_usefor;
             tb1.TextField = "value";
             tb1.ValueField = "value";
