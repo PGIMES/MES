@@ -79,7 +79,6 @@
         </div>--%>
 
     <script type="text/javascript">
-      
 
         $(document).ready(function () {
             $("#mestitle").html("【PO采购审批单】<a href='/userguide/reviewGuide.pptx' target='_blank' class='h4' style='display:none'>使用说明</a>");
@@ -116,8 +115,12 @@
                 //alert("终止");
                 $("#btntaskEnd").hide();
             }
-
-        })
+            
+            $("select[id*='potype']").change(function () {  
+                buyername_potype_change();
+            });
+           
+        });
 
         //提出自定流程 JS 
         function setComment(val) {
@@ -195,11 +198,6 @@
             }
         }
        
-        //验证
-        function validate(id){
-            <%=ValidScript%>
-           
-        }
          var fieldStatus = "1"=="<%=Request.QueryString["isreadonly"]%>"? {} : <%=fieldStatus%>;
 	    var displayModel = '<%=DisplayModel%>';
         $(window).load(function (){
@@ -213,118 +211,11 @@
     </script>
     <script type="text/javascript">
         var popupwindow = null;
-        function GetXMH() {
-            popupwindow = window.open('../../Select/select_XMLJ.aspx', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
-        }
-        function GetPgi_Product() {
-            popupwindow = window.open('../../Select/select_product.aspx?ctrl1=pgi_no', '_blank', 'height=500,width=800,resizable=no,menubar=no,scrollbars =no,location=no');
-        }
-        function setvalue_product(lspgi_no, lspn, lspn_desc, lsdomain, lsproduct_user, lsproduct_dept, lsstatus, lscailiao, lsnyl, lsline, lsver) {
-
-            $("input[id*='pgi_no']").val(lspgi_no);
-            $("input[id*='pn']").val(lspn);
-            $("input[id*='pn_desc']").val(lspn_desc);
-            $("input[id*='domain']").val(lsdomain);
-            $("input[id*='product_user']").val(lsproduct_user);
-            $("input[id*='dept']").val(lsproduct_dept);
-            $("input[id*='status']").val(lsstatus);
-            $("input[id*='sku']").val(lscailiao);
-            $("input[id*='year_num']").val(lsnyl);
-            $("input[id*='line']").val(lsline);
-            $("input[id*='ver']").val(lsver);
-            popupwindow.close();
-            //$("input[id*='" + ctrl0 + "']").change();
-
-            $.ajax({
-                type: "post",
-                url: "daoju.aspx/GetGx",
-                data: "{'lspgi_no':'" + lspgi_no + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    if (data.d != "") //返回的数据用data.d获取内容Logaction + "成功."
-                    {
-                       
-                        $('#MainContent_op').html("");
-                        $('#MainContent_op').append("<option value=''> </option>");
-                        $.each(eval(data.d), function (i) {
-                           
-                            $('#MainContent_op').append("<option value=" + eval(data.d)[i].value + ">" + eval(data.d)[i].value + "</option>");
-                          
-                        });
-                    }
-                    else {
-                        alert("失败.");
-                    }
-                }
-
-            });
-        }
-
-
-        function Getgx_name() {
-
-           // alert('xxxx');
-           // $("input[id*='MainContent_op_desc']").val("aaaaaa");
-            //  $("input[id*='MainContent_op_desc']").val($("#MainContent_op").find("option:selected").val());
-
-            $.ajax({
-                type: "post",
-                url: "daoju.aspx/GetGxms",
-                data: "{'lspgi_no':'" + $("input[id*='pgi_no']").val() + "','lsop':'" + $('#MainContent_op').val() + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    if (data.d != "") //返回的数据用data.d获取内容Logaction + "成功."
-                    {
-
-                       // alert(data.d);
-                        $("input[id*='MainContent_op_desc']").val(data.d);
-                    }
-                    else {
-                        alert("失败.");
-                    }
-                }
-
-            });
-            
-        }
-        function Getdaoju(e)
-        {
-            
-            var ss = e.id.split("_");// 在每个逗号(,)处进行分解。
-            var url = "../../select/sz_report_dev_select.aspx?id=" + ss[6] + "&domain=" + $("input[id*='domain']").val()
-           
-            popupwindow = window.open(url, '_blank', 'height=500,width=1000,resizable=yes,menubar=no,scrollbars =yes,location=no');
-        }
-        function setvalue_dj(id, wlh, ms, lx, js, sm, pp, gys)
-        {
-            $("input[id*='MainContent_gv_cell" + id + "_3_daoju_no1_" + id + "_I']").val(wlh);
-            $("input[id*='MainContent_gv_cell" + id + "_4_daoju_desc1_" + id + "_I']").val(ms);
-            $("input[id*='MainContent_gv_cell" + id + "_5_daoju_type_" + id + "_I']").val(lx);
-            $("input[id*='MainContent_gv_cell" + id + "_6_jiaoshu_" + id + "_I']").val(js);
-            $("input[id*='MainContent_gv_cell" + id + "_8_edsm_" + id + "_I']").val(sm);
-            $("input[id*='MainContent_gv_cell" + id + "_9_smtzxs_" + id + "_I']").val(1);
-            $("input[id*='MainContent_gv_cell" + id + "_12_brand_" + id + "_I']").val(pp);
-            $("input[id*='MainContent_gv_cell" + id + "_13_supplier_" + id + "_I']").val(gys);
-            popupwindow.close();
-        }
-
-        function setvalue(ctrl0, keyValue0, ctrl1, keyValue1, ctrl2, keyValue2) {
-
-            $("input[id*='MainContent_gv_cell0_3_daoju_no1_0_I']").val(keyValue0);
-            //$("input[id*='" + ctrl1 + "']").val(keyValue1);
-            //$("input[id*='" + ctrl2 + "']").val(keyValue2);
-            popupwindow.close();
-           // $("input[id*='" + ctrl0 + "']").change();
-        }
-
+        
         function openSelect()
         {
-            
             //if ( $("input[id*='povendorid']").val()=="") {
-            //    layer.alert("请先选择供应商！");
-               
+            //    layer.alert("请先选择供应商！");               
             //    return;
             //}
             
@@ -338,9 +229,6 @@
                 content: url
             });
           
-          
-           
-            //popupwindow = window.open(url, '_blank', 'height=500,width=1000,resizable=yes,menubar=no,scrollbars =yes,location=no');
         }
 
         function potype(){
@@ -359,13 +247,11 @@
            grid.PerformCallback(s.GetValue());
         }
 
-
-        function test(){
-        
-            alert('xxxxx');
+        function buyername_potype_change(){
+           grid.PerformCallback($("input[type!=hidden][id*='buyername']").val());
         }
-    </script>
 
+    </script>
     <script type="text/javascript">
         var uploadedFiles = [];
         function onFileUploadComplete(s, e) {
@@ -394,6 +280,42 @@
            $("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
         }
         
+    </script>
+    <script type="text/javascript">
+        function validate(action){
+            var flag=true;var msg="";
+            <%=ValidScript%>
+            
+            if(action=='submit'){
+                if($("input[type!=hidden][id*='buyername']").val()==""){
+                    msg+="【采购负责人】不可为空.<br />";
+                }
+
+                if($("input[type!=hidden][id*='povendorid']").val()==""){
+                    msg+="【采购供应商】不可为空.<br />";
+                }
+            }
+           
+            if($("[id$=gv] tr[id*=DataRow]").length==0){
+                msg+="【采购清单】不可为空.<br />";
+            }
+
+            $("[id$=gv] tr[id*=DataRow]").each(function (index, item) { 
+
+                if($(item).find("input[id*=PlanReceiveDate]").val()==""){
+                    msg+="第"+(index+1)+"行【计划到货日期】不可为空.<br />";
+                }
+
+            });
+
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+                return flag;
+            }
+
+           return flag; 
+        }
     </script>
 
     <style type="text/css">
@@ -524,44 +446,52 @@
             	
             	}
     </style>
-      <style>
-        .btnSave{ background:url(/Images/ico/save.gif) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }
-        .btnflowSend{ background:url(/Images/ico/arrow_medium_right.png) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }
-        .btnaddWrite{ background:url(/Images/ico/edit.gif) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }
-        .btnflowBack{ background:url(/Images/ico/arrow_medium_left.png) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }
-        .btnflowCompleted{ background:url(/Images/ico/arrow_medium_lower_right.png) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }
-        .btnshowProcess{ background:url(/Images/ico/search.png) no-repeat  0.3em;
-                  padding-left:24px;
-                  border:0
-        }      
+    <style>
+    .btnSave{ background:url(/Images/ico/save.gif) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }
+    .btnflowSend{ background:url(/Images/ico/arrow_medium_right.png) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }
+    .btnaddWrite{ background:url(/Images/ico/edit.gif) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }
+    .btnflowBack{ background:url(/Images/ico/arrow_medium_left.png) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }
+    .btnflowCompleted{ background:url(/Images/ico/arrow_medium_lower_right.png) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }
+    .btnshowProcess{ background:url(/Images/ico/search.png) no-repeat  0.3em;
+                padding-left:24px;
+                border:0
+    }      
 
-          .auto-style1 {
-              position: relative;
-              min-height: 1px;
-              float: left;
-              width: 100%;
-              top: -5px;
-              left: 0px;
-              margin-top: 0px;
-              padding-left: 1px;
-              padding-right: 1px;
-          }
+        .auto-style1 {
+            position: relative;
+            min-height: 1px;
+            float: left;
+            width: 100%;
+            top: -5px;
+            left: 0px;
+            margin-top: 0px;
+            padding-left: 1px;
+            padding-right: 1px;
+        }
 
+</style>
+    <style>
+        .lineread{
+            font-size:9px; border:none; border-bottom:1px solid #ccc;
+        }
+        .linewrite{
+            font-size:9px; border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent" enctype="multipart/form-data">
@@ -570,7 +500,7 @@
             <div class="col-md-10  ">
                 <div class="form-inline " style="text-align:right">
                    <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="return validate();" OnClick="btnSave_Click" />
-                    <asp:Button ID="btnflowSend" runat="server" Text="申请" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate();" OnClick="btnflowSend_Click" />
+                    <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate('submit');" OnClick="btnflowSend_Click" />
                     <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                     <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                     <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
@@ -731,7 +661,7 @@
             <div class="col-md-12" >
                 <div class="panel panel-info">
                     <div class="panel-heading" data-toggle="collapse" data-target="#FKXX">
-                         <strong>付款信息strong>
+                         <strong>付款信息<strong>
                     </div>
                     <div class="panel-body collapse in" id="FKXX">
                         

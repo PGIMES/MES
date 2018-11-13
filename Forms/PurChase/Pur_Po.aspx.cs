@@ -16,6 +16,8 @@ using System.Collections;
 using System.Reflection;
 using System.Linq;
 using System.IO;
+using System.Data.SqlClient;
+using System.Configuration;
 
 public partial class Pur_Po : System.Web.UI.Page
 {
@@ -52,13 +54,15 @@ public partial class Pur_Po : System.Web.UI.Page
 
 
         //加载表头控件
-        List<TableRow> ls = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "form-control input-s-sm");
+        //List<TableRow> ls = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "form-control input-s-sm");
+        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "lineread", "linewrite");
         for (int i = 0; i < ls.Count; i++)
         {
             this.tblWLLeibie.Rows.Add(ls[i]);
         }
 
-        List<TableRow> ls_pay = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD_PAY", 1, "", "", "form-control input-s-sm");
+        //List<TableRow> ls_pay = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD_PAY", 1, "", "", "form-control input-s-sm");
+        List<TableRow> ls_pay = ShowControl("PUR_PO_Main_Form", "HEAD_PAY", 1, "", "", "lineread", "linewrite");
         for (int i = 0; i < ls_pay.Count; i++)
         {
             this.tablePay.Rows.Add(ls_pay[i]);
@@ -176,30 +180,37 @@ public partial class Pur_Po : System.Web.UI.Page
                 //特殊处理
                 DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='" + this.m_sid + "' and stepname='采购负责人'").Tables[0];
 
-                if (ldt_flow.Rows.Count==0)
+                if (ldt_flow.Rows.Count == 0)
                 {
-                    
-                        ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["TaxPrice"], "TaxPrice")).ReadOnly = true;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
-                        ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
-                        ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["TaxPrice"], "TaxPrice")).BorderStyle = BorderStyle.None;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
-                        ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
-                        this.btndel.Visible = false;
-                        this.btnadd.Visible = false;
-                    
-                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Enabled = false;
-                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled = false;
-                        ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
-                        ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
+
+                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["TaxPrice"], "TaxPrice")).ReadOnly = true;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
+                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["TaxPrice"], "TaxPrice")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+                    this.btndel.Visible = false;
+                    this.btnadd.Visible = false;
+
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Enabled = false;
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled = false;
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
                     //this.FileUpload1.Visible = false;
                     this.uploadcontrol.Visible = false;
-                        this.btnflowSend.Text = "批准";
+                    this.btnflowSend.Text = "批准";
 
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).CssClass = "lineread";
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).CssClass = "lineread";
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
+
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
 
                 }
                 if(Request.QueryString["display"]!=null)
@@ -223,6 +234,13 @@ public partial class Pur_Po : System.Web.UI.Page
                     // this.FileUpload1.Visible = false;
                     this.uploadcontrol.Visible = false;
 
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).CssClass = "lineread";
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).CssClass = "lineread";
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
+                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
+
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
                 }
             }
 
@@ -257,6 +275,7 @@ public partial class Pur_Po : System.Web.UI.Page
         // ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).AutoPostBack = true;
         ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).ClientSideEvents.ValueChanged = "function(s, e) {vendorid(s);}";
 
+        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ClientSideEvents.ValueChanged = "function(s, e) { buyername_potype_change();}";
 
 
         DisplayModel = Request.QueryString["display"] ?? "0";
@@ -398,37 +417,11 @@ public partial class Pur_Po : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
         //获取表头
         List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
-        for (int i = 0; i < ls.Count; i++)
-        {
-            Pgi.Auto.Common com = new Pgi.Auto.Common();
-            com = ls[i];
-            if (ls[i].Code == "")
-            {
-
-                Pgi.Auto.Public.MsgBox(this, "alert", ls[i].Value + " 不能为空!");
-                //Response.Write(ls[i].Value + "不能为空!");
-                return false;
-            }
-
-        }
 
         //表体生成SQL
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
 
         ldt.AcceptChanges();
-        if (ldt.Rows.Count==0)
-        {
-            Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
-            return false;
-        }
-        for (int i = 0; i < ldt.Rows.Count; i++)
-        {
-            if (ldt.Rows[i]["PlanReceiveDate"].ToString() == "")
-            {
-                Pgi.Auto.Public.MsgBox(this, "alert", "第" + (i + 1).ToString() + "行计划到货日期不能为空!");
-                return false;
-            }
-        }
 
         //特殊数据处理
         for (int i = 0; i < ls.Count; i++)
@@ -677,6 +670,294 @@ public partial class Pur_Po : System.Web.UI.Page
         return bflag;
     }
 
+    /*private bool SaveData()
+    {
+        bool bflag = false;
+        string lspgi_no = "";
+        string lsdomain = "";
+        //定义总SQL LIST
+        List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
+        //获取表头
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        for (int i = 0; i < ls.Count; i++)
+        {
+            Pgi.Auto.Common com = new Pgi.Auto.Common();
+            com = ls[i];
+            if (ls[i].Code == "")
+            {
+
+                Pgi.Auto.Public.MsgBox(this, "alert", ls[i].Value + " 不能为空!");
+                //Response.Write(ls[i].Value + "不能为空!");
+                return false;
+            }
+
+        }
+
+        //表体生成SQL
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+
+        ldt.AcceptChanges();
+        if (ldt.Rows.Count == 0)
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
+            return false;
+        }
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            if (ldt.Rows[i]["PlanReceiveDate"].ToString() == "")
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", "第" + (i + 1).ToString() + "行计划到货日期不能为空!");
+                return false;
+            }
+        }
+
+        //特殊数据处理
+        for (int i = 0; i < ls.Count; i++)
+        {
+            if (ls[i].Code == "podomain")
+            {
+                if (ls[i].Value == "昆山工厂")
+                {
+                    ls[i].Value = "200";
+                    lsdomain = "200";
+                }
+                else if (ls[i].Value == "上海工厂")
+                {
+                    ls[i].Value = "100";
+                    lsdomain = "100";
+                }
+                else
+                {
+                    lsdomain = ls[i].Value;
+                }
+            }
+
+            if (ls[i].Code.ToLower() == "buyername")
+            {
+                string[] lsstr = ls[i].Value.ToString().Split('|');
+                if (lsstr.Length == 2)
+                {
+                    ls[i].Value = lsstr[1];
+
+
+                    //增加采购负责人ID
+                    Pgi.Auto.Common lcbuyerid = new Pgi.Auto.Common();
+                    lcbuyerid.Code = "buyerid";
+                    lcbuyerid.Key = "";
+                    lcbuyerid.Value = lsstr[0];
+                    ls.Add(lcbuyerid);
+                }
+
+            }
+
+            if (ls[i].Code.ToLower() == "povendorid")
+            {
+                string[] lsstr = ls[i].Value.ToString().Split('|');
+                if (lsstr.Length == 3)
+                {
+                    ls[i].Value = lsstr[0];
+
+
+                    //增加供应商名称
+                    Pgi.Auto.Common lcpovendname = new Pgi.Auto.Common();
+                    lcpovendname.Code = "povendorname";
+                    lcpovendname.Key = "";
+                    lcpovendname.Value = lsstr[1];
+                    ls.Add(lcpovendname);
+                }
+
+
+            }
+
+        }
+
+
+
+        if (this.m_sid == "")
+        {
+            //没有单号，自动生成
+            string lsid = "K";
+            if (((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).SelectedValue == "100")
+            {
+                lsid = "S";
+            }
+            lsid += System.DateTime.Now.Year.ToString().Substring(3, 1) + System.DateTime.Now.Month.ToString("00");
+            this.m_sid = Pgi.Auto.Public.GetNo("PO", lsid, 0, 4);
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "pono")
+                {
+                    ls[i].Value = this.m_sid;
+                    ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text = this.m_sid;
+                }
+
+            }
+
+            //新增时增加创建人ID
+            Pgi.Auto.Common lccreate_byid = new Pgi.Auto.Common();
+            lccreate_byid.Code = "createbyid";
+            lccreate_byid.Key = "";
+            lccreate_byid.Value = ((LoginUser)Session["LogUser"]).UserId;
+            ls.Add(lccreate_byid);
+        }
+
+
+        //自定义，上传文件
+        //var filepath = "";
+        // if (this.FileUpload1.HasFile)
+        // {
+        //     SaveFile(this.FileUpload1, this.m_sid, out filepath, "123.txt", "123.txt");
+        // //增加上传文件列
+        // Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+        // lcfile.Code = "attachments";
+        // lcfile.Key = "";
+        // lcfile.Value = filepath;
+        // ls.Add(lcfile);
+
+        //}
+        string filepath = "";//string filepath=this.UploadFiles(this.uploadcontrol);
+        string[] ls_files = ip_filelist.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files)
+        {
+            string[] ls_files_2 = item.Split(',');
+            if (ls_files_2.Length == 3)//挪动路径到po单号下面
+            {
+                FileInfo fi = new FileInfo(MapPath("~") + ls_files_2[1]);
+
+                var sorpath = @"\UploadFile\Purchase\";
+                var despath = MapPath("~") + sorpath + @"\" + m_sid + @"\";
+                if (!System.IO.Directory.Exists(despath))
+                {
+                    System.IO.Directory.CreateDirectory(despath);
+                }
+                string tmp = despath + ls_files_2[1].Replace(sorpath, "");
+                if (File.Exists(tmp))
+                {
+                    File.Delete(tmp);
+                }
+                fi.MoveTo(tmp);
+
+                filepath += item.Replace(@"\UploadFile\Purchase\", @"\UploadFile\Purchase\" + m_sid + @"\") + ";";
+            }
+            else
+            {
+                filepath += item + ";";
+            }
+        }
+
+        string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db)
+        {
+            filepath += item + ";";
+        }
+        if (filepath != "") { filepath = filepath.Substring(0, filepath.Length - 1); }
+
+
+        // 增加上传文件列
+        Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+        lcfile.Code = "attachments";
+        lcfile.Key = "";
+        lcfile.Value = filepath;
+        ls.Add(lcfile);
+
+
+
+
+
+
+
+
+
+
+
+        //主表相关字段赋值到明细表
+        decimal lntotalpay = 0;
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+
+            for (int j = 0; j < ls.Count; j++)
+            {
+                if (ls[j].Code.ToLower() == "pono")
+                {
+                    ldt.Rows[i]["pono"] = ls[j].Value;
+                }
+                if (ldt.Rows[i]["TotalPrice"].ToString() != "")
+                {
+                    lntotalpay += Convert.ToDecimal(ldt.Rows[i]["TotalPrice"].ToString());
+                }
+            }
+        }
+
+        //从明细表中合计采购总金额
+        Pgi.Auto.Common lcTotalPay = new Pgi.Auto.Common();
+        lcTotalPay.Code = "totalpay";
+        lcTotalPay.Key = "";
+        lcTotalPay.Value = ((LoginUser)Session["LogUser"]).UserId;
+        ls.Add(lcTotalPay);
+
+
+        //获取的表头信息，自动生成SQL，增加到SUM中
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PUR_PO_Main_Form"));
+
+
+        //明细数据自动生成SQL，并增入SUM
+        List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PUR_PO_Dtl_Form", "id", "flag,wlType,wlSubType,wlh,wlmc,wlms,targetPrice,targetTotalPrice,RecmdVendorName,historyPrice,deliveryDate,RecmdVendorId,attachments,attachments_name,pt_status");
+        for (int i = 0; i < ls1.Count; i++)
+        {
+            ls_sum.Add(ls1[i]);
+        }
+
+        //明细删除增加到list中
+        if (Session["del"] != null)
+        {
+            DataTable ldt_del = (DataTable)Session["del"];
+            for (int i = 0; i < ldt_del.Rows.Count; i++)
+            {
+                Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+                ls_del.Sql = "delete from PUR_PO_Dtl_Form where id=" + ldt_del.Rows[i]["id"].ToString() + "";
+                ls_del.Sql += ";update PUR_PR_Dtl_Form set  Status='0' where prno='" + ldt_del.Rows[i]["prno"].ToString() + "' and rowid='" + ldt_del.Rows[i]["prrowid"].ToString() + "'";
+                ls_sum.Add(ls_del);
+            }
+            Session["del"] = null;
+        }
+
+        //处理PR明细表状态
+        if (ldt.Rows.Count > 0)
+        {
+            Pgi.Auto.Common ls_status = new Pgi.Auto.Common();
+            for (int i = 0; i < ldt.Rows.Count; i++)
+            {
+                ls_status.Sql += "update PUR_PR_Dtl_Form set status=2 where prno='" + ldt.Rows[i]["prno"].ToString() + "' and rowid='" + ldt.Rows[i]["prrowid"].ToString() + "'";
+                if (i > 0)
+                {
+                    ls_status.Sql += ";";
+                }
+            }
+            ls_sum.Add(ls_status);
+        }
+
+
+
+        //批量提交
+        int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+        if (ln > 0)
+        {
+            bflag = true;
+            // string instanceid = ln.ToString();
+            string title = "PO采购单申请" + lspgi_no + "--" + this.m_sid;
+            script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
+                 "$('#customformtitle',parent.document).val('" + title + "');";
+
+        }
+        else
+        {
+            bflag = false;
+        }
+
+        return bflag;
+    }*/
+
     protected void Button1_Click(object sender, EventArgs e)
     {
 
@@ -782,7 +1063,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
     protected void gv_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
     {
-        if (Session["pr_select"]!=null)
+        if (Session["pr_select"] != null)
         {
             DataTable ldt1 = (DataTable)Session["pr_select"];
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
@@ -790,7 +1071,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
-                if (Convert.ToInt32(ldt.Rows[i]["rowid"].ToString())>ln)
+                if (Convert.ToInt32(ldt.Rows[i]["rowid"].ToString()) > ln)
                 {
                     ln = Convert.ToInt32(ldt.Rows[i]["rowid"].ToString());
                 }
@@ -798,12 +1079,12 @@ public partial class Pur_Po : System.Web.UI.Page
             for (int i = 0; i < ldt1.Rows.Count; i++)
             {
                 DataRow ldr = ldt.NewRow(); ;
-                if (ldt.Select("prno='"+ldt1.Rows[i]["prno"].ToString()+"' and prrowid='"+ldt1.Rows[i]["rowid"].ToString()+"'").Length>0)
+                if (ldt.Select("prno='" + ldt1.Rows[i]["prno"].ToString() + "' and prrowid='" + ldt1.Rows[i]["rowid"].ToString() + "'").Length > 0)
                 {
                     continue;
                 }
-               
-                ldr["rowid"] = (ln+1).ToString();
+
+                ldr["rowid"] = (ln + 1).ToString();
                 ldr["PRNo"] = ldt1.Rows[i]["prno"].ToString();
                 ldr["PRRowId"] = ldt1.Rows[i]["rowid"].ToString();
                 ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString();
@@ -840,19 +1121,19 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 }
 
-               
 
-                if (ldt1.Rows[i]["deliveryDate"].ToString()!="")
+
+                if (ldt1.Rows[i]["deliveryDate"].ToString() != "")
                 {
                     ldr["deliveryDate"] = Convert.ToDateTime(ldt1.Rows[i]["deliveryDate"].ToString()).ToShortDateString();
                 }
-                if (ldt1.Rows[i]["targetPrice"].ToString()!="" && ldt1.Rows[i]["qty"].ToString()!="")
+                if (ldt1.Rows[i]["targetPrice"].ToString() != "" && ldt1.Rows[i]["qty"].ToString() != "")
                 {
                     ldr["targetTotalPrice"] = Convert.ToDecimal(ldt1.Rows[i]["targetPrice"].ToString()) * Convert.ToDecimal(ldt1.Rows[i]["qty"].ToString());
                     ldr["TotalPrice"] = Convert.ToDecimal(ldt1.Rows[i]["targetPrice"].ToString()) * Convert.ToDecimal(ldt1.Rows[i]["qty"].ToString());
 
                 }
-                ldr["historyPrice"]=ldt1.Rows[i]["historyPrice"].ToString();
+                ldr["historyPrice"] = ldt1.Rows[i]["historyPrice"].ToString();
                 ldr["attachments"] = ldt1.Rows[i]["attachments"].ToString();
                 ldr["attachments_name"] = "查看";
                 ln += 1;
@@ -860,25 +1141,51 @@ public partial class Pur_Po : System.Web.UI.Page
             }
 
             //未保存时，重新更改序号
-            if (this.m_sid=="")
+            if (this.m_sid == "")
             {
                 for (int i = 0; i < ldt.Rows.Count; i++)
                 {
                     ldt.Rows[i]["rowid"] = (i + 1).ToString();
                 }
             }
-           
+
             this.gv.Columns.Clear();
-            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL", this.gv, ldt,2);
+            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL", this.gv, ldt, 2);
             Session["pr_select"] = null;
         }
         else
         {
-            txt_TextChanged(sender, e);
+            string param = e.Parameters.Trim();
+            int i = param.Length - param.Replace("|", @"").Length;
+            if (i < 2)//采购负责人、采购类别  下拉动态改变
+            {
+                DataTable ldt = null;
+                string lssql = "";
+                lssql = @"select po.*,pr.wlType,pr.wlSubType,pr.wlh,pr.wlmc,pr.wlms,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+                            ,pr.ApointVendorId,pr.unit,pr.historyPrice,pr.targetPrice,pr.deliveryDate,(pr.targetPrice*pr.qty) as targetTotalPrice,pr.attachments
+                            ,'查看' as attachments_name,qad_pt_mstr.pt_status
+                        from PUR_PO_Dtl_Form po
+                            left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
+                            left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
+                            inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain
+                        where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
+                        order by po.rowid";
+                lssql = string.Format(lssql, ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text
+                    , ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).SelectedValue
+                    , param);
+                ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+                this.gv.Columns.Clear();
+                Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL", this.gv, ldt, 2);
+            }
+            else//i== 2//采购供应商  下拉动态改变
+            {
+
+                txt_TextChanged(sender, e);
+            }
         }
 
-       
-       
+        
     }
 
 
@@ -1017,8 +1324,12 @@ public partial class Pur_Po : System.Web.UI.Page
 
         //add by heguiqin20180515 请购单号链接
         string PRNo = Convert.ToString(e.GetValue("PRNo"));
+        //e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
+        //    + e.GetValue("PRNo") + "&mode=view' target='_blank'>" + PRNo.ToString() + "</a>";
+
+        //mode=view 修改为 display=1
         e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-            + e.GetValue("PRNo") + "&mode=view' target='_blank'>" + PRNo.ToString() + "</a>";
+            + e.GetValue("PRNo") + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
 
         //add by heguiqin20180515 采购供应商跟推荐供应商不一致，背景色黄色
         DevExpress.Web.ASPxComboBox acb_pvi = (DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId");
@@ -1068,6 +1379,758 @@ public partial class Pur_Po : System.Web.UI.Page
         e.CallbackData = name + "|" + "\\" + savepath + "\\" + resultFileName + "|" + sizeText;
 
     }
+
+
+
+    #region 在页面中显示要显示的字段
+    /// <summary>
+    /// 在页面中显示要显示的字段
+    /// </summary>
+    /// <param name="lsform_type">要显示字段大类</param>
+    /// <param name="lsform_div">要显示字段小类</param>
+    /// <param name="lncolumn">设置每行显示列的数量</param>
+    /// <param name="lsrow_style">设置行样式</param>
+    /// <param name="lscolumn_style">设置列样式</param>
+    /// <param name="lscontrol_style">设置显示控件样式（默认统一）</param>
+    /// <param name="ldt_head">赋值数据源（可选参数，默认抓取Datatable中第一行）</param>
+    /// <returns></returns>
+    public static List<TableRow> ShowControl(string lsform_type, string lsform_div, int lncolumn, string lsrow_style, string lscolumn_style, string lscontrol_style_read, string lscontrol_style_write, DataTable ldt_head = null)
+    {
+        string lsconn = ConfigurationSettings.AppSettings["ConnectionMES"];
+        string lswhere = "";
+        if (lsform_type != "")
+        {
+            lswhere += " and form_type=@form_type";
+        }
+        if (lsform_div != "")
+        {
+            lswhere += " and form_div=@form_div";
+        }
+        DataTable ldt = Pgi.Auto.SQLHelper.ExecuteDataSet(lsconn, CommandType.Text, "select * from auto_form where (control_id<>'' or control_id is null) " + lswhere + " order by control_order",
+            new SqlParameter[]{
+              new SqlParameter("@form_type",lsform_type)
+                ,new SqlParameter("@form_div",lsform_div)}).Tables[0];
+
+        List<TableRow> ls = new List<TableRow>();
+        int ln = 1;
+        TableRow lrow = null;
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+
+            if ((i % lncolumn) == 0)
+            {
+                lrow = new TableRow();
+                if (lsrow_style != "")
+                {
+                    lrow.CssClass = lsrow_style;
+                }
+            }
+            if (ldt.Rows[i]["control_onlyrow"].ToString() == "1")
+            {
+
+                ls.Add(lrow);
+                lrow = new TableRow();
+                //行样式
+                if (lsrow_style != "")
+                {
+                    lrow.CssClass = lsrow_style;
+                }
+            }
+
+            //列样式
+            TableCell lcellHead = new TableCell();
+            if (lscolumn_style != "")
+            {
+                lcellHead.CssClass = lscolumn_style;
+            }
+            TableCell lcellContent = new TableCell();
+            if (lscolumn_style != "")
+            {
+                lcellContent.CssClass = lscolumn_style;
+            }
+            Label lbl = new Label();
+            lbl.ID = "lbl_" + lsform_type + "_" + lsform_div + "_" + ln.ToString();
+            lbl.Text = ldt.Rows[i]["control_dest"].ToString();
+
+            //-----------------------------------控件判断开始----------------------------------------
+            //文本控件
+            if (ldt.Rows[i]["control_type"].ToString() == "TEXTBOX")
+            {
+                #region "TextBox"
+                TextBox ltxt = new TextBox();
+                ltxt.AutoPostBack = false;
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToopTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                //是否服务器运行
+                ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() != "")
+                {
+                    ltxt.Attributes.Add(ldt.Rows[i]["control_event1"].ToString(), ldt.Rows[i]["control_event"].ToString());
+                }
+                else if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() == "")
+                {
+                    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                }
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.ReadOnly = true;
+                    ltxt.Attributes.Add("contenteditable", "false");
+                }
+                //样式
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.CssClass = lscontrol_style_read;
+                }
+                else
+                {
+                    ltxt.CssClass = lscontrol_style_write;
+                }
+                
+                if (ldt_head != null)
+                {
+                    ltxt.Text = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+                }
+
+
+
+                lcellContent.Controls.Add(ltxt);
+                #endregion
+            }
+            //下拉控件
+            else if (ldt.Rows[i]["control_type"].ToString() == "DROPDOWNLIST")
+            {
+                #region "DropDownList"
+                DropDownList ltxt = new DropDownList();
+                ltxt.AutoPostBack = false;
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToolTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                //是否服务器运行
+                ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                if (ldt.Rows[i]["control_event"].ToString() != "")
+                {
+                    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                }
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                }
+                //样式                
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.CssClass = lscontrol_style_read;
+                }
+                else
+                {
+
+                    ltxt.CssClass = lscontrol_style_write;
+                }
+                
+                //赋值
+                if (ldt.Rows[i]["control_type_source"].ToString() == "")
+                {
+                    //直接给定值
+                    if (ldt.Rows[i]["control_type_text"].ToString() != "" && ldt.Rows[i]["control_type_value"].ToString() != "")
+                    {
+                        string[] ls1 = ldt.Rows[i]["control_type_text"].ToString().Split(',');
+                        string[] ls2 = ldt.Rows[i]["control_type_value"].ToString().Split(',');
+                        if (ls1.Length == ls2.Length)
+                        {
+                            for (int j = 0; j < ls1.Length; j++)
+                            {
+                                ltxt.Items.Add(new ListItem(ls1[j], ls2[j]));
+                            }
+                        }
+
+                    }
+                }
+
+                else
+                {
+                    //通过数据源获取
+                    DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldt.Rows[i]["control_type_source"].ToString(), CommandType.Text, ldt.Rows[i]["control_type_sql"].ToString()
+                        , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                    for (int j = 0; j < ldt_source.Rows.Count; j++)
+                    {
+                        ltxt.Items.Add(new ListItem(ldt_source.Rows[j][ldt.Rows[i]["control_type_text"].ToString()].ToString(), ldt_source.Rows[j][ldt.Rows[i]["control_type_value"].ToString()].ToString()));
+                    }
+                }
+
+                if (ldt_head != null)
+                {
+                    if (ltxt.Items.Count > 0)
+                    {
+                        ltxt.Text = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+                    }
+
+                }
+
+                lcellContent.Controls.Add(ltxt);
+                #endregion
+
+            }
+
+            //CheckBoxList控件
+            else if (ldt.Rows[i]["control_type"].ToString() == "CHECKBOXLIST")
+            {
+                #region "CheckBoxList"
+                CheckBoxList ltxt = new CheckBoxList();
+                HiddenField htxt = new HiddenField();
+                htxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                ltxt.AutoPostBack = false;
+                ltxt.ID = "chk" + ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToolTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                //是否服务器运行
+                ltxt.Attributes.Add("AutoPostBack", "false");
+                ltxt.RepeatLayout = RepeatLayout.Flow;
+                ltxt.RepeatColumns = 3;
+                //事件
+                var script = "var val='';$(\"input[id*='" + ldt.Rows[i]["control_id"].ToString().ToLower() + "']\").each(function(){   val+=$(this).val();   }); ";
+                if (ldt.Rows[i]["control_event"].ToString() != "")
+                {
+                    ltxt.Attributes.Add("onclick", ldt.Rows[i]["control_event"].ToString());
+                }
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                }
+                //样式
+                //if (lscontrol_style != "")
+                //{
+                //    ltxt.CssClass = lscontrol_style;
+                //}
+                //赋值
+                if (ldt.Rows[i]["control_type_source"].ToString() == "")
+                {
+                    //直接给定值
+                    if (ldt.Rows[i]["control_type_text"].ToString() != "" && ldt.Rows[i]["control_type_value"].ToString() != "")
+                    {
+                        string[] ls1 = ldt.Rows[i]["control_type_text"].ToString().Split(',');
+                        string[] ls2 = ldt.Rows[i]["control_type_value"].ToString().Split(',');
+                        if (ls1.Length == ls2.Length)
+                        {
+                            for (int j = 0; j < ls1.Length; j++)
+                            {
+                                ltxt.Items.Add(new ListItem(ls1[j], ls2[j]));
+                            }
+                        }
+
+                    }
+                }
+
+                else
+                {
+                    //通过数据源获取
+                    DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldt.Rows[i]["control_type_source"].ToString(), CommandType.Text, ldt.Rows[i]["control_type_sql"].ToString()
+                        , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                    for (int j = 0; j < ldt_source.Rows.Count; j++)
+                    {
+                        ltxt.Items.Add(new ListItem(ldt_source.Rows[j][ldt.Rows[i]["control_type_text"].ToString()].ToString(), ldt_source.Rows[j][ldt.Rows[i]["control_type_value"].ToString()].ToString()));
+                    }
+                }
+
+                if (ldt_head != null)
+                {
+                    if (ltxt.Items.Count > 0)
+                    {
+                        ltxt.Text = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+                    }
+
+                }
+
+                lcellContent.Controls.Add(ltxt);
+                #endregion
+
+            }
+
+            else if (ldt.Rows[i]["control_type"].ToString() == "CHECKBOX")
+            {
+                #region "CheckBox"
+                CheckBox ltxt = new CheckBox();
+                ltxt.AutoPostBack = false;
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToopTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                ////是否服务器运行
+                //ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                if (ldt.Rows[i]["control_event"].ToString() != "")
+                {
+                    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                }
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                    // ltxt.Attributes.Add("contenteditable", "false");
+                }
+                //样式
+                //if (lscontrol_style != "")
+                //{
+                //    ltxt.CssClass = lscontrol_style;
+                //}
+                if (ldt.Rows[i]["control_type_value"].ToString() != "")
+                {
+                    ltxt.Checked = true;
+                }
+
+                if (ldt_head != null)
+                {
+                    if (ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString() == "1" || ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString().ToUpper() == "TRUE")
+                    {
+                        ltxt.Checked = true;
+                    }
+                }
+
+                lcellContent.Controls.Add(ltxt);
+                #endregion
+            }
+            else if (ldt.Rows[i]["control_type"].ToString() == "FILEUPLOAD")
+            {
+                #region "FileUpLoad"
+                FileUpload ltxt = new FileUpload();
+                HyperLink lnk = new HyperLink();
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                lnk.ID = "link_" + ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToopTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                ////是否服务器运行
+                //ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                //if (ldt.Rows[i]["control_event"].ToString() != "")
+                //{
+                //    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                //}
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                    // ltxt.Attributes.Add("contenteditable", "false");
+                }
+                //样式
+                //if (lscontrol_style != "")
+                //{
+                //    ltxt.CssClass = lscontrol_style;
+                //}
+
+
+
+                lcellContent.Controls.Add(ltxt);
+                lcellContent.Controls.Add(lnk);
+                #endregion
+            }
+            else if (ldt.Rows[i]["control_type"].ToString() == "ASPXGRIDLOOKUP")
+            {
+                #region ASPxGridLookup
+                DevExpress.Web.ASPxGridLookup ltxt = new DevExpress.Web.ASPxGridLookup();
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToolTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                //是否服务器运行
+                // ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                //if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() != "")
+                //{
+                //    ltxt.Attributes.Add(ldt.Rows[i]["control_event1"].ToString(), ldt.Rows[i]["control_event"].ToString());
+                //}
+                //else if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() == "")
+                //{
+                //    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                //}
+                if (ldt.Rows[i]["control_event1"].ToString() == "")
+                {
+                    ltxt.ClientSideEvents.QueryCloseUp = "function(s, e) {" + ldt.Rows[i]["control_event"].ToString() + "}";
+                }
+
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                }
+                //样式
+                //if (lscontrol_style != "")
+                //{
+                //    ltxt.CssClass = lscontrol_style;
+                //}
+                //赋值
+                if (ldt.Rows[i]["control_type_source"].ToString() == "")
+                {
+                    //直接给定值
+                    //if (ldt.Rows[i]["control_type_text"].ToString() != "" && ldt.Rows[i]["control_type_value"].ToString() != "")
+                    //{
+                    //    string[] ls_column= ldt.Rows[i]["control_type_text"].ToString().Split(',');
+                    //    string[] ls1 = ldt.Rows[i]["control_type_text"].ToString().Split(',');
+                    //    string[] ls2 = ldt.Rows[i]["control_type_value"].ToString().Split(',');
+                    //    if (ls1.Length == ls2.Length)
+                    //    {
+                    //        for (int j = 0; j < ls1.Length; j++)
+                    //        {
+                    //            ltxt.Items.Add(new ListItem(ls1[j], ls2[j]));
+                    //        }
+                    //    }
+
+                    //}
+                }
+
+                else
+                {
+                    //通过数据源获取
+                    DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldt.Rows[i]["control_type_source"].ToString(), CommandType.Text, ldt.Rows[i]["control_type_sql"].ToString()
+                        , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                    string lspara = "";
+                    for (int j = 0; j < ldt_source.Columns.Count; j++)
+                    {
+                        if (lspara != "")
+                        {
+                            lspara += " ";
+                        }
+                        lspara += "{" + j + "}";
+                        DevExpress.Web.GridViewDataTextColumn lcom = new DevExpress.Web.GridViewDataTextColumn();
+                        lcom.Name = ldt_source.Columns[j].ColumnName;
+                        lcom.FieldName = ldt_source.Columns[j].ColumnName; ;
+                        ltxt.Columns.Add(lcom);
+                    }
+                    if (ldt.Rows[i]["control_type_value"].ToString() != "")
+                    {
+                        ltxt.KeyFieldName = ldt.Rows[i]["control_type_value"].ToString();
+                    }
+                    else
+                    {
+                        ltxt.KeyFieldName = ldt_source.Columns[0].ColumnName;
+                    }
+
+                    if (ldt.Rows[i]["control_type_text"].ToString() != "")
+                    {
+                        ltxt.TextFormatString = ldt.Rows[i]["control_type_text"].ToString();
+                    }
+                    else
+                    {
+                        ltxt.TextFormatString = lspara;
+                    }
+                    ltxt.GridViewProperties.SettingsBehavior.AllowFocusedRow = true;
+                    ltxt.GridViewProperties.SettingsBehavior.AllowSelectSingleRowOnly = true;
+                    ltxt.GridViewProperties.SettingsBehavior.AllowDragDrop = false;
+                    ltxt.GridViewProperties.SettingsBehavior.EnableRowHotTrack = false;
+                    ltxt.GridViewProperties.Settings.AutoFilterCondition = DevExpress.Web.AutoFilterCondition.Contains;
+                    ltxt.GridViewProperties.Settings.ShowColumnHeaders = false;
+
+
+                    ltxt.DataSource = ldt_source;
+                    ltxt.DataBind();
+                    //for (int j = 0; j < ldt_source.Rows.Count; j++)
+                    //{
+                    //    ltxt.Items.Add(new ListItem(ldt_source.Rows[j][ldt.Rows[i]["control_type_text"].ToString()].ToString(), ldt_source.Rows[j][ldt.Rows[i]["control_type_value"].ToString()].ToString()));
+                    //}
+                }
+
+                if (ldt_head != null)
+                {
+
+                    ltxt.Value = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+
+
+                }
+
+                lcellContent.Controls.Add(ltxt);
+
+                #endregion
+            }
+            else if (ldt.Rows[i]["control_type"].ToString() == "ASPXCOMBOBOX")
+            {
+                #region ASPxComboBox
+                DevExpress.Web.ASPxComboBox ltxt = new DevExpress.Web.ASPxComboBox();
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToolTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+
+                if (ldt.Rows[i]["control_event1"].ToString() == "")
+                {
+                    ltxt.ClientSideEvents.QueryCloseUp = "function(s, e) {" + ldt.Rows[i]["control_event"].ToString() + "}";
+                }
+
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.Enabled = false;
+                }
+                //样式
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.CssClass = lscontrol_style_read;
+                }
+                else
+                {
+
+                    ltxt.CssClass = lscontrol_style_write;
+                    ltxt.ControlStyle.BackColor = System.Drawing.Color.FromName("#FDF7D9");
+                }
+                //赋值
+                if (ldt.Rows[i]["control_type_source"].ToString() == "")
+                {
+                    //直接给定值
+
+                }
+
+                else
+                {
+                    //通过数据源获取
+                    DataTable ldt_source = Pgi.Auto.SQLHelper.ExecuteDataSet(ldt.Rows[i]["control_type_source"].ToString(), CommandType.Text, ldt.Rows[i]["control_type_sql"].ToString()
+                        , new SqlParameter[] { new SqlParameter("", "") }).Tables[0];
+                    string lspara = "";
+                    for (int j = 0; j < ldt_source.Columns.Count; j++)
+                    {
+                        if (lspara != "")
+                        {
+                            lspara += " ";
+                        }
+                        lspara += "{" + j + "}";
+                        DevExpress.Web.ListBoxColumn lcom = new DevExpress.Web.ListBoxColumn();
+                        lcom.Name = ldt_source.Columns[j].ColumnName;
+                        lcom.FieldName = ldt_source.Columns[j].ColumnName; ;
+                        ltxt.Columns.Add(lcom);
+                    }
+
+
+                    if (ldt.Rows[i]["control_type_text"].ToString() != "")
+                    {
+                        ltxt.TextFormatString = ldt.Rows[i]["control_type_text"].ToString();
+                    }
+                    else
+                    {
+                        ltxt.TextFormatString = lspara;
+                    }
+
+
+
+                    ltxt.DataSource = ldt_source;
+                    ltxt.DataBind();
+                    //for (int j = 0; j < ldt_source.Rows.Count; j++)
+                    //{
+                    //    ltxt.Items.Add(new ListItem(ldt_source.Rows[j][ldt.Rows[i]["control_type_text"].ToString()].ToString(), ldt_source.Rows[j][ldt.Rows[i]["control_type_value"].ToString()].ToString()));
+                    //}
+                }
+
+                if (ldt_head != null)
+                {
+
+                    ltxt.Value = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+
+
+                }
+
+                lcellContent.Controls.Add(ltxt);
+
+                #endregion
+            }
+            else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDATEEDIT")
+            {
+                #region "ASPXDATEEDIT"
+                DevExpress.Web.ASPxDateEdit ltxt = new DevExpress.Web.ASPxDateEdit();
+                ltxt.AutoPostBack = false;
+                ltxt.ID = ldt.Rows[i]["control_id"].ToString().ToLower();
+                //ToopTip
+                ltxt.ToolTip = ldt.Rows[i]["control_key"].ToString() + "|" + ldt.Rows[i]["control_empty"].ToString();
+                //是否服务器运行
+                ltxt.Attributes.Add("AutoPostBack", "false");
+                //事件
+                if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() != "")
+                {
+                    ltxt.Attributes.Add(ldt.Rows[i]["control_event1"].ToString(), ldt.Rows[i]["control_event"].ToString());
+                }
+                else if (ldt.Rows[i]["control_event"].ToString() != "" && ldt.Rows[i]["control_event1"].ToString() == "")
+                {
+                    ltxt.Attributes.Add("onchange", ldt.Rows[i]["control_event"].ToString());
+                }
+                //宽度
+                if (ldt.Rows[i]["control_width"].ToString() != "" && ldt.Rows[i]["control_width"].ToString() != "0")
+                {
+                    ltxt.Width = Convert.ToInt32(ldt.Rows[i]["control_width"].ToString());
+                }
+                //高度
+                if (ldt.Rows[i]["control_height"].ToString() != "" && ldt.Rows[i]["control_height"].ToString() != "0")
+                {
+                    ltxt.Height = Convert.ToInt32(ldt.Rows[i]["control_height"].ToString());
+                }
+                //字体
+                if (ldt.Rows[i]["control_fontsize"].ToString() != "" && ldt.Rows[i]["control_fontsize"].ToString() != "0")
+                {
+                    ltxt.Font.Size = Convert.ToInt32(ldt.Rows[i]["control_fontsize"].ToString());
+                }
+
+                //只读
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.ReadOnly = true;
+                    ltxt.Attributes.Add("contenteditable", "false");
+                }
+                //样式
+                if (ldt.Rows[i]["control_readonly"].ToString() == "1")
+                {
+                    ltxt.CssClass = lscontrol_style_read;
+                }
+                else
+                {
+
+                    ltxt.CssClass = lscontrol_style_write;
+                }
+                if (ldt_head != null)
+                {
+                    ltxt.Text = ldt_head.Rows[0][ldt.Rows[i]["control_id"].ToString().ToLower()].ToString();
+                }
+
+
+
+                lcellContent.Controls.Add(ltxt);
+                #endregion
+            }
+            //-----------------------------------控件判断结束----------------------------------------
+            //判断下个字段是否独立
+            if (i + 1 < ldt.Rows.Count)
+            {
+                if (ldt.Rows[i + 1]["control_onlyrow"].ToString() == "1")
+                {
+                    int lnspan = i % lncolumn + 1;
+                    lcellContent.ColumnSpan = lnspan * 2;
+                }
+            }
+            if (ldt.Rows[i]["control_onlyrow"].ToString() == "1")
+            {
+                lcellContent.ColumnSpan = lncolumn * 2 - 1;
+            }
+            lcellHead.Controls.Add(lbl);
+            lrow.Cells.Add(lcellHead);
+            lrow.Cells.Add(lcellContent);
+
+
+            if ((i % lncolumn) == 0 || ldt.Rows[i]["control_onlyrow"].ToString() == "1")
+            {
+                ls.Add(lrow);
+            }
+            ln += 1;
+        }
+
+
+        return ls;
+    }
+    #endregion
+
+
 }
 
 
