@@ -201,7 +201,7 @@
                     flag=false;
                     return false;
                 }
-            })
+            });
             //validate wlh
             $("#gvdtl input[id*=usefor]").each(function (){
                 if( $(this).val()==""){
@@ -209,15 +209,14 @@
                     flag=false;
                     return false;
                 }
-            })
-            //validate date
-            $("#gvdtl input[id*=targetprice]").each(function (){
+            });
+            $("#gvdtl input[id*=notax_targetprice]").each(function (){
                 if( $(this).val()==""){
                     msg+="【目标价】不可为空.";
                     flag=false;
                     return false;
                 }
-            })
+            });
             //validate qty
             $("#gvdtl input[id*=qty]").each(function (){
                 if( $(this).val()==""){
@@ -225,7 +224,7 @@
                     flag=false;
                     return false;
                 }
-            })
+            });
             //validate deliverydate
             $("#gvdtl input[id*=deliverydate]").each(function (){
                 if( $(this).val()==""){
@@ -233,7 +232,7 @@
                     flag=false;
                     return false;
                 }
-            })
+            });
 
             if(flag==false){  
                 layer.alert(msg);
@@ -242,7 +241,11 @@
             if($("#upload").val()==""&& $("#link_upload").text()==""){
                 layer.alert("请选择【附件】");
                 return false;
-            }           
+            }    
+            
+            if(!parent.checkSign()){
+                return false;
+            }
 
         }
         //GetHistroyPrice
@@ -275,7 +278,7 @@
                 }
             });
         }
-        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,historyprice){
+        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
             var p2=$("#domain").val();
             var p3=$("#prtype").val();
             if(p2==""){layer.alert("请选择【申请工厂】");return false;}
@@ -295,7 +298,7 @@
                         $(wlh).val("");
                         $(wlmc).val(""); 
                         $(wlms).val("");
-                        $(historyprice).val("");//add heguiqin
+                        $(notax_historyprice).val("");//add heguiqin
                     }
                     $.each(eval(data.d), function (i, item) {                                
                         if (data.d == "") {
@@ -303,7 +306,7 @@
                             $(wlh).val("");
                             $(wlmc).val(""); 
                             $(wlms).val("");
-                            $(historyprice).val("");//add heguiqin
+                            $(notax_historyprice).val("");//add heguiqin
                         }
                         else {
                             if(item.ispodsched=="1"){
@@ -311,7 +314,7 @@
                                 $(wlh).val("");
                                 $(wlmc).val(""); 
                                 $(wlms).val("");
-                                $(historyprice).val("");//add heguiqin
+                                $(notax_historyprice).val("");//add heguiqin
                                 return false;
                             }
                             else{
@@ -320,7 +323,7 @@
                                     $(wlh).val("");
                                     $(wlmc).val(""); 
                                     $(wlms).val("");
-                                    $(historyprice).val("");//add heguiqin
+                                    $(notax_historyprice).val("");//add heguiqin
                                     return false;
                                 }else{
                                     $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
@@ -446,37 +449,37 @@
         }
         //计算总价 
         function getTotalPrice(){                                                      
-            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=targetprice]").each(function () { 
+            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=notax_targetprice]").each(function () { 
                 $(this).bind("change", function () {                                                          
-                    var price = $(this).parent().parent().find("input[id*=targetprice]").val(); 
+                    var price = $(this).parent().parent().find("input[id*=notax_targetprice]").val(); 
                     var qty = $(this).parent().parent().find("input[id*=qty]").val();  
                     price= (price==""||price=="NaN")? 0 : price;
                     qty= (qty==""||qty=="NaN")? 0 : qty;
                     if(price!=null&&qty!="")
                     {   
                         var result = (parseFloat(price) * parseFloat(qty)) ; 
-                        $(this).parent().parent().find("input[id*=targettotal]").val(result); 
+                        $(this).parent().parent().find("input[id*=notax_targettotal]").val(result); 
                     }else{  
-                        $(this).parent().parent().find("input[id*=targettotal]").val("");
+                        $(this).parent().parent().find("input[id*=notax_targettotal]").val("");
                     }
                     //计算所有明细总价                                 
-                    getTotalMoney();
+                    get_notax_TotalMoney();
                 }); 
             });
         }
-        function getTotalMoney(){
+        function get_notax_TotalMoney(){
             //计算所有明细总价            
-            var totalMoney=0;
-            $("#gvdtl").find("tr td input[id*=targettotal]").each(function (i) {
-                var rowval=$("tr td input[id*=targettotal_"+i+"]").val();
+            var notax_totalMoney=0;
+            $("#gvdtl").find("tr td input[id*=notax_targettotal]").each(function (i) {
+                var rowval=$("tr td input[id*=notax_targettotal_"+i+"]").val();
                 rowval= (rowval==""||rowval=="NaN")? 0 : rowval;                
-                totalMoney=totalMoney+parseFloat(rowval)
-                $("#totalMoney").val(totalMoney);
+                notax_totalMoney=notax_totalMoney+parseFloat(rowval)
+                $("#notax_totalMoney").val(notax_totalMoney);
 
                 //grid底部total值更新
                 $('table[id*=gvdtl] tr[id*=DXFooterRow]').find('td').each(function () {
                     if($.trim($(this).text())!=""){
-                        $(this).text("合计:"+fmoney(totalMoney,2));
+                        $(this).text("合计:"+fmoney(notax_totalMoney,2));
                     }   
                 });
                 
@@ -501,7 +504,7 @@
             $("#gvdtl").find("tr td input[id*=wlh]").each(function () { 
                 $(this).bind("change", function () {  
                     wlh=this.id;
-                    var obj=$(this).parent().parent().find("input[id*=historyprice]");                                                         
+                    var obj=$(this).parent().parent().find("input[id*=notax_historyprice]");                                                         
                     //赋历史采购价
                     getHisToryPrice($(this).val(),obj[0].id); 
                     //物料信息                                                      
@@ -677,12 +680,12 @@
                                         </tr>                                        
                                         <tr>
                                             <td>申请原因描述：</td>
-                                            <td style="width:800px"><%--CssClass="form-control input-s-sm"--%>
+                                            <td style="width:800px"><%--CssClass="form-control input-s-sm" --%>
                                                 <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="linewrite" Width="100%" ToolTip="0|0"   />                                               
                                             </td>
                                         </tr>
                                     </table>
-                                     <asp:TextBox ID="totalMoney" runat="server"  Width="80px" ToolTip="0|0" CssClass=" hidden"  />   
+                                     <asp:TextBox ID="notax_totalMoney" runat="server"  Width="80px" ToolTip="0|0" CssClass=" hidden" />   
                                 </div>
                             </div>
                         </div>
@@ -708,7 +711,7 @@
                                                 //绑定物料信息
                                                 getMatInfo();
                                                 //
-                                                getTotalMoney();
+                                                get_notax_TotalMoney();
                                                SetControlStatus2(<%=fieldStatus%>);
                                             });
                                         </script>
@@ -745,7 +748,7 @@
                                                 </dx:GridViewDataTextColumn>
                                             </Columns>
                                             <TotalSummary>
-                                                <dx:ASPxSummaryItem DisplayFormat="合计:{0:N2}" FieldName="targettotal" ShowInColumn="targettotal" ShowInGroupFooterColumn="targettotal" SummaryType="Sum" />
+                                                <dx:ASPxSummaryItem DisplayFormat="合计:{0:N2}" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
                                                 
                                             </TotalSummary>
                                         </dx:ASPxGridView>

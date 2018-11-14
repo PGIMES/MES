@@ -280,7 +280,7 @@ protected void Page_Load(object sender, EventArgs e)
                     // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
 
                     //将表单主表值给页面
-                    Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main", this, dtMst.Rows[0]);
+                    Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main_new", this, dtMst.Rows[0]);
 
                     if (item != null)
                     {
@@ -376,8 +376,11 @@ protected void Page_Load(object sender, EventArgs e)
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
+        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
+        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
@@ -408,8 +411,8 @@ protected void Page_Load(object sender, EventArgs e)
      [System.Web.Services.WebMethod()] 
     public static string GetHistoryPrice(string P1, string P2)
     {
-        string result = "";
-        var strB = new StringBuilder();//历史采购最低价
+        /*string result = "";
+        var strB = new StringBuilder();//历史采购最低价  含税
         strB.Append(" SELECT top 1  (1+(CASE WHEN pod_taxc='17' AND ISNULL([pod_start_eff[1]]],pod_due_date)>='2018-05-01' THEN 16 ");
         strB.Append("           WHEN pod_taxc = '17' AND ISNULL([pod_start_eff[1]]],pod_due_date)< '2018-05-01' THEN 17 ELSE pod_taxc END )/ 100.0) *[pod_pur_cost] ");
         strB.Append(" FROM[qad].[dbo].[qad_pod_det]  where pod_nbr<> '11801'  and pod_type<> 'M'   ");//and ISNULL([pod_start_eff[1]]], pod_due_date)<= dateadd(year, -1, getdate())
@@ -420,6 +423,18 @@ protected void Page_Load(object sender, EventArgs e)
               
         var value = DbHelperSQL.GetSingle(sql) ;        
         result = value==null?"":value.ToString();
+        return result;*/
+
+        string result = "";//历史采购最低价  未税
+        string sql = @"select top 1 [pod_pur_cost]
+                    from[qad].[dbo].[qad_pod_det]  
+                    where pod_nbr<> '11801'  and pod_type<> 'm'   and pod_part = '{0}' and pod_domain = '{1}'   
+                    order by [pod_pur_cost] asc ";
+
+        sql = string.Format(sql, P1, P2);
+
+        var value = DbHelperSQL.GetSingle(sql);
+        result = value == null ? "" : value.ToString();
         return result;
     }
     [System.Web.Services.WebMethod()]
@@ -636,7 +651,7 @@ protected void Page_Load(object sender, EventArgs e)
         try
         {
             //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "", this);
+            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new", this);
             formtype = prtype.SelectedValue;
 
             for (int i = 0; i < ls.Count; i++)
@@ -857,7 +872,8 @@ protected void Page_Load(object sender, EventArgs e)
         gvdtl.Columns.Clear();
         //var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
         //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl_new", this.gvdtl, ViewState["dtl"] as DataTable, 2);
         GetGrid(ViewState["dtl"] as DataTable, formtype);
     }
 
