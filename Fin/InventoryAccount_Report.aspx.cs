@@ -33,7 +33,8 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
     }
     public void Setddl_site()
     {
-        string strSQL = @"	SELECT si_site,si_desc,si_site+'【'+si_desc+'】' as si_site_desc  from qad.[dbo].[qad_si_mstr] where si_domain='" + ddl_domain.SelectedValue + "' order by si_site";
+        //string strSQL = @"	SELECT si_site,si_desc,si_site+'【'+si_desc+'】' as si_site_desc  from qad.[dbo].[qad_si_mstr] where si_domain='" + ddl_domain.SelectedValue + "' order by si_site";
+        string strSQL = @"	SELECT si_site,si_desc,si_site+'【'+si_desc+'】' as si_site_desc  from [dbo].[qad_si_mstr] where si_domain='" + ddl_domain.SelectedValue + "' order by si_site";
         DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
 
         ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).TextField = "si_site_desc";
