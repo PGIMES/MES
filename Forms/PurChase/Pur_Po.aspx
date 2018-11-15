@@ -314,6 +314,10 @@
                 return flag;
             }
 
+            if(!parent.checkSign()){
+                flag=false;return flag;
+            }
+
            return flag; 
         }
     </script>
@@ -612,7 +616,7 @@
                                 </div>
                                
                               
-                                <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
+                                <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False"  KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
                                      ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" >
                                    
                                     <SettingsPager PageSize="1000"></SettingsPager>
@@ -621,7 +625,7 @@
                                     <Columns>
                                     </Columns>
                                     <TotalSummary>
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="targetTotalPrice" ShowInColumn="targetTotalPrice" ShowInGroupFooterColumn="targetTotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
                                         <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
                                     </TotalSummary>
                                     <Styles>
