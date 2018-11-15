@@ -69,7 +69,7 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
                 string groupid = Convert.ToString(e.GetValue("GroupID"));
                 string stepid = Convert.ToString(e.GetValue("StepID"));
                 //e.Row.Cells[index].Text = "<a href='http://172.16.5.26:8030/Forms/MaterialBase/ToolKnife.aspx?instanceid=" + e.GetValue("wlh") + "&domain=" + site + "' target='_blank'>" + value.ToString() + "</a>";
-                e.Row.Cells[index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid=" + e.GetValue("PRNo") + "&stepid=" + stepid + "&groupid=" + groupid + "&mode=view' target='_blank'>" + PRNo.ToString() + "</a>";
+                e.Row.Cells[index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid=" + e.GetValue("PRNo") + "&stepid=" + stepid + "&groupid=" + groupid + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
 
                 //  ((DevExpress.Web.GridViewDataHyperLinkColumn)this.GV_PART.DataColumns["yycps"]).PropertiesHyperLinkEdit.NavigateUrlFormatString = "Forproducts.aspx?wlh=" + e.GetValue("wlh") + "&ljh=" + ljh + "&site=" + site + "";
             }

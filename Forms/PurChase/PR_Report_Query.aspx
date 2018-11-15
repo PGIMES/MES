@@ -82,143 +82,79 @@
            }
         	
     </script>
-            <asp:ScriptManager ID="ScriptManager1" runat="server">
-    </asp:ScriptManager>
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
      
-<%--     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                    <ContentTemplate>--%>
-                        <div class="panel-body" id="div_p">
-                            <div class="col-sm-12">
-
-                                <table>
-
-                                    <tr>
-                                        <td>采购类别:
-                                        </td>
-                                        <td>
-                                            <asp:DropDownList ID="drop_type" runat="server" class="form-control input-s-sm ">
-                                                <asp:ListItem>存货</asp:ListItem>
-                                                <asp:ListItem>设备</asp:ListItem>
-                                                <asp:ListItem>设施</asp:ListItem>
-                                                <asp:ListItem>工夹模具</asp:ListItem>
-                                                <asp:ListItem>IT硬件/软件</asp:ListItem>
-                                                <asp:ListItem>服务及其他</asp:ListItem>
-                                            </asp:DropDownList>
-                                        </td>
-                                        
-
-                                      
-
-                                        <td>创建日期;</td>
-                                        <td >
-                                   <asp:TextBox ID="txtDateFrom" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
-                                </td>
-                                <td>~</td>
-                                <td >
-                                   <asp:TextBox ID="txtDateTo" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
-                                </td>
+    <div class="panel-body" id="div_p">
+        <div class="col-sm-12">
+            <table>
+                <tr>
+                    <td>采购类别:</td>
+                    <td>
+                        <asp:DropDownList ID="drop_type" runat="server" class="form-control input-s-sm ">
+                            <asp:ListItem>存货(刀具类)</asp:ListItem>
+                            <asp:ListItem>存货(其他辅料类)</asp:ListItem>
+                            <asp:ListItem>设备</asp:ListItem>
+                            <asp:ListItem>设施</asp:ListItem>
+                            <asp:ListItem>工夹模具</asp:ListItem>
+                            <asp:ListItem>IT硬件/软件</asp:ListItem>
+                            <asp:ListItem>服务及其他</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                    <td>创建日期:</td>
+                    <td >
+                        <asp:TextBox ID="txtDateFrom" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
+                    </td>
+                    <td>~</td>
+                    <td>
+                        <asp:TextBox ID="txtDateTo" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
+                    </td>
                                       
                                        
-                                        <td> 
-                                            &nbsp;<td>
-                                    <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <asp:Button ID="Bt_Export" runat="server" Text="导出" 
-                                                class="btn btn-large btn-primary" OnClick="Bt_Export_Click" 
-                                                Width="100px" />   
-                                                &nbsp;&nbsp;&nbsp;&nbsp;   
-                                                <asp:Button ID="btnNext" runat="server" 
-                                                    OnClick="btnNext_Click" Style="display: none" Text="Next" />
-                                            </td>
-                                    </tr>
-
-                                     
-
-                                    
-
-
-                                </table>
-                            </div>
-
-                        </div>
-                   <%-- </ContentTemplate>
-                    <Triggers>
-                        <asp:PostBackTrigger ControlID="Bt_select" />
-
-                    </Triggers>
-                </asp:UpdatePanel>--%>
+                    <td> 
+                        &nbsp;
+                        <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <asp:Button ID="Bt_Export" runat="server" Text="导出" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Width="100px" />   
+                        &nbsp;&nbsp;&nbsp;&nbsp;   
+                        <asp:Button ID="btnNext" runat="server" OnClick="btnNext_Click" Style="display: none" Text="Next" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     <div runat="server" id="DIV1" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px">
           <table>
             <tr>
                 <td>
-
-                 
-
-                     <dx:ASPxGridView ID="GV_PART" runat="server" 
-                         KeyFieldName="PRNo" AutoGenerateColumns="False"  
-                         
-                         OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" 
-                         OnHtmlRowCreated="GV_PART_HtmlRowCreated" 
-                         onrowcommand="GV_PART_RowCommand" 
-                         onpageindexchanged="GV_PART_PageIndexChanged">
-                            <ClientSideEvents EndCallback="function(s, e) {           
-                            setHeight();
-        	                    }" />
-                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" />
-              <SettingsPager PageSize="1000">
-                     
-                </SettingsPager>
-                <Styles>
-            <AlternatingRow Enabled="true" />
-           
-        </Styles>
-                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"
-                             ShowFilterRowMenuLikeItem="True"   ShowGroupPanel="True" 
-                             ShowFooter="True"/>
-            <SettingsSearchPanel Visible="True" />
-
-<Settings ShowFilterRow="True" ShowFilterRowMenu="True" 
-                             ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" 
-                             ShowFooter="True" showgroupedcolumns="True"></Settings>
-
-<SettingsBehavior ColumnResizeMode="Control" AllowFocusedRow="True" 
-                             AllowSelectByRowClick="True" autoexpandallgroups="True" 
-                             mergegroupsmode="Always" sortmode="Value"></SettingsBehavior>
-
-<SettingsSearchPanel Visible="True"></SettingsSearchPanel>
-
-            <SettingsFilterControl AllowHierarchicalColumns="True">
-            </SettingsFilterControl>
-            <Columns>
-               
-            </Columns>
-                              <TotalSummary>
-                                  <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="targetzj" 
-                                      SummaryType="Sum" />
-                                       
-                         </TotalSummary>
-                              <Styles>
-                <Header BackColor="#99CCFF">
-                </Header>
-                                 <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC">
-                                  </FocusedRow>
-                                  <Footer HorizontalAlign="Right">
-                                  </Footer>
-            </Styles>
-        </dx:ASPxGridView>
+                    <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="PRNo" AutoGenerateColumns="False"  
+                        OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" OnHtmlRowCreated="GV_PART_HtmlRowCreated" onrowcommand="GV_PART_RowCommand" onpageindexchanged="GV_PART_PageIndexChanged">
+                        <ClientSideEvents EndCallback="function(s, e) {setHeight();}" />
+                        <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" 
+                            autoexpandallgroups="True" mergegroupsmode="Always" sortmode="Value" />
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"
+                                ShowFilterRowMenuLikeItem="True" ShowGroupPanel="True" ShowFooter="True" showgroupedcolumns="True"/>
+                        <SettingsSearchPanel Visible="True" />
+                        <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
+                        <Columns>
+                        </Columns>
+                        <TotalSummary>
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="targetzj" SummaryType="Sum" />                                       
+                        </TotalSummary>
+                        <Styles>
+                            <AlternatingRow Enabled="true" />
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
                 </td>
             </tr>
-                <tr>
+            <tr>
                 <td>
-                    &nbsp;</td>
-            </tr>
-               <tr>
-                <td>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" 
-                        runat="server">
-                    </dx:ASPxGridViewExporter>
-                   </td>
+                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server"></dx:ASPxGridViewExporter>
+                </td>
             </tr>
         </table>
     
