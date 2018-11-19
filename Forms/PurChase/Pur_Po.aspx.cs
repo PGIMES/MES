@@ -998,7 +998,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
             if (ldt.Rows[i]["notaxprice"].ToString() != "" && ldt.Rows[i]["taxrate"].ToString() != "")
             {
-                ldt.Rows[i]["taxprice"] = Math.Round(Convert.ToDecimal(ldt.Rows[i]["notaxprice"].ToString()) * (1 + Convert.ToDecimal(ldt.Rows[i]["taxrate"].ToString().Replace("%", "")) / 100), 4);
+                ldt.Rows[i]["taxprice"] = (Convert.ToDecimal(ldt.Rows[i]["notaxprice"].ToString()) * (1 + Convert.ToDecimal(ldt.Rows[i]["taxrate"].ToString().Replace("%", "")) / 100)).ToString("0.0000");
             }
 
             if (ldt.Rows[i]["taxprice"].ToString() != "" && ldt.Rows[i]["purqty"].ToString() != "")
@@ -1108,7 +1108,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
                     if (ldt1.Rows[i]["notax_targetPrice"].ToString() != "")
                     {
-                        ldr["TaxPrice"] = Math.Round(Convert.ToDecimal(ldt1.Rows[i]["notax_targetPrice"].ToString()) * (1 + Convert.ToDecimal(ldr["taxrate"]) / 100), 4);
+                        ldr["TaxPrice"] = (Convert.ToDecimal(ldt1.Rows[i]["notax_targetPrice"].ToString()) * (1 + Convert.ToDecimal(ldr["taxrate"]) / 100)).ToString("0.0000");
                     }
 
                 }
