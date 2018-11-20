@@ -326,7 +326,7 @@
                                                         </dx:GridViewToolbarItem>
                                                         <dx:GridViewToolbarItem BeginGroup="true">
                                                             <Template>
-                                                                <dx:ASPxButtonEdit ID="tbToolbarSearch" runat="server" NullText="Search..." Height="100%">
+                                                                <dx:ASPxButtonEdit ID="tbToolbarSearch3" runat="server" NullText="Search..." Height="100%">
                                                                     <Buttons>
                                                                         <dx:SpinButtonExtended Image-IconID="find_find_16x16gray" />
                                                                     </Buttons>
@@ -336,7 +336,7 @@
                                                     </Items>
                                                 </dx:GridViewToolbar>
                                             </Toolbars>
-                                            <SettingsSearchPanel CustomEditorID="tbToolbarSearch" />
+                                            <SettingsSearchPanel CustomEditorID="tbToolbarSearch3" />
                                             <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  ToolbarItemClick="OnToolbarItemClick" />
                                             <SettingsPager PageSize="1000" ></SettingsPager>
                                             <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -395,17 +395,61 @@
                             <dx:TabPage Name="TabPage4" Text="产品类">
                                 <ContentCollection>
                                     <dx:ContentControl>
-                                        <dx:ASPxGridView ID="ASPxGridView4" runat="server" KeyFieldName="" AutoGenerateColumns="False">
-                                            <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
-                                            <SettingsPager PageSize="1000"></SettingsPager>
+                                        <dx:ASPxGridView ID="ASPxGridView4" runat="server" KeyFieldName="pl_prod_line" AutoGenerateColumns="False"
+                                            OnToolbarItemClick="ASPxGridView4_ToolbarItemClick" OnCellEditorInitialize="ASPxGridView4_CellEditorInitialize"
+                                            OnRowValidating="ASPxGridView4_RowValidating" OnRowUpdating="ASPxGridView4_RowUpdating" OnRowInserting="ASPxGridView4_RowInserting"
+                                            OnRowDeleting="ASPxGridView4_RowDeleting">
+                                            <Toolbars>
+                                                <dx:GridViewToolbar ItemAlign="Right" EnableAdaptivity="true">
+                                                    <Items>
+                                                        <dx:GridViewToolbarItem Command="New" />
+                                                        <dx:GridViewToolbarItem Command="Edit" />
+                                                        <dx:GridViewToolbarItem Command="Delete" />
+                                                        <%--<dx:GridViewToolbarItem Command="Refresh" BeginGroup="true" />--%>
+                                                        <dx:GridViewToolbarItem Text="Export to" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
+                                                            <Items>
+                                                                <%--<dx:GridViewToolbarItem Command="ExportToXls" Text="Export to XLS(DataAware)" />
+                                                                <dx:GridViewToolbarItem Name="CustomExportToXLS" Text="Export to XLS(WYSIWYG)" Image-IconID="export_exporttoxls_16x16office2013" />
+                                                                <dx:GridViewToolbarItem Command="ExportToXlsx" Text="Export to XLSX(DataAware)" />--%>
+                                                                <dx:GridViewToolbarItem Name="CustomExportToXLSX" Text="Export to XLSX(WYSIWYG)" Image-IconID="export_exporttoxlsx_16x16office2013" />
+                                                            </Items>
+                                                        </dx:GridViewToolbarItem>
+                                                        <dx:GridViewToolbarItem BeginGroup="true">
+                                                            <Template>
+                                                                <dx:ASPxButtonEdit ID="tbToolbarSearch4" runat="server" NullText="Search..." Height="100%">
+                                                                    <Buttons>
+                                                                        <dx:SpinButtonExtended Image-IconID="find_find_16x16gray" />
+                                                                    </Buttons>
+                                                                </dx:ASPxButtonEdit>
+                                                            </Template>
+                                                        </dx:GridViewToolbarItem>
+                                                    </Items>
+                                                </dx:GridViewToolbar>
+                                            </Toolbars>
+                                            <SettingsSearchPanel CustomEditorID="tbToolbarSearch4" />
+                                            <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  ToolbarItemClick="OnToolbarItemClick" />
+                                            <SettingsPager PageSize="1000" ></SettingsPager>
                                             <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                                                 VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                                             <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                                            <SettingsExport EnableClientSideExportAPI="true" ExcelExportMode="DataAware" />
                                             <Columns> 
-                                                <dx:GridViewDataTextColumn Caption="产品类编码" FieldName="pl_prod_line" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>
+                                                <%--<dx:GridViewDataTextColumn Caption="产品类编码" FieldName="pl_prod_line" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>--%>
+                                                <dx:GridViewDataComboBoxColumn Caption="产品类编码" FieldName="pl_prod_line" Width="100px" VisibleIndex="2">
+                                                    <PropertiesComboBox TextField="pl_prod_line" ValueField="pl_prod_line" EnableSynchronization="false" IncrementalFilteringMode="StartsWith">
+                                                    </PropertiesComboBox>
+                                                </dx:GridViewDataComboBoxColumn>
+
                                                 <dx:GridViewDataTextColumn Caption="产品类名称" FieldName="pl_desc" Width="200px" VisibleIndex="2"></dx:GridViewDataTextColumn>
                                                 <dx:GridViewDataTextColumn Caption="产品类_物流归类" FieldName="pl_type" Width="200px" VisibleIndex="3"></dx:GridViewDataTextColumn>  
                                             </Columns>
+                                            <EditFormLayoutProperties ColCount="2">
+                                                <Items>
+                                                    <dx:GridViewColumnLayoutItem ColumnName="pl_prod_line" />
+                                                    <dx:GridViewColumnLayoutItem ColumnName="pl_type" />
+                                                    <dx:EditModeCommandLayoutItem ColSpan="2" HorizontalAlign="right" />
+                                                </Items>
+                                            </EditFormLayoutProperties>
                                             <Styles>
                                                 <Header BackColor="#99CCFF"></Header>
                                                 <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>

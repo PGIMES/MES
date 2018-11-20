@@ -167,6 +167,9 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
 
     public void QueryASPxGridView_4()
     {
+        DataTable dt_prod_line = DbHelperSQL.Query("select pl_prod_line from qad.[dbo].[qad_pl_mstr] where pl_domain='" + ddl_domain.SelectedValue + "' order by pl_prod_line").Tables[0];
+        ((GridViewDataComboBoxColumn)this.ASPxGridView4.Columns["pl_prod_line"]).PropertiesComboBox.DataSource = dt_prod_line;
+
         string sql = "";
         DataTable dt4 = null;
         sql = @"select da.pl_prod_line,db.pl_desc,da.pl_type 
@@ -490,5 +493,126 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
 
     #endregion
 
+    #region ASPxGridView4 编辑
+
+    protected void ASPxGridView4_ToolbarItemClick(object sender, ASPxGridToolbarItemClickEventArgs e)
+    {
+        QueryASPxGridView_4();
+        ASPxGridView grid = (ASPxGridView)sender;
+        switch (e.Item.Name)
+        {
+            case "CustomExportToXLS":
+                grid.ExportXlsToResponse(new DevExpress.XtraPrinting.XlsExportOptionsEx { ExportType = ExportType.WYSIWYG });
+                break;
+            case "CustomExportToXLSX":
+                grid.ExportXlsxToResponse(new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = ExportType.WYSIWYG });
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void ASPxGridView4_CellEditorInitialize(object sender, ASPxGridViewEditorEventArgs e)
+    {
+        ASPxGridView grid = (ASPxGridView)sender;
+        if (!grid.IsEditing) return;
+
+        if (e.Column.FieldName == "pl_prod_line")//地点
+        {
+            ASPxComboBox combo = e.Editor as ASPxComboBox;
+
+            if (e.KeyValue != DBNull.Value && e.KeyValue != null)
+            {
+                //combo.Enabled = false;//编辑时，只读
+                combo.ClientEnabled = false;
+            }
+            else
+            {
+                combo.Items.Clear();
+                // a.loc_loc is null -->筛选出 不存在产品类
+                string sql = @"select db.pl_prod_line 
+					from qad.[dbo].[qad_pl_mstr] db
+						left join Fin_pl_mstr_type da on da.pl_domain=db.pl_domain and da.pl_prod_line=db.pl_prod_line
+                    where db.pl_domain='{0}' and da.pl_prod_line is null 
+                    order by db.pl_prod_line";
+                sql = string.Format(sql, ddl_domain.SelectedValue);
+                DataTable dt_loc = DbHelperSQL.Query(sql).Tables[0];
+
+                foreach (DataRow dr in dt_loc.Rows)
+                    combo.Items.Add(dr["pl_prod_line"].ToString());
+            }
+        }
+
+
+    }
+
+    protected void ASPxGridView4_RowValidating(object sender, DevExpress.Web.Data.ASPxDataValidationEventArgs e)
+    {
+        ASPxGridView grid = (ASPxGridView)sender;
+        foreach (GridViewColumn column in grid.Columns)
+        {
+            GridViewDataColumn dataColumn = column as GridViewDataColumn;
+            if (dataColumn == null) continue;
+            if (dataColumn.FieldName == "pl_desc") continue;
+            if (e.NewValues[dataColumn.FieldName] == null)
+            {
+                e.Errors[dataColumn] = "Value can't be null.";
+            }
+        }
+        if (e.Errors.Count > 0) e.RowError = "Please, fill all fields.";
+    }
+
+    protected void ASPxGridView4_RowUpdating(object sender, DevExpress.Web.Data.ASPxDataUpdatingEventArgs e)
+    {
+        string pl_prod_line = e.Keys["pl_prod_line"].ToString();
+        string pl_type = e.NewValues["pl_type"].ToString();
+
+        string sql_update = @"update Fin_pl_mstr_type set [pl_type]='{2}' where pl_domain='{0}' and pl_prod_line='{1}'";
+        sql_update = string.Format(sql_update, ddl_domain.SelectedValue, pl_prod_line, pl_type);
+        DbHelperSQL.ExecuteSql(sql_update);
+
+        QueryASPxGridView_4();
+
+        ASPxGridView4.CancelEdit();
+        e.Cancel = true;
+
+
+    }
+
+    protected void ASPxGridView4_RowInserting(object sender, DevExpress.Web.Data.ASPxDataInsertingEventArgs e)
+    {
+        string pl_prod_line = e.NewValues["pl_prod_line"].ToString();
+        string pl_type = e.NewValues["pl_type"].ToString();
+
+
+        string sql_insert = @"insert into Fin_pl_mstr_type(pl_domain,pl_prod_line,pl_type)
+                                      values('{0}','{1}','{2}')";
+        sql_insert = string.Format(sql_insert, ddl_domain.SelectedValue, pl_prod_line, pl_type);
+        DbHelperSQL.ExecuteSql(sql_insert);
+
+        QueryASPxGridView_4();
+
+        ASPxGridView4.CancelEdit();
+        e.Cancel = true;
+
+    }
+
+    protected void ASPxGridView4_RowDeleting(object sender, DevExpress.Web.Data.ASPxDataDeletingEventArgs e)
+    {
+        string pl_prod_line = e.Keys["pl_prod_line"].ToString();
+
+        string sql_del = @"delete Fin_pl_mstr_type where pl_domain='{0}' and pl_prod_line='{1}'";
+        sql_del = string.Format(sql_del, ddl_domain.SelectedValue, pl_prod_line);
+        DbHelperSQL.ExecuteSql(sql_del);
+
+        QueryASPxGridView_4();
+
+        ASPxGridView4.CancelEdit();
+        e.Cancel = true;
+
+    }
+
+
+    #endregion
 
 }
