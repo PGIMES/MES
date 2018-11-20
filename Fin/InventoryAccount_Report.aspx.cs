@@ -1,8 +1,10 @@
-﻿using DevExpress.Web;
+﻿using DevExpress.Export;
+using DevExpress.Web;
 using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -126,7 +128,7 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
         sql = @"select a.[si_site] ,b.[si_desc],b.[si_entity],b.[si_status],a.[si_type] 
                     from [dbo].[Fin_si_mstr_type] a
                         left join dbo.qad_si_mstr b on a.si_domain=b.si_domain and a.si_site=b.si_site
-                    where a.si_domain='" + ddl_domain.SelectedValue + @"'";
+                    where a.si_domain='" + ddl_domain.SelectedValue + @"' order by a.[si_site]";
         dt2 = DbHelperSQL.Query(sql).Tables[0];
         ASPxGridView2.DataSource = dt2;
         ASPxGridView2.DataBind();
@@ -134,6 +136,18 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
 
     public void QueryASPxGridView_3()
     {
+        DataTable dt_site = DbHelperSQL.Query("select si_site from dbo.qad_si_mstr where si_domain='" + ddl_domain.SelectedValue + "' order by si_site").Tables[0];
+        ((GridViewDataComboBoxColumn)this.ASPxGridView3.Columns["loc_site"]).PropertiesComboBox.DataSource = dt_site;
+
+        DataTable dt_loc = DbHelperSQL.Query(@"select distinct b.loc_loc 
+                                                from qad.dbo.qad_loc_mstr b
+                                                    left join [dbo].[Fin_loc_mstr_type] a on a.loc_domain = b.loc_domain and a.loc_site = b.loc_site and a.loc_loc = b.loc_loc
+                                                where b.loc_domain = '" + ddl_domain.SelectedValue + @"'
+                                                    and b.loc_loc  NOT LIKE('%[A-Z]%')
+                                                    and(b.loc_status in('CUSTOMER', 'TRANSIT', 'OVERSEA', 'HOLD', 'NSP', 'SUB') or b.loc_loc like '4%')
+                                                order by b.loc_loc").Tables[0];
+        ((GridViewDataComboBoxColumn)this.ASPxGridView3.Columns["loc_loc"]).PropertiesComboBox.DataSource = dt_loc;
+
         string sql = "";
         DataTable dt3 = null;
         /*sql = @"select loc_site+loc_loc loc_site_loc,loc_site,loc_loc,loc_desc,loc_status
@@ -142,10 +156,10 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
                          when loc_status='OVERSEA' then '中转库' when loc_status='SUB' then '外协加工库' else '' end loc_type						
                 from qad.dbo.qad_loc_mstr
                 where loc_status in('CUSTOMER','TRANSIT','OVERSEA','HOLD','NSP','SUB') and loc_domain='" + ddl_domain.SelectedValue + @"'";*/
-        sql = @"select a.loc_site,a.loc_loc,b.loc_desc,b.loc_status,a.loc_type,a.part_is_r 
+        sql = @"select a.loc_site+'|'+a.loc_loc loc_site_loc,a.loc_domain,a.loc_site,a.loc_loc,b.loc_desc,b.loc_status,a.loc_type,a.part_is_r 
                     from [dbo].[Fin_loc_mstr_type] a
                         left join  qad.dbo.qad_loc_mstr b on a.loc_domain=b.loc_domain and a.loc_site=b.loc_site and a.loc_loc=b.loc_loc
-                    where a.loc_domain='" + ddl_domain.SelectedValue + @"' order by a.part_is_r,a.loc_loc";
+                    where a.loc_domain='" + ddl_domain.SelectedValue + @"' order by a.part_is_r,a.loc_site,a.loc_loc";
         dt3 = DbHelperSQL.Query(sql).Tables[0];
         ASPxGridView3.DataSource = dt3;
         ASPxGridView3.DataBind();
@@ -158,7 +172,7 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
         sql = @"select da.pl_prod_line,db.pl_desc,da.pl_type 
 					from Fin_pl_mstr_type da 
 						left join qad.[dbo].[qad_pl_mstr] db on da.pl_domain=db.pl_domain and da.pl_prod_line=db.pl_prod_line
-                    where da.pl_domain='" + ddl_domain.SelectedValue + @"'";
+                    where da.pl_domain='" + ddl_domain.SelectedValue + @"' order by da.pl_prod_line";
         dt4 = DbHelperSQL.Query(sql).Tables[0];
         ASPxGridView4.DataSource = dt4;
         ASPxGridView4.DataBind();
@@ -304,5 +318,177 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
         return lcolumn;
 
     }
+
+
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #region ASPxGridView3 编辑
+
+    protected void ASPxGridView3_ToolbarItemClick(object sender, ASPxGridToolbarItemClickEventArgs e)
+    {
+        QueryASPxGridView_3();
+        ASPxGridView grid = (ASPxGridView)sender;
+        switch (e.Item.Name)
+        {
+            case "CustomExportToXLS":
+                grid.ExportXlsToResponse(new DevExpress.XtraPrinting.XlsExportOptionsEx { ExportType = ExportType.WYSIWYG });
+                break;
+            case "CustomExportToXLSX":
+                grid.ExportXlsxToResponse(new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = ExportType.WYSIWYG });
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void ASPxGridView3_CellEditorInitialize(object sender, ASPxGridViewEditorEventArgs e)
+    {
+        //ASPxGridView grid = (ASPxGridView)sender;
+        //if (!grid.IsEditing || e.Column.FieldName != "loc_loc") return;
+        //if (e.KeyValue == DBNull.Value || e.KeyValue == null) return;
+        //object val = grid.GetRowValuesByKeyValue(e.KeyValue, "loc_site");
+        //if (val == DBNull.Value) return;
+        //string site = (string)val;
+
+        //ASPxComboBox combo = e.Editor as ASPxComboBox;
+        //FillLocCombo(combo, site);
+
+        //combo.Callback += new CallbackEventHandlerBase(cmbLoc_OnCallback);
+
+        ASPxGridView grid = (ASPxGridView)sender;
+        if (!grid.IsEditing) return;
+
+        if (e.Column.FieldName == "loc_site")//地点
+        {
+            ASPxComboBox combo = e.Editor as ASPxComboBox;
+
+            if (e.KeyValue != DBNull.Value && e.KeyValue != null)
+            {
+                //combo.Enabled = false;//编辑时，只读
+                combo.ClientEnabled = false;
+            }
+        }
+        if (e.Column.FieldName == "loc_loc")//库位
+        {
+            object val = grid.GetRowValuesByKeyValue(e.KeyValue, "loc_site");
+            string site = (string)val;
+
+            ASPxComboBox combo = e.Editor as ASPxComboBox;
+            FillLocCombo(combo, site);
+
+            combo.Callback += new CallbackEventHandlerBase(cmbLoc_OnCallback);
+
+            if (e.KeyValue != DBNull.Value && e.KeyValue != null)
+            {
+                //combo.Enabled = false;//编辑时，只读
+                combo.ClientEnabled = false;
+            }
+        }
+
+
+
+    }
+
+    void cmbLoc_OnCallback(object source, CallbackEventArgsBase e)
+    {
+        FillLocCombo(source as ASPxComboBox, e.Parameter);
+    }
+
+    protected void FillLocCombo(ASPxComboBox cmb, string site)
+    {
+        if (string.IsNullOrEmpty(site)) return;
+
+        cmb.Items.Clear();
+        // a.loc_loc is null -->筛选出 不存在的库位
+        string sql = @"select b.loc_loc 
+                    from qad.dbo.qad_loc_mstr b
+                        left join [dbo].[Fin_loc_mstr_type] a on a.loc_domain=b.loc_domain and a.loc_site=b.loc_site and a.loc_loc=b.loc_loc
+                    where b.loc_domain='{0}' and b.loc_site like '%{1}%' 
+                        and a.loc_loc is null
+                        and b.loc_loc  NOT LIKE ('%[A-Z]%')
+                        and (b.loc_status in('CUSTOMER','TRANSIT','OVERSEA','HOLD','NSP','SUB') or b.loc_loc like '4%') 
+	                    order by b.loc_loc";
+        sql = string.Format(sql, ddl_domain.SelectedValue, site);
+        DataTable dt_loc = DbHelperSQL.Query(sql).Tables[0];
+
+        foreach (DataRow dr in dt_loc.Rows)
+            cmb.Items.Add(dr["loc_loc"].ToString());
+    }
+
+    protected void ASPxGridView3_RowValidating(object sender, DevExpress.Web.Data.ASPxDataValidationEventArgs e)
+    {
+        ASPxGridView grid = (ASPxGridView)sender;
+        foreach (GridViewColumn column in grid.Columns)
+        {
+            GridViewDataColumn dataColumn = column as GridViewDataColumn;
+            if (dataColumn == null) continue;
+            if (dataColumn.FieldName == "loc_desc" || dataColumn.FieldName == "loc_status") continue;
+            if (e.NewValues[dataColumn.FieldName] == null)
+            {
+                e.Errors[dataColumn] = "Value can't be null.";
+            }
+        }
+        if (e.Errors.Count > 0) e.RowError = "Please, fill all fields.";
+    }
+
+    protected void ASPxGridView3_RowUpdating(object sender, DevExpress.Web.Data.ASPxDataUpdatingEventArgs e)
+    {
+        string loc_site_loc = e.Keys["loc_site_loc"].ToString();
+        string loc_site = e.NewValues["loc_site"].ToString();
+        string loc_loc = e.NewValues["loc_loc"].ToString();
+        string loc_type = e.NewValues["loc_type"].ToString();
+        string part_is_r = e.NewValues["part_is_r"].ToString();
+
+        string sql_update = @"update Fin_loc_mstr_type set [loc_type]='{3}',[part_is_r]='{4}' where loc_domain='{0}' and loc_site='{1}' and loc_loc='{2}'";
+        sql_update = string.Format(sql_update, ddl_domain.SelectedValue, loc_site, loc_loc, loc_type, part_is_r);
+        DbHelperSQL.ExecuteSql(sql_update);
+
+        QueryASPxGridView_3();
+
+        ASPxGridView3.CancelEdit();
+        e.Cancel = true;
+
+
+    }
+
+    protected void ASPxGridView3_RowInserting(object sender, DevExpress.Web.Data.ASPxDataInsertingEventArgs e)
+    {
+        string loc_site = e.NewValues["loc_site"].ToString();
+        string loc_loc = e.NewValues["loc_loc"].ToString();
+        string loc_type = e.NewValues["loc_type"].ToString();
+        string part_is_r = e.NewValues["part_is_r"].ToString();
+
+
+        string sql_insert = @"insert into Fin_loc_mstr_type(loc_domain,loc_site,loc_loc,loc_type,part_is_r)
+                                      values('{0}','{1}','{2}','{3}','{4}')";
+        sql_insert = string.Format(sql_insert, ddl_domain.SelectedValue, loc_site, loc_loc, loc_type, part_is_r);
+        DbHelperSQL.ExecuteSql(sql_insert);
+
+        QueryASPxGridView_3();
+
+        ASPxGridView3.CancelEdit();
+        e.Cancel = true;
+
+    }
+
+    protected void ASPxGridView3_RowDeleting(object sender, DevExpress.Web.Data.ASPxDataDeletingEventArgs e)
+    {
+        string loc_site_loc = e.Keys["loc_site_loc"].ToString();
+
+        string loc_site = loc_site_loc.Substring(0, loc_site_loc.IndexOf('|'));
+        string loc_loc = loc_site_loc.Substring(loc_site_loc.IndexOf('|') + 1);
+
+        string sql_del = @"delete Fin_loc_mstr_type where loc_domain='{0}' and loc_site='{1}' and loc_loc='{2}'";
+        sql_del = string.Format(sql_del, ddl_domain.SelectedValue, loc_site, loc_loc);
+        DbHelperSQL.ExecuteSql(sql_del);
+
+        QueryASPxGridView_3();
+
+        ASPxGridView3.CancelEdit();
+        e.Cancel = true;
+
+    }
+
+    #endregion
+
 
 }

@@ -78,6 +78,32 @@
             return values.join(textSeparator2);
         }
     </script>
+    <script type="text/javascript">
+        function OnToolbarItemClick(s, e) {
+            if(IsCustomExportToolbarCommand(e.item.name)) {
+                e.processOnServer=true;
+                e.usePostBack=true;
+            }
+        }
+        function IsCustomExportToolbarCommand(command) {
+            return command == "CustomExportToXLS" || command == "CustomExportToXLSX";
+        }
+    </script>
+    <script type="text/javascript">
+        var lastSite = null;
+        function OnSiteChanged(cmbSite) {
+            if (Grid3.GetEditor("loc_loc").InCallback())
+                lastSite = cmbSite.GetValue().toString();
+            else 
+                Grid3.GetEditor("loc_loc").PerformCallback(cmbSite.GetValue().toString());
+        }
+        function OnEndCallback(s, e) {
+            if (lastSite) {
+                Grid3.GetEditor("loc_loc").PerformCallback(lastSite);
+                lastSite = null;
+            }
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -279,21 +305,84 @@
                             <dx:TabPage Name="TabPage3" Text="库位">
                                 <ContentCollection>
                                     <dx:ContentControl>
-                                        <dx:ASPxGridView ID="ASPxGridView3" runat="server" KeyFieldName="" AutoGenerateColumns="False">
-                                            <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
+                                        <dx:ASPxGridView ID="ASPxGridView3" ClientInstanceName="Grid3" runat="server" KeyFieldName="loc_site_loc" AutoGenerateColumns="False" 
+                                            OnToolbarItemClick="ASPxGridView3_ToolbarItemClick" OnCellEditorInitialize="ASPxGridView3_CellEditorInitialize"
+                                            OnRowValidating="ASPxGridView3_RowValidating" OnRowUpdating="ASPxGridView3_RowUpdating" OnRowInserting="ASPxGridView3_RowInserting"
+                                            OnRowDeleting="ASPxGridView3_RowDeleting">
+                                            <Toolbars>
+                                                <dx:GridViewToolbar ItemAlign="Right" EnableAdaptivity="true">
+                                                    <Items>
+                                                        <dx:GridViewToolbarItem Command="New" />
+                                                        <dx:GridViewToolbarItem Command="Edit" />
+                                                        <dx:GridViewToolbarItem Command="Delete" />
+                                                        <%--<dx:GridViewToolbarItem Command="Refresh" BeginGroup="true" />--%>
+                                                        <dx:GridViewToolbarItem Text="Export to" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
+                                                            <Items>
+                                                                <%--<dx:GridViewToolbarItem Command="ExportToXls" Text="Export to XLS(DataAware)" />
+                                                                <dx:GridViewToolbarItem Name="CustomExportToXLS" Text="Export to XLS(WYSIWYG)" Image-IconID="export_exporttoxls_16x16office2013" />
+                                                                <dx:GridViewToolbarItem Command="ExportToXlsx" Text="Export to XLSX(DataAware)" />--%>
+                                                                <dx:GridViewToolbarItem Name="CustomExportToXLSX" Text="Export to XLSX(WYSIWYG)" Image-IconID="export_exporttoxlsx_16x16office2013" />
+                                                            </Items>
+                                                        </dx:GridViewToolbarItem>
+                                                        <dx:GridViewToolbarItem BeginGroup="true">
+                                                            <Template>
+                                                                <dx:ASPxButtonEdit ID="tbToolbarSearch" runat="server" NullText="Search..." Height="100%">
+                                                                    <Buttons>
+                                                                        <dx:SpinButtonExtended Image-IconID="find_find_16x16gray" />
+                                                                    </Buttons>
+                                                                </dx:ASPxButtonEdit>
+                                                            </Template>
+                                                        </dx:GridViewToolbarItem>
+                                                    </Items>
+                                                </dx:GridViewToolbar>
+                                            </Toolbars>
+                                            <SettingsSearchPanel CustomEditorID="tbToolbarSearch" />
+                                            <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  ToolbarItemClick="OnToolbarItemClick" />
                                             <SettingsPager PageSize="1000" ></SettingsPager>
                                             <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                                                 VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                                             <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                                            <SettingsExport EnableClientSideExportAPI="true" ExcelExportMode="DataAware" />
                                             <Columns> 
                                                 <%--<dx:GridViewDataTextColumn Caption="索引号" FieldName="loc_site_loc" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>--%>
-                                                <dx:GridViewDataTextColumn Caption="地点" FieldName="loc_site" Width="100px" VisibleIndex="2"></dx:GridViewDataTextColumn>
-                                                <dx:GridViewDataTextColumn Caption="库位" FieldName="loc_loc" Width="100px" VisibleIndex="3"></dx:GridViewDataTextColumn>    
+
+                                                <%--<dx:GridViewDataTextColumn Caption="地点" FieldName="loc_site" Width="100px" VisibleIndex="2"></dx:GridViewDataTextColumn>--%>
+                                                <dx:GridViewDataComboBoxColumn Caption="地点" FieldName="loc_site" Width="100px" VisibleIndex="2">
+                                                    <PropertiesComboBox TextField="si_site" ValueField="si_site" EnableSynchronization="false" IncrementalFilteringMode="StartsWith">
+                                                        <ClientSideEvents SelectedIndexChanged="function(s, e) { OnSiteChanged(s); }" />
+                                                    </PropertiesComboBox>
+                                                </dx:GridViewDataComboBoxColumn>
+
+                                                <%--<dx:GridViewDataTextColumn Caption="库位" FieldName="loc_loc" Width="100px" VisibleIndex="3"></dx:GridViewDataTextColumn>   --%> 
+                                                <dx:GridViewDataComboBoxColumn Caption="库位" FieldName="loc_loc" Width="100px" VisibleIndex="3">
+                                                    <PropertiesComboBox  TextField="loc_loc" ValueField="loc_loc" EnableSynchronization="false" IncrementalFilteringMode="StartsWith">
+                                                        <ClientSideEvents EndCallback="OnEndCallback" />
+                                                    </PropertiesComboBox>
+                                                </dx:GridViewDataComboBoxColumn>
+
                                                 <dx:GridViewDataTextColumn Caption="描述" FieldName="loc_desc" Width="300px" VisibleIndex="4"></dx:GridViewDataTextColumn>                                                
                                                 <dx:GridViewDataTextColumn Caption="状态" FieldName="loc_status" Width="120px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                                                 <dx:GridViewDataTextColumn Caption="库位类型" FieldName="loc_type" Width="120px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                                                <dx:GridViewDataTextColumn Caption="物料号是否R开头" FieldName="part_is_r" Width="150px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+
+                                                <%--<dx:GridViewDataTextColumn Caption="物料号是否R开头" FieldName="part_is_r" Width="150px" VisibleIndex="7"></dx:GridViewDataTextColumn>--%>
+                                                <dx:GridViewDataComboBoxColumn Caption="物料号是否R开头" FieldName="part_is_r" Width="150px" VisibleIndex="7">
+                                                    <PropertiesComboBox>
+                                                        <Items>
+                                                            <dx:ListEditItem Text="是" Value="是" />
+                                                            <dx:ListEditItem Text="否" Value="否" />
+                                                        </Items>
+                                                    </PropertiesComboBox>
+                                                </dx:GridViewDataComboBoxColumn>
                                             </Columns>
+                                            <EditFormLayoutProperties ColCount="4">
+                                                <Items>
+                                                    <dx:GridViewColumnLayoutItem ColumnName="loc_site" />
+                                                    <dx:GridViewColumnLayoutItem ColumnName="loc_loc" />
+                                                    <dx:GridViewColumnLayoutItem ColumnName="loc_type" />
+                                                    <dx:GridViewColumnLayoutItem ColumnName="part_is_r" />
+                                                    <dx:EditModeCommandLayoutItem ColSpan="4" HorizontalAlign="right" />
+                                                </Items>
+                                            </EditFormLayoutProperties>
                                             <Styles>
                                                 <Header BackColor="#99CCFF"></Header>
                                                 <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
