@@ -312,11 +312,11 @@
                                             <Toolbars>
                                                 <dx:GridViewToolbar ItemAlign="Right" EnableAdaptivity="true">
                                                     <Items>
-                                                        <dx:GridViewToolbarItem Command="New" />
-                                                        <dx:GridViewToolbarItem Command="Edit" />
-                                                        <dx:GridViewToolbarItem Command="Delete" />
+                                                        <dx:GridViewToolbarItem Command="New" Text="新增" />
+                                                        <dx:GridViewToolbarItem Command="Edit" Text="修改"  />
+                                                        <dx:GridViewToolbarItem Command="Delete" Text="删除" />
                                                         <%--<dx:GridViewToolbarItem Command="Refresh" BeginGroup="true" />--%>
-                                                        <dx:GridViewToolbarItem Text="Export to" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
+                                                        <dx:GridViewToolbarItem Text="导出" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
                                                             <Items>
                                                                 <%--<dx:GridViewToolbarItem Command="ExportToXls" Text="Export to XLS(DataAware)" />
                                                                 <dx:GridViewToolbarItem Name="CustomExportToXLS" Text="Export to XLS(WYSIWYG)" Image-IconID="export_exporttoxls_16x16office2013" />
@@ -402,11 +402,11 @@
                                             <Toolbars>
                                                 <dx:GridViewToolbar ItemAlign="Right" EnableAdaptivity="true">
                                                     <Items>
-                                                        <dx:GridViewToolbarItem Command="New" />
-                                                        <dx:GridViewToolbarItem Command="Edit" />
-                                                        <dx:GridViewToolbarItem Command="Delete" />
+                                                        <dx:GridViewToolbarItem Command="New" Text="新增" />
+                                                        <dx:GridViewToolbarItem Command="Edit" Text="修改"  />
+                                                        <dx:GridViewToolbarItem Command="Delete" Text="删除" />
                                                         <%--<dx:GridViewToolbarItem Command="Refresh" BeginGroup="true" />--%>
-                                                        <dx:GridViewToolbarItem Text="Export to" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
+                                                        <dx:GridViewToolbarItem Text="导出" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
                                                             <Items>
                                                                 <%--<dx:GridViewToolbarItem Command="ExportToXls" Text="Export to XLS(DataAware)" />
                                                                 <dx:GridViewToolbarItem Name="CustomExportToXLS" Text="Export to XLS(WYSIWYG)" Image-IconID="export_exporttoxls_16x16office2013" />
