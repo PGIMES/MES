@@ -27,7 +27,7 @@
     <div class="col-md-12" id="div_p"  style="margin-bottom:5px">
         <table style=" border-collapse: collapse;">
             <tr>
-                <td style="width:70px;">域</td>
+                <td style="width:30px;">域</td>
                 <td style="width:125px;">
                     <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="120px">
                         <asp:ListItem Value="200">200</asp:ListItem>
