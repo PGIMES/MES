@@ -451,7 +451,11 @@ public partial class Pur_Po : System.Web.UI.Page
             if (ls[i].Code.ToLower() == "buyername")
             {
                 //string[] lsstr = ls[i].Value.ToString().Split('|');
-                string[] lsstr = buyer.Split('|');
+                //string[] lsstr = buyer.Split('|');
+
+                string[] lsstr = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled == true ?
+                    ls[i].Value.ToString().Split('|') : buyer.Split('|');
+
                 if (lsstr.Length == 2)
                 {
                     ls[i].Value = lsstr[1];
@@ -469,7 +473,11 @@ public partial class Pur_Po : System.Web.UI.Page
             if (ls[i].Code.ToLower() == "povendorid")
             {
                 //string[] lsstr = ls[i].Value.ToString().Split('|');
-                string[] lsstr = povendor.Split('|');
+                //string[] lsstr = povendor.Split('|');
+
+                string[] lsstr = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Enabled == true ?
+                    ls[i].Value.ToString().Split('|') : povendor.Split('|');
+
                 if (lsstr.Length == 3)
                 {
                     ls[i].Value = lsstr[0];
