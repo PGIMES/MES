@@ -202,6 +202,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
                     SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_2", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
+                    applytype.SelectedValue = ldt.Rows[0]["applytype"].ToString();
                     modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
                 }
                 else
@@ -295,9 +296,24 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         if (StepID.ToUpper() != SQ_StepID && StepID != "A")
         {
+            applytype.CssClass = "lineread";
+            applytype.Enabled = false;
+
             modifyremark.ReadOnly = true;
             ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
         }
+
+        if (applytype.SelectedValue == "")
+        {
+            if (((TextBox)this.FindControl("ctl00$MainContent$ver")).Text == "A" || ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text == "")
+            {
+                applytype.SelectedValue = "新增工艺";
+
+                applytype.CssClass = "lineread";
+                applytype.Enabled = false;
+            }
+        }
+
 
         #region 仅修改GP12权限
 
@@ -518,8 +534,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
       
 
-        if ((bf_xh_step == true && bf_xh == true) || stepname_cur == "包装工程师")//修改申请 且 在申请步骤 且 填单人是 物流部门
+        if ((bf_xh_step == true && bf_xh == true) || stepname_cur == "包装工程师")//修改申请 且 在申请步骤 且 填单人是 物流部门   huo  当前步骤是包装工程师
         {
+            if (bf_xh_step == true && bf_xh == true)//修改申请 且 在申请步骤 且 填单人是 物流部门
+            {
+                applytype.SelectedValue = "仅修改扣料工序";
+
+                applytype.CssClass = "lineread";
+                applytype.Enabled = false;
+            }
+
             if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
             {
                 btndel.Visible = false;//隐藏删除
@@ -665,6 +689,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
         ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+
+        applytype.CssClass = "lineread";
+        applytype.Enabled = false;
 
         modifyremark.ReadOnly = true; 
 
@@ -1071,6 +1098,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
         ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+
+        applytype.CssClass = "lineread";
+        applytype.Enabled = false;
 
         modifyremark.ReadOnly = true;
 
@@ -1708,6 +1738,12 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcModifyRemark.Key = "";
         lcModifyRemark.Value = modifyremark.Text.Trim();//modifyremark.Value.Trim();
         ls.Add(lcModifyRemark);
+
+        Pgi.Auto.Common lcApplyType = new Pgi.Auto.Common();
+        lcApplyType.Code = "ApplyType";
+        lcApplyType.Key = "";
+        lcApplyType.Value = applytype.SelectedValue;
+        ls.Add(lcApplyType);
 
 
         Pgi.Auto.Common lcvg_manager_id = new Pgi.Auto.Common();

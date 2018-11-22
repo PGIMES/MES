@@ -980,6 +980,9 @@
                         }
                     });
                 }
+                if($.trim($("#MainContent_applytype").val())==""){
+                    msg+="【申请类别】不可为空.<br />";
+                }
 
                 if($.trim($("#MainContent_modifyremark").val())==""){
                     msg+="【申请(变更)说明】不可为空.<br />";
@@ -2000,6 +2003,21 @@
                 </div>
                 <div class="panel-body " id="bgjl">
                     <table border="0"  width="100%"  >
+                        <tr>
+                            <td width="100px" ><font color="red">*</font><label>申请类别：</label></td>
+                            <td>
+                                <asp:DropDownList ID="applytype" CssClass="linewrite" runat="server" Width="130px" Height="25px">
+                                    <asp:ListItem Value="" Text=""></asp:ListItem>
+                                    <asp:ListItem Value="新增/删除工序" Text="新增/删除工序"></asp:ListItem>
+                                    <asp:ListItem Value="工作中心变更" Text="工作中心变更"></asp:ListItem>
+                                    <asp:ListItem Value="是否报工变更" Text="是否报工变更"></asp:ListItem>
+                                    <asp:ListItem Value="人员逻辑更改" Text="人员逻辑更改"></asp:ListItem>
+                                    <asp:ListItem Value="仅更改工时" Text="仅更改工时"></asp:ListItem>
+                                    <asp:ListItem Value="新增工艺" Text="新增工艺"></asp:ListItem>
+                                    <asp:ListItem Value="仅修改扣料工序" Text="仅修改扣料工序"></asp:ListItem>
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
                         <tr>
                             <td width="100px" ><font color="red">*</font><label>申请(变更)说明：</label></td>
                             <td>
