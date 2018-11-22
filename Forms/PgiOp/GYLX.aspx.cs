@@ -44,6 +44,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         if (ViewState["IsBg_i"] == null) { ViewState["IsBg_i"] = ""; }
         if (ViewState["IsBg_i_yz"] == null) { ViewState["IsBg_i_yz"] = ""; }
 
+        if (ViewState["IsXh_op_i"] == null) { ViewState["IsXh_op_i"] = ""; }
+        if (ViewState["IsXh_op_i_yz"] == null) { ViewState["IsXh_op_i_yz"] = ""; }
+
         //string FlowID = "A";
         //string StepID = "A";
         //string state = "";
@@ -107,7 +110,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
             DataTable ldt_detail = null;
             string lssql = @"select a.id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
-                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, ver, pn                                
+                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, ver, pn
+                                , isnull(isxh_op,'否') isxh_op                               
                                 ,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid 
                             from [dbo].[PGI_GYLX_Dtl_Form] a";
 
@@ -119,6 +123,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     txt_CreateById.Value = LogUserModel.UserId;
                     txt_CreateByName.Value = LogUserModel.UserName;
                     txt_CreateByDept.Value = LogUserModel.DepartName;
+                    //txt_CreateByDept.Value = "物流二部";
                     txt_CreateDate.Value = System.DateTime.Now.ToString();
                 }
 
@@ -154,6 +159,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         //该条件仅作为测试使用
                         if (txt_CreateByDept.Value == "IT部")
                         {
+                            //txt_CreateByDept.Value = "物流二部";
                             string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
                             ldt.Rows[0]["product_user"] = test_product_user;
                             ldt.Rows[0]["yz_user"] = test_product_user;
@@ -168,7 +174,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
                         lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver
-                                , '"+ ldt.Rows[0]["pn"].ToString() + @"' pn,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
+                                , '"+ ldt.Rows[0]["pn"].ToString() + @"' pn, isnull(isxh_op,'否') isxh_op,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
                     }
@@ -215,7 +221,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 if (stepname != "申请人")
                 {
                     string del_sql = @"select a.id, a.GYGSNo, 'del' typeno, a.pgi_no, a.pgi_no_t, a.op, a.op_desc, a.op_remark, a.gzzx, a.gzzx_desc, a.IsBg, a.JgNum, a.JgSec, a.WaitSec, a.ZjSecc, a.JtNum, a.TjOpSec, a.JSec, a.JHour
-                                                , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn  
+                                                , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn, isnull(a.isxh_op,'否') isxh_op   
                                              ,(select count(1)+ROW_NUMBER() OVER (ORDER BY a.UpdateDate) from PGI_GYLX_Dtl_Form where GYGSNo='{3}') numid
                                        from (select * from [dbo].[PGI_GYLX_Dtl] where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1)) a
                                         left join (select * from PGI_GYLX_Dtl_Form where GYGSNo='{3}') b on a.pgi_no=b.pgi_no and a.pgi_no_t=b.pgi_no_t and a.op=b.op
@@ -292,6 +298,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             modifyremark.ReadOnly = true;
             ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
         }
+
+        #region 仅修改GP12权限
 
         //------------------------------------------------------------------------------仅修改GP12权限 begin
         /*
@@ -475,6 +483,90 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).Enabled = false;
         }
         //------------------------------------------------------------------------------仅修改GP12权限 end
+
+        #endregion
+
+        #region 扣料工序维护权限
+
+        string stepname_cur = "";
+        if (this.m_sid != "")
+        {
+            stepname_cur = DbHelperSQL.Query(@"select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                    + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+        }
+
+        bool bf_xh_step = false;
+        if (Request.QueryString["display"] == null && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请  且 在申请步骤
+        {
+            if (this.m_sid != "")
+            {
+                if (stepname_cur == "申请人")//申请步骤
+                {
+                    bf_xh_step = true;
+                }
+            }
+            else
+            {
+                bf_xh_step = true;
+            }
+        }
+
+        bool bf_xh = false;//标记 填单人 是否是 物流部门
+        if (txt_CreateByDept.Value.Contains("物流"))
+        {
+            bf_xh = true;//填单人是 物流部门
+        }
+      
+
+        if ((bf_xh_step == true && bf_xh == true) || stepname_cur == "包装工程师")//修改申请 且 在申请步骤 且 填单人是 物流部门
+        {
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
+            {
+                btndel.Visible = false;//隐藏删除
+
+                DataTable dt_jj = (DataTable)gv_d.DataSource;
+                if (dt_jj != null)
+                {
+                    for (int i = 0; i < dt_jj.Rows.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            gv_d.Columns[gv_d.VisibleColumns.Count - 1].Visible = false;
+                            gv_d.Columns[0].Visible = false;
+                        }
+                        ViewState["gzzx_i"] = "Y"; ViewState["IsBg_i"] = "Y";
+                        setread_grid(i);
+                    }
+                }
+
+            }
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "压铸")
+            {
+                btn_del_yz.Visible = false;//隐藏删除
+
+                DataTable dt_yz = (DataTable)gv_d_yz.DataSource;
+                if (dt_yz != null)
+                {
+                    for (int i = 0; i < dt_yz.Rows.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            gv_d_yz.Columns[gv_d_yz.VisibleColumns.Count - 1].Visible = false;
+                            gv_d_yz.Columns[0].Visible = false;
+                        }
+                        ViewState["gzzx_i_yz"] = "Y"; ViewState["IsBg_i_yz"] = "Y";
+                        setread_grid_yz(i);
+                    }
+                }
+            }
+
+        }
+        else 
+        {
+            ViewState["IsXh_op_i"] = "Y";
+            ViewState["IsXh_op_i_yz"] = "Y";
+        }
+        #endregion
 
         /*JgNum_ValueChanged(sender, e);*/
 
@@ -713,6 +805,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 {
                     ldr[ldt.Columns[j].ColumnName] = "Y";
                 }
+                else if (ldt.Columns[j].ColumnName.ToLower() == "isxh_op")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "否";
+                }
                 else
                 {
                     ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
@@ -779,12 +875,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     public void SetGvRow()
     {
-        //if (Request.QueryString["state"] == "edit")
-        //{
-
-        //}
-        //else
-        //{
 
         string lspgi_no = ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Text;
         string lspgi_no_t = ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).Text;
@@ -793,11 +883,6 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string lspn = txt_pn.Text; //((TextBox)this.FindControl("ctl00$MainContent$pn")).Text;
 
         string lstypeno = ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue;
-        
-        //if (lspgi_no == "" || lstypeno=="")
-        //{
-        //    return;
-        //}
 
         //先查询数据库时候有数据
         string lsformno = ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text;
@@ -823,7 +908,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ldr["typeno"] = "机加";
             ldr["ver"] = "A";
             ldr["op"] = "OP1" + i.ToString() + "0";
-            ldr["isbg"] = "Y";
+            ldr["isbg"] = "Y"; ldr["isxh_op"] = "否";
             ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["pgi_no"] = lspgi_no; ldr["pgi_no_t"] = lspgi_no_t;
             ldr["numid"] = i;
 
@@ -834,24 +919,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ldr_z1["typeno"] = "机加";
         ldr_z1["ver"] = "A";
         ldr_z1["op"] = "OP600";
-        ldr_z1["isbg"] = "Y";
+        ldr_z1["isbg"] = "Y"; ldr_z1["isxh_op"] = "否";
         ldr_z1["domain"] = lsdomain; ldr_z1["pn"] = lspn; ldr_z1["pgi_no"] = lspgi_no; ldr_z1["pgi_no_t"] = lspgi_no_t;
         ldr_z1["numid"] = 8;
         ldt.Rows.Add(ldr_z1);
 
-        //DataRow ldr_z2 = ldt.NewRow();
-        //ldr_z2["typeno"] = "机加";//质量
-        //ldr_z2["ver"] = "A";
-        //ldr_z2["op"] = "OP700";
-        //ldr_z2["isbg"] = "Y";
-        //ldr_z2["domain"] = txt_domain.Text; ldr_z2["pn"] = txt_pn.Text; ldr_z2["pgi_no"] = lspgi_no; ldr_z2["pgi_no_t"] = lspgi_no_t + "-GP12";
-        //ldr_z2["numid"] = 9;
-        //ldt.Rows.Add(ldr_z2);
-        
         gv_d.DataSource = ldt;
         gv_d.DataBind();
-
-        //}
 
     }
 
@@ -968,6 +1042,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
                 }
             }
+
+            //if (colname=="isxh_op")
+            //{
+            //    e.Row.Cells[i + 3].Style.Add("background-color", "#034AF3");
+            //    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+            //        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#034AF3");
+            //}
+
         }
 
     }
@@ -1145,6 +1227,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 {
                     ldr[ldt.Columns[j].ColumnName] = "Y";
                 }
+                else if (ldt.Columns[j].ColumnName.ToLower() == "isxh_op")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "否";
+                }
                 else
                 {
                     ldr[ldt.Columns[j].ColumnName] = DBNull.Value;
@@ -1260,7 +1346,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             else
             {
                 ldr["isbg"] = "Y"; ldr["weights"] = "0"; ldr["acupoints"] = "0"; ldr["capacity"] = "0";
-            }            
+            }
+            ldr["isxh_op"] = "否";
             ldr["domain"] = lsdomain; ldr["pn"] = lspn; ldr["EquipmentRate"] = "1"; ldr["pgi_no"] = lspgi_no; ldr["pgi_no_t"] = lspgi_no_t;
             ldr["numid"] = i;
 
@@ -1375,6 +1462,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEE00");
                 }
             }
+
+            //if (colname == "isxh_op")
+            //{
+            //    if (e.GetValue(gv_d_yz.DataColumns[i].FieldName).ToString() == "是")
+            //    {
+            //        e.Row.Cells[i + 3].Style.Add("background-color", "#034AF3");
+            //        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+            //            , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#034AF3");
+            //    }
+            //}
         }
     }
 

@@ -453,6 +453,45 @@
             }
         }
 
+        function Get_IsXh_op(vi,ty){
+           
+            layer.open({
+                title:'扣料工序选择',
+                type: 1,
+                closeBtn: 0,//默认1，展示关闭
+                area: ['250px', '150px'],
+                content: $('#div_TRUE_FALSE'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                btn: ['确认', '取消'],
+                yes: function(index, layero){//按钮【确认】的回调    
+                    var TF_value=$("#div_TRUE_FALSE input[id*='rdb_TF']:checked").val();
+                    if (typeof(TF_value)=="undefined") {
+                        layer.alert("请选择扣料工序选择！");
+                        return false;
+                    }
+                    if (ty=="") {
+                        var IsXh_op= eval('IsXh_op' + vi);
+                        IsXh_op.SetText(TF_value);
+                    }
+                    if (ty=="yz") {
+                        var IsXh_op= eval('IsXh_op_yz' + vi);
+                        IsXh_op.SetText(TF_value);
+                    }
+
+                    layer.close(index);
+
+                },btn2: function(index, layero){ //按钮【取消】的回调                   
+                    //alert(2);
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+                //,cancel: function(){ 
+                //    //右上角关闭回调
+                //    //alert(3);
+                //    //return false 开启该代码可禁止点击该按钮关闭
+                //}
+            });
+        }
+
+
         function RefreshRow(vi) {
             var op = eval('op' + vi);
             var JgNum = eval('JgNum' + vi); var JgSec = eval('JgSec' + vi); var WaitSec = eval('WaitSec' + vi); var ZjSecc = eval('ZjSecc' + vi);var JtNum = eval('JtNum' + vi); 
@@ -1199,6 +1238,13 @@
         </div>
     </div>
 
+    <div id="div_TRUE_FALSE" style="display:none;">
+        <asp:RadioButtonList ID="rdb_TF" runat="server" RepeatDirection="Horizontal" Height="20px" Width="120px" style="margin-left:10px; margin-top:10px;">
+            <asp:ListItem Text="是" Value="是"></asp:ListItem>
+            <asp:ListItem Text="否" Value="否"></asp:ListItem>
+        </asp:RadioButtonList>
+    </div>
+
     <div class="col-md-12" >  
 
         <div class="row row-container">
@@ -1509,6 +1555,21 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="扣料<br />工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
+                                            <DataItemTemplate>     
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
+                                                                ClientInstanceName='<%# "IsXh_op"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="IsXh_op_i_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["IsXh_op_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_IsXh_op(<%# Container.VisibleIndex %>,'')"></i></td>
+                                                    </tr>
+                                                </table>              
+                                            </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
                                                                                 
                                         <dx:GridViewDataTextColumn FieldName="numid" Width="0px" >
@@ -1854,6 +1915,21 @@
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="扣料<br />工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
+                                            <DataItemTemplate>     
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
+                                                                ClientInstanceName='<%# "IsXh_op_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="IsXh_op_i_yz_<%#Container.VisibleIndex.ToString() %>" class="fa fa-search <% =ViewState["IsXh_op_i_yz"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_IsXh_op(<%# Container.VisibleIndex %>,'yz')"></i></td>
+                                                    </tr>
+                                                </table>              
+                                            </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
                                                                                 
                                         <dx:GridViewDataTextColumn FieldName="numid" Width="0px" >
