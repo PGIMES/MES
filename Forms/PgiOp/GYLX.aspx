@@ -406,7 +406,7 @@
         }
         
         function Get_wkzx(vi,ty){
-            var url = "/select/select_wkzx.aspx?domain="+$("#CPXX input[id*='domain']").val()+"&vi="+vi+"&ty="+ty;
+            var url = "/select/select_wkzx.aspx?domain="+$("#CPXX input[id*='domain']").val()+"&userid="+$("#SQXX input[id*='txt_CreateById']").val()+"&vi="+vi+"&ty="+ty;
 
             layer.open({
                 title:'工作中心选择',

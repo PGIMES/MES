@@ -26,21 +26,36 @@ public partial class Select_select_wkzx : System.Web.UI.Page
 
     private void GetData()
     {
-        //if(txt_ljh.Text=="" && txt_ljh.Text=="" && txt_sales_name.Text == "")
-        // {
-        //     lb_msg.Text = "请至少输入一个条件!";
-        // }
-        //else
-        // { 
         //string sql = @"select * from [172.16.5.6].[Report].[dbo].[qad_wkctr] 
         //            where domain='" + Request.QueryString["domain"] + "' and wkctr like '%" + txt_code.Text.Trim() + "%' and [desc] like '%" + txt_desc.Text.Trim() + "%' order by wkctr";
-        string sql = @"select * from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] 
-                    where wc_domain='" + Request.QueryString["domain"] + "' and wc_wkctr like '%" + txt_code.Text.Trim() + "%' and wc_desc like '%" + txt_desc.Text.Trim() + "%' order by wc_wkctr";
+        //string sql = @"select * from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] 
+        //            where wc_domain='" + Request.QueryString["domain"] + "' and wc_wkctr like '%" + txt_code.Text.Trim() + "%' and wc_desc like '%" + txt_desc.Text.Trim() + "%' order by wc_wkctr";
+
+        string sql = @"
+                    select * 
+                    from (
+                        select a.* 
+                        from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] a
+	                        inner join (select * from [dbo].[PGI_GYLX_wc_relation] 
+				                        where deptcode=(select deptcode from [172.16.5.6].[eHR_DB].[dbo].[View_CostCenter] where employeeid='{1}')
+			                        )b on a.wc_dept=b.wc_dept
+                        where wc_domain='{0}'
+                        union
+                        select a.* 
+                        from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] a
+	                        left join [dbo].[PGI_GYLX_wc_relation] b on a.wc_dept=b.wc_dept
+                        where wc_domain='{0}' and b.wc_dept  is null
+                        ) aa 
+                    where wc_wkctr like '%{2}%' and wc_desc like '%{3}%' order by wc_wkctr";
+
+        sql = string.Format(sql, Request.QueryString["domain"], Request.QueryString["userid"], txt_code.Text.Trim(), txt_desc.Text.Trim());
+
+
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         GridView1.DataSource = dt;
         GridView1.DataBind();
 
-        //}
+      
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
