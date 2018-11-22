@@ -87,7 +87,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         Session["LogUser_CurPage"] = LogUserModel;
 
         //加载表头控件
-        List<TableRow> ls = ShowControl("PGI_GYLX_Main_Form", "HEAD_NEW_2", 4, "", "", "lineread", "linewrite");//Pgi.Auto.Control.form-control input-s-sm
+        List<TableRow> ls = ShowControl("PGI_GYLX_Main_Form", "HEAD_NEW_3", 4, "", "", "lineread", "linewrite");//Pgi.Auto.Control.form-control input-s-sm
         for (int i = 0; i < ls.Count; i++)
         {
             this.tblCPXX.Rows.Add(ls[i]);
@@ -149,7 +149,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         string sql_head = @"select a.id, a.FormNo, a.projectno,d.pt_desc1 pn,d.pt_desc2 pn_desc, a.domain, a.typeno, a.state
                                             , a.containgp, nchar(ascii(isnull(ver,'A'))+1) ver, a.pgi_no_t
                                             , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate, a.ModifyGP 
-                                            ,c.product_user,c.zl_user,c.yz_user
+                                            ,c.product_user,c.zl_user,c.yz_user,c.bz_user 
                                     from PGI_GYLX_Main a 
                                         left join form3_Sale_Product_MainTable c on left(a.projectno,5)=c.pgino 
                                         left join qad_pt_mstr d on a.projectno=d.pt_part and a.domain=d.pt_domain
@@ -163,10 +163,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                             string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
                             ldt.Rows[0]["product_user"] = test_product_user;
                             ldt.Rows[0]["yz_user"] = test_product_user;
+                            ldt.Rows[0]["bz_user"] = test_product_user;
                         }
                         //end
 
-                        SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_2", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                        SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                         txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
 
 
@@ -200,7 +201,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
                     txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
                     txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
-                    SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_2", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
                     applytype.SelectedValue = ldt.Rows[0]["applytype"].ToString();
                     modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
@@ -1635,7 +1636,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_2", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this, "ctl00$MainContent${0}");
 
 
         /*

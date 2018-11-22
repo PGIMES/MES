@@ -29,7 +29,7 @@ public partial class Select_select_pgino_gy : System.Web.UI.Page
     private void GetData()
     {
         string sql = @"select aa.pt_part,aa.pt_desc1,aa.pt_desc2,aa.pt_status,aa.pt_prod_line,aa.pt_domain
-                        ,fpm.zl_user,fpm.yz_user,fpm.product_user 
+                        ,fpm.zl_user,fpm.yz_user,fpm.product_user,fpm.bz_user   
                     from qad_pt_mstr aa
                         left join form3_Sale_Product_MainTable fpm on left(aa.pt_part,5)=fpm.pgino
                     where (aa.pt_prod_line not like '4%' and aa.pt_prod_line not like '5%') and (aa.pt_status<>'DEAD' and aa.pt_status<>'OBS') and aa.pt_pm_code='L' 
@@ -63,10 +63,11 @@ public partial class Select_select_pgino_gy : System.Web.UI.Page
         string lsproduct_user = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
         string lszl_user = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
         string lsyz_user = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
+        string lsbz_user = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
         string lsver = "A";
 
         string temp = @"<script>parent.setvalue_product('" + lspgino + "','" + lsproductcode + "','" + lsproductname + "','" + lsmake_factory + "','" + lsver + "','"
-            + lszl_user + "','" + lsyz_user + "','" + lsproduct_user + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);parent.CheckVer();</script>";
+            + lszl_user + "','" + lsyz_user + "','" + lsproduct_user + "','" + lsbz_user + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);parent.CheckVer();</script>";
 
         Response.Write(temp.Trim());
     }

@@ -95,6 +95,12 @@
                                        <HeaderStyle Wrap="True" />
                                         <ItemStyle Width="7%" />
                                     </asp:BoundField>
+
+                                     <asp:BoundField DataField="bz_user" HeaderText="包装工程师" 
+                                       ReadOnly="True" >  
+                                       <HeaderStyle Wrap="True" />
+                                        <ItemStyle Width="7%" />
+                                    </asp:BoundField>
                                      
                                      <%--<asp:BoundField DataField="pt_prod_line" HeaderText="生产线" 
                                        ReadOnly="True" >  

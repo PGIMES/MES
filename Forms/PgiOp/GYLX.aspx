@@ -70,6 +70,7 @@
                 $("#CPXX input[id*='yz_user']").val("");
                 $("#CPXX input[id*='zl_user']").val("");
                 $("#CPXX input[id*='product_user']").val("");
+                $("#CPXX input[id*='bz_user']").val("");
 
                 $("#CPXX input[id*='projectno']").val("");
                 $("#CPXX input[id*='pgi_no_t']").val("");
@@ -345,7 +346,7 @@
             }); 
         }
 
-        function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver, lszl_user, lsyz_user,lsproduct_user) 
+        function setvalue_product(lspgino, lsproductcode, lsproductname, lsmake_factory, lsver, lszl_user, lsyz_user,lsproduct_user,lsbz_user) 
         {
             
             $("#CPXX input[id*='pn']").val(lsproductcode);
@@ -354,6 +355,7 @@
             $("#CPXX input[id*='yz_user']").val(lsyz_user);
             $("#CPXX input[id*='zl_user']").val(lszl_user);
             $("#CPXX input[id*='product_user']").val(lsproduct_user);
+            $("#CPXX input[id*='bz_user']").val(lsbz_user);
 
             $("#CPXX input[id*='pgi_no_t']").val(lspgino);
             $("#CPXX input[id*='projectno']").val(lspgino);
@@ -364,6 +366,7 @@
                 lsproduct_user=$("#SQXX input[id*='txt_CreateById']").val()+"-"+$("#SQXX input[id*='txt_CreateByName']").val();
                 $("#CPXX input[id*='yz_user']").val(lsproduct_user);
                 $("#CPXX input[id*='product_user']").val(lsproduct_user); 
+                $("#CPXX input[id*='bz_user']").val(lsproduct_user); 
             }
         }
 
