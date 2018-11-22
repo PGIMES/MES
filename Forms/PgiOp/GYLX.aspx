@@ -362,12 +362,12 @@
             $("#CPXX input[id*='ver']").val(lsver);
 
             //该条件仅作为测试使用
-            if($("#SQXX input[id*='txt_CreateByDept']").val()=="IT部"){
-                lsproduct_user=$("#SQXX input[id*='txt_CreateById']").val()+"-"+$("#SQXX input[id*='txt_CreateByName']").val();
-                $("#CPXX input[id*='yz_user']").val(lsproduct_user);
-                $("#CPXX input[id*='product_user']").val(lsproduct_user); 
-                $("#CPXX input[id*='bz_user']").val(lsproduct_user); 
-            }
+            //if($("#SQXX input[id*='txt_CreateByDept']").val()=="IT部"){
+            //    lsproduct_user=$("#SQXX input[id*='txt_CreateById']").val()+"-"+$("#SQXX input[id*='txt_CreateByName']").val();
+            //    $("#CPXX input[id*='yz_user']").val(lsproduct_user);
+            //    $("#CPXX input[id*='product_user']").val(lsproduct_user); 
+            //    $("#CPXX input[id*='bz_user']").val(lsproduct_user); 
+            //}
         }
 
         function CheckVer(){

@@ -157,14 +157,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                         DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
 
                         //该条件仅作为测试使用
-                        if (txt_CreateByDept.Value == "IT部")
-                        {
-                            //txt_CreateByDept.Value = "物流二部";
-                            string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
-                            ldt.Rows[0]["product_user"] = test_product_user;
-                            ldt.Rows[0]["yz_user"] = test_product_user;
-                            ldt.Rows[0]["bz_user"] = test_product_user;
-                        }
+                        //if (txt_CreateByDept.Value == "IT部")
+                        //{
+                        //    //txt_CreateByDept.Value = "物流二部";
+                        //    string test_product_user = txt_CreateById.Value + "-" + txt_CreateByName.Value;
+                        //    ldt.Rows[0]["product_user"] = test_product_user;
+                        //    ldt.Rows[0]["yz_user"] = test_product_user;
+                        //    ldt.Rows[0]["bz_user"] = test_product_user;
+                        //}
                         //end
 
                         SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this.Page, ldt.Rows[0], "ctl00$MainContent$");
