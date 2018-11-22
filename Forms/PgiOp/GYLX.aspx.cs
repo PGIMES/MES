@@ -111,7 +111,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             DataTable ldt_detail = null;
             string lssql = @"select a.id, GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, ver, pn
-                                , isnull(isxh_op,'否') isxh_op                               
+                                , isnull(IsXh_op,'否') IsXh_op                               
                                 ,ROW_NUMBER() OVER (ORDER BY UpdateDate) numid 
                             from [dbo].[PGI_GYLX_Dtl_Form] a";
 
@@ -175,7 +175,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
                         lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
                                 , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver
-                                , '"+ ldt.Rows[0]["pn"].ToString() + @"' pn, isnull(isxh_op,'否') isxh_op,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
+                                , '"+ ldt.Rows[0]["pn"].ToString() + @"' pn, isnull(IsXh_op,'否') IsXh_op,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
                            from PGI_GYLX_Dtl a 
                            where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
                     }
@@ -223,7 +223,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 if (stepname != "申请人")
                 {
                     string del_sql = @"select a.id, a.GYGSNo, 'del' typeno, a.pgi_no, a.pgi_no_t, a.op, a.op_desc, a.op_remark, a.gzzx, a.gzzx_desc, a.IsBg, a.JgNum, a.JgSec, a.WaitSec, a.ZjSecc, a.JtNum, a.TjOpSec, a.JSec, a.JHour
-                                                , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn, isnull(a.isxh_op,'否') isxh_op   
+                                                , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn, isnull(a.IsXh_op,'否') IsXh_op   
                                              ,(select count(1)+ROW_NUMBER() OVER (ORDER BY a.UpdateDate) from PGI_GYLX_Dtl_Form where GYGSNo='{3}') numid
                                        from (select * from [dbo].[PGI_GYLX_Dtl] where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1)) a
                                         left join (select * from PGI_GYLX_Dtl_Form where GYGSNo='{3}') b on a.pgi_no=b.pgi_no and a.pgi_no_t=b.pgi_no_t and a.op=b.op
