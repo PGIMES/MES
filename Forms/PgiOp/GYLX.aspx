@@ -1567,7 +1567,7 @@
                                                 <table>
                                                     <tr>
                                                         <td>
-                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
+                                                            <dx:ASPxTextBox ID="IsXh_op" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
                                                                 ClientInstanceName='<%# "IsXh_op"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>
@@ -1927,7 +1927,7 @@
                                                 <table>
                                                     <tr>
                                                         <td>
-                                                            <dx:ASPxTextBox ID="IsBg" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
+                                                            <dx:ASPxTextBox ID="IsXh_op" Width="35px" runat="server" Value='<%# Eval("IsXh_op")%>' 
                                                                 ClientInstanceName='<%# "IsXh_op_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0"   ReadOnly="true">
                                                             </dx:ASPxTextBox>
                                                         </td>

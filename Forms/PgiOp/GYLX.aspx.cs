@@ -1071,12 +1071,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
 
-            //if (colname=="isxh_op")
-            //{
-            //    e.Row.Cells[i + 3].Style.Add("background-color", "#034AF3");
-            //    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
-            //        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#034AF3");
-            //}
+            if (colname == "isxh_op")
+            {
+                if (e.GetValue(gv_d.DataColumns[i].FieldName).ToString() == "是")
+                {
+                    e.Row.Cells[i + 3].Style.Add("background-color", "#BFEFFF");
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#BFEFFF");
+                }
+            }
 
         }
 
@@ -1494,15 +1497,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
 
-            //if (colname == "isxh_op")
-            //{
-            //    if (e.GetValue(gv_d_yz.DataColumns[i].FieldName).ToString() == "是")
-            //    {
-            //        e.Row.Cells[i + 3].Style.Add("background-color", "#034AF3");
-            //        ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
-            //            , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#034AF3");
-            //    }
-            //}
+            if (colname == "isxh_op")
+            {
+                if (e.GetValue(gv_d_yz.DataColumns[i].FieldName).ToString() == "是")
+                {
+                    e.Row.Cells[i + 3].Style.Add("background-color", "#BFEFFF");
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                        , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#BFEFFF");
+                }
+            }
         }
     }
 
