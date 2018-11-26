@@ -46,7 +46,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1340px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1290px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -75,7 +75,7 @@
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="地点" FieldName="abs_site" Width="60px" VisibleIndex="11"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="库位" FieldName="abs_loc" Width="60px" VisibleIndex="12"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="域" FieldName="abs_domain" Width="50px" VisibleIndex="13"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="域" FieldName="abs_domain" Width="50px" VisibleIndex="13"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="shipfrom" FieldName="abs_shipfrom" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="shipto" FieldName="abs_shipto" Width="110px" VisibleIndex="15"></dx:GridViewDataTextColumn>
                         </Columns>
