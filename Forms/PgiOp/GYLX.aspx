@@ -1009,6 +1009,7 @@
                 var typeno=$("#CPXX input[id*='typeno']:checked").val();
                 var product_user=$("#CPXX input[id*='product_user']").val();
                 var yz_user=$("#CPXX input[id*='yz_user']").val();
+                var bz_user=$("#CPXX input[id*='yz_user']").val();
 
                 var pgi_no=$("#CPXX input[id*='projectno']").val();
                 var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
@@ -1018,7 +1019,7 @@
                 $.ajax({
                     type: "post",
                     url: "GYLX.aspx/CheckData",
-                    data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','pgi_no':'" + pgi_no 
+                    data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','bz_user':'" + bz_user + "','pgi_no':'" + pgi_no 
                         + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "','domain':'" + domain + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
