@@ -787,7 +787,7 @@
                         }
                     });
                     $("[id$=gv_d] input[id*=op]").each(function (){
-                        if( $(this).val()==""){
+                        if( $(this).val()=="" && this.id.indexOf('IsXh_op')==-1 ){
                             msg+="【工序号】不可为空.<br />";
                             return false;
                         }
@@ -880,8 +880,8 @@
                             return false;
                         }
                     });
-                    $("[id$=gv_d_yz] input[id*=op]").each(function (){
-                        if( $(this).val()==""){
+                    $("[id$=gv_d_yz] input[id*=op]").each(function (index){
+                        if( $(this).val()=="" && this.id.indexOf('IsXh_op')==-1 ){
                             msg+="【工序号】不可为空.<br />";
                             return false;
                         }
