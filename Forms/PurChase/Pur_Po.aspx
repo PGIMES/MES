@@ -625,8 +625,9 @@
                                     <Columns>
                                     </Columns>
                                     <TotalSummary>
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N4}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
                                     </TotalSummary>
                                     <Styles>
                                         <Header BackColor="#E4EFFA"></Header>   
