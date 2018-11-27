@@ -1563,7 +1563,7 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="扣料<br />工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
+                                        <dx:GridViewDataTextColumn Caption="包材扣<br />料工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
                                             <DataItemTemplate>     
                                                 <table>
                                                     <tr>
@@ -1923,7 +1923,7 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="扣料<br />工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
+                                        <dx:GridViewDataTextColumn Caption="包材扣<br />料工序" FieldName="IsXh_op" Width="35px" VisibleIndex="25">
                                             <DataItemTemplate>     
                                                 <table>
                                                     <tr>
