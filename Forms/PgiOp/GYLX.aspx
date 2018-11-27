@@ -1248,7 +1248,7 @@
     <div id="div_TRUE_FALSE" style="display:none;">
         <asp:RadioButtonList ID="rdb_TF" runat="server" RepeatDirection="Horizontal" Height="20px" Width="120px" style="margin-left:10px; margin-top:10px;">
             <asp:ListItem Text="是" Value="是"></asp:ListItem>
-            <asp:ListItem Text="否" Value="否"></asp:ListItem>
+            <asp:ListItem Text="否" Value=""></asp:ListItem>
         </asp:RadioButtonList>
     </div>
 
