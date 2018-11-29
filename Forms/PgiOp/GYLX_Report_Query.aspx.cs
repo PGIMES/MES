@@ -120,8 +120,8 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
 
         if (re_dt.Rows.Count > 0)
         {
-            re_flag= pgi_no + "(" + pgi_no_t + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",申请人:" 
-                + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!";
+            re_flag= pgi_no + "(" + pgi_no_t + ")项目正在<font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",<font color='red'>申请人:"
+                + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + "</font>)!";
         }
 
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
