@@ -228,7 +228,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2115px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2165px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -301,7 +301,8 @@
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="formno" Width="90px" VisibleIndex="26">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="27"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="包材扣<br />料工序" FieldName="IsXh_op" Width="50px" VisibleIndex="27"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="28"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
