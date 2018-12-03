@@ -46,12 +46,12 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1420px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1560px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
-                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                        <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
                         <Columns>                        
                             <dx:GridViewDataTextColumn Caption="销售货运单号" FieldName="abs_par_id" Width="140px" VisibleIndex="1" ></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="货运单号" FieldName="abs_par_id_2" Width="130px" VisibleIndex="2"></dx:GridViewDataTextColumn>                             
@@ -78,7 +78,8 @@
                             <dx:GridViewDataTextColumn Caption="库位" FieldName="abs_loc" Width="60px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <%--<dx:GridViewDataTextColumn Caption="域" FieldName="abs_domain" Width="50px" VisibleIndex="13"></dx:GridViewDataTextColumn>--%>
                             <dx:GridViewDataTextColumn Caption="shipfrom" FieldName="abs_shipfrom" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="shipto" FieldName="abs_shipto" Width="110px" VisibleIndex="15"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="shipto" FieldName="abs_shipto" Width="110px" VisibleIndex="15"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="客户名称" FieldName="DebtorShipToName" Width="250px" VisibleIndex="15"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
