@@ -70,7 +70,7 @@
                             <dx:GridViewDataTextColumn Caption="订单号" FieldName="abs_order" Width="70px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="发票号" FieldName="abs_inv_nbr" Width="180px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="abs_item" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="物料描述" FieldName="pt_desc2" Width="150px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料描述" FieldName="pt_desc1" Width="150px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="发货数量" FieldName="abs_qty" Width="80px" VisibleIndex="10">
                                 <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
