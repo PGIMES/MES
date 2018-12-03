@@ -365,6 +365,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         domain.Enabled = false;
         applydept.Enabled = false;
+        prtype.Enabled = false;
 
         //file.Visible = false;
 
@@ -390,6 +391,10 @@ protected void Page_Load(object sender, EventArgs e)
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
+
+        ((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+
+        ((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
     }
 
     public  string GetDanHao()
