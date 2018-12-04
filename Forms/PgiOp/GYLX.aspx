@@ -1493,7 +1493,7 @@
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "col1"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                        <RegularExpression ErrorText="请输入最多两位小数位的数字！" ValidationExpression="^\d+(\.\d{1,2})?$" />
                                                     </ValidationSettings>
                                                 </dx:ASPxTextBox>                                             
                                             </DataItemTemplate>   
@@ -1856,7 +1856,7 @@
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow_yz("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "col1_yz"+Container.VisibleIndex.ToString() %>'>
                                                      <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入数字！" ValidationExpression="^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$" />
+                                                        <RegularExpression ErrorText="请输入最多两位小数位的数字！" ValidationExpression="^\d+(\.\d{1,2})?$" />
                                                     </ValidationSettings>
                                                 </dx:ASPxTextBox>                                             
                                             </DataItemTemplate>   
