@@ -36,7 +36,7 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
         string sql = @"select aa.pt_part,aa.pt_desc1,aa.pt_desc2,aa.pt_status,aa.pt_prod_line,aa.pt_domain
                     from qad_pt_mstr aa
                      where aa.pt_pm_code = 'P' and aa.pt_part like 'Z%' and aa.pt_prod_line <> '4010' and(aa.pt_status <> 'DEAD' and aa.pt_status <> 'OBS')
-                         and aa.pt_prod_line='4090'
+                         and (aa.pt_prod_line='4090' or aa.pt_prod_line='4060')
                          and aa.pt_domain = '{0}' and aa.pt_part like '%{1}%' and aa.pt_desc1 like '%{2}%'
                      order by aa.pt_part";
          sql = string.Format(sql, sdomain, this.txtwlh.Value.Trim(), this.txtljh.Value.Trim());
