@@ -16,8 +16,8 @@ public partial class Fin_xxcontract_Report : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            //StartDate.Text = System.DateTime.Now.ToShortDateString(); //System.DateTime.Now.AddDays(1 - System.DateTime.Now.Day).ToShortDateString();
-            //EndDate.Text = System.DateTime.Now.ToShortDateString();
+            StartDate.Text = System.DateTime.Now.AddDays(1 - System.DateTime.Now.Day).ToShortDateString();
+            EndDate.Text = System.DateTime.Now.ToShortDateString();
             QueryASPxGridView();
         }
         if (this.gv.IsCallback == true)//页面搜索条件使用
@@ -49,7 +49,7 @@ public partial class Fin_xxcontract_Report : System.Web.UI.Page
     protected void btn_export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        gv.ExportXlsxToResponse("应付类合同执行进度查询_" + ddl_domain.SelectedItem.Text + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
-        //ASPxGridViewExporter1.WriteXlsToResponse("应付类合同执行进度浏览_" + ddl_domain.SelectedItem.Text + System.DateTime.Now.ToShortDateString());//导出到Excel
+        gv.ExportXlsxToResponse("应付类合同执行进度查询_" + ddl_domain.SelectedItem.Text + "_" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+        //ASPxGridViewExporter1.WriteXlsToResponse("应付类合同执行进度浏览_" + ddl_domain.SelectedItem.Text + "_" + System.DateTime.Now.ToShortDateString());//导出到Excel
     }
 }
