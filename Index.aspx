@@ -308,6 +308,7 @@
                                         <li><a href="/Fin/Fin_WG2_Report.aspx">完工报表二</a></li>
                                         <li><a href="/Fin/WorkOrder_Report.aspx" target="_blank">工单 会计事务/发料会计事务/历史记录 查询</a></li>
                                         <li><a href="/Fin/InventoryAccount_Report.aspx" target="_blank">库存会计事务浏览</a></li>
+                                        <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_Fin" name="div_Fin">
@@ -786,6 +787,7 @@
                                         <li class="divider"></li>
                                         <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询 </a></li>
                                         <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询 </a></li>
+                                        <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
