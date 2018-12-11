@@ -482,7 +482,7 @@ protected void Page_Load(object sender, EventArgs e)
 		                    where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
 		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
                     where pt_pm_code = 'P' and pt_part like 'z%' and pt_prod_line<>'4010' and (pt_status<>'DEAD' and pt_status<>'OBS') 
-                        and pt_prod_line='4090'
+                        and (pt_prod_line='4090' or pt_prod_line='4060')
                         and pt_part='{0}' and pt_domain='{1}' ";
         }
         
