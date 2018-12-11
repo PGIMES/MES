@@ -1300,7 +1300,7 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             if (this.gv.DataColumns[i].FieldName== "notax_TotalPrice")
             {
-                lncindex = i;
+                lncindex = i;//采购总价(未税)
             }
             if (this.gv.DataColumns[i].FieldName == "PRNo")
             {
@@ -1311,9 +1311,15 @@ public partial class Pur_Po : System.Web.UI.Page
                 RecmdVendorNameindex = i;
             }
         }
-        decimal lmbzj = Convert.ToDecimal(e.GetValue("notax_targetTotalPrice"));
-        decimal lzj = Convert.ToDecimal(e.GetValue("notax_TotalPrice").ToString() == "" ? "0" : e.GetValue("notax_TotalPrice").ToString());
-        decimal ln = ((lzj - lmbzj) / lmbzj) *100;
+        decimal lmbzj = Convert.ToDecimal(e.GetValue("notax_targetTotalPrice"));//目标总价(未税)
+        decimal lzj = Convert.ToDecimal(e.GetValue("notax_TotalPrice").ToString() == "" ? "0" : e.GetValue("notax_TotalPrice").ToString());//采购总价(未税)
+        //decimal ln = ((lzj - lmbzj) / lmbzj) *100;
+        decimal ln = 0;
+        if (lmbzj != 0)
+        {
+            ln = ((lzj - lmbzj) / lmbzj) * 100;
+        }
+
         if (ln>0 && ln<=20)
         {
             e.Row.Cells[lncindex+1].Style.Add("background-color", "yellow");
