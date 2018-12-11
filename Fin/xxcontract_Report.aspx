@@ -31,7 +31,7 @@
             <tr>
                 <td style="width:35px;">域</td>
                 <td style="width:125px;">
-                    <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="120px" AutoPostBack="true">
+                    <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="120px">
                         <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                         <asp:ListItem Value="100">上海工厂</asp:ListItem>
                     </asp:DropDownList>
