@@ -59,7 +59,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="2865px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="3215px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -76,13 +76,13 @@
                             <dx:GridViewDataTextColumn Caption="产品信息" FieldName="xxcontract_charfld[7]" Width="160px" VisibleIndex="8"></dx:GridViewDataTextColumn>  
                             <dx:GridViewDataTextColumn Caption="模具属性" FieldName="xxcontract_charfld[8]" Width="110px" VisibleIndex="9"></dx:GridViewDataTextColumn>     
                             <dx:GridViewDataTextColumn Caption="条款摘要" FieldName="xxcontractd_charfld[1]" Width="100px" VisibleIndex="10"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="签订日期" FieldName="xxcontract_datefld[1]" Width="80px" VisibleIndex="11">
+                            <dx:GridViewDataDateColumn Caption="签订日期" FieldName="xxcontract_datefld[1]" Width="130px" VisibleIndex="11">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>                          
-                            <dx:GridViewDataDateColumn Caption="计划到货日期" FieldName="xxcontract_datefld[2]" Width="80px" VisibleIndex="12">
+                            <dx:GridViewDataDateColumn Caption="计划到货日期" FieldName="xxcontract_datefld[2]" Width="130px" VisibleIndex="12">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataDateColumn Caption="实际到货日期" FieldName="xxcontract_datefld[5]" Width="80px" VisibleIndex="13">
+                            <dx:GridViewDataDateColumn Caption="实际到货日期" FieldName="xxcontract_datefld[5]" Width="130px" VisibleIndex="13">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
                             <dx:GridViewDataTextColumn Caption="合同币种" FieldName="xxcontract_charfld[9]" Width="55px" VisibleIndex="14"></dx:GridViewDataTextColumn> 
@@ -95,14 +95,14 @@
                             <dx:GridViewDataTextColumn Caption="合同计划原币总金额" FieldName="xxcontract_decfld_2_plan" Width="130px" VisibleIndex="17">
                                 <PropertiesTextEdit DisplayFormatString="{0:N3}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="计划付款日期" FieldName="xxcontractd_datefld[1]" Width="80px" VisibleIndex="18">
+                            <dx:GridViewDataDateColumn Caption="计划付款日期" FieldName="xxcontractd_datefld[1]" Width="130px" VisibleIndex="18">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
                             <dx:GridViewDataTextColumn Caption="计划付款金额(本币)" FieldName="fkamt__plan_cur" Width="130px" VisibleIndex="19">
                                 <PropertiesTextEdit DisplayFormatString="{0:N6}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>  
                             <dx:GridViewDataTextColumn Caption="计划付款比例" FieldName="xxcontractd_decfld_02_percent" Width="90px" VisibleIndex="20"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="实际付款日期" FieldName="fkdate" Width="80px" VisibleIndex="21">
+                            <dx:GridViewDataDateColumn Caption="实际付款日期" FieldName="fkdate" Width="130px" VisibleIndex="21">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
                             <dx:GridViewDataTextColumn Caption="付款金额(原币)" FieldName="fkamt" Width="100px" VisibleIndex="22">
@@ -120,10 +120,10 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="余额比例" FieldName="yerate" Width="70px" VisibleIndex="28"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="验收日期" FieldName="xxcontract_datefld[3]" Width="80px" VisibleIndex="29">
+                            <dx:GridViewDataDateColumn Caption="验收日期" FieldName="xxcontract_datefld[3]" Width="130px" VisibleIndex="29">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataDateColumn Caption="收到发票日期" FieldName="xxcontractd_datefld[2]" Width="80px" VisibleIndex="30">
+                            <dx:GridViewDataDateColumn Caption="收到发票日期" FieldName="xxcontractd_datefld[2]" Width="130px" VisibleIndex="30">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
                         </Columns>
