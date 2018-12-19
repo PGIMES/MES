@@ -96,6 +96,10 @@ public partial class Forms_PurChase_PO_KPI_Report : System.Web.UI.Page
     {
         if (e.RowType == GridViewRowType.Data)
         {
+            //if (e.KeyValue.ToString() == "总零星采购行数")
+            //{
+            //    e.Row.Style.Add("background-color", "#EEEE00");
+            //}
             if (e.KeyValue.ToString() == "及时率")
             {
                 for (int i = 1; i < 13; i++)
@@ -105,6 +109,8 @@ public partial class Forms_PurChase_PO_KPI_Report : System.Web.UI.Page
                         e.Row.Cells[i].Text = Convert.ToString(Convert.ToDouble(e.GetValue(i.ToString())) * 100) + "%";
                     }
                 }
+
+                //e.Row.Style.Add("background-color", "#BFEFFF");
             }
         }
     }
