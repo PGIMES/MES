@@ -788,6 +788,7 @@
                                         <li><a href="/Forms/PurChase/PR_Report_Query.aspx" target="_blank">请购单查询 </a></li>
                                         <li><a href="/Forms/PurChase/PO_Report_Query.aspx" target="_blank">采购单查询 </a></li>
                                         <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
+                                        <li><a href="/Forms/PurChase/PO_KPI_Report.aspx" target="_blank">采购工程师KPI查询</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
