@@ -62,7 +62,7 @@
             <tr>
                 <td style="width:35px;">年</td>
                 <td style="width:100px;">
-                    <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="90px">
+                    <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-md " Width="90px">
                         <asp:ListItem Value="">All</asp:ListItem>
                         <asp:ListItem Value="2018">2018</asp:ListItem>
                     </asp:DropDownList>

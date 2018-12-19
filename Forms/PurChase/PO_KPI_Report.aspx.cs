@@ -69,7 +69,7 @@ public partial class Forms_PurChase_PO_KPI_Report : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec [Report_PO_KPI] '" + ddl_domain.SelectedValue + "','" + ddl_buyname.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_PO_KPI] '" + ddl_year.SelectedValue + "','" + ddl_buyname.SelectedValue + "'").Tables[0];
         gv.DataSource = dt;
         gv.DataBind();
     }
@@ -77,7 +77,7 @@ public partial class Forms_PurChase_PO_KPI_Report : System.Web.UI.Page
     protected void btn_export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        gv.ExportXlsxToResponse("应付类合同执行进度查询_" + ddl_domain.SelectedItem.Text + "_" + System.DateTime.Now.ToShortDateString()
+        gv.ExportXlsxToResponse("采购工程师KPI查询_" + ddl_year.SelectedItem.Text + "_" + System.DateTime.Now.ToShortDateString()
             , new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
     }
 
