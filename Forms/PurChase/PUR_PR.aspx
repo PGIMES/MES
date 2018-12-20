@@ -300,8 +300,7 @@
                 }
             });
         }
-        //function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
-        function getDaoJuMatInfo(p1,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
+        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
             var p2=$("#domain").val();
             var p3=$("#prtype").val();
             if(p2==""){layer.alert("请选择【申请工厂】");return false;}
@@ -349,7 +348,7 @@
                                     $(notax_historyprice).val("");//add heguiqin
                                     return false;
                                 }else{
-                                    //$(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
+                                    $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
                                     $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
                                     $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
                                     $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
@@ -457,7 +456,7 @@
             if (prtype=="存货(刀具类)") {
                 url = "/select/sz_report_dev_select.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val();
             }else {
-                url = "/select/select_pt_mstr.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val();
+                url = "/select/select_pt_mstr.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val()+ "&prtype=" + encodeURIComponent(prtype);
             }                      
             popupwindow = window.open(url, '_blank', 'height=500,width=1000,resizable=yes,menubar=no,scrollbars =yes,location=no');
         }
@@ -531,14 +530,13 @@
                     //赋历史采购价
                     getHisToryPrice($(this).val(),obj[0].id); 
                     //物料信息                                                      
-                    //var wlType= $(this).parent().parent().find("input[id*=wltype]");
+                    var wlType= $(this).parent().parent().find("input[id*=wltype]");
                     var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]");
                     var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
                     var wlms= $(this).parent().parent().find("input[id*=wlms]");
                     var attachments= $(this).parent().parent().find("input[id*=attachments]");
                     var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");
-                    //getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);  
-                    getDaoJuMatInfo($(this).val(),wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);  
+                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);  
                 }); 
             });
         }

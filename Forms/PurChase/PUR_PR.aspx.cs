@@ -229,7 +229,7 @@ protected void Page_Load(object sender, EventArgs e)
 
             //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
             //20181107 add heguiqin 新增采购类别
-            var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text").Tables[0];
+            var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text union select '存货(原材料及前期样件)' as value ,'存货(原材料及前期样件)' as text").Tables[0];
             fun.initDropDownList(prtype, tbltype, "value", "text");
 
             BaseFun.loadDepartment(applydept, domain.SelectedValue);//申请部门
@@ -402,11 +402,11 @@ protected void Page_Load(object sender, EventArgs e)
 
         //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
 
-        if (formtype == "存货(其他辅料类)")
+        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
         {
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
         }
 
         //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
@@ -488,7 +488,8 @@ protected void Page_Load(object sender, EventArgs e)
                     from dbo.PGI_BASE_PART_DATA a 
                     where wlh='{0}' and domain='{1}' ";
         }
-        else
+
+        if (P3 == "存货(其他辅料类)")
         {
             sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
 	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
@@ -501,11 +502,28 @@ protected void Page_Load(object sender, EventArgs e)
 		                    from qad.dbo.qad_pl_mstr
 		                    where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
 		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
-                    where pt_pm_code = 'P' and pt_part like 'z%' and pt_prod_line<>'4010' and (pt_status<>'DEAD' and pt_status<>'OBS') 
-                        and (pt_prod_line='4090' or pt_prod_line='4060')
+                    where pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'z%' and pt_prod_line<>'4010'
+                        and pt_part='{0}' and pt_domain='{1}' ";// and(pt_prod_line = '4090' or pt_prod_line = '4060')
+        }
+
+        if (P3 == "存货(原材料及前期样件)")
+        {
+            sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
+	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                    from dbo.qad_pt_mstr a
+	                    left join(
+		                    select distinct pl_domain, PL_PROD_LINE 
+			                    ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
+				                    when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
+				                    end as pt_prod_line_mc 
+		                    from qad.dbo.qad_pl_mstr
+		                    where left(pl_prod_line,1) in ('1') and pl_prod_line like '1%'
+		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
+                    where pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'P%' and pt_prod_line like '1%'
                         and pt_part='{0}' and pt_domain='{1}' ";
         }
-        
+
+
         var value = DbHelperSQL.Query(string.Format(sql, P1, P2)).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
@@ -742,7 +760,7 @@ protected void Page_Load(object sender, EventArgs e)
             {
                 dtl.Rows[i]["prno"] = formno_main;
 
-                if (formtype== "存货(刀具类)")//刀具类 隐藏了这两列
+                if (formtype == "存货(刀具类)")//刀具类 隐藏了这两列
                 {
                     dtl.Rows[i]["wltype"] = "4010-刀具类";
                     dtl.Rows[i]["unit"] = "EA";
@@ -916,7 +934,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         string formdiv = "";
         if (formtype == "存货(刀具类)") { formdiv = "dtl_new_1"; }
-        if (formtype == "存货(其他辅料类)") { formdiv = "dtl_new_2"; }
+        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)") { formdiv = "dtl_new_2"; }
         Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ViewState["dtl"] as DataTable, 2);
         GetGrid(ViewState["dtl"] as DataTable, formtype);
 
@@ -924,7 +942,7 @@ protected void Page_Load(object sender, EventArgs e)
         {
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(120);
-            if (formtype == "存货(其他辅料类)")
+            if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
             {
                 ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
             }

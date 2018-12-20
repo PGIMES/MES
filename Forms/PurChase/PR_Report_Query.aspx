@@ -93,11 +93,12 @@
                         <asp:DropDownList ID="drop_type" runat="server" class="form-control input-s-sm ">
                             <asp:ListItem>存货(刀具类)</asp:ListItem>
                             <asp:ListItem>存货(其他辅料类)</asp:ListItem>
-                            <asp:ListItem>设备</asp:ListItem>
+                            <asp:ListItem>存货(原材料及前期样件)</asp:ListItem>
+                            <%--<asp:ListItem>设备</asp:ListItem>
                             <asp:ListItem>设施</asp:ListItem>
                             <asp:ListItem>工夹模具</asp:ListItem>
                             <asp:ListItem>IT硬件/软件</asp:ListItem>
-                            <asp:ListItem>服务及其他</asp:ListItem>
+                            <asp:ListItem>服务及其他</asp:ListItem>--%>
                         </asp:DropDownList>
                     </td>
                     <td>创建日期:</td>
