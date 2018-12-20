@@ -205,7 +205,7 @@
             //validate wlh
             $("#gvdtl input[id*=wlh]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【物料号】不可为空.";
+                    msg+="【物料号】不可为空.<br />";
                     flag=false;
                     return false;
                 }
@@ -213,21 +213,28 @@
             //validate wlh
             $("#gvdtl input[id*=usefor]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【用于产品/项目】不可为空.";
+                    msg+="【用于产品/项目】不可为空.<br />";
+                    flag=false;
+                    return false;
+                }
+            });
+            $("#gvdtl input[id*=unit]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【单位】不可为空.<br />";
                     flag=false;
                     return false;
                 }
             });
             $("#gvdtl input[id*=currency]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【币别】不可为空.";
+                    msg+="【币别】不可为空.<br />";
                     flag=false;
                     return false;
                 }
             });
             $("#gvdtl input[id*=notax_targetprice]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【目标价】不可为空.";
+                    msg+="【目标价】不可为空.<br />";
                     flag=false;
                     return false;
                 }
@@ -235,7 +242,7 @@
             //validate qty
             $("#gvdtl input[id*=qty]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【数量】不可为空.";
+                    msg+="【数量】不可为空.<br />";
                     flag=false;
                     return false;
                 }
@@ -243,7 +250,7 @@
             //validate deliverydate
             $("#gvdtl input[id*=deliverydate]").each(function (){
                 if( $(this).val()==""){
-                    msg+="【要求到货日期】不可为空.";
+                    msg+="【要求到货日期】不可为空.<br />";
                     flag=false;
                     return false;
                 }
