@@ -14,9 +14,11 @@
     <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <link href="../../Content/css/custom.css" rel="stylesheet" />
-    <style>        hidden { display:none
+    <style>body{overflow-x:auto; overflow-y:hidden}
+        hidden { display:none
         }
     </style>
+
     <script src="../../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
     <script src="../../Scripts/RFlow.js"></script>
     <script type="text/javascript">
@@ -157,10 +159,16 @@
             font-weight:400;
         }
         .lineread{
-            font-size:9px; border:none; border-bottom:1px solid #ccc;
+            /*font-size:9px;*/ border:none; border-bottom:1px solid #ccc;
         }
         .linewrite{
-            font-size:9px; border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+            /*font-size:9px;*/ border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+        }
+        /*.dxeTextBoxDefaultWidthSys, .dxeButtonEditSys{
+            width:120px;
+        }*//*后台方法loadControll里最后面for循环设定申请时的宽度的*/
+        .dxeButtonDisabled{
+            display:none;
         }
     </style>
 </head>
@@ -206,6 +214,13 @@
             $("#gvdtl input[id*=usefor]").each(function (){
                 if( $(this).val()==""){
                     msg+="【用于产品/项目】不可为空.";
+                    flag=false;
+                    return false;
+                }
+            });
+            $("#gvdtl input[id*=currency]").each(function (){
+                if( $(this).val()==""){
+                    msg+="【币别】不可为空.";
                     flag=false;
                     return false;
                 }
@@ -278,7 +293,8 @@
                 }
             });
         }
-        function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
+        //function getDaoJuMatInfo(p1,wltype,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
+        function getDaoJuMatInfo(p1,wlsubtype,wlmc,wlms,attachments,attachments_name,wlh,notax_historyprice){
             var p2=$("#domain").val();
             var p3=$("#prtype").val();
             if(p2==""){layer.alert("请选择【申请工厂】");return false;}
@@ -326,7 +342,7 @@
                                     $(notax_historyprice).val("");//add heguiqin
                                     return false;
                                 }else{
-                                    $(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
+                                    //$(wltype).val(item.class);//$(wltype).attr("readonly","readonly")
                                     $(wlsubtype).val(item.type);//$(wlsubtype).attr("readonly","readonly");                           
                                     $(wlmc).val(item.wlmc);//$(wlmc).attr("readonly","readonly")
                                     $(wlms).val(item.ms);//$(wlms).attr("readonly","readonly")
@@ -508,13 +524,14 @@
                     //赋历史采购价
                     getHisToryPrice($(this).val(),obj[0].id); 
                     //物料信息                                                      
-                    var wlType= $(this).parent().parent().find("input[id*=wltype]");
+                    //var wlType= $(this).parent().parent().find("input[id*=wltype]");
                     var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]");
                     var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
                     var wlms= $(this).parent().parent().find("input[id*=wlms]");
                     var attachments= $(this).parent().parent().find("input[id*=attachments]");
                     var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");
-                    getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);                                                       
+                    //getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);  
+                    getDaoJuMatInfo($(this).val(),wlSubType,wlmc,wlms,attachments,attachments_name,$(this),obj);  
                 }); 
             });
         }
@@ -585,7 +602,7 @@
                         <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
                             <strong>申请记录基础信息</strong>
                         </div>
-                        <div class="panel-body collapse in" id="SQXX">
+                        <div class="panel-body collapse" id="SQXX">
                             <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                                 <div class="">
                                     <asp:UpdatePanel ID="UpdatePanel_request" runat="server" UpdateMode="Conditional">
@@ -604,54 +621,36 @@
                                                 <tr>
                                                     <td>请购单号：</td>
                                                     <td><%--CssClass="form-control input-s-sm"--%>
-                                                        <asp:TextBox ID="PRNo" runat="server" CssClass="lineread" readonly="true" Width="247px" ToolTip="1|0"   />
+                                                        <asp:TextBox ID="PRNo" runat="server" CssClass="lineread" readonly="true" Width="200px" ToolTip="1|0"   />
                                                     </td>
                                                     <td>申请日期：</td>
                                                     <td><%--CssClass="form-control input-s-sm"--%>
-                                                        <asp:TextBox ID="CreateDate" CssClass="lineread" Style="height: 27px; width: 200px" runat="server" ReadOnly="True" />
-                                                    </td>
+                                                        <asp:TextBox ID="CreateDate" CssClass="lineread" Style="height: 27px; width: 120px" runat="server" ReadOnly="True" />
+                                                    </td>                                                    
+                                                    <td>当前登陆人：</td>
+                                                    <td>
+                                                        <div class="form-inline"><%--CssClass="form-control input-s-sm"--%>
+                                                            <input id="txt_LogUserId" class="lineread" style="height: 27px; width:40px" runat="server" readonly="True" />
+                                                            <input id="txt_LogUserName" class="lineread" style="height: 27px; width: 60px" runat="server" readonly="True" />
+                                                            <input id="txt_LogUserDept" class="lineread" style="height: 27px; width: 90px" runat="server" readonly="True" />                                                           
+                                                        </div>
+                                                    </td> 
                                                 </tr>
                                                 <tr>
                                                     <td>申请人：</td>
                                                     <td>
                                                         <div class="form-inline"><%--CssClass="form-control input-s-sm"--%>
-                                                            <asp:TextBox runat="server" ID="CreateById" CssClass="lineread" Style="height: 27px; width: 70px" ReadOnly="True"></asp:TextBox>
-                                                            <asp:TextBox runat="server" ID="CreateByName" CssClass="lineread" Style="height: 27px; width: 70px" ReadOnly="True"></asp:TextBox>                                                           
-                                                            <asp:TextBox runat="server" id="DeptName" cssclass="lineread" style="height: 27px; width: 100px" readonly="True" />
+                                                            <asp:TextBox runat="server" ID="CreateById" CssClass="lineread" Style="height: 27px; width: 40px" ReadOnly="True"></asp:TextBox>
+                                                            <asp:TextBox runat="server" ID="CreateByName" CssClass="lineread" Style="height: 27px; width: 60px" ReadOnly="True"></asp:TextBox>                                                           
+                                                            <asp:TextBox runat="server" id="DeptName" cssclass="lineread" style="height: 27px; width: 90px" readonly="True" />
                                                         </div>
                                                     </td>                                                    
                                                     <td>电话（分机）：
                                                     </td>
                                                     <td><%--CssClass="form-control input-s-sm"--%>                                                        
-                                                        <asp:TextBox id="phone" class="linewrite" style="height: 27px; width: 200px" runat="server"  />                                                            
+                                                        <asp:TextBox id="phone" class="lineread" style="height: 27px; width: 120px" runat="server"  />                                                            
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>当前登陆人：</td>
-                                                    <td>
-                                                        <div class="form-inline"><%--CssClass="form-control input-s-sm"--%>
-                                                            <input id="txt_LogUserId" class="lineread" style="height: 27px; width: 70px" runat="server" readonly="True" />
-                                                            <input id="txt_LogUserName" class="lineread" style="height: 27px; width: 70px" runat="server" readonly="True" />
-                                                            <input id="txt_LogUserDept" class="lineread" style="height: 27px; width: 100px" runat="server" readonly="True" />                                                           
-                                                        </div>
-                                                    </td>                                                    
-                                                    <td>申请公司：</td>
-                                                    <td>   
-                                                        <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
-                                                            <asp:DropDownList ID="domain" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1"  >
-                                                                <asp:ListItem Value="" Text=""></asp:ListItem>
-                                                                <asp:ListItem Value="200" Text="昆山工厂"></asp:ListItem>
-                                                                <asp:ListItem Value="100" Text="上海工厂"></asp:ListItem>
-                                                            </asp:DropDownList></div>  
-                                                        <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
-                                                            <asp:DropDownList ID="applydept" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1" >
-                                                            </asp:DropDownList>
-                                                        </div>
-
-                                                         <asp:TextBox id="deptm"  style=" width: 20px;display:none" runat="server"  />
-                                                         <asp:TextBox id="deptmfg"  style=" width: 20px;display:none" runat="server"  />                                              
-                                                     </td>
-                                                 </tr>
                                             </table>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
@@ -672,6 +671,21 @@
                                 <div>
                                     <table style="" border="0" runat="server" id="tblWLLeibie">
                                         <tr>
+                                            <td>申请公司：</td>
+                                            <td >
+                                                 <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
+                                                    <asp:DropDownList ID="domain" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1"  >
+                                                        <asp:ListItem Value="" Text=""></asp:ListItem>
+                                                        <asp:ListItem Value="200" Text="昆山工厂"></asp:ListItem>
+                                                        <asp:ListItem Value="100" Text="上海工厂"></asp:ListItem>
+                                                    </asp:DropDownList></div>  
+                                                <div style="float:left"><%--CssClass="form-control input-s-sm"--%>
+                                                    <asp:DropDownList ID="applydept" CssClass="linewrite" runat="server" Width="100px" Height="27px" ToolTip="0|1" >
+                                                    </asp:DropDownList>
+                                                </div>
+                                                <asp:TextBox id="deptm"  style=" width: 20px;display:none" runat="server"  />
+                                                <asp:TextBox id="deptmfg"  style=" width: 20px;display:none" runat="server"  />   
+                                            </td>
                                             <td>采购类别：</td>
                                             <td ><%--CssClass="form-control"--%>
                                                 <asp:DropDownList ID="prtype" runat="server" CssClass="linewrite" ToolTip="0|1" Width="200px" Height="27px"
@@ -680,7 +694,7 @@
                                         </tr>                                        
                                         <tr>
                                             <td>申请原因描述：</td>
-                                            <td style="width:800px"><%--CssClass="form-control input-s-sm" --%>
+                                            <td style="width:800px" colspan="3"><%--CssClass="form-control input-s-sm" --%>
                                                 <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="linewrite" Width="100%" ToolTip="0|0"   />                                               
                                             </td>
                                         </tr>

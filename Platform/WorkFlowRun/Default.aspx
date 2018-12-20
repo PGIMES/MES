@@ -234,7 +234,7 @@
                 //Response.Write("<input type=\"hidden\" id=\"instanceid\" name=\"instanceid\" value=\"\" />");
                 src = src.IndexOf('?') >= 0 ? src + Request.Url.Query.Substring(1) : src + Request.Url.Query;
 
-                Response.Write("<iframe src=\"" + (src.StartsWith("http") ? src : src.StartsWith("/") ? src : "/" + src) + "\" id=\"customeformiframe\" style=\"border:none 0;padding:0;width:100%;margin-top:5px;\" onload=\"iframeLoad()\"></iframe>");//<!--设定iframe高度自适应iframeLoad added by fish 2017.1.31--> 
+                Response.Write("<iframe src=\"" + (src.StartsWith("http") ? src : src.StartsWith("/") ? src : "/" + src) + "\" id=\"customeformiframe\" scrolling='auto' style=\"border:none 0;padding:0;width:100%;margin-top:5px;\" onload=\"iframeLoad()\"></iframe>");//<!--设定iframe高度自适应iframeLoad added by fish 2017.1.31--> 
             }
         }
     %>
@@ -318,7 +318,7 @@
         { 
             
 
-            $("#customeformiframe").height($(window).height()-42); //Marked by fish:2018.1.31
+           $("#customeformiframe").height($(window).height()-42); //Marked by fish:2018.1.31
 
         }
 
@@ -326,5 +326,19 @@
 
     });
 </script>
+<script type="text/javascript">  
+        function reinitIframe(){  
+            var iframe = document.getElementById("customeformiframe");  
+            try{  
+                var bHeight = iframe.contentWindow.document.body.scrollHeight;  
+                var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;  
+                var height = Math.max(bHeight, dHeight);  
+                //iframe.height =  height; 
+               $(iframe).height(height);
+            }catch (ex){}  
+        }  
+  
+         window.setInterval("reinitIframe()", 1000);  
+    </script>
 </body>
 </html>

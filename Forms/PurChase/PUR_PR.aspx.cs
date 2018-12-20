@@ -245,6 +245,7 @@ protected void Page_Load(object sender, EventArgs e)
 
             DataTable ldt_detail = null;
             string lssql = @"select *,'查看' attachments_name from pur_pr_dtl_form";
+            string prtype_value = "";
 
             if (this.m_sid == "")//新建
             {
@@ -268,25 +269,17 @@ protected void Page_Load(object sender, EventArgs e)
                 DataTable dtMst = new DataTable();
                 dtMst = DbHelperSQL.Query("select * from pur_pr_main_form where prno='" + m_sid + "' ").Tables[0];
 
-                string prtype_value = "";
                 if (dtMst.Rows.Count > 0)
                 {
                     PRNo.Text = dtMst.Rows[0]["PRNo"].ToString(); prtype_value = dtMst.Rows[0]["PRType"].ToString();
-                    var item = prtype.Items.FindByText(prtype_value);
 
                     CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
                     CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
                     CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
-                    // applydept.SelectedValue = dtMst.Rows[0]["applydept"].ToString();
 
                     //将表单主表值给页面
                     Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main_new", this, dtMst.Rows[0]);
 
-                    if (item != null)
-                    {
-                        prtype.ClearSelection();
-                        item.Selected = true;
-                    }
                     //显示文件
                     ShowFile(dtMst.Rows[0]["files"] == null ? "" : dtMst.Rows[0]["files"].ToString(), '|');
                 }
@@ -306,7 +299,7 @@ protected void Page_Load(object sender, EventArgs e)
             ViewState["dtl"] = ldt_detail;
             loadControl();
 
-            setGridIsRead(ldt_detail);
+            setGridIsRead(ldt_detail, prtype_value);
 
         }
         else
@@ -322,7 +315,7 @@ protected void Page_Load(object sender, EventArgs e)
 
     }
 
-    public void setGridIsRead(DataTable ldt_detail)
+    public void setGridIsRead(DataTable ldt_detail,string formtype)
     {
         //特殊处理，签核界面，明细的框框拿掉
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
@@ -339,24 +332,24 @@ protected void Page_Load(object sender, EventArgs e)
             }
             if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
             {
-                setread(i);
+                setread(i, formtype);
             }
             else
             {
                 if (Request.QueryString["display"] != null)
                 {
-                    setread(i);
+                    setread(i, formtype);
                 }
             }
         }
     }
 
-    public void setread(int i)
+    public void setread(int i,string formtype)
     {
         btnAddDetl.Visible = false;
         btnDelete.Visible = false;
 
-        phone.CssClass = "lineread";
+        //phone.CssClass = "lineread";
         domain.CssClass = "lineread";
         applydept.CssClass = "lineread";
         prtype.CssClass = "lineread";
@@ -374,27 +367,54 @@ protected void Page_Load(object sender, EventArgs e)
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
 
         ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle= BorderStyle.None;
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(65);
+
+
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
+
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(110);
 
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
 
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).Style.Add("text-align", "right");
+
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).BorderStyle = BorderStyle.None;
+        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).ReadOnly = true;
+        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).BorderStyle = BorderStyle.None;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
 
-        ((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+        //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
 
-        ((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
+        if (formtype == "存货(其他辅料类)")
+        {
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
+        }
+
+        //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
+
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+
     }
 
     public  string GetDanHao()
@@ -657,15 +677,17 @@ protected void Page_Load(object sender, EventArgs e)
         try
         {
             //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new", this);
             formtype = prtype.SelectedValue;
+            string domain_value = domain.SelectedValue;
+            string applydept_value = applydept.SelectedValue;
+
+            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new", this);
 
             for (int i = 0; i < ls.Count; i++)
             {
-                if (ls[i].Code.ToLower() == "prtype")
-                {
-                    ls[i].Value = formtype;
-                }
+                if (ls[i].Code.ToLower() == "prtype") { ls[i].Value = formtype; }
+                if (ls[i].Code.ToLower() == "domain") { ls[i].Value = domain_value; }
+                if (ls[i].Code.ToLower() == "applydept") { ls[i].Value = applydept_value; }
             }
 
             //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
@@ -719,6 +741,12 @@ protected void Page_Load(object sender, EventArgs e)
             for (int i = 0; i < dtl.Rows.Count; i++)
             {
                 dtl.Rows[i]["prno"] = formno_main;
+
+                if (formtype== "存货(刀具类)")//刀具类 隐藏了这两列
+                {
+                    dtl.Rows[i]["wltype"] = "4010-刀具类";
+                    dtl.Rows[i]["unit"] = "EA";
+                }
             }
 
             //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
@@ -872,15 +900,38 @@ protected void Page_Load(object sender, EventArgs e)
 
 
     public void loadControl()
-    {
+    {/*
         string formtype = prtype.SelectedValue;
 
         gvdtl.Columns.Clear();
         //var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
         //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
         //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl_new", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl_new_1", this.gvdtl, ViewState["dtl"] as DataTable, 2);
         GetGrid(ViewState["dtl"] as DataTable, formtype);
+        */
+
+        string formtype = prtype.SelectedValue;
+        gvdtl.Columns.Clear();
+
+        string formdiv = "";
+        if (formtype == "存货(刀具类)") { formdiv = "dtl_new_1"; }
+        if (formtype == "存货(其他辅料类)") { formdiv = "dtl_new_2"; }
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ViewState["dtl"] as DataTable, 2);
+        GetGrid(ViewState["dtl"] as DataTable, formtype);
+
+        for (int i = 0; i < ((DataTable)ViewState["dtl"]).Rows.Count; i++)
+        {
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(120);
+            if (formtype == "存货(其他辅料类)")
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
+            }
+
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(50);
+        }
+
     }
 
     protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
