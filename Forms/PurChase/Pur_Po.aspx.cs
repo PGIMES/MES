@@ -1362,10 +1362,10 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             return;
         }
-        int lncindex = 0; int prnoindex = 0;int RecmdVendorNameindex = 0;
+        int lncindex = 0; int prnoindex = 0; int RecmdVendorNameindex = 0;
         for (int i = 0; i < this.gv.DataColumns.Count; i++)
         {
-            if (this.gv.DataColumns[i].FieldName== "notax_TotalPrice")
+            if (this.gv.DataColumns[i].FieldName == "notax_TotalPrice")
             {
                 lncindex = i;//采购总价(未税)
             }
@@ -1387,15 +1387,15 @@ public partial class Pur_Po : System.Web.UI.Page
             ln = ((lzj - lmbzj) / lmbzj) * 100;
         }
 
-        if (ln>0 && ln<=20)
+        if (ln > 0 && ln <= 20)
         {
-            e.Row.Cells[lncindex+1].Style.Add("background-color", "yellow");
+            e.Row.Cells[lncindex - 1].Style.Add("background-color", "yellow");
 
         }
-        else if (ln>20)
+        else if (ln > 20)
         {
-            e.Row.Cells[lncindex + 1].Style.Add("color", "white");
-            e.Row.Cells[lncindex+1].Style.Add("background-color", "red");
+            e.Row.Cells[lncindex - 1].Style.Add("color", "white");
+            e.Row.Cells[lncindex - 1].Style.Add("background-color", "red");
         }
 
         //add by heguiqin20180515 请购单号链接
@@ -1420,9 +1420,9 @@ public partial class Pur_Po : System.Web.UI.Page
             }
         }
 
-        if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司",""))
+        if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司", ""))
         {
-            e.Row.Cells[RecmdVendorNameindex + 1].Style.Add("background-color", "yellow");
+            e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("background-color", "yellow");
         }
 
     }
