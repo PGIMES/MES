@@ -321,7 +321,6 @@
            return flag; 
         }
     </script>
-
     <style type="text/css">
         .row {
             margin-right: 2px;
@@ -489,12 +488,16 @@
         }
 
 </style>
+
     <style>
         .lineread{
-            font-size:9px; border:none; border-bottom:1px solid #ccc;
+            /*font-size:9px;*/ border:none; border-bottom:1px solid #ccc;
         }
         .linewrite{
-            font-size:9px; border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+            /*font-size:9px;*/ border:none; border-bottom:1px solid #ccc;background-color:#FDF7D9;/*EFEFEF*/
+        }
+        .dxeButtonDisabled{
+            display:none;
         }
     </style>
 </asp:Content>
@@ -625,9 +628,10 @@
                                     <Columns>
                                     </Columns>
                                     <TotalSummary>
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
-                                        <dx:aspxsummaryitem DisplayFormat="合计:{0:N2}" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>合计:{0:N0}</font>" FieldName="PRNo" ShowInColumn="PRNo" ShowInGroupFooterColumn="PRNo" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
                                     </TotalSummary>
                                     <Styles>
                                         <Header BackColor="#E4EFFA"></Header>   

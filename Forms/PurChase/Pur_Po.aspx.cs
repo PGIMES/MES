@@ -18,6 +18,7 @@ using System.Linq;
 using System.IO;
 using System.Data.SqlClient;
 using System.Configuration;
+using DevExpress.Web;
 
 public partial class Pur_Po : System.Web.UI.Page
 {
@@ -55,7 +56,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
         //加载表头控件
         //List<TableRow> ls = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "form-control input-s-sm");
-        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "lineread", "linewrite");
+        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD_New", 3, "", "", "lineread", "linewrite");
         for (int i = 0; i < ls.Count; i++)
         {
             this.tblWLLeibie.Rows.Add(ls[i]);
@@ -99,14 +100,23 @@ public partial class Pur_Po : System.Web.UI.Page
             //lssql += " left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid";
             //lssql += " left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
             //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
-            lssql = @"select po.*,pr.wlType,pr.wlSubType,pr.wlh,pr.wlmc,pr.wlms,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+
+            /*lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+                        ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
                         ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                         ,'查看' as attachments_name,qad_pt_mstr.pt_status
                     from PUR_PO_Dtl_Form po
                         left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
                         left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                         inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
-           
+           */
+            lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+                        ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,replace(pr.RecmdVendorName,'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+                        ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                        ,'查看' as attachments_name
+                    from PUR_PO_Dtl_Form po
+                        left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
+                        left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
             if (this.m_sid == "")
             {
                 //新增
@@ -122,8 +132,8 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 lssql += " where 1=0";
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
-
-                Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
+                                
+                loadControl(ldt_detail);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
                 ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where 1=0").Tables[0];
                 
                 Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PO_PAY", this.gv2, ldt_pay);
@@ -134,7 +144,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 //编辑  
                 //表头赋值
                 DataTable ldt= DbHelperSQL.Query("select * from PUR_PO_Main_Form where PoNo='"+this.m_sid+"'").Tables[0];
-                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_New", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                 if (ldt.Rows[0]["attachments"].ToString()!="")
                 {
                     //this.txtfile.NavigateUrl = ldt.Rows[0]["attachments"].ToString();
@@ -175,10 +185,10 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
 
-               
 
-                Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
-               
+
+                loadControl(ldt_detail);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
+
 
             }
 
@@ -193,16 +203,29 @@ public partial class Pur_Po : System.Web.UI.Page
                 if (ldt_flow.Rows.Count == 0)
                 {
 
-                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
-                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
+
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+
+                    //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
+
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(65);
+
+                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
+                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+
                     this.btndel.Visible = false;
                     this.btnadd.Visible = false;
 
@@ -225,18 +248,31 @@ public partial class Pur_Po : System.Web.UI.Page
                 }
                 if(Request.QueryString["display"]!=null)
                 {
-                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
+
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
-                    ((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
+
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+
+                    //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
+
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(65);
+
+                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
+                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+
                     this.btndel.Visible = false;
                     this.btnadd.Visible = false;
+
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Enabled = false;
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled = false;
                     ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
@@ -260,8 +296,8 @@ public partial class Pur_Po : System.Web.UI.Page
 
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
             this.gv.Columns.Clear();
-           
-            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
+
+            loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
 
@@ -354,6 +390,16 @@ public partial class Pur_Po : System.Web.UI.Page
         }
     }
 
+    public void loadControl(DataTable ldt_detail)
+    {
+        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New_1", this.gv, ldt_detail, 2);
+
+        for (int i = 0; i < ldt_detail.Rows.Count; i++)
+        {
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(48);
+        }
+    }
+
 
     void Btn_Click(object sender, EventArgs e)
     {
@@ -434,7 +480,7 @@ public partial class Pur_Po : System.Web.UI.Page
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
         //获取表头
-        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_New", this, "ctl00$MainContent${0}");
         string buyer = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value.ToString();
         string povendor = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Value.ToString();
 
@@ -613,7 +659,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
         //明细数据自动生成SQL，并增入SUM
         List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PUR_PO_Dtl_Form", "id"
-            , "flag,wlType,wlSubType,wlh,wlmc,wlms,notax_targetPrice,notax_targetTotalPrice,RecmdVendorName,notax_historyPrice,deliveryDate,RecmdVendorId,attachments,attachments_name,pt_status");
+            , "flag,wlType,wlSubType,wlh,wlmc,wlms,wldesc,notax_targetPrice,notax_targetTotalPrice,RecmdVendorName,notax_historyPrice,deliveryDate,RecmdVendorId,attachments,attachments_name,pt_status");
         for (int i = 0; i < ls1.Count; i++)
         {
             ls_sum.Add(ls1[i]);
@@ -1017,7 +1063,7 @@ public partial class Pur_Po : System.Web.UI.Page
             }
         }
         this.gv.Columns.Clear();
-        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
+        loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
 
     }
 
@@ -1085,17 +1131,26 @@ public partial class Pur_Po : System.Web.UI.Page
                 ldr["rowid"] = (ln + 1).ToString();
                 ldr["PRNo"] = ldt1.Rows[i]["prno"].ToString();
                 ldr["PRRowId"] = ldt1.Rows[i]["rowid"].ToString();
-                ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString();
-                ldr["wlSubType"] = ldt1.Rows[i]["wlSubType"].ToString();
+                //ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString();
+                //ldr["wlSubType"] = ldt1.Rows[i]["wlSubType"].ToString();
+                if (ldt1.Rows[i]["wlType"].ToString().Substring(0, 4) == "4010")
+                {
+                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5) + "[" + ldt1.Rows[i]["wlSubType"].ToString() + "]";
+                }
+                else
+                {
+                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5);
+                }
                 ldr["wlh"] = ldt1.Rows[i]["wlh"].ToString();
-                ldr["wlmc"] = ldt1.Rows[i]["wlmc"].ToString();
-                ldr["wlms"] = ldt1.Rows[i]["wlms"].ToString();
+                //ldr["wlmc"] = ldt1.Rows[i]["wlmc"].ToString();
+                //ldr["wlms"] = ldt1.Rows[i]["wlms"].ToString();
+                ldr["wldesc"] = ldt1.Rows[i]["wlmc"].ToString() + "[" + ldt1.Rows[i]["wlms"].ToString() + "]";
                 ldr["currency"] = ldt1.Rows[i]["currency"].ToString();
                 ldr["notax_targetPrice"] = ldt1.Rows[i]["notax_targetPrice"].ToString();
                 ldr["PurQty"] = ldt1.Rows[i]["qty"].ToString();
-                ldr["RecmdVendorName"] = ldt1.Rows[i]["RecmdVendorName"].ToString();
+                ldr["RecmdVendorName"] = ldt1.Rows[i]["RecmdVendorName"].ToString().Replace("有限公司","");
                 ldr["NoTaxPrice"] = ldt1.Rows[i]["notax_targetPrice"].ToString();
-                ldr["pt_status"] = ldt1.Rows[i]["pt_status"].ToString();
+                //ldr["pt_status"] = ldt1.Rows[i]["pt_status"].ToString();
                 string[] lsrate = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Text.Split('|');
                 if (lsrate.Length == 3)
                 {
@@ -1153,7 +1208,7 @@ public partial class Pur_Po : System.Web.UI.Page
             }
 
             this.gv.Columns.Clear();
-            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
+            loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
             Session["pr_select"] = null;
         }
         else
@@ -1164,13 +1219,23 @@ public partial class Pur_Po : System.Web.UI.Page
             {
                 DataTable ldt = null;
                 string lssql = "";
-                lssql = @"select po.*,pr.wlType,pr.wlSubType,pr.wlh,pr.wlmc,pr.wlms,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+                /*lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+                            ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
                             ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                             ,'查看' as attachments_name,qad_pt_mstr.pt_status
                         from PUR_PO_Dtl_Form po
                             left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
                             left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                             inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain
+                        where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
+                        order by po.rowid";*/
+                lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+                            ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,replace(pr.RecmdVendorName,'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+                            ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                            ,'查看' as attachments_name
+                        from PUR_PO_Dtl_Form po
+                            left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
+                            left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                         where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
                         order by po.rowid";
                 lssql = string.Format(lssql, ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text
@@ -1179,7 +1244,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 ldt = DbHelperSQL.Query(lssql).Tables[0];
 
                 this.gv.Columns.Clear();
-                Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
+                loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
             }
             else//i== 2//采购供应商  下拉动态改变
             {
@@ -1279,7 +1344,7 @@ public partial class Pur_Po : System.Web.UI.Page
             }
             Session["del"] = ldt_del;
         }
-        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
+        loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
         //Pgi.Auto.Public.MsgBox(this.Page,"alert","删除成功!");
     }
 
@@ -1349,7 +1414,7 @@ public partial class Pur_Po : System.Web.UI.Page
             if (pvarr.Length >= 2) { PoVendor = pvarr[0] + "_" + pvarr[1]; }
         }
 
-        if (e.GetValue("RecmdVendorName").ToString() != PoVendor)
+        if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司",""))
         {
             e.Row.Cells[RecmdVendorNameindex + 1].Style.Add("background-color", "yellow");
         }

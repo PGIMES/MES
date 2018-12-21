@@ -38,7 +38,7 @@ public partial class Select_select_Pr : System.Web.UI.Page
             //lssql += " where domain='" + lsdomain + "' and pr.status=0 and pr_main.iscomplete='1' and (pt_status<>'OBS' and pt_status<>'DEAD')";
             //lssql += " order by pr.prno,pr.rowid";
             DataTable ldt = GetData(lsdomain, lspotype, lsbuyername);
-            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT_New", this.gv, ldt,2);
+            Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PR_SELECT_New_1", this.gv, ldt,2);
         }
         else
         {

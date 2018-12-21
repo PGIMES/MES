@@ -500,9 +500,12 @@
 
                 //grid底部total值更新
                 $('table[id*=gvdtl] tr[id*=DXFooterRow]').find('td').each(function () {
-                    if($.trim($(this).text())!=""){
-                        $(this).text("合计:"+fmoney(notax_totalMoney,2));
-                    }   
+                    //if($.trim($(this).text())!=""){
+                    //    $(this).text("合计:"+fmoney(notax_totalMoney,2));
+                    //}   
+                    if ($.trim($(this).text())!="") {
+                        $(this).html("<font color='red'>合计:"+fmoney(notax_totalMoney,2)+"</font>");
+                    }
                 });
                 
             })
@@ -767,7 +770,7 @@
                                                 </dx:GridViewDataTextColumn>
                                             </Columns>
                                             <TotalSummary>
-                                                <dx:ASPxSummaryItem DisplayFormat="合计:{0:N2}" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
+                                                <dx:ASPxSummaryItem DisplayFormat="<font color='red'>合计:{0:N2}</font>" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
                                                 
                                             </TotalSummary>
                                         </dx:ASPxGridView>
