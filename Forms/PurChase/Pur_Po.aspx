@@ -321,6 +321,11 @@
            return flag; 
         }
     </script>
+    <style>body{overflow-x:auto; overflow-y:hidden}
+        hidden { display:none
+        }
+    </style>
+
     <style type="text/css">
         .row {
             margin-right: 2px;
@@ -498,6 +503,9 @@
         }
         .dxeButtonDisabled{
             display:none;
+        }
+        .dxgvDataRow_MetropolisBlue>td:nth-child(6){/*为了给 物料名称[描述] 强行换行*/
+            word-break:break-all;
         }
     </style>
 </asp:Content>
