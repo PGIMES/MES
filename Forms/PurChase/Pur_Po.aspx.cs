@@ -254,7 +254,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(28);
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
