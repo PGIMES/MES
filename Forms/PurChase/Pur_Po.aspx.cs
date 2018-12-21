@@ -110,8 +110,9 @@ public partial class Pur_Po : System.Web.UI.Page
                         left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                         inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
            */
-            lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
-                        ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,replace(pr.RecmdVendorName,'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+            lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end +'[' +pr.wlh+']' wlType
+                        ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
+                        ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
                         ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                         ,'查看' as attachments_name
                     from PUR_PO_Dtl_Form po
@@ -1135,20 +1136,20 @@ public partial class Pur_Po : System.Web.UI.Page
                 //ldr["wlSubType"] = ldt1.Rows[i]["wlSubType"].ToString();
                 if (ldt1.Rows[i]["wlType"].ToString().Substring(0, 4) == "4010")
                 {
-                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5) + "[" + ldt1.Rows[i]["wlSubType"].ToString() + "]";
+                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5) + "[" + ldt1.Rows[i]["wlSubType"].ToString() + "]" + "[" + ldt1.Rows[i]["wlh"].ToString() + "]";
                 }
                 else
                 {
-                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5);
+                    ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString().Substring(5) + "[" + ldt1.Rows[i]["wlh"].ToString() + "]";
                 }
-                ldr["wlh"] = ldt1.Rows[i]["wlh"].ToString();
+                //ldr["wlh"] = ldt1.Rows[i]["wlh"].ToString();
                 //ldr["wlmc"] = ldt1.Rows[i]["wlmc"].ToString();
                 //ldr["wlms"] = ldt1.Rows[i]["wlms"].ToString();
                 ldr["wldesc"] = ldt1.Rows[i]["wlmc"].ToString() + "[" + ldt1.Rows[i]["wlms"].ToString() + "]";
                 ldr["currency"] = ldt1.Rows[i]["currency"].ToString();
                 ldr["notax_targetPrice"] = ldt1.Rows[i]["notax_targetPrice"].ToString();
                 ldr["PurQty"] = ldt1.Rows[i]["qty"].ToString();
-                ldr["RecmdVendorName"] = ldt1.Rows[i]["RecmdVendorName"].ToString().Replace("有限公司","");
+                ldr["RecmdVendorName"] = ldt1.Rows[i]["RecmdVendorName"].ToString().Substring(ldt1.Rows[i]["RecmdVendorName"].ToString().IndexOf('_') + 1).Replace("有限公司", "");
                 ldr["NoTaxPrice"] = ldt1.Rows[i]["notax_targetPrice"].ToString();
                 //ldr["pt_status"] = ldt1.Rows[i]["pt_status"].ToString();
                 string[] lsrate = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Text.Split('|');
@@ -1229,8 +1230,9 @@ public partial class Pur_Po : System.Web.UI.Page
                             inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain
                         where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
                         order by po.rowid";*/
-                lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
-                            ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,replace(pr.RecmdVendorName,'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
+                lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end +'[' +pr.wlh+']' wlType
+                            ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
+                            ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
                             ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                             ,'查看' as attachments_name
                         from PUR_PO_Dtl_Form po
@@ -1411,7 +1413,11 @@ public partial class Pur_Po : System.Web.UI.Page
         if (acb_pvi != null)
         {
             string[] pvarr = acb_pvi.Text.Split('|');
-            if (pvarr.Length >= 2) { PoVendor = pvarr[0] + "_" + pvarr[1]; }
+            if (pvarr.Length >= 2)
+            {
+                //PoVendor = pvarr[0] + "_" + pvarr[1];
+                PoVendor = pvarr[1];
+            }
         }
 
         if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司",""))
