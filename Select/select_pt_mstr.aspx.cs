@@ -38,20 +38,29 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
         string sql = "";
         if (prtype == "存货(其他辅料类)")
         {
-            sql = @"select aa.pt_part,aa.pt_desc1,aa.pt_desc2,aa.pt_status,aa.pt_prod_line,aa.pt_domain
-                    from qad_pt_mstr aa
-                     where aa.pt_pm_code = 'P' and aa.pt_part like 'Z%' and aa.pt_prod_line <> '4010' and(aa.pt_status <> 'DEAD' and aa.pt_status <> 'OBS')                         
-                         and aa.pt_domain = '{0}' and aa.pt_part like '%{1}%' and aa.pt_desc1 like '%{2}%'
-                     order by aa.pt_part";//and (aa.pt_prod_line='4090' or aa.pt_prod_line='4060')
+            sql = @"select * 
+                    from (
+                        select a.pt_part,a.pt_desc1,a.pt_desc2,a.pt_status,a.pt_prod_line,a.pt_domain
+                             , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                        from qad_pt_mstr a
+                         where a.pt_pm_code = 'P' and a.pt_part like 'Z%' and a.pt_prod_line <> '4010' and(a.pt_status <> 'DEAD' and a.pt_status <> 'OBS')                         
+                             and a.pt_domain = '{0}' and a.pt_part like '%{1}%' and a.pt_desc1 like '%{2}%'
+                        ) aa where ispodsched=0
+                    order by aa.pt_part";//and (a.pt_prod_line='4090' or a.pt_prod_line='4060')
         }
         if (prtype == "存货(原材料及前期样件)")
         {
-            sql = @"select aa.pt_part,aa.pt_desc1,aa.pt_desc2,aa.pt_status,aa.pt_prod_line,aa.pt_domain
-                    from qad_pt_mstr aa
-                     where aa.pt_pm_code = 'P' and aa.pt_part like 'P%' and aa.pt_prod_line like '1%' and(aa.pt_status <> 'DEAD' and aa.pt_status <> 'OBS')                         
-                         and aa.pt_domain = '{0}' and aa.pt_part like '%{1}%' and aa.pt_desc1 like '%{2}%'
-                     order by aa.pt_part";
+            sql = @"select * 
+                    from (
+                        select a.pt_part,a.pt_desc1,a.pt_desc2,a.pt_status,a.pt_prod_line,a.pt_domain
+                            , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                        from qad_pt_mstr a
+                            where a.pt_pm_code = 'P' and a.pt_part like 'P%' and a.pt_prod_line like '1%' and(a.pt_status <> 'DEAD' and a.pt_status <> 'OBS')                         
+                                and a.pt_domain = '{0}' and a.pt_part like '%{1}%' and a.pt_desc1 like '%{2}%'
+                         ) aa where ispodsched=0
+                    order by aa.pt_part";
         }
+
 
         sql = string.Format(sql, sdomain, this.txtwlh.Value.Trim(), this.txtljh.Value.Trim());
 

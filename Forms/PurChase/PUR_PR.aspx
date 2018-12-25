@@ -331,7 +331,7 @@
                             $(notax_historyprice).val("");//add heguiqin
                         }
                         else {
-                            if(item.ispodsched=="1"){
+                            if(item.ispodsched!="0"){
                                 layer.alert(item.wlh+" 为日程物料号，无需提请购单.");
                                 $(wlh).val("");
                                 $(wlmc).val(""); 
