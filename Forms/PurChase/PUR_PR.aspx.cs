@@ -365,40 +365,59 @@ protected void Page_Load(object sender, EventArgs e)
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BackColor = System.Drawing.Color.Transparent;
 
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
+
+        if (formtype == "存货(刀具类)")
+        {
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
+        }
+        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+        {
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
+        }
         ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
         ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle= BorderStyle.None;
         ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(72);
-
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(110);
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
 
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).Style.Add("text-align", "right");
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BackColor = System.Drawing.Color.Transparent;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BackColor = System.Drawing.Color.Transparent;
 
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).ReadOnly = true;
         //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).BorderStyle = BorderStyle.None;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BackColor = System.Drawing.Color.Transparent;
 
         //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
 
@@ -407,6 +426,7 @@ protected void Page_Load(object sender, EventArgs e)
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
         }
 
         //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
@@ -414,7 +434,7 @@ protected void Page_Load(object sender, EventArgs e)
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
-
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
     }
 
     public  string GetDanHao()
@@ -941,6 +961,18 @@ protected void Page_Load(object sender, EventArgs e)
 
         for (int i = 0; i < ((DataTable)ViewState["dtl"]).Rows.Count; i++)
         {
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
+
+            if (formtype == "存货(刀具类)")
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
+            }
+            if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
+            }
+
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(120);
             if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
@@ -949,6 +981,12 @@ protected void Page_Load(object sender, EventArgs e)
             }
 
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(50);
+
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
         }
 
     }
