@@ -113,7 +113,7 @@ public partial class Pur_Po : System.Web.UI.Page
             lssql = @"select po.*,'['+pr.wlh+']'+case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'/'+pr.wlSubType else right(pr.wlType,LEN(pr.wlType)-5) end wlType
                         ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
                         ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                        ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                        ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                         ,'查看' as attachments_name
                     from PUR_PO_Dtl_Form po
                         left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
@@ -210,19 +210,31 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
+                    if (ldt_detail.Rows[i]["notax_historyPrice"].ToString() == "新单价")
+                    {
+                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
+                    }
+                    else if (Convert.ToDecimal(ldt_detail.Rows[i]["notax_historyPrice"].ToString()) < Convert.ToDecimal(ldt_detail.Rows[i]["NoTaxPrice"].ToString()))
+                    {
+                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
+                    }
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BackColor = System.Drawing.Color.Transparent;
 
                     //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
 
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(65);
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(72);
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.BackColor= System.Drawing.Color.Transparent;
 
                     //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
                     //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
@@ -255,18 +267,31 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(28);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
+                    if (ldt_detail.Rows[i]["notax_historyPrice"].ToString() == "新单价")
+                    {
+                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
+                    }
+                    else if (Convert.ToDecimal(ldt_detail.Rows[i]["notax_historyPrice"].ToString()) < Convert.ToDecimal(ldt_detail.Rows[i]["NoTaxPrice"].ToString()))
+                    {
+                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
+                    }
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BackColor = System.Drawing.Color.Transparent;
 
                     //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
 
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(65);
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(72);
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
                     //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
                     //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
@@ -393,7 +418,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
     public void loadControl(DataTable ldt_detail)
     {
-        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New_1", this.gv, ldt_detail, 2);
+        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New_2", this.gv, ldt_detail, 2);
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
@@ -1192,7 +1217,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 {
                     ldr["TotalPrice"] = (Convert.ToDecimal(ldr["TaxPrice"]) * Convert.ToDecimal(ldt1.Rows[i]["qty"].ToString())).ToString("0.0000");
                 }
-                ldr["notax_historyPrice"] = ldt1.Rows[i]["notax_historyPrice"].ToString();
+                ldr["notax_historyPrice"] = ldt1.Rows[i]["notax_historyPrice"].ToString() == "" ? "新单价" : ldt1.Rows[i]["notax_historyPrice"].ToString();
                 ldr["attachments"] = ldt1.Rows[i]["attachments"].ToString();
                 ldr["attachments_name"] = "查看";
                 ln += 1;
@@ -1233,7 +1258,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 lssql = @"select po.*,'['+pr.wlh+']'+case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'/'+pr.wlSubType else right(pr.wlType,LEN(pr.wlType)-5) end wlType
                             ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
                             ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                            ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                            ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
                             ,'查看' as attachments_name
                         from PUR_PO_Dtl_Form po
                             left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid

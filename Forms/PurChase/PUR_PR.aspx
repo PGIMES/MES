@@ -742,7 +742,7 @@
                                     <asp:Button ID="btnAddDetl" runat="server" Text="添加" CssClass="btn btn-primary btn-sm" OnClientClick="return Add_check()"  OnClick="btnAddDetl_Click"/>
                                     <asp:Button ID="btnDelete" runat="server" Text="删除"  CssClass="btn btn-primary btn-sm"   OnClick="btnDelete_Click"/>
                                     
-                                        <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue">
+                                        <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue" Border-BorderColor="#DCDCDC">
                                             <SettingsBehavior AllowDragDrop="false" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowSort="false"  />
                                             <SettingsPager PageSize="1000">
                                             </SettingsPager>
@@ -755,9 +755,10 @@
                                             <SettingsFilterControl AllowHierarchicalColumns="True">
                                             </SettingsFilterControl>
                                             <Styles>
-                                                <Header BackColor="#E4EFFA"></Header>   
-                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow>                                               
+                                                <Header BackColor="#E4EFFA"  Border-BorderColor="#DCDCDC"></Header>   
+                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow>                                           
                                                 <Footer HorizontalAlign="Right"></Footer>
+                                                <Cell Border-BorderColor="#DCDCDC"></Cell>
                                             </Styles>
                                             <Styles>   
                                     </Styles> 

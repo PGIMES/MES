@@ -504,6 +504,9 @@
         .dxeButtonDisabled{
             display:none;
         }
+        .dxgvDataRow_MetropolisBlue>td:nth-child(3){
+            word-break:break-all;
+        }
         .dxgvDataRow_MetropolisBlue>td:nth-child(6){/*为了给 物料名称[描述] 强行换行*/
             word-break:break-all;
         }
@@ -615,7 +618,11 @@
             <div class="col-md-12" >
                 <div class="panel panel-info">
                     <div class="panel-heading" data-toggle="collapse" data-target="#gscs">
-                        <strong style="padding-right: 100px">采购清单</strong>
+                        <strong>采购清单</strong>
+                        &nbsp;&nbsp;<font style="color:red; font-size:9px;">
+                                    提示：采购单价(未税) 字体红色：采购单价(未税) 大于 历史单价(未税)
+                        &nbsp;&nbsp;采购总价(未税) 单元格 红色：多出 目标总价(未税) 的20%，黄色：在 目标总价(未税) 的20% 范围内
+                                    </font>
                     </div>
                     <div class="panel-body  collapse in" id="gscs">
                         <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
@@ -628,7 +635,7 @@
                                
                               
                                 <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False"  KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
-                                     ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" >
+                                     ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" Border-BorderColor="#DCDCDC" >
                                    
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
@@ -642,8 +649,10 @@
                                         <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
                                     </TotalSummary>
                                     <Styles>
-                                        <Header BackColor="#E4EFFA"></Header>   
+                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC"></Header>   
                                         <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
+                                        <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
+                                        <Cell Border-BorderColor="#DCDCDC"></Cell>
                                     </Styles>
                                     <Columns>
                                         <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>
