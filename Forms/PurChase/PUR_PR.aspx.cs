@@ -483,10 +483,11 @@ protected void Page_Load(object sender, EventArgs e)
         string sql = "";
         if (P3 == "存货(刀具类)")
         {
-            sql = @"select wlh,wlmc,ms,class,type,upload
+            sql = @"select a.wlh,a.wlmc,a.ms,a.class,a.type,a.upload,b.pt_status
 	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.domain and [pod_sched]=1 and [pod_part]=a.wlh  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
                     from dbo.PGI_BASE_PART_DATA a 
-                    where wlh='{0}' and domain='{1}' ";
+	                    left join dbo.qad_pt_mstr b on a.domain=b.pt_domain and a.wlh=b.pt_part
+                    where a.wlh='{0}' and a.domain='{1}' and (b.pt_status<>'DEAD' and b.pt_status<>'OBS')";
         }
 
         if (P3 == "存货(其他辅料类)")
