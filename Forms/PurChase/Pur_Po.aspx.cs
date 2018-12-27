@@ -677,9 +677,9 @@ public partial class Pur_Po : System.Web.UI.Page
         else { pricetype = "2"; }
 
         Pgi.Auto.Common lcPriceType = new Pgi.Auto.Common();
-        lcTotalPay.Code = "pricetype";
-        lcTotalPay.Key = "";
-        lcTotalPay.Value = pricetype;
+        lcPriceType.Code = "pricetype";
+        lcPriceType.Key = "";
+        lcPriceType.Value = pricetype;
         ls.Add(lcPriceType);
 
 
