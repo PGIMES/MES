@@ -1108,6 +1108,10 @@ protected void Page_Load(object sender, EventArgs e)
         }
         sql += @" union all SELECT replace(pgino+[version]+'/'+productcode,' ','')   FROM [dbo].[form3_Sale_Product_DetailTable]";
 
+        if (prtype_v == "存货(其他辅料类)")
+        {
+            sql += @" union all select replace(XMBH+'/'+XMMS,' ','') from [dbo].[formtable_main_55_ZDHXM]";
+        }
         DataTable ldt_usefor = DbHelperSQL.Query(sql).Tables[0];
 
         for (int i = 0; i < gvdtl.VisibleRowCount; i++)
