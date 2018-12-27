@@ -156,7 +156,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 }
 
 
-                lssql += " where pono='" + this.m_sid + "'  order by po.rowid";
+                lssql += " where pono='" + this.m_sid + "'  order by po.rowid"; //order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
 
@@ -216,14 +216,6 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
-                    if (ldt_detail.Rows[i]["notax_historyPrice"].ToString() == "新单价")
-                    {
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
-                    }
-                    else if (Convert.ToDecimal(ldt_detail.Rows[i]["notax_historyPrice"].ToString()) < Convert.ToDecimal(ldt_detail.Rows[i]["NoTaxPrice"].ToString()))
-                    {
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
-                    }
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
@@ -273,14 +265,6 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
-                    if (ldt_detail.Rows[i]["notax_historyPrice"].ToString() == "新单价")
-                    {
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
-                    }
-                    else if (Convert.ToDecimal(ldt_detail.Rows[i]["notax_historyPrice"].ToString()) < Convert.ToDecimal(ldt_detail.Rows[i]["NoTaxPrice"].ToString()))
-                    {
-                        ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ForeColor = System.Drawing.Color.FromName("#FF4500");
-                    }
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
@@ -663,6 +647,7 @@ public partial class Pur_Po : System.Web.UI.Page
         }
 
         decimal lntotalpay = 0;
+        string pricetype = ""; decimal notax_historyPrice = 0, NoTaxPrice = 0, notax_historyPrice_num = 0, NoTaxPrice_num = 0;
         for (int i = 0; i < ldt.Rows.Count; i++)
         {
             ldt.Rows[i]["pono"] = formno_main;
@@ -670,6 +655,13 @@ public partial class Pur_Po : System.Web.UI.Page
             {
                 lntotalpay += Convert.ToDecimal(ldt.Rows[i]["TotalPrice"].ToString());
             }
+
+            notax_historyPrice = 0; NoTaxPrice = 0; notax_historyPrice_num = 0; NoTaxPrice_num = 0;
+            notax_historyPrice = Convert.ToDecimal(ldt.Rows[i]["notax_historyPrice"].ToString() == "新单价" ? "0" : ldt.Rows[i]["notax_historyPrice"].ToString());
+            NoTaxPrice = Convert.ToDecimal(ldt.Rows[i]["NoTaxPrice"].ToString());
+
+            if (NoTaxPrice <= notax_historyPrice) { notax_historyPrice_num++; }
+            else if (NoTaxPrice > notax_historyPrice) { NoTaxPrice_num++; }
         }
 
         //从明细表中合计采购总金额
@@ -678,6 +670,18 @@ public partial class Pur_Po : System.Web.UI.Page
         lcTotalPay.Key = "";
         lcTotalPay.Value = lntotalpay.ToString();// ((LoginUser)Session["LogUser"]).UserId;
         ls.Add(lcTotalPay);
+
+        //从明细表中得出 PriceType
+        if (notax_historyPrice_num == ldt.Rows.Count) { pricetype = "0"; }
+        else if (NoTaxPrice_num == ldt.Rows.Count) { pricetype = "1"; }
+        else { pricetype = "2"; }
+
+        Pgi.Auto.Common lcPriceType = new Pgi.Auto.Common();
+        lcTotalPay.Code = "pricetype";
+        lcTotalPay.Key = "";
+        lcTotalPay.Value = pricetype;
+        ls.Add(lcPriceType);
+
 
         //获取的表头信息，自动生成SQL，增加到SUM中
         ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PUR_PO_Main_Form"));
@@ -1264,7 +1268,7 @@ public partial class Pur_Po : System.Web.UI.Page
                             left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
                             left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                         where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
-                        order by po.rowid";
+                        order by po.rowid";//order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc
                 lssql = string.Format(lssql, ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text
                     , ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).SelectedValue
                     , param);
@@ -1387,6 +1391,27 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             return;
         }
+        //新增价格 背景色 
+        //string PoNo = ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text;
+        //if (PoNo != "")
+        //{
+        //    string pricetype = DbHelperSQL.Query("select pricetype from PUR_PO_Main_Form where pono='" + PoNo + "'").Tables[0].Rows[0][0].ToString();
+        //    if (pricetype == "2")
+        //    {
+        //        decimal notax_historyPrice = Convert.ToDecimal(e.GetValue("notax_historyPrice").ToString() == "新单价" ? "0" : e.GetValue("notax_historyPrice").ToString());
+        //        decimal NoTaxPrice = Convert.ToDecimal(e.GetValue("NoTaxPrice").ToString());
+        //        if (NoTaxPrice > notax_historyPrice)
+        //        {
+        //            e.Row.Style.Add("background-color", "#FFE7BA");
+        //        }
+        //        else
+        //        {
+        //            e.Row.Style.Add("background-color", "#FFFFFF");
+        //        }
+        //    }
+        //}
+
+
         int lncindex = 0; int prnoindex = 0; int RecmdVendorNameindex = 0;
         for (int i = 0; i < this.gv.DataColumns.Count; i++)
         {
@@ -1448,6 +1473,7 @@ public partial class Pur_Po : System.Web.UI.Page
         if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司", ""))
         {
             e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("background-color", "yellow");
+           // e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("color","Red");#EEEE00            
         }
 
     }

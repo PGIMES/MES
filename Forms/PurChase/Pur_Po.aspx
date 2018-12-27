@@ -619,10 +619,11 @@
                 <div class="panel panel-info">
                     <div class="panel-heading" data-toggle="collapse" data-target="#gscs">
                         <strong>采购清单</strong>
-                        &nbsp;&nbsp;<font style="color:red; font-size:9px;">
-                                    提示：采购单价(未税) 字体红色：采购单价(未税) 大于 历史单价(未税)
+                       <%-- &nbsp;&nbsp;<font style="color:red; font-size:9px;">
+                                    提示：行背景橙色：采购单价(未税) 大于 历史单价(未税)
                         &nbsp;&nbsp;采购总价(未税) 单元格 红色：多出 目标总价(未税) 的20%，黄色：在 目标总价(未税) 的20% 范围内
-                                    </font>
+                        &nbsp;&nbsp;推荐供应商 黄色：与采购供应商不一致
+                                    </font>--%>
                     </div>
                     <div class="panel-body  collapse in" id="gscs">
                         <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
