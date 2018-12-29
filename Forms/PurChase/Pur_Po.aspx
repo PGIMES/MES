@@ -510,6 +510,9 @@
         .dxgvDataRow_MetropolisBlue>td:nth-child(6){/*为了给 物料名称[描述] 强行换行*/
             word-break:break-all;
         }
+		.dxgvDataRow_MetropolisBlue>td:nth-child(11){
+            word-break:break-all;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent" enctype="multipart/form-data">
