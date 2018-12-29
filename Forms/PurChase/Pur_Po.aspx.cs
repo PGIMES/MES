@@ -656,8 +656,8 @@ public partial class Pur_Po : System.Web.UI.Page
                 lntotalpay += Convert.ToDecimal(ldt.Rows[i]["TotalPrice"].ToString());
             }
 
-            notax_historyPrice = 0; NoTaxPrice = 0; notax_historyPrice_num = 0; NoTaxPrice_num = 0;
-            notax_historyPrice = Convert.ToDecimal(ldt.Rows[i]["notax_historyPrice"].ToString() == "新单价" ? "0" : ldt.Rows[i]["notax_historyPrice"].ToString());
+            notax_historyPrice = 0; NoTaxPrice = 0;
+            notax_historyPrice = Convert.ToDecimal(ldt.Rows[i]["notax_historyPrice"].ToString() == "新单价" ? "0" : ldt.Rows[i]["notax_historyPrice"].ToString() == "" ? "0" : ldt.Rows[i]["notax_historyPrice"].ToString());
             NoTaxPrice = Convert.ToDecimal(ldt.Rows[i]["NoTaxPrice"].ToString());
 
             if (NoTaxPrice <= notax_historyPrice) { notax_historyPrice_num++; }
