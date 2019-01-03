@@ -499,6 +499,20 @@ public partial class Pur_Po : System.Web.UI.Page
 
         ldt.AcceptChanges();
 
+        if (ldt.Rows.Count == 0)
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
+            return false;
+        }
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            if (ldt.Rows[i]["PlanReceiveDate"].ToString() == "")
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", "第" + (i + 1).ToString() + "行计划到货日期不能为空!");
+                return false;
+            }
+        }
+        
         //特殊数据处理
         for (int i = 0; i < ls.Count; i++)
         {
