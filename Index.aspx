@@ -705,7 +705,8 @@
                                     <ul class="dropdown-menu" style="color: Black" role="menu">                                        
                                         <li><a href="http://172.16.5.6:8080/dj/Sftnum_Query.aspx" target="_blank">安全库存报表</a></li>
                                         <li><a href="http://172.16.5.6:8080/dj/Sftnum_Unapply.aspx"  target="_blank">有安全库存未请购报表</a></li> 
-                                         <li><a href="http://172.16.5.6:8080/dj/Jiance_Data.aspx"  target="_blank">监测物流流通时间报表</a></li>                                       
+                                         <li><a href="http://172.16.5.6:8080/dj/Jiance_Data.aspx"  target="_blank">监测物流流通时间报表</a></li>    
+                                        <li><a href="/wuliu/Qad_usrw_wkfl_condition.aspx"  target="_blank">福特标签浏览</a></li>                                   
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
