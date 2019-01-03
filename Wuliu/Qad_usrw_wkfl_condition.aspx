@@ -45,6 +45,14 @@
                     <asp:TextBox ID="EndDate" runat="server" class="form-control" Width="120px"
                         onclick="laydate({type: 'date',format: 'YYYY/MM/DD',choose: function(dates){}});" />
                 </td>
+                <td style="width:60px;">标签号</td>
+                <td style="width:125px;">
+                    <asp:DropDownList ID="ddl_yn" runat="server" class="form-control input-s-md " Width="80px">
+                        <asp:ListItem Value="">All</asp:ListItem>
+                        <asp:ListItem Value="有">有</asp:ListItem>
+                        <asp:ListItem Value="无" Selected="True">无</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
                 <td id="td_btn">  
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>  
                     <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
@@ -67,15 +75,16 @@
                             <dx:GridViewDataDateColumn Caption="生效日期" FieldName="tr_effdate" Width="120px" VisibleIndex="1">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataTextColumn Caption="订单号" FieldName="tr_nbr" Width="100px" VisibleIndex="2"></dx:GridViewDataTextColumn>    
-                            <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="100px" VisibleIndex="3"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="数量" FieldName="tr_qty_loc" Width="80px" VisibleIndex="4">
+                            <dx:GridViewDataTextColumn Caption="时间" FieldName="tr_time_str" Width="100px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="订单号" FieldName="tr_nbr" Width="100px" VisibleIndex="3"></dx:GridViewDataTextColumn>    
+                            <dx:GridViewDataTextColumn Caption="参考号" FieldName="tr_ref" Width="100px" VisibleIndex="4"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="数量" FieldName="tr_qty_loc" Width="80px" VisibleIndex="5">
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="tr_part" Width="100px" VisibleIndex="5"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="客户零件号" FieldName="pt_desc1" Width="150px" VisibleIndex="6"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="标签号" FieldName="usrw_key2_part" Width="90px" VisibleIndex="7"></dx:GridViewDataTextColumn>    
-                            <dx:GridViewDataTextColumn Caption="标签数量" FieldName="usrw_decfld[2]" Width="80px" VisibleIndex="8">
+                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="tr_part" Width="100px" VisibleIndex="6"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="客户零件号" FieldName="pt_desc1" Width="150px" VisibleIndex="7"></dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="标签号" FieldName="usrw_key2_part" Width="90px" VisibleIndex="8"></dx:GridViewDataTextColumn>    
+                            <dx:GridViewDataTextColumn Caption="标签数量" FieldName="usrw_decfld[2]" Width="80px" VisibleIndex="9">
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
                                           

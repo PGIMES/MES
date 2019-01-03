@@ -32,7 +32,7 @@ public partial class Wuliu_Qad_usrw_wkfl_condition : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec Report_usrw_wkfl '" + ddl_domain.SelectedValue + "','" + StartDate.Text + "','" + EndDate.Text + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec Report_usrw_wkfl '" + ddl_domain.SelectedValue + "','" + StartDate.Text + "','" + EndDate.Text + "','" + ddl_yn.SelectedValue + "'").Tables[0];
         gv.DataSource = dt;
         gv.DataBind();
     }
