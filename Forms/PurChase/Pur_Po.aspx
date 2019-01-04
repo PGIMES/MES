@@ -653,10 +653,11 @@
                                         <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
                                     </TotalSummary>
                                     <Styles>
-                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC"></Header>   
+                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
                                         <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
                                         <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
-                                        <Cell Border-BorderColor="#DCDCDC"></Cell>
+                                        <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
+                                        <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None"></CommandColumn>
                                     </Styles>
                                     <Columns>
                                         <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>

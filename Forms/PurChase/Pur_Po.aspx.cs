@@ -56,7 +56,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
         //加载表头控件
         //List<TableRow> ls = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "form-control input-s-sm");
-        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD_New", 3, "", "", "lineread", "linewrite");
+        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD_New_1", 4, "", "", "lineread", "linewrite");
         for (int i = 0; i < ls.Count; i++)
         {
             this.tblWLLeibie.Rows.Add(ls[i]);
@@ -145,7 +145,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 //编辑  
                 //表头赋值
                 DataTable ldt= DbHelperSQL.Query("select * from PUR_PO_Main_Form where PoNo='"+this.m_sid+"'").Tables[0];
-                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_New", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_New_1", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                 if (ldt.Rows[0]["attachments"].ToString()!="")
                 {
                     //this.txtfile.NavigateUrl = ldt.Rows[0]["attachments"].ToString();
@@ -156,7 +156,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 }
 
 
-                lssql += " where pono='" + this.m_sid + "'  order by po.rowid"; //order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc
+                lssql += " where pono='" + this.m_sid + "'  order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc,po.rowid"; 
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
 
@@ -180,9 +180,9 @@ public partial class Pur_Po : System.Web.UI.Page
 
                     lsrate = ldt_detail.Rows[0]["TaxRate"].ToString();
                 }
-             
 
-                ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString()+"|"+lsrate;
+
+                ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString() + "|" + lsrate;
 
                 ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
 
@@ -247,9 +247,19 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
                     ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
 
+                    //签核的时候，加上%
+                    if (((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value.ToString().Right(1) != "%")
+                    {
+                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value + "%";
+                    }
+
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
 
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#333333");
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#333333");
+
+                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).DisabledStyle.Font.Bold = true;
                 }
                 if(Request.QueryString["display"]!=null)
                 {
@@ -294,6 +304,12 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).CssClass = "lineread";
                     ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
                     ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
+
+                    //签核的时候，加上%
+                    if (((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value.ToString().Right(1)!="%")
+                    {
+                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value + "%";
+                    }
 
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
                     ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
@@ -490,7 +506,7 @@ public partial class Pur_Po : System.Web.UI.Page
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
         //获取表头
-        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_New", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_New_1", this, "ctl00$MainContent${0}");
         string buyer = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value.ToString();
         string povendor = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Value.ToString();
 
@@ -1282,7 +1298,7 @@ public partial class Pur_Po : System.Web.UI.Page
                             left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
                             left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
                         where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
-                        order by po.rowid";//order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc
+                        order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc,po.rowid";
                 lssql = string.Format(lssql, ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text
                     , ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).SelectedValue
                     , param);
@@ -1405,26 +1421,7 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             return;
         }
-        //新增价格 背景色 
-        //string PoNo = ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text;
-        //if (PoNo != "")
-        //{
-        //    string pricetype = DbHelperSQL.Query("select pricetype from PUR_PO_Main_Form where pono='" + PoNo + "'").Tables[0].Rows[0][0].ToString();
-        //    if (pricetype == "2")
-        //    {
-        //        decimal notax_historyPrice = Convert.ToDecimal(e.GetValue("notax_historyPrice").ToString() == "新单价" ? "0" : e.GetValue("notax_historyPrice").ToString());
-        //        decimal NoTaxPrice = Convert.ToDecimal(e.GetValue("NoTaxPrice").ToString());
-        //        if (NoTaxPrice > notax_historyPrice)
-        //        {
-        //            e.Row.Style.Add("background-color", "#FFE7BA");
-        //        }
-        //        else
-        //        {
-        //            e.Row.Style.Add("background-color", "#FFFFFF");
-        //        }
-        //    }
-        //}
-
+        
 
         int lncindex = 0; int prnoindex = 0; int RecmdVendorNameindex = 0;
         for (int i = 0; i < this.gv.DataColumns.Count; i++)
@@ -1453,8 +1450,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
         if (ln > 0 && ln <= 20)
         {
-            e.Row.Cells[lncindex - 1].Style.Add("background-color", "yellow");
-
+            e.Row.Cells[lncindex - 1].Style.Add("background-color", "#EEEE00");
         }
         else if (ln > 20)
         {
@@ -1462,12 +1458,7 @@ public partial class Pur_Po : System.Web.UI.Page
             e.Row.Cells[lncindex - 1].Style.Add("background-color", "red");
         }
 
-        //add by heguiqin20180515 请购单号链接
         string PRNo = Convert.ToString(e.GetValue("PRNo"));
-        //e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-        //    + e.GetValue("PRNo") + "&mode=view' target='_blank'>" + PRNo.ToString() + "</a>";
-
-        //mode=view 修改为 display=1
         e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
             + e.GetValue("PRNo") + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
 
@@ -1484,11 +1475,76 @@ public partial class Pur_Po : System.Web.UI.Page
             }
         }
 
-        if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司", ""))
+        if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司", "") && e.GetValue("RecmdVendorName").ToString() !="")
         {
-            e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("background-color", "yellow");
-           // e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("color","Red");#EEEE00            
+            e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("background-color", "#EEEE00");
         }
+
+        //新增价格 背景色 
+        #region color
+        if (this.FindControl("ctl00$MainContent$PoNo") is Control)
+        {
+            string PoNo = ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text;
+            if (PoNo != "")
+            {
+
+                string stepname_po = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='ce701853-e13b-4c39-9cd6-b97e18656d31' and InstanceID='"
+                            + PoNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                if (stepname_po != "采购负责人")//申请步骤
+                {
+                    string pricetype = DbHelperSQL.Query("select pricetype from PUR_PO_Main_Form where pono='" + PoNo + "'").Tables[0].Rows[0][0].ToString();
+                    if (pricetype == "2")
+                    {
+                        decimal notax_historyPrice = Convert.ToDecimal(e.GetValue("notax_historyPrice").ToString() == "新单价" ? "0" : e.GetValue("notax_historyPrice").ToString());
+                        decimal NoTaxPrice = Convert.ToDecimal(e.GetValue("NoTaxPrice").ToString());
+                        //if (NoTaxPrice > notax_historyPrice)
+                        //{
+                        //    e.Row.Style.Add("background-color", "#FFE7BA");
+                        //}
+                        //else
+                        //{
+                        //    e.Row.Style.Add("background-color", "#FFFFFF");
+                        //}
+
+                        if (NoTaxPrice > notax_historyPrice)
+                        {
+                            //e.Row.Style.Add("background-color", "#FFFFFF");
+                        }
+                        else
+                        {
+                            e.Row.Style.Add("background-color", "#FFFFFF");
+                            e.Row.Style.Add("font-style", "italic");
+                            e.Row.Style.Add("color", "#969696");
+
+                            e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
+                + e.GetValue("PRNo") + "&display=1' target='_blank' style='color:#969696'>" + PRNo.ToString() + "</a>";
+
+                            //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["wlType"], "wlType")).Style.Add("color", "#CDC5BF");
+                            //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["RecmdVendorName"], "RecmdVendorName")).Style.Add("color", "#CDC5BF");
+                            //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["notax_historyPrice"], "notax_historyPrice")).Style.Add("color", "#CDC5BF");
+                            ((HyperLink)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["attachments_name"], "attachments_name")).Style.Add("color", "#969696");
+
+                            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
+                            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Font.Italic = true;
+
+                            ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("color", "#969696");
+                            ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("font-style", "italic");
+
+                            ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
+                            ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Font.Italic = true;
+
+                            e.Row.Cells[RecmdVendorNameindex - 1].Style.Remove("background-color");
+                            e.Row.Cells[lncindex - 1].Style.Add("color", "#969696");
+                            e.Row.Cells[lncindex - 1].Style.Remove("background-color");
+
+
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
 
     }
 
