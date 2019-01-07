@@ -286,7 +286,7 @@
             var flag=true;var msg="";
             <%=ValidScript%>
             
-            if(action=='submit'){
+            //if(action=='submit'){
                 if($("input[type!=hidden][id*='buyername']").val()==""){
                     msg+="【采购负责人】不可为空.<br />";
                 }
@@ -294,7 +294,7 @@
                 if($("input[type!=hidden][id*='povendorid']").val()==""){
                     msg+="【采购供应商】不可为空.<br />";
                 }
-            }
+            //}
            
             if($("[id$=gv] tr[id*=DataRow]").length==0){
                 msg+="【采购清单】不可为空.<br />";
