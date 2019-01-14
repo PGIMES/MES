@@ -32,6 +32,7 @@ public partial class Forms_PurChase_PO_KPI_Report : System.Web.UI.Page
         {
             if (!IsPostBack)
             {
+                ddl_year.SelectedValue = DateTime.Now.Year.ToString();
                 Set_buyname();
                 QueryASPxGridView();
             }

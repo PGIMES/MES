@@ -65,6 +65,7 @@
                     <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-md " Width="90px">
                         <asp:ListItem Value="">All</asp:ListItem>
                         <asp:ListItem Value="2018">2018</asp:ListItem>
+                        <asp:ListItem Value="2019">2019</asp:ListItem>
                     </asp:DropDownList>
                 </td>
                 <td style="width:85px;">采购工程师</td>
@@ -89,7 +90,7 @@
                         <SettingsPager PageSize="100" ></SettingsPager>
 
                         <%--ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" --%>
-                        <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />                        
+                     <%--   <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />    --%>                    
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"/>
                         <Columns>                        
                             <dx:GridViewDataTextColumn Caption="采购工程师" FieldName="lastname" Width="120px" VisibleIndex="1" ></dx:GridViewDataTextColumn>
