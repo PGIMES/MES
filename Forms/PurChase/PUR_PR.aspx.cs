@@ -572,7 +572,7 @@ protected void Page_Load(object sender, EventArgs e)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[HR_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
+        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
         object obj = DbHelperSQL.GetSingle(sb.ToString());
         return obj == null ? "" : obj.ToString();
     }
