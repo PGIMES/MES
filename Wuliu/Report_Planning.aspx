@@ -46,6 +46,13 @@
                     <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-md " Width="90px">
                         <asp:ListItem Value="2019">2019</asp:ListItem>
                     </asp:DropDownList>
+                </td>
+                <td style="width:30px;">域</td>
+                <td style="width:100px;">
+                    <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="90px">
+                        <asp:ListItem Value="200">200</asp:ListItem>
+                        <asp:ListItem Value="100">100</asp:ListItem>
+                    </asp:DropDownList>
                 </td>     
                 <td id="td_btn">  
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>  

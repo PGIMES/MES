@@ -75,7 +75,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
         try
         {
             DataTable dtExcel = GetExcelData_Table(fileName, 0);
-            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 3)
+            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 4)
             {
                 return "No Data";
             }
@@ -94,7 +94,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
                 DataRow dr = dtExcel.Rows[k];
 
                 DataRow dt_r = dt.NewRow();
-                dt_r["domain"] = ddl_comp.SelectedValue;
+                dt_r["domain"] = dr["域"].ToString();
                 dt_r["years"] = dr["年份"].ToString();
                 dt_r["weeks"] = dr["周数"].ToString();
                 dt_r["Qty"] = dr["数量"].ToString().Replace(",", "").Trim() == "" ? "0" : dr["数量"].ToString().Replace(",", "").Trim();

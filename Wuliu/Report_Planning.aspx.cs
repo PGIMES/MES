@@ -28,7 +28,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     }
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "','" + ddl_domain.SelectedValue + "'").Tables[0];
         SetGrid(this.gv, dt, 90);
     }
     protected void btn_export_Click(object sender, EventArgs e)

@@ -31,14 +31,14 @@
     <div class="col-md-12  ">
         <div class="row row-container">
             <table style="margin:10px 10px;">
-                <tr style="height:50px;">
+                <%--<tr style="height:50px;">
                     <td>
-                       <asp:DropDownList ID="ddl_comp" runat="server" Width="110px"  class="form-control" >
-                            <asp:ListItem Value="200" Selected="True">昆山工厂</asp:ListItem>
+                       <asp:DropDownList ID="ddl_comp" runat="server" Width="110px"  class="form-control" AutoPostBack="true">
+                            <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                             <asp:ListItem Value="100">上海工厂</asp:ListItem>
-                        </asp:DropDownList>   
+                        </asp:DropDownList>
                     </td>
-                </tr>
+                </tr>--%>
                 
                 <tr>
                     <td>
