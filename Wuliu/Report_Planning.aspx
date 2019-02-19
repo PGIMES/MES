@@ -69,7 +69,8 @@
             <table>
                 <tr>
                     <td>
-                        <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="" AutoGenerateColumns="False">
+                        <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc_depta_all" AutoGenerateColumns="False"
+                            OnHtmlRowCreated="gv_HtmlRowCreated">
                             <SettingsPager PageSize="1000" ></SettingsPager>
                             <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
                             <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />

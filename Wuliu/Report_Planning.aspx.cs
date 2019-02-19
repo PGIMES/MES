@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using DevExpress.Web;
+using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -56,17 +57,6 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             lcolumn.HeaderStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
             lcolumn.CellStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
 
-            //if (ldt_data.Columns[i].MaxLength > 0)
-            //{
-            //    lcolumn.Width = ldt_data.Columns[i].MaxLength;
-            //    lcolumn.ExportWidth = ldt_data.Columns[i].MaxLength;
-            //}
-            //else
-            //{
-            //    lcolumn.Width = lnw;
-            //    lcolumn.ExportWidth = lnw;
-            //}
-
             lnwidth_emp = 0;
             if (ldt_data.Columns[i].ColumnName.ToString() == "描述") { lnwidth_emp = 170; }
 
@@ -85,30 +75,43 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
 
             //设置查询
             lcolumn.Settings.AutoFilterCondition = DevExpress.Web.AutoFilterCondition.Contains;
-
             lgrid.Columns.Add(lcolumn);
 
-
-            //if (ldt_data.Columns[i].MaxLength > 0)
-            //{
-            //    lnwidth += ldt_data.Columns[i].MaxLength;
-            //}
-            //else
-            //{
-            //    lnwidth += Convert.ToInt32(lnw);
-            //}
-
+            if (lcolumn.FieldName == "typedesc_depta_all")
+            {
+                lcolumn.Visible = false;
+            }
+            lcolumn.PropertiesTextEdit.DisplayFormatString = "{0:N0}";
         }
+        lnwidth = lnwidth - 90;//减去 隐藏列typedesc_depta_all的宽度
 
-        //lgrid.Columns[0].Width = 40;
-        //lgrid.Columns[0].ExportWidth = 40;
-
-        //lgrid.Width = (lnwidth + 40);
         lgrid.Width = lnwidth;
         lgrid.DataSource = ldt_data;
         lgrid.DataBind();
 
-        //return lgrid;
     }
 
+
+    protected void gv_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            //if (e.KeyValue.ToString() == "总零星采购行数")
+            //{
+            //    e.Row.Style.Add("background-color", "#EEEE00");
+            //}
+            if (e.KeyValue.ToString().Contains("完成率"))
+            {
+                for (int i = 1; i < gv.Columns.Count - 3; i++)
+                {
+                    if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                    {
+                        e.Row.Cells[i + 2].Text = Convert.ToString(Convert.ToDouble(e.GetValue("W" + i.ToString())) * 100) + "%";
+                    }
+                }
+
+                //e.Row.Style.Add("background-color", "#BFEFFF");
+            }
+        }
+    }
 }
