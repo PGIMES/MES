@@ -671,7 +671,8 @@
                                          <li><a href="/kanban/Qad_WorkOrder_List.aspx"  target="_blank">工单流转状态及父工单看板</a></li>  
                                          <li><a href="/wuliu/Qad_Report_tr_hist_Sum.aspx"  target="_blank">库龄汇总报表</a></li>
                                          <li><a href="/wuliu/Qad_Report_tr_hist.aspx"  target="_blank">库龄明细报表</a></li>
-                                         <li><a href="/Wuliu/Edi_BMW_Query.aspx"  target="_blank">BMW Edi对比</a></li>   
+                                         <li><a href="/Wuliu/Edi_BMW_Query.aspx"  target="_blank">BMW Edi对比</a></li>  
+                                         <li><a href="/Wuliu/Report_Planning.aspx"  target="_blank">Planning</a></li>    
                                         <li><a href="javascript:void(0)"  target="_blank"></a></li>                                       
                                     </ul>
                                 </div>
