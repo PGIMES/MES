@@ -82,6 +82,7 @@
                                 <Footer HorizontalAlign="Right"></Footer>
                                 <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
                             </Styles>
+                            <SettingsExport EnableClientSideExportAPI="true"></SettingsExport>
                         </dx:ASPxGridView>
                          <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
                         </dx:ASPxGridViewExporter>

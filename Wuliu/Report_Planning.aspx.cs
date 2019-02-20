@@ -96,9 +96,9 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     {
         if (e.RowType == GridViewRowType.Data)
         {
-            //if (e.KeyValue.ToString() == "总零星采购行数")
+            //if (e.KeyValue.ToString().Contains("计划生产订单数量"))
             //{
-            //    e.Row.Style.Add("background-color", "#EEEE00");
+            //    e.Row.Cells[0].Style.Add("background-color", "#EEEE00");
             //}
             if (e.KeyValue.ToString().Contains("完成率"))
             {
@@ -106,7 +106,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
                 {
                     if (e.GetValue("W" + i.ToString()) != DBNull.Value)
                     {
-                        e.Row.Cells[i + 2].Text = Convert.ToString(Convert.ToDouble(e.GetValue("W" + i.ToString())) * 100) + "%";
+                        e.Row.Cells[i + 2].Text = Convert.ToString(e.GetValue("W" + i.ToString())) + "%";
                     }
                 }
 
