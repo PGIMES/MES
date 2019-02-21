@@ -56,7 +56,7 @@
                 </td>     
                 <td id="td_btn">  
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>  
-                    <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
+                    <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_Click" visible="false"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
                     <input type="button"  value="上传计划发货数量" class="btn btn-large btn-primary" style="height:35px;"  onclick="open_upload()" />    
                    <a href='/userguide/uploadformat.xlsx' target='_blank' style='color:red'>upload format</a>
                 </td>

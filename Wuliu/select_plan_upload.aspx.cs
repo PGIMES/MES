@@ -15,15 +15,13 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
 {
     //保存上传文件路径
     public static string savepath = @"UploadFile\Planning";
-    
+
 
     protected void Page_Load(object sender, EventArgs e)
     {
         LoginUser LogUserModel = null;
-        if (Session["empid"] == null)
-        {
-            LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
-        }
+        LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+
         Session["LogUser"] = LogUserModel;
     }
 
@@ -53,7 +51,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
         {
             string sql = @"delete Planning_base_upload 
                         from  Planning_base_upload a 
-	                        left join  Planning_base_upload_temp b on a.domain=b.domain and a.years=b.years and a.weeks=b.weeks";
+	                        inner join  Planning_base_upload_temp b on a.domain=b.domain and a.years=b.years and a.weeks=b.weeks";
             DbHelperSQL.ExecuteSql(sql);
             sql = @"insert into Planning_base_upload select * from Planning_base_upload_temp";
             DbHelperSQL.ExecuteSql(sql);

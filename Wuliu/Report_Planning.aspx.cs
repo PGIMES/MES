@@ -77,13 +77,13 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             lcolumn.Settings.AutoFilterCondition = DevExpress.Web.AutoFilterCondition.Contains;
             lgrid.Columns.Add(lcolumn);
 
-            if (lcolumn.FieldName == "typedesc_depta_all")
+            if (lcolumn.FieldName == "typedesc_depta_all" || lcolumn.FieldName == "dept")
             {
                 lcolumn.Visible = false;
             }
             lcolumn.PropertiesTextEdit.DisplayFormatString = "{0:N0}";
         }
-        lnwidth = lnwidth - 90;//减去 隐藏列typedesc_depta_all的宽度
+        lnwidth = lnwidth - 90 - 90;//减去 隐藏列typedesc_depta_all的宽度
 
         lgrid.Width = lnwidth;
         lgrid.DataSource = ldt_data;
@@ -102,7 +102,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             //}
             if (e.KeyValue.ToString().Contains("完成率"))
             {
-                for (int i = 1; i < gv.Columns.Count - 3; i++)
+                for (int i = 1; i < gv.Columns.Count - 4; i++)
                 {
                     if (e.GetValue("W" + i.ToString()) != DBNull.Value)
                     {
@@ -112,6 +112,20 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
 
                 //e.Row.Style.Add("background-color", "#BFEFFF");
             }
+
+            if (!e.KeyValue.ToString().Contains("完成率"))
+            {
+                for (int i = 1; i < gv.Columns.Count - 4; i++)
+                {
+                    if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                    {
+                   //     e.Row.Cells[i + 2].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
+                   //+ e.GetValue("dept") + "&display=1' target='_blank'>" + Convert.ToString(e.GetValue("W" + i.ToString())) + "</a>";
+                    }
+                }
+
+            }
+
         }
     }
 }
