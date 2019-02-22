@@ -128,7 +128,7 @@
             </Columns>    
             <TotalSummary>
                 <%--<dx:aspxsummaryitem DisplayFormat="<font color='blue'>小计</font>" FieldName="rowid" ShowInColumn="rowid" ShowInGroupFooterColumn="rowid" SummaryType="Sum" />--%>
-                <dx:aspxsummaryitem DisplayFormat="<font color='blue'>{0:N0}</font>" FieldName="baofei_qty" ShowInColumn="baofei_qty" ShowInGroupFooterColumn="baofei_qty" SummaryType="Sum" />
+                <dx:aspxsummaryitem DisplayFormat="<font color='blue'>{0:N0}</font>" FieldName="hege_qty" ShowInColumn="hege_qty" ShowInGroupFooterColumn="hege_qty" SummaryType="Sum" />
             </TotalSummary>                                          
             <Styles>
                 <Header BackColor="#99CCFF"  ></Header>        

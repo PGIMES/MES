@@ -18,7 +18,9 @@ public partial class Wuliu_Report_Planning_dtl : System.Web.UI.Page
             QueryASPxGridView();
         }
         if (this.gv_xx_wo_mstr.IsCallback == true || this.gv_workorder_touchan.IsCallback == true 
-            || this.gv_workorder_ruku.IsCallback == true || this.gv_workorder_feipin.IsCallback == true)//页面搜索条件使用
+            || this.gv_workorder_ruku.IsCallback == true || this.gv_workorder_feipin.IsCallback == true
+            || this.gv_workorder_shangque.IsCallback == true || this.gv_workorder_GP.IsCallback == true
+            || this.gv_workorder_N_GP.IsCallback == true || this.gv_tr_hist.IsCallback == true)//页面搜索条件使用
         {
             QueryASPxGridView();
         }
