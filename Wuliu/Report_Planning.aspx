@@ -48,7 +48,7 @@
                 title: typedesc+'_明细',
                 closeBtn: 2,
                 type: 2,
-                area: ['900px', '650px'],
+                area: ['900px', '550px'],
                 fixed: false, //不固定
                 maxmin: true, //开启最大化最小化按钮
                 content: url

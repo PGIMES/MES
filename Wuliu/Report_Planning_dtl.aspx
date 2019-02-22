@@ -25,7 +25,7 @@
                 Visible="false" OnPageIndexChanged="gv_tr_hist_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataDateColumn Caption="生效日期" FieldName="tr_effdate" Width="100px" VisibleIndex="1"></dx:GridViewDataDateColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="事务号" FieldName="tr_trnbr" Width="70px" VisibleIndex="2"></dx:GridViewDataTextColumn>                                                             
@@ -50,7 +50,7 @@
                 Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="scx_area" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="scx" Width="200px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -76,7 +76,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_touchan_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"  AllowEllipsisInText="true" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                <dx:GridViewDataDateColumn Caption="归属日期" FieldName="rep_date" Width="80px" VisibleIndex="1"></dx:GridViewDataDateColumn>
                 <dx:GridViewDataTextColumn Caption="操作时间" FieldName="create_date" Width="110px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -111,7 +111,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_ruku_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"   AllowEllipsisInText="true"/>
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataDateColumn Caption="归属日期" FieldName="rep_date" Width="80px" VisibleIndex="1"></dx:GridViewDataDateColumn>
                 <dx:GridViewDataTextColumn Caption="操作时间" FieldName="create_date" Width="110px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -142,7 +142,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_feipin_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"  AllowEllipsisInText="true"/>
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataDateColumn Caption="归属日期" FieldName="rep_date" Width="80px" VisibleIndex="1"></dx:GridViewDataDateColumn>
                 <dx:GridViewDataTextColumn Caption="操作时间" FieldName="create_date" Width="110px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -173,7 +173,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_shangque_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="area" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="line" Width="200px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -200,7 +200,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_GP_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="area" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="line" Width="200px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -227,7 +227,7 @@
                 Visible="false" OnPageIndexChanged="gv_workorder_N_GP_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="area" Width="100px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="line" Width="200px" VisibleIndex="2"></dx:GridViewDataTextColumn>
@@ -254,7 +254,7 @@
                 Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="scx_area" Width="90px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="scx" Width="90px" VisibleIndex="2"></dx:GridViewDataTextColumn>
