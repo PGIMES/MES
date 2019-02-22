@@ -33,6 +33,27 @@
                 content: url
             });
         }
+
+        function show_detail(dept, typedesc, week) {
+            //alert();
+            var dept_str = dept;
+            if (dept_str == "生产2部") { dept_str = "二车间"; }
+            if (dept_str == "生产4部") { dept_str = "四车间"; }
+            if (dept_str == "生产1部") { dept_str = "一车间"; }
+            if (dept_str == "压铸") { dept_str = "三车间"; }
+
+            var url = "/wuliu/Report_Planning_dtl.aspx?dept=" + dept + "&dept_str=" + dept_str + "&typedesc=" + typedesc + "&week=" + week + "&year=" + $("select[name$='ddl_year'] option[selected]").val();
+
+            layer.open({
+                title: typedesc+'_明细',
+                closeBtn: 2,
+                type: 2,
+                area: ['900px', '600px'],
+                fixed: false, //不固定
+                maxmin: true, //开启最大化最小化按钮
+                content: url
+            });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -72,8 +93,7 @@
                         <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc_depta_all" AutoGenerateColumns="False"
                             OnHtmlRowCreated="gv_HtmlRowCreated">
                             <SettingsPager PageSize="1000" ></SettingsPager>
-                            <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains"  />
-                            <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control" />
+                            <SettingsBehavior AllowFocusedRow="false" ColumnResizeMode="Control" />
                             <Columns>
                             </Columns>
                             <Styles>

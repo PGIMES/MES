@@ -112,19 +112,29 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
 
                 //e.Row.Style.Add("background-color", "#BFEFFF");
             }
-
-            if (!e.KeyValue.ToString().Contains("完成率"))
+            else
             {
-                for (int i = 1; i < gv.Columns.Count - 4; i++)
+                if (e.KeyValue.ToString().Contains("生产2部") || e.KeyValue.ToString().Contains("生产1部") || e.KeyValue.ToString().Contains("生产4部") || e.KeyValue.ToString().Contains("压铸")
+                    || e.KeyValue.ToString().Contains("实际发货数量"))
                 {
-                    if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                    for (int i = 1; i < gv.Columns.Count - 4; i++)
                     {
-                   //     e.Row.Cells[i + 2].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-                   //+ e.GetValue("dept") + "&display=1' target='_blank'>" + Convert.ToString(e.GetValue("W" + i.ToString())) + "</a>";
+                        if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                        {
+                            if (Convert.ToDouble(e.GetValue("W" + i.ToString()))!=0)
+                            {
+                                e.Row.Cells[i + 2].Style.Add("color", "blue");
+                                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"
+                                    + e.GetValue("typedesc_depta_all").ToString().Replace("(" + e.GetValue("dept").ToString() + ")", "") + "','" + i.ToString() + "')");
+                            }
+                           
+                        }
                     }
+
                 }
 
             }
+
 
         }
     }
