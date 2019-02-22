@@ -66,7 +66,7 @@ public partial class Wuliu_Report_Planning_dtl : System.Web.UI.Page
         }
         if (Request.QueryString["typedesc"].ToString() == "投产数量")
         {
-            sql = @"select * from Planning_workorder_touchan
+            sql = @"select *,hege_qty+baofei_qty as hege_baofei_qty from Planning_workorder_touchan
                     where years='{0}' and weeks='{1}' and workshop='{2}'";
 
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
@@ -142,6 +142,19 @@ public partial class Wuliu_Report_Planning_dtl : System.Web.UI.Page
             gv_workorder_N_GP.DataSource = dt;
             gv_workorder_N_GP.DataBind();
         }
+        if (Request.QueryString["typedesc"].ToString() == "计划产品重量(KG)")
+        {
+            sql = @"select * from Planning_ps_mstr
+                    where years='{0}' and weeks='{1}' and scx_workshop='{2}' order by xxwo_nbr";
+
+            sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
+            DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+            gv_ps_mstr.Visible = true;
+
+            gv_ps_mstr.DataSource = dt;
+            gv_ps_mstr.DataBind();
+        }
     }
 
     protected void gv_xx_wo_mstr_PageIndexChanged(object sender, EventArgs e)
@@ -174,6 +187,10 @@ public partial class Wuliu_Report_Planning_dtl : System.Web.UI.Page
         QueryASPxGridView();
     }
     protected void gv_tr_hist_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+    }
+    protected void gv_ps_mstr_PageIndexChanged(object sender, EventArgs e)
     {
         QueryASPxGridView();
     }

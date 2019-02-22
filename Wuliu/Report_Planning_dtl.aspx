@@ -21,7 +21,7 @@
          &nbsp;&nbsp;
         <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="部门："></dx:ASPxLabel><dx:ASPxLabel ID="lbl_dept" runat="server" Text="" ForeColor="Blue"></dx:ASPxLabel>
 
-        <dx:aspxgridview ID="gv_tr_hist" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_tr_hist" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_tr_hist"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_tr_hist_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -46,7 +46,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_xx_wo_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_xx_wo_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -72,7 +72,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_touchan" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_touchan"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_touchan" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_workorder_touchan"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_touchan_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"  AllowEllipsisInText="true" />
@@ -93,11 +93,13 @@
                 <dx:GridViewDataTextColumn Caption="姓名" FieldName="emp_name" Width="60px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="合格数量" FieldName="hege_qty" Width="70px" VisibleIndex="13"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="报废数量" FieldName="baofei_qty" Width="70px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="合格+报废数量" FieldName="hege_baofei_qty" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
             </Columns>    
             <TotalSummary>
                 <%--<dx:aspxsummaryitem DisplayFormat="<font color='blue'>小计</font>" FieldName="rowid" ShowInColumn="rowid" ShowInGroupFooterColumn="rowid" SummaryType="Sum" />--%>
                 <dx:aspxsummaryitem DisplayFormat="<font color='blue'>{0:N0}</font>" FieldName="hege_qty" ShowInColumn="hege_qty" ShowInGroupFooterColumn="hege_qty" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='blue'>{0:N0}</font>" FieldName="baofei_qty" ShowInColumn="baofei_qty" ShowInGroupFooterColumn="baofei_qty" SummaryType="Sum" />
+                <dx:aspxsummaryitem DisplayFormat="<font color='blue'>{0:N0}</font>" FieldName="hege_baofei_qty" ShowInColumn="hege_baofei_qty" ShowInGroupFooterColumn="hege_baofei_qty" SummaryType="Sum" />
             </TotalSummary>                                          
             <Styles>
                 <Header BackColor="#99CCFF"  ></Header>        
@@ -105,7 +107,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_ruku" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_ruku"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_ruku" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_workorder_ruku"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_ruku_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"   AllowEllipsisInText="true"/>
@@ -136,7 +138,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_feipin" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_feipin"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_feipin" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_workorder_feipin"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_feipin_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False"  AllowEllipsisInText="true"/>
@@ -167,7 +169,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_shangque" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_shangque" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_workorder_shangque"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_shangque_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -194,7 +196,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_GP" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_GP" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_workorder_GP"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_GP_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -221,7 +223,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder_N_GP" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder_N_GP" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_N_GP"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_N_GP_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
@@ -236,6 +238,38 @@
                 <dx:GridViewDataTextColumn Caption="当前工序" FieldName="xxwo_current_op" Width="70px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="数量" FieldName="qty" Width="80px" VisibleIndex="8">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+            </Columns>    
+            <TotalSummary>
+                <%--<dx:aspxsummaryitem DisplayFormat="<font color='red'>小计</font>" FieldName="rowid" ShowInColumn="rowid" ShowInGroupFooterColumn="rowid" SummaryType="Sum" />--%>
+                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="qty" ShowInColumn="qty" ShowInGroupFooterColumn="qty" SummaryType="Sum" />
+            </TotalSummary>                                          
+            <Styles>
+                <Header BackColor="#99CCFF"  ></Header>        
+                <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>    
+            </Styles>                                          
+        </dx:aspxgridview>
+
+        <dx:aspxgridview ID="gv_ps_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_ps_mstr"  EnableTheming="True"
+                Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
+            <SettingsPager PageSize="1000"></SettingsPager>
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="400" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Columns>
+                <dx:GridViewDataTextColumn Caption="区域" FieldName="scx_area" Width="90px" VisibleIndex="1"></dx:GridViewDataTextColumn>                                                               
+                <dx:GridViewDataTextColumn Caption="生产线" FieldName="scx" Width="90px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="父工单号" FieldName="xxwo_nbr" Width="90px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="物料号" FieldName="xxwo_part" Width="100px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="零件号" FieldName="pt_desc1" Width="150px" VisibleIndex="5"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="生产线(QAD)" FieldName="xxwo_line" Width="90px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="订单数量" FieldName="xxwo_qty_ord" Width="80px" VisibleIndex="7">
+                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="重量" FieldName="ps_qty_per" Width="80px" VisibleIndex="7">
+                    <%--<PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>--%>
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="总量" FieldName="qty" Width="80px" VisibleIndex="7">
+                    <%--<PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>--%>
                 </dx:GridViewDataTextColumn>
             </Columns>    
             <TotalSummary>
