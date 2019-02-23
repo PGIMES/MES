@@ -94,6 +94,9 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             sql = @"select *
                          ,case xxwo__chr01 when '0' then '量产' when '1' then '试制' when '2' then '隔离'  WHEN '3' THEN '挑选'  WHEN '4' THEN '重工' end xxwo__chr01_desc
                         ,ROW_NUMBER() OVER (ORDER BY workorder) rownum
+                        ,case when touchan_qty=0 then 0 
+                            when touchan_qty>0 then case workshop when '三车间' then touchan_qty-yiwan_qty else dingdan_qty-yiwan_qty end
+                            end  as sque_qty2
                     from Planning_workorder
                     where years = '{0}' and weeks = '{1}' and workshop = '{2}'
                     order by workorder,pgino";

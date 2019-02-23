@@ -48,7 +48,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_xx_wo_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_xx_wo_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="xxwo_nbr" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" AllowEllipsisInText="true" />
@@ -104,7 +104,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_workorder" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_workorder" runat="server" AutoGenerateColumns="False" KeyFieldName="workorder" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" AllowEllipsisInText="true" />
@@ -127,7 +127,12 @@
                 <dx:GridViewDataTextColumn Caption="已完成数量" FieldName="yiwan_qty" Width="70px" VisibleIndex="9">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn Caption="尚缺数量" FieldName="sque_qty" Width="70px" VisibleIndex="10">
+                <dx:GridViewDataTextColumn Caption="尚缺数量" FieldName="sque_qty" Width="70px" VisibleIndex="10" 
+                    ToolTip="投产数量-报废数量-入库数量">
+                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="尚缺数量2" FieldName="sque_qty2" Width="70px" VisibleIndex="10"
+                    ToolTip="若投产：数量=[压铸(投产数量)][其他车间(订单数量)]-已完成数量；若没投产：数量=0">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="报废入库数量" FieldName="baofei_qty" Width="70px" VisibleIndex="11">
@@ -156,6 +161,7 @@
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="touchan_qty" ShowInColumn="touchan_qty" ShowInGroupFooterColumn="touchan_qty" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="yiwan_qty" ShowInColumn="yiwan_qty" ShowInGroupFooterColumn="yiwan_qty" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="sque_qty" ShowInColumn="sque_qty" ShowInGroupFooterColumn="sque_qty" SummaryType="Sum" />
+                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="sque_qty2" ShowInColumn="sque_qty2" ShowInGroupFooterColumn="sque_qty2" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="baofei_qty" ShowInColumn="baofei_qty" ShowInGroupFooterColumn="baofei_qty" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="gongfei_qty" ShowInColumn="gongfei_qty" ShowInGroupFooterColumn="gongfei_qty" SummaryType="Sum" />
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="liaofei_qty" ShowInColumn="liaofei_qty" ShowInGroupFooterColumn="liaofei_qty" SummaryType="Sum" />
