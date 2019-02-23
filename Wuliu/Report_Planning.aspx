@@ -42,7 +42,7 @@
             if (dept_str == "生产1部") { dept_str = "一车间"; }
             if (dept_str == "压铸") { dept_str = "三车间"; }
 
-            var url = "/wuliu/Report_Planning_dtl.aspx?dept=" + dept + "&dept_str=" + dept_str + "&typedesc=" + typedesc + "&week=" + week + "&year=" + $("select[name$='ddl_year'] option[selected]").val();
+            var url = "/wuliu/Report_Planning_dtl_new.aspx?dept=" + dept + "&dept_str=" + dept_str + "&typedesc=" + typedesc + "&week=" + week + "&year=" + $("select[name$='ddl_year'] option[selected]").val();
 
             layer.open({
                 title: typedesc+'_明细',

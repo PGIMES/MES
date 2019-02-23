@@ -114,20 +114,39 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             }
             else
             {
-                if (e.KeyValue.ToString().Contains("生产2部") || e.KeyValue.ToString().Contains("生产1部") || e.KeyValue.ToString().Contains("生产4部") || e.KeyValue.ToString().Contains("压铸")
-                    || e.KeyValue.ToString().Contains("实际发货数量"))
+                //if (e.KeyValue.ToString().Contains("生产2部") || e.KeyValue.ToString().Contains("生产1部") || e.KeyValue.ToString().Contains("生产4部") || e.KeyValue.ToString().Contains("压铸")
+                //    || e.KeyValue.ToString().Contains("实际发货数量"))
+                //{
+                //    for (int i = 1; i < gv.Columns.Count - 4; i++)
+                //    {
+                //        if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                //        {
+                //            if (Convert.ToDouble(e.GetValue("W" + i.ToString()))!=0)
+                //            {
+                //                e.Row.Cells[i + 2].Style.Add("color", "blue");
+                //                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"
+                //                    + e.GetValue("typedesc_depta_all").ToString().Replace("(" + e.GetValue("dept").ToString() + ")", "") + "','" + i.ToString() + "')");
+                //            }
+
+                //        }
+                //    }
+
+                //}
+
+                if (e.KeyValue.ToString().Contains("计划生产订单数量") || e.KeyValue.ToString().Contains("废品数量")
+                     || e.KeyValue.ToString().Contains("未完成订单数量") || e.KeyValue.ToString().Contains("实际发货数量"))
                 {
                     for (int i = 1; i < gv.Columns.Count - 4; i++)
                     {
                         if (e.GetValue("W" + i.ToString()) != DBNull.Value)
                         {
-                            if (Convert.ToDouble(e.GetValue("W" + i.ToString()))!=0)
+                            if (Convert.ToDouble(e.GetValue("W" + i.ToString())) != 0)
                             {
                                 e.Row.Cells[i + 2].Style.Add("color", "blue");
                                 e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"
                                     + e.GetValue("typedesc_depta_all").ToString().Replace("(" + e.GetValue("dept").ToString() + ")", "") + "','" + i.ToString() + "')");
                             }
-                           
+
                         }
                     }
 
