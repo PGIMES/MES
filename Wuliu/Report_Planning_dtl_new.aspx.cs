@@ -98,8 +98,12 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
                             when touchan_qty>0 then case workshop when '三车间' then touchan_qty-yiwan_qty else dingdan_qty-yiwan_qty end
                             end  as sque_qty2
                     from Planning_workorder
-                    where years = '{0}' and weeks = '{1}' and workshop = '{2}'
-                    order by workorder,pgino";
+                    where years = '{0}' and weeks = '{1}' and workshop = '{2}'";
+            if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量"))
+            {
+                sql = sql + " and xxwo_status='P'";
+            }
+            sql = sql + " order by workorder,pgino";
 
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
