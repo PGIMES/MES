@@ -51,7 +51,7 @@
         <dx:aspxgridview ID="gv_xx_wo_mstr" runat="server" AutoGenerateColumns="False" KeyFieldName="xxwo_nbr" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_xx_wo_mstr_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
-            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" AllowEllipsisInText="true" />
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="true" AllowEllipsisInText="true" SortMode="Value"  />
             <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
             <Columns>
                 <dx:GridViewDataTextColumn Caption="序号" FieldName="rownum" Width="40px" VisibleIndex="0"></dx:GridViewDataTextColumn> 
@@ -76,11 +76,11 @@
                 <dx:GridViewDataTextColumn Caption="生产计划" FieldName="jihua_qty" Width="70px" VisibleIndex="11">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn Caption="差异" FieldName="chayi_qty" Width="70px" VisibleIndex="12">
+                <dx:GridViewDataTextColumn Caption="差异" FieldName="chayi_qty" Width="70px" VisibleIndex="12" SortOrder="Descending">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="重量" FieldName="ps_qty_per" Width="70px" VisibleIndex="13">
-                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                    <PropertiesTextEdit DisplayFormatString="{0:N3}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="总重量" FieldName="ps_qty_per_qty" Width="70px" VisibleIndex="14">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
