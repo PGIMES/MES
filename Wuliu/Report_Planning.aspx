@@ -91,7 +91,7 @@
                 <tr>
                     <td>
                         <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc_depta_all" AutoGenerateColumns="False"
-                            OnHtmlRowCreated="gv_HtmlRowCreated">
+                            OnHtmlRowCreated="gv_HtmlRowCreated" OnExportRenderBrick="gv_ExportRenderBrick">
                             <SettingsPager PageSize="1000" ></SettingsPager>
                             <SettingsBehavior AllowFocusedRow="false" ColumnResizeMode="Control" />
                             <Columns>
