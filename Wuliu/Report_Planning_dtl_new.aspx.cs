@@ -51,7 +51,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         {
             sql = @"select *
                         ,case scx_workshop when '二车间' then kaishi_qty/1.5 else kaishi_qty end as jihua_qty
-                        ,case scx_workshop when '二车间' then kaishi_qty/1.5-touchan_qty else kaishi_qty-touchan_qty end as chayi_qty 
+                        ,case scx_workshop when '二车间' then kaishi_qty/1.5-chaifei_qty else kaishi_qty-touchan_qty end as chayi_qty 
                         ,ROW_NUMBER() OVER (ORDER BY xxwo_nbr) rownum
                     from Planning_xx_wo_mstr
                     where years='{0}' and weeks='{1}' and scx_workshop='{2}'
