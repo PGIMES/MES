@@ -91,7 +91,6 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
 
     }
 
-
     protected void gv_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
     {
         if (e.RowType == GridViewRowType.Data)
@@ -155,6 +154,24 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             }
 
 
+        }
+    }
+
+
+    protected void gv_ExportRenderBrick(object sender, ASPxGridViewExportRenderingEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            if (e.KeyValue.ToString().Contains("完成率"))
+            {
+                if (e.Column.Caption.Substring(0, 1) == "W")
+                {
+                    if (e.Value != DBNull.Value)
+                    {
+                        e.TextValue = Convert.ToString(e.Value) + "%";
+                    }
+                }
+            }
         }
     }
 }
