@@ -535,6 +535,8 @@
                 <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                 <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
                 <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
+                <a id="btnPDF"   href="rptPoPdf.aspx?pono=<%= Request.QueryString["instanceid"] %>" target="_blank"   class="btn btn-default- btn-xs"  
+                    style="background:url(../..//Images/ico/printer.gif) no-repeat left;padding-left:20px;">PDF打印</a>
             </div>
         </div>
     </div>
@@ -622,7 +624,7 @@
                         <div class="col-md-12" >
                             <div class="panel panel-info">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#FKXX">
-                                     <strong>付款信息<strong>
+                                     <strong>合同&付款信息</strong>
                                 </div>
                                 <div class="panel-body collapse in" id="FKXX">
                                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
