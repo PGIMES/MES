@@ -11,6 +11,73 @@
     <link href="../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <script src="../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
 
+<%--       <div class="row row-container" >
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
+                         <strong>申请人信息</strong>
+                    </div>
+                    <div class="panel-body <% =ViewState["lv"].ToString() == "SQXX" ? "" : "collapse" %>" id="SQXX">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                            <div class="">
+                                <asp:UpdatePanel ID="UpdatePanel_request" runat="server">
+                                    <ContentTemplate>
+                                        <table style="height: 30px; width: 100%">
+                                            <tr>
+                                                <td>申请人
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_CreateById" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True"  />
+                                                        <input id="txt_CreateByName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_CreateByAd" class="form-control input-s-sm" style="height: 30px; width: 100px; font-size:12px;display: none;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                <td>部门
+                                                </td>
+                                                <td>
+                                                    <input id="txt_CreateByDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                               <td style="display: none">部门经理
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline" style="display: none">
+                                                        <input id="txt_managerid" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager_AD" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                              <td>当前登陆人员</td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_LogUserId" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />/
+                                                        <input id="txt_LogUserJob" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                 <td>申请日期：</td>
+                                                <td>
+                                                    <input id="txt_CreateDate" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input id="txt_Code" class="form-control input-s-sm" style="height: 30px; width: 200px; display: none; font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>--%>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -34,7 +101,7 @@
             }
             if ($('#B8A7AF17-7AD5-4699-B679-D421691DD737', parent.document).length == 0) {
                 //alert("查看流程");
-                //  $("#btnshowProcess").hide();
+              //  $("#btnshowProcess").hide();
             }
             if ($('#347B811C-7568-4472-9A61-6C31F66980AE', parent.document).length == 0) {
                 //alert("转交");
@@ -48,24 +115,12 @@
                 //alert("终止");
                 $("#btntaskEnd").hide();
             }
-
-            init_pay();
+            
+            $("select[id*='potype']").change(function () {  
+                buyername_potype_change();
+            });
+           
         });
-
-        function init_pay(){
-            if (getType_Contain()) {
-                $("[id*='fqfk_div']").show();
-                if ($("[id*='paytype']").val()!="" && $("[id*='paytype']").val().indexOf("一次性")<0){
-                    $("[id*='btnadd_contract']").show();$("[id*='btndel_contract']").show();
-                }else{
-                    $("[id*='btnadd_contract']").hide();$("[id*='btndel_contract']").hide();
-                }                
-            }
-            else {                        
-                $("[id*='fqfk_div']").hide();
-                $("[id*='btnadd_contract']").hide();$("[id*='btndel_contract']").hide();
-            }    
-        }
 
         //提出自定流程 JS 
         function setComment(val) {
@@ -164,11 +219,11 @@
             //    return;
             //}
             
-            var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"&buyername="+$("input[type!=hidden][id*='buyername']").val()+"&potype="+$("input[type!=hidden][id*='potype']").val();
+            var url = "../../select/select_pr.aspx?domain="+$("[id*='podomai']").val()+"&buyername="+$("input[type!=hidden][id*='buyername']").val()+"&potype="+$("[id*='potype']").val();
 
             layer.open({
                 type: 2,
-                area: ['1000px', '550px'],
+                area: ['1000px', '500px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
@@ -176,71 +231,25 @@
           
         }
 
+        function potype(){
+            if ($("[id*='potype']").val()=="存货") {
+               
+                $("[id*='fqfk_div']").hide();
+            }else {
+                
+                $("[id*='fqfk_div']").show();
+            }
+        }
+
         function vendorid(s){
+        
            // alert(s.GetValue());
            grid.PerformCallback(s.GetValue());
         }
 
-        function buyername_potype_change(type,s){ 
-            //if (type=="buyer") {
-            //    grid.PerformCallback($("input[type!=hidden][id*='buyername']").val());
-            //}
-            if (type=="potype") {
-                //grid.PerformCallback($("input[type!=hidden][id*='buyername']").val());                
-                potype();
-            }
+        function buyername_potype_change(){
+           grid.PerformCallback($("input[type!=hidden][id*='buyername']").val());
         }
-
-        function potype(){
-            if (getType_Contain()) {   
-                $("[id*='fqfk_div']").show();
-                $("[id*='paytype']").val("");    
-                paytype();
-            }else {            
-               
-                $("[id*='fqfk_div']").hide();
-                $("[id*='btnadd_contract']").hide();$("[id*='btndel_contract']").hide();
-            }
-        }
-
-        function paytype(){
-            if ($("[id*='paytype']").val()!="" && $("[id*='paytype']").val().indexOf("一次性")<0){
-                $("[id*='btnadd_contract']").show();$("[id*='btndel_contract']").show();
-            }else{
-                $("[id*='btnadd_contract']").hide();$("[id*='btndel_contract']").hide();
-            }
-
-            grid2.PerformCallback("change");
-        }
-
-        //获取 是否是 合同模块
-        function getType_Contain(){   
-            //var str="";
-            //$.ajax({
-            //    type: "Post",async: false,
-            //    url: "Pur_Po.aspx/getType_Contain" , 
-            //    data: "{'potype':'"+$("input[type!=hidden][id*='potype']").val()+"'}",
-            //    contentType: "application/json; charset=utf-8",
-            //    dataType: "json",
-            //    success: function (data) {                   
-            //        str=data.d;            
-            //    },
-            //    error: function (err) {
-            //        layer.alert(err);
-            //    }
-            //});
-            //if (str=="合同模块") {
-            //    return true;
-            //}else {
-            //    return false;
-            //}
-
-            if ($("input[type!=hidden][id*='potype']").val()=="合同") {
-                return true;
-            }else {
-                return false;
-            }
-        };
 
     </script>
     <script type="text/javascript">
@@ -292,30 +301,12 @@
             }
 
             $("[id$=gv] tr[id*=DataRow]").each(function (index, item) { 
-                //alert($(item).find("input[type!=hidden][id*=PlanReceiveDate]").val());
+
                 if($(item).find("input[id*=PlanReceiveDate]").val()==""){
                     msg+="第"+(index+1)+"行【计划到货日期】不可为空.<br />";
                 }
 
             });
-
-            if ($("input[type!=hidden][id*='potype']").val()=="合同"){
-                if ($("[id*='paytype']").val()==""){                   
-                    msg+="【付款类型】不可为空.<br />";
-                }
-                if($("[id$=gv2] tr[id*=DataRow]").length==0){
-                    msg+="【付款信息】不可为空.<br />";
-                }else{
-                    $("[id$=gv2] tr[id*=DataRow]").each(function (index, item) { 
-                        if($(item).find("input[id*=PayRate]").val()==""){
-                            msg+="第"+(index+1)+"行【付款比列】不可为空.<br />";
-                        }
-                        if($(item).find("input[id*=PlanPayDate]").val()==""){
-                            msg+="第"+(index+1)+"行【计划付款日期】不可为空.<br />";
-                        }
-                    });
-                } 
-            }
 
             if(msg!=""){  
                 flag=false;
@@ -526,22 +517,85 @@
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent" enctype="multipart/form-data">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-    <div class="col-md-12  ">
-        <div class="col-md-10  ">
-            <div class="form-inline " style="text-align:right">
-                <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="return validate();" OnClick="btnSave_Click" />
-                <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate('submit');" OnClick="btnflowSend_Click" />
-                <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
-                <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
-                <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
-                <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
-                <a id="btnPDF"   href="rptPoPdf.aspx?pono=<%= Request.QueryString["instanceid"] %>" target="_blank"   class="btn btn-default- btn-xs"  
-                    style="background:url(../..//Images/ico/printer.gif) no-repeat left;padding-left:20px;">PDF打印</a>
+      <div class="col-md-12  ">
+            <div class="col-md-10  ">
+                <div class="form-inline " style="text-align:right">
+                   <asp:Button ID="btnSave" runat="server" Text="保存" CssClass="btn btn-default btn-xs btnSave" OnClientClick="return validate();" OnClick="btnSave_Click" />
+                    <asp:Button ID="btnflowSend" runat="server" Text="发送" CssClass="btn btn-default btn-xs btnflowSend"  OnClientClick="return validate('submit');" OnClick="btnflowSend_Click" />
+                    <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
+                    <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
+                    <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
+                    <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
+                </div>
             </div>
         </div>
-    </div>
     <div class="col-md-12">
+ <%--       <div class="row row-container" >
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#SQXX">
+                         <strong>申请人信息</strong>
+                    </div>
+                    <div class="panel-body <% =ViewState["lv"].ToString() == "SQXX" ? "" : "collapse" %>" id="SQXX">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                            <div class="">
+                                <asp:UpdatePanel ID="UpdatePanel_request" runat="server">
+                                    <ContentTemplate>
+                                        <table style="height: 30px; width: 100%">
+                                            <tr>
+                                                <td>申请人
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_CreateById" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True"  />
+                                                        <input id="txt_CreateByName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_CreateByAd" class="form-control input-s-sm" style="height: 30px; width: 100px; font-size:12px;display: none;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                <td>部门
+                                                </td>
+                                                <td>
+                                                    <input id="txt_CreateByDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                               <td style="display: none">部门经理
+                                                </td>
+                                                <td>
+                                                    <div class="form-inline" style="display: none">
+                                                        <input id="txt_managerid" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_manager_AD" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                              <td>当前登陆人员</td>
+                                                <td>
+                                                    <div class="form-inline">
+                                                        <input id="txt_LogUserId" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserName" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />/
+                                                        <input id="txt_LogUserJob" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                        <input id="txt_LogUserDept" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                    </div>
+                                                </td>
+                                                 <td>申请日期：</td>
+                                                <td>
+                                                    <input id="txt_CreateDate" class="form-control input-s-sm" style="height: 30px; width: 100px;font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input id="txt_Code" class="form-control input-s-sm" style="height: 30px; width: 200px; display: none; font-size:12px;" runat="server" readonly="True" />
+                                                </td>
+                                            </tr>
+                                        </table>
 
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>--%>
         <div class="row  row-container">
             <div class="col-md-12" >
                 <div class="panel panel-info">
@@ -558,113 +612,125 @@
                     </div>
                 </div>
             </div>
-        </div>       
+        </div>
 
-        <asp:UpdatePanel runat="server" ID="p1" UpdateMode="Conditional">
-            <ContentTemplate>
-                <div class="row  row-container" >
-                    <div class="col-md-12" >
-                        <div class="panel panel-info">
-                            <div class="panel-heading" data-toggle="collapse" data-target="#gscs">
-                                <strong>采购清单</strong>
-                               <%-- &nbsp;&nbsp;<font style="color:red; font-size:9px;">
-                                            提示：行背景橙色：采购单价(未税) 大于 历史单价(未税)
-                                &nbsp;&nbsp;采购总价(未税) 单元格 红色：多出 目标总价(未税) 的20%，黄色：在 目标总价(未税) 的20% 范围内
-                                &nbsp;&nbsp;推荐供应商 黄色：与采购供应商不一致
-                                            </font>--%>
-                            </div>
-                            <div class="panel-body  collapse in" id="gscs">
-                                <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
-                                    <div> 
-                                        <div style="padding: 2px 5px 5px 0px">                
-                                            <input runat="server" id="btnadd" type="button" value="新增" class="btn btn-primary btn-sm" onclick="openSelect()"/>
-                                            <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-primary btn-sm" OnClick="btndel_Click"  />
-                                        </div>
-                                        <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False"  KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" 
-                                            OnCustomCallback="gv_CustomCallback" ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" Border-BorderColor="#DCDCDC"
-                                            OnDataBound="gv_DataBound" >
-                                            <ClientSideEvents EndCallback="function(s, e) {  grid2.PerformCallback('load');}" />
-                                            <SettingsPager PageSize="1000"></SettingsPager>
-                                            <Settings ShowFooter="True" />
-                                            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-                                            <Columns>
-                                            </Columns>
-                                            <TotalSummary>
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>合计:{0:N0}</font>" FieldName="PRNo" ShowInColumn="PRNo" ShowInGroupFooterColumn="PRNo" SummaryType="Sum" />
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
-                                            </TotalSummary>
-                                            <Styles>
-                                                <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
-                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
-                                                <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
-                                                <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
-                                                <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None" HorizontalAlign="Left"></CommandColumn>
-                                            </Styles>
-                                        </dx:aspxgridview>
-                                        <table style="width:100%;">
-                                            <tr style="display: block; margin: 10px 0; text-align:right;" >
-                                                <td style="display: block; margin: 10px 0; text-align:right;">
-                                                    <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
-                                                        <ContentTemplate></ContentTemplate>
-                                                    </asp:UpdatePanel>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+       
+                                <asp:UpdatePanel runat="server" ID="p1" UpdateMode="Conditional">
+                                    <ContentTemplate>
+       <div class="row  row-container" >
+            <div class="col-md-12" >
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#gscs">
+                        <strong>采购清单</strong>
+                       <%-- &nbsp;&nbsp;<font style="color:red; font-size:9px;">
+                                    提示：行背景橙色：采购单价(未税) 大于 历史单价(未税)
+                        &nbsp;&nbsp;采购总价(未税) 单元格 红色：多出 目标总价(未税) 的20%，黄色：在 目标总价(未税) 的20% 范围内
+                        &nbsp;&nbsp;推荐供应商 黄色：与采购供应商不一致
+                                    </font>--%>
                     </div>
-                </div>                                
-
-                <div id="fqfk_div" hidden="hidden">
-                    <div class="row  row-container">
-                        <div class="col-md-12" >
-                            <div class="panel panel-info">
-                                <div class="panel-heading" data-toggle="collapse" data-target="#FKXX">
-                                     <strong>合同&付款信息</strong>
+                    <div class="panel-body  collapse in" id="gscs">
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                            <div> 
+                                <div style="padding: 2px 5px 5px 0px">
+                
+                                     <input runat="server" id="btnadd" type="button" value="新增" class="btn btn-primary btn-sm" onclick="openSelect()"/><%--class="btn btn-default" style="width:60px; height:32px;"  --%>
+                                     <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-primary btn-sm" OnClick="btndel_Click"  /><%--style="width:60px; height:32px;"  class="btn btn-default"--%>
                                 </div>
-                                <div class="panel-body collapse in" id="FKXX">
-                                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
-                                        <div>
-                                            <asp:Table border="0" runat="server" ID="tablePay" Font-Size="12px">
-                                            </asp:Table>                                
-                                        </div>
-                                        <div style="padding: 2px 5px 5px 0px">                
-                                            <asp:Button ID="btnadd_contract" runat="server" Text="新增" class="btn btn-primary btn-sm" OnClick="btnadd_contract_Click" />
-                                            <asp:Button ID="btndel_contract" runat="server" Text="删除" class="btn btn-primary btn-sm" OnClick="btndel_contract_Click" />
-                                        </div>
-                                        <dx:aspxgridview ID="gv2" runat="server" AutoGenerateColumns="False"  KeyFieldName="rowid"  Theme="MetropolisBlue" TabIndex="1000"  
-                                            ClientInstanceName="grid2"  EnableTheming="True" Border-BorderColor="#DCDCDC" OnCustomCallback="gv2_CustomCallback">
-                                            <SettingsPager PageSize="1000" />
-                                            <Settings ShowFooter="True" />
-                                            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
-                                            <Columns>
-                                            </Columns>
-                                            <TotalSummary>
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>小计</font>" FieldName="rowid" ShowInColumn="rowid" ShowInGroupFooterColumn="rowid" SummaryType="Sum" />
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="PayRate" ShowInColumn="PayRate" ShowInGroupFooterColumn="PayRate" SummaryType="Sum" />
-                                                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="PayMoney" ShowInColumn="PayMoney" ShowInGroupFooterColumn="PayMoney" SummaryType="Sum" />
-                                            </TotalSummary>
-                                            <Styles>
-                                                <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
-                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
-                                                <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
-                                                <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
-                                                <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None"></CommandColumn>
-                                            </Styles>
-                                        </dx:aspxgridview>
-                                    </div>
-                                </div>
+                               
+                              
+                                <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False"  KeyFieldName="rowid" OnRowCommand="gv_RowCommand" Theme="MetropolisBlue" OnCustomCallback="gv_CustomCallback" 
+                                     ClientInstanceName="grid"  EnableTheming="True" onhtmlrowcreated="gv_HtmlRowCreated" Border-BorderColor="#DCDCDC" >
+                                   
+                                    <SettingsPager PageSize="1000"></SettingsPager>
+                                    <Settings ShowFooter="True" />
+                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <Columns>
+                                    </Columns>
+                                    <TotalSummary>
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>合计:{0:N0}</font>" FieldName="PRNo" ShowInColumn="PRNo" ShowInGroupFooterColumn="PRNo" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_targetTotalPrice" ShowInColumn="notax_targetTotalPrice" ShowInGroupFooterColumn="notax_targetTotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                                        <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
+                                    </TotalSummary>
+                                    <Styles>
+                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
+                                        <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
+                                        <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
+                                        <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None"></CommandColumn>
+                                    </Styles>
+                                    <Columns>
+                                        <%-- <dx:gridviewcommandcolumn ShowSelectCheckbox="True" ShowClearFilterButton="true" SelectAllCheckboxMode="Page" Width="50" />--%>
+                                    </Columns> 
+                                </dx:aspxgridview>
+                                
+                                    
+                                 <table style="width:100%;"><tr style="display: block; margin: 10px 0; text-align:right;" >
+                                    <td style="display: block; margin: 10px 0; text-align:right;">
+                                        
+                                        <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        
+                                        </ContentTemplate></asp:UpdatePanel>
+                                        </td>
+                                       </tr></table>
                             </div>
+                           
                         </div>
                     </div>
                 </div>
-            </ContentTemplate>                                    
-        </asp:UpdatePanel> 
-              
+            </div>
+        </div>
+
+                               </ContentTemplate>
+                                    
+                                </asp:UpdatePanel>
+                                
+
+   <div id="fqfk_div" style="display:none;">
+         <div class="row  row-container">
+            <div class="col-md-12" >
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#FKXX">
+                         <strong>付款信息<strong>
+                    </div>
+                    <div class="panel-body collapse in" id="FKXX">
+                        
+                        <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                            <div>
+                                <asp:Table  border="0" runat="server" ID="tablePay" Font-Size="12px">
+                                </asp:Table>
+                                
+                            </div>
+                           
+                                 
+                                <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                <dx:aspxgridview ID="gv2" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="id"  Theme="MetropolisBlue" TabIndex="1000" >
+            <SettingsPager PageSize="1000">
+            </SettingsPager>
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+            <Columns>
+            </Columns>
+            <Styles>
+                <Header BackColor="#1E82CD" ForeColor="White" >
+                </Header>
+                <SelectedRow BackColor="Red">
+                </SelectedRow>
+            </Styles>
+        </dx:aspxgridview>
+                                       </ContentTemplate>
+                                    
+                                </asp:UpdatePanel>
+
+                            
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+             </div>
+
          <div class="row  row-container">
             <div class="auto-style1" >
                 <div class="panel panel-info">
@@ -693,7 +759,8 @@
                                 <input type="hidden" id="ip_filelist" name="ip_filelist" runat="server" />                              
                                 <table id="tbl_filelist"  Width="500px">  
                                 </table>
-                                <%--<dx:UploadedFilesContainer ID="FileContainer" runat="server" Width="380" Height="180" NameColumnWidth="240" SizeColumnWidth="70" HeaderText="Uploaded files" />--%>
+                                <%--<dx:UploadedFilesContainer ID="FileContainer" runat="server" Width="380" Height="180" 
+            NameColumnWidth="240" SizeColumnWidth="70" HeaderText="Uploaded files" />--%>
 
                                 <asp:UpdatePanel runat="server" ID="p11" UpdateMode="Conditional">
                                     <ContentTemplate>
@@ -704,32 +771,59 @@
                                             </asp:TableRow>--%>
                                         </asp:Table>
                                     </ContentTemplate>
+                                    
                                 </asp:UpdatePanel>
                             </div>
-                        </div>
+                           
+                            </div>
                         <br />
+                        </div>
+                    </div>
+                </div>
+            
+             </div>
+
+
+    </div>
+    <asp:Button ID="Button2" runat="server" Text="test" class="btn btn-large btn-primary" Width="100px" OnClick="Button2_Click"  Visible="false" />
+    <asp:Button ID="Button1" runat="server" Text="提交" class="btn btn-large btn-primary" Width="100px" OnClick="Button1_Click" Visible="false" />
+       
+       <div class="row  row-container" style="display: ">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ">
+                        
+                    </div>
+                    <div class="panel-body ">
+                        <table border="0"  width="100%" class="bg-info" >
+                        <tr><td width="100px" ><label>处理意见：</label></td>
+                        <td> <%--<input id="comment" type="text" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" />--%>
+                            <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+                        </td>
+                       </tr>
+
+                    </table>
+                     <table>
+                         <tr>
+                             <td>
+                                  <%--<dx:aspxgridview ID="gv3" runat="server" AutoGenerateColumns="False" Width="525px" KeyFieldName="id"  Theme="MetropolisBlue" TabIndex="1000" >
+            <SettingsPager PageSize="1000">
+            </SettingsPager>
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+            <Columns>
+            </Columns>
+            <Styles>
+                <Header BackColor="#1E82CD" ForeColor="White" >
+                </Header>
+                <SelectedRow BackColor="Red">
+                </SelectedRow>
+            </Styles>
+        </dx:aspxgridview>--%>
+                             </td>
+                         </tr>
+                     </table>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
-       
-    <div class="row  row-container" style="display: ">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading" data-toggle="collapse" data-target="#CZRZ"></div>
-                <div class="panel-body ">
-                    <table border="0"  width="100%" class="bg-info" >
-                        <tr>
-                            <td width="100px" ><label>处理意见：</label></td>
-                            <td> <%--<input id="comment" type="text" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" />--%>
-                                <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 </asp:Content>
