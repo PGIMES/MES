@@ -41,11 +41,12 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server"  Width="1000px" ClientInstanceName="grid"  KeyFieldName="id"  EnableTheming="True" >
-                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True"  />
+                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowEllipsisInText="true" />
               <SettingsPager PageSize="1000">
                      
                 </SettingsPager>
-                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True"/>
+                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True"
+                      VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="260"/>
                          <SettingsCommandButton>
                              <SelectButton ButtonType="Button" RenderMode="Button">
                              </SelectButton>

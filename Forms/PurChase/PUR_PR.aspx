@@ -340,7 +340,7 @@
                                 return false;
                             }
                             else{
-                                if(item.wlmc==""||item.ms==""){
+                                if(item.wlmc==""){//||item.ms==""
                                     layer.alert(item.wlh+"请维护完整物料信息后再申请.");
                                     $(wlh).val("");
                                     $(wlmc).val(""); 
