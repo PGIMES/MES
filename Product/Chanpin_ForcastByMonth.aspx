@@ -227,6 +227,10 @@
                                 HeaderText="ship_from" />
                             <asp:BoundField DataField="ship_to" HeaderText="ship_to" />
                             <asp:BoundField DataField="khdm" HeaderText="客户代码" />
+                            <asp:BoundField DataField="pc_date" 
+                                DataFormatString="{0:yyyy/MM/dd}" HeaderText="批产日期" />
+                            <asp:BoundField DataField="end_date" 
+                                DataFormatString="{0:yyyy/MM/dd}" HeaderText="停产日期" />
                             <asp:BoundField DataField="pc_dj_qad" HeaderText="单价" />
                             <asp:BoundField DataField="quantity_year" 
                                 HeaderText="最大年用量" DataFormatString="{0:N0}" />

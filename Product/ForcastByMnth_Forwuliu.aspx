@@ -1,4 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ForcastByMnth_Forwuliu.aspx.cs" Inherits="Product_ForcastByMnth_Forwuliu" %>
+﻿<%@ Page Title="三个月滚动预测" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ForcastByMnth_Forwuliu.aspx.cs" Inherits="Product_ForcastByMnth_Forwuliu" %>
+
+<%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
+    Namespace="DevExpress.Web" TagPrefix="dx" %>
 
 <%@ Register Assembly="DevExpress.XtraCharts.v17.2.Web, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.XtraCharts.Web" TagPrefix="dx" %>
@@ -77,7 +80,7 @@
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mestitle").text("【月销售预测】");
+            $("#mestitle").text("【三个月滚动预测】");
 
             // $("a[id*='_LinkBtn']").css("display", "none");
 
@@ -186,14 +189,27 @@
               
               
                 </div>
-                  <asp:GridView ID="gv_month" BorderColor="lightgray"   style=" word-break:keep-all " 
+               <%--   <asp:GridView ID="gv_month" BorderColor="lightgray"   style=" word-break:keep-all " 
                     runat="server" BorderWidth=1
                         AutoGenerateColumns="true" PageSize="200" OnRowCreated="gv_month_RowCreated"
                         OnRowDataBound="gv_month_RowDataBound" 
                     ShowFooter="True">
                         <EmptyDataTemplate>
                             查无资料</EmptyDataTemplate>
-                    </asp:GridView>
+                    </asp:GridView>--%>
+                <dx:ASPxGridView ID="gv_month" runat="server"  OnRowCreated="gv_month_RowCreated"  
+                        OnRowDataBound="gv_month_RowDataBound" 
+                    Width="1800px" ondatabound="gv_month_DataBound" 
+                    onhtmlrowcreated="gv_month_HtmlRowCreated" >
+                             <SettingsPager PageSize="10000">
+                             </SettingsPager>
+                             <Settings 
+                            VerticalScrollBarMode="Visible" 
+                                 VerticalScrollBarStyle="Standard"    
+                                 VerticalScrollableHeight="600" ShowFooter="True" />
+                </dx:ASPxGridView>
+                 <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
+                    </dx:ASPxGridViewExporter>
             </ContentTemplate>
         </asp:UpdatePanel>  
        

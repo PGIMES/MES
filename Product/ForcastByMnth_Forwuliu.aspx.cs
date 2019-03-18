@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DevExpress.XtraCharts;
-using DevExpress.Charts;
 using System.Data;
+using Maticsoft.DBUtility;
+using System.Text;
+using DevExpress.Web;
+using System.Drawing;
 using System.Data.SqlClient;
 using Maticsoft.DBUtility;
 using System.Configuration;
@@ -72,7 +74,7 @@ public partial class Product_ForcastByMnth_Forwuliu : System.Web.UI.Page
     {
 
         DataSet ds;
-        ds = DbHelperSQL.Query("exec rpt_Form3_Sale_ForcastDetail_Forwuliu_xg  '" + dropYear.SelectedValue + "','" + dropsite.SelectedValue + "','" + droptype.SelectedValue + "','" + dropfrom.SelectedValue + "'");
+        ds = DbHelperSQL.Query("exec rpt_Form3_Sale_ForcastDetail_Forwuliu_xg '" + dropYear.SelectedValue + "','" + dropsite.SelectedValue + "','" + droptype.SelectedValue + "','" + dropfrom.SelectedValue + "'");
         DataTable dt = ds.Tables[0];
         ViewState["tbhj"] = dt;
         for (int i = 12; i < dt.Columns.Count; i++)
@@ -95,50 +97,54 @@ public partial class Product_ForcastByMnth_Forwuliu : System.Web.UI.Page
     {
         
 
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            e.Row.Cells[5].Style.Add("word-break", "break-all");//顾客项目
-            e.Row.Cells[5].Style.Add("width", "160px");
-            e.Row.Cells[4].Style.Add("word-break", "break-all");//ship_to
-            e.Row.Cells[4].Style.Add("width", "180px");
+        //if (e.Row.RowType == DataControlRowType.DataRow)
+        //{
+        //    e.Row.Cells[5].Style.Add("word-break", "break-all");//顾客项目
+        //    e.Row.Cells[5].Style.Add("width", "160px");
+        //    e.Row.Cells[4].Style.Add("word-break", "break-all");//ship_to
+        //    e.Row.Cells[4].Style.Add("width", "180px");
           
-                for (int i = 13; i < e.Row.Cells.Count; i++)
-                {
+        //        for (int i = 13; i < e.Row.Cells.Count; i++)
+        //        {
                     
-                    if (e.Row.Cells[i].Text.Replace("&nbsp;", "") != "")
-                    {
-                        e.Row.Cells[i].Text = string.Format("{0:N0}", Convert.ToDecimal(e.Row.Cells[i].Text));
-                        e.Row.Cells[i].HorizontalAlign = HorizontalAlign.Right;
-                    }
-                }
+        //            if (e.Row.Cells[i].Text.Replace("&nbsp;", "") != "")
+        //            {
+        //                e.Row.Cells[i].Text = string.Format("{0:N0}", Convert.ToDecimal(e.Row.Cells[i].Text));
+        //                e.Row.Cells[i].HorizontalAlign = HorizontalAlign.Right;
+        //            }
+        //        }
             
 
-        }
-        if (e.Row.RowType == DataControlRowType.Footer)
-        {
+        //}
+        //if (e.Row.RowType == DataControlRowType.Footer)
+        //{
             
-            e.Row.Cells[1].Text = "合计";
-            e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Left;
-            e.Row.Style.Add("text-align", "right");
-            e.Row.Cells[13].Text = this.sj1.ToString("N0");
-            e.Row.Cells[14].Text = this.sj2.ToString("N0");
-            e.Row.Cells[15].Text = this.sj3.ToString("N0");
-            e.Row.Cells[16].Text = this.rc1.ToString("N0");
-            e.Row.Cells[17].Text = this.rc2.ToString("N0");
-            e.Row.Cells[18].Text = this.rc3.ToString("N0");
-            e.Row.Cells[19].Text = this.yc1.ToString("N0");
-            e.Row.Cells[20].Text = this.yc2.ToString("N0");
-            e.Row.Cells[21].Text = this.yc3.ToString("N0");
+        //    e.Row.Cells[1].Text = "合计";
+        //    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Left;
+        //    e.Row.Style.Add("text-align", "right");
+        //    e.Row.Cells[13].Text = this.sj1.ToString("N0");
+        //    e.Row.Cells[14].Text = this.sj2.ToString("N0");
+        //    e.Row.Cells[15].Text = this.sj3.ToString("N0");
+        //    e.Row.Cells[16].Text = this.rc1.ToString("N0");
+        //    e.Row.Cells[17].Text = this.rc2.ToString("N0");
+        //    e.Row.Cells[18].Text = this.rc3.ToString("N0");
+        //    e.Row.Cells[19].Text = this.yc1.ToString("N0");
+        //    e.Row.Cells[20].Text = this.yc2.ToString("N0");
+        //    e.Row.Cells[21].Text = this.yc3.ToString("N0");
 
-        }
+        //}
         
     }
     protected void btnexport_Click(object sender, EventArgs e)
     {
-        YangjianSQLHelp YangjianSQLHelp = new YangjianSQLHelp();
-        string lsname = "三个月滚动预测";
-         DataTable dt = GetDataTable();;
-        YangjianSQLHelp.DataTableToExcel(dt, "xls", lsname, "1");
+        //YangjianSQLHelp YangjianSQLHelp = new YangjianSQLHelp();
+        //string lsname = "三个月滚动预测";
+        // DataTable dt = GetDataTable();;
+        //YangjianSQLHelp.DataTableToExcel(dt, "xls", lsname, "1");
+        DataTable dt = GetDataTable();
+        gv_month.DataSource = dt;
+        gv_month.DataBind();
+        ASPxGridViewExporter1.WriteXlsToResponse("三个月滚动预测" + System.DateTime.Now.ToShortDateString());//导出到Excel
     }
 
     private void Getsum(DataTable ldt)
@@ -193,6 +199,50 @@ public partial class Product_ForcastByMnth_Forwuliu : System.Web.UI.Page
                     this.yc3 = this.yc3 + Convert.ToInt32(ldt.Rows[i][21].ToString().Replace(",", ""));
                 }
             
+        }
+    }
+    protected void gv_month_DataBound(object sender, EventArgs e)
+    {
+
+    }
+ protected void gv_month_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            e.Row.Cells[5].Style.Add("word-break", "break-all");//顾客项目
+            e.Row.Cells[5].Style.Add("width", "160px");
+            e.Row.Cells[4].Style.Add("word-break", "break-all");//ship_to
+            e.Row.Cells[4].Style.Add("width", "180px");
+
+            for (int i = 13; i < e.Row.Cells.Count; i++)
+            {
+
+                if (e.Row.Cells[i].Text.Replace("&nbsp;", "") != "")
+                {
+                    e.Row.Cells[i].Text = string.Format("{0:N0}", Convert.ToDecimal(e.Row.Cells[i].Text));
+                    e.Row.Cells[i].HorizontalAlign = HorizontalAlign.Right;
+                }
+            }
+
+
+        }
+        if (e.RowType == GridViewRowType.Footer)
+        {
+
+            e.Row.Cells[1].Text = "合计";
+            e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Left;
+            e.Row.Style.Add("text-align", "right");
+            e.Row.Cells[13].Text = this.sj1.ToString("N0");
+            e.Row.Cells[14].Text = this.sj2.ToString("N0");
+            e.Row.Cells[15].Text = this.sj3.ToString("N0");
+            e.Row.Cells[16].Text = this.rc1.ToString("N0");
+            e.Row.Cells[17].Text = this.rc2.ToString("N0");
+            e.Row.Cells[18].Text = this.rc3.ToString("N0");
+            e.Row.Cells[19].Text = this.yc1.ToString("N0");
+            e.Row.Cells[20].Text = this.yc2.ToString("N0");
+            e.Row.Cells[21].Text = this.yc3.ToString("N0");
+
         }
     }
 }

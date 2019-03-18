@@ -28,7 +28,7 @@ public partial class Product_Chanpin_ForcastByMonth : System.Web.UI.Page
             //}
 
             string Year = DateTime.Now.Date.Year.ToString();
-            int intYear = Convert.ToInt32(Year) + 2;
+            int intYear = Convert.ToInt32(Year) + 6;
             int chaYear = intYear - 2016;
             string[] Yearlist;
             Yearlist = new string[chaYear];
@@ -87,7 +87,7 @@ public partial class Product_Chanpin_ForcastByMonth : System.Web.UI.Page
                 GridView2.Rows[j].Cells[0].Text = Index.ToString();
                 HyperLink link = new HyperLink();
                 link.ID = "link" + rowIndex.ToString();
-                link.NavigateUrl = "product.aspx?requestid=" + Server.HtmlDecode(GridView2.Rows[j].Cells[13].Text).Trim();
+                link.NavigateUrl = "product.aspx?requestid=" + Server.HtmlDecode(GridView2.Rows[j].Cells[15].Text).Trim();
                 link.Text = GridView2.Rows[j].Cells[2].Text;
                 link.Target = "_blank";
                 GridView2.Rows[j].Cells[2].Controls.Add(link);
@@ -214,15 +214,15 @@ public partial class Product_Chanpin_ForcastByMonth : System.Web.UI.Page
             DataRowView dr = e.Row.DataItem as DataRowView;
 
             //添加可点击Link 及前端识别属性：name
-            for (int i = 11; i < e.Row.Cells.Count; i++)
+            for (int i = 13; i < e.Row.Cells.Count; i++)
             {
 
-                if (e.Row.Cells[11].Text.Replace(",", "") == "999999999")
+                if (e.Row.Cells[13].Text.Replace(",", "") == "999999999")
                 {
-                    e.Row.Cells[11].Text = "小计";
+                    e.Row.Cells[13].Text = "小计";
                     e.Row.BackColor = System.Drawing.Color.LightYellow;
                 }
-                if (i == 11 && e.Row.Cells[i].Text != "小计")
+                if (i == 13 && e.Row.Cells[i].Text != "小计")
                 {
                     e.Row.Cells[i].Text = (string.Format("{0:N2}", Convert.ToDecimal(e.Row.Cells[i].Text)));
                 }
@@ -342,11 +342,11 @@ public partial class Product_Chanpin_ForcastByMonth : System.Web.UI.Page
         if (e.Row.Cells[1].Text == "合计(万)")
         {
             e.Row.BackColor = System.Drawing.Color.BlanchedAlmond;
-            e.Row.Cells[11].Text = "";
+            e.Row.Cells[13].Text = "";
             e.Row.Cells[2].Text = "";
             e.Row.Cells[0].Text = "合计(万)";
             e.Row.Cells[1].Text = "";
-            e.Row.Cells[12].Text = "";
+            e.Row.Cells[14].Text = "";
 
         }
 
