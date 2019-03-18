@@ -82,10 +82,15 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
                 lcolumn.Visible = false;
             }
             lcolumn.PropertiesTextEdit.DisplayFormatString = "{0:N0}";
+
+            if (lcolumn.FieldName == "描述" || lcolumn.FieldName == "Total" || lcolumn.FieldName == "Average") 
+            {
+                lcolumn.FixedStyle = GridViewColumnFixedStyle.Left;
+            }
         }
         lnwidth = lnwidth - 90 - 90;//减去 隐藏列typedesc_depta_all的宽度
 
-        lgrid.Width = lnwidth;
+        //lgrid.Width = lnwidth;
         lgrid.DataSource = ldt_data;
         lgrid.DataBind();
 

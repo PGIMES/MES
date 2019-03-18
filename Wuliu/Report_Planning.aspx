@@ -18,6 +18,9 @@
 
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 150) + "px");
+
+            $("#MainContent_gv").css("width", ($(window).width() - 100) + "px")
+            $("div[class=dxgvCSD]").css("width", ($(window).width() - 100) + "px");
         }
 
         function open_upload() {
@@ -88,12 +91,14 @@
     <div class="panel-body">
         <div class="col-sm-12">
             <table>
-                <tr>
+                <tr> <%-- --%>
                     <td>
                         <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc_depta_all" AutoGenerateColumns="False"
-                            OnHtmlRowCreated="gv_HtmlRowCreated" OnExportRenderBrick="gv_ExportRenderBrick">
+                            OnHtmlRowCreated="gv_HtmlRowCreated" OnExportRenderBrick="gv_ExportRenderBrick" Width="1000px">
                             <SettingsPager PageSize="1000" ></SettingsPager>
                             <SettingsBehavior AllowFocusedRow="false" ColumnResizeMode="Control" />
+                            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350"
+                                 HorizontalScrollBarMode="Visible" />
                             <Columns>
                             </Columns>
                             <Styles>
@@ -101,11 +106,10 @@
                                 <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
                                 <Footer HorizontalAlign="Right"></Footer>
                                 <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
+                                <%--<FixedColumn BackColor="Yellow"></FixedColumn>--%>
                             </Styles>
                             <SettingsExport EnableClientSideExportAPI="true"></SettingsExport>
                         </dx:ASPxGridView>
-                         <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
-                        </dx:ASPxGridViewExporter>
                     </td>
                 </tr>
             </table>
