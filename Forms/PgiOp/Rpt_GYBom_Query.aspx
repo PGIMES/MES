@@ -79,7 +79,7 @@
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
                     <dx:ASPxGridView ID="gv" runat="server" 
-                        AutoGenerateColumns="False" Width="1200px" 
+                        AutoGenerateColumns="False" Width="1350px" 
                         OnPageIndexChanged="gv_PageIndexChanged" 
                         oncustomcellmerge="gv_CustomCellMerge"    >
                         
@@ -101,18 +101,20 @@
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="Projectno" Width="90px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="Projectno" Width="70px" VisibleIndex="2"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pn" Width="120px" VisibleIndex="3"> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工艺路线版本" FieldName="ver" Width="100px" VisibleIndex="4"> </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="120px" VisibleIndex="5"> </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工艺流程" FieldName="pgi_no_t" Width="100px" VisibleIndex="5"> </dx:GridViewDataTextColumn>
                              <dx:GridViewDataTextColumn Caption="工序" FieldName="op" Width="60px" VisibleIndex="6"></dx:GridViewDataTextColumn>
                               <dx:GridViewDataTextColumn Caption="工序描述" FieldName="op_desc" Width="100px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="工作中心" FieldName="gzzx" Width="80px" VisibleIndex="8"> </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工作中心" FieldName="gzzx" Width="60px" VisibleIndex="8"> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="createByName" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
-                              <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="GY_currnode" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="gy_approvetime" Width="80px" VisibleIndex="13"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="createByName" Width="60px" VisibleIndex="10"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="11"></dx:GridViewDataTextColumn>
+                             <dx:GridViewDataTextColumn Caption="申请类别" FieldName="ApplyType" Width="70px" VisibleIndex="12"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="申请(变更)说明" FieldName="ModifyRemark" Width="180px" VisibleIndex="13"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="GY_currnode" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="gy_approvetime" Width="80px" VisibleIndex="15"></dx:GridViewDataTextColumn>
                             
                        
                            
@@ -128,7 +130,7 @@
                     </dx:ASPxGridViewExporter>
                     <br />
                     <dx:ASPxGridView ID="gv_BOM" runat="server" 
-                        AutoGenerateColumns="False" Width="1100px" 
+                        AutoGenerateColumns="False" Width="1300px" 
                         oncustomcellmerge="gv_BOM_CustomCellMerge">
                      
                         <SettingsPager PageSize="100" ></SettingsPager>
@@ -154,11 +156,11 @@
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="pt_part" Width="90px" VisibleIndex="3"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="版本" FieldName="bomver" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="pt_desc1" Width="120px" VisibleIndex="5"> </dx:GridViewDataTextColumn>
-                             <dx:GridViewDataTextColumn Caption="件数" FieldName="qty" Width="60px" VisibleIndex="6"> 
+                             <dx:GridViewDataTextColumn Caption="件数" FieldName="qty" Width="120px" VisibleIndex="6"> 
                                  <CellStyle HorizontalAlign="Right">
                                  </CellStyle>
                              </dx:GridViewDataTextColumn>
-                             <dx:GridViewDataTextColumn Caption="单件用量" FieldName="ps_qty_per" Width="80px" VisibleIndex="7"> </dx:GridViewDataTextColumn>
+                             <dx:GridViewDataTextColumn Caption="单件用量" FieldName="ps_qty_per" Width="120px" VisibleIndex="7"> </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="工厂" FieldName="domain" Width="80px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="CreateByName" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
                               <dx:GridViewDataTextColumn Caption="申请时间" FieldName="createDate" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
