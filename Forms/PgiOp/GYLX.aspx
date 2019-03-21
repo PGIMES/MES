@@ -744,8 +744,12 @@
             var op700_flag=false;
             if(typeno=="机加"){
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                        
-                    if((eval('op' + index)).GetText()=="OP700"){
-                        op700_flag=true;
+                    if((eval('op' + index)).GetText()=="OP700"){                                
+                        if($(item).css("background-color")=="rgb(220, 220, 220)" || $(item).css("background-color")=="#DCDCDC"){//签核页面补出删除的数据
+
+                        }else {
+                            op700_flag=true;  
+                        }
                     }
                     //if((eval('op' + index)).GetText()=="OP700" && (eval('pgi_no_t' + index)).GetText()!=pgi_no_t+"-GP12"){
                     //    msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
@@ -769,7 +773,11 @@
             if(typeno=="压铸"){
                 $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                        
                     if((eval('op_yz' + index)).GetText()=="OP700"){
-                        op700_flag=true;
+                        if($(item).css("background-color")=="rgb(220, 220, 220)" || $(item).css("background-color")=="#DCDCDC"){//签核页面补出删除的数据
+
+                        }else {
+                            op700_flag=true;  
+                        }
                     }
                     //if((eval('op_yz' + index)).GetText()=="OP700" && (eval('pgi_no_t_yz' + index)).GetText()!=pgi_no_t+"-GP12"){
                     //    msg+="工序号OP700对应的工艺流程必须是GP12.<br />";
@@ -795,7 +803,9 @@
                 if(!op700_flag){msg+="需要GP12 必须填写工序号OP700.<br />";}
             }
             if(containgp=="N"){
-                if(op700_flag){msg+="不需要GP12 请删除工序号OP700.<br />";}
+                if(op700_flag){
+                   if(displayModel!="1"){msg+="不需要GP12 请删除工序号OP700.<br />"};//签核时 不需要
+                }
             }
 
             if(action=='submit'){
