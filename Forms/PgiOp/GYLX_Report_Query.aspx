@@ -150,7 +150,7 @@
     <div class="col-md-12" id="div_p"  style="margin-bottom:5px">
         <table style=" border-collapse: collapse;">
             <tr>
-                <td style="width:60px;">物料号</td>
+                <td style="width:45px;">物料号</td>
                 <td style="width:115px;">
                     <asp:TextBox ID="txt_pgi_no" class="form-control input-s-sm" runat="server" Width="110px"></asp:TextBox>
                 </td>
@@ -158,21 +158,21 @@
                 <td style="width:125px;">
                     <asp:TextBox ID="txt_pn" class="form-control input-s-sm" runat="server" Width="120px"></asp:TextBox>
                 </td>    
-                <td style="width:40px;">版本</td>
+                <td style="width:30px;">版本</td>
                 <td style="width:85px;"> 
                     <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="">ALL</asp:ListItem>
                         <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td style="width:60px;">工艺段</td>
+                <td style="width:45px;">工艺段</td>
                 <td style="width:85px;"> 
                     <asp:DropDownList ID="ddl_typeno" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="机加">机加</asp:ListItem>
                         <asp:ListItem Value="压铸">压铸</asp:ListItem>
                     </asp:DropDownList>
                 </td>                                
-                <td style="width:60px;">产品类</td>
+                <td style="width:45px;">产品类</td>
                 <td style="width:155px;"> 
                     <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox" ID="ASPxDropDownEdit1" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
                         <DropDownWindowStyle BackColor="#EDEDED" />
@@ -204,14 +204,14 @@
                         <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
                     </dx:ASPxDropDownEdit>
                 </td>
-                <td style="width:70px;">物料状态</td>
+                <td style="width:60px;">物料状态</td>
                 <td style="width:85px;">
                     <asp:DropDownList ID="ddl_pt_status" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="Y">有效</asp:ListItem>
                         <asp:ListItem Value="N">无效</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td style="width:70px;">工艺状态</td>
+                <td style="width:60px;">工艺状态</td>
                 <td style="width:85px;">
                     <asp:DropDownList ID="ddl_applytype" runat="server" class="form-control input-s-md " Width="80px">
                         <asp:ListItem Value="Y">有效</asp:ListItem>
