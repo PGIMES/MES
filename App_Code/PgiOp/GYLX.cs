@@ -19,7 +19,7 @@ public class GYLX
     SQLHelper SQLHelper = new SQLHelper();
 
 
-    public DataTable GYLX_query(string pgi_no, string pn, string ver,string ddl_typeno, string cpl,string pt_status)
+    public DataTable GYLX_query(string pgi_no, string pn, string ver,string ddl_typeno, string cpl,string pt_status, string applytype)
     {
         SqlParameter[] param = new SqlParameter[]
       {
@@ -28,13 +28,14 @@ public class GYLX
            new SqlParameter("@ver",ver),
            new SqlParameter("@typeno",ddl_typeno),
            new SqlParameter("@cpl",cpl),
-           new SqlParameter("@pt_status",pt_status)
+           new SqlParameter("@pt_status",pt_status),
+           new SqlParameter("@applytype",applytype)
       };
         return SQLHelper.GetDataTable("Report_GYLX", param);
 
     }
 
-    public DataTable GYLX_IsNeedCloseWork(DataTable dt, string lstypeno, string formno_main, string projectno_main, string pgi_no_t_main, string domain_main, string titlever,string containgp)
+    public DataTable GYLX_IsNeedCloseWork(DataTable dt, string lstypeno, string formno_main, string projectno_main, string pgi_no_t_main, string domain_main, string titlever,string containgp, string applytype)
     {
         SqlParameter[] param = new SqlParameter[]
       {
@@ -44,7 +45,8 @@ public class GYLX
             new SqlParameter("@pgi_no_t",pgi_no_t_main),
             new SqlParameter("@domain",domain_main),
             new SqlParameter("@ver",titlever),
-            new SqlParameter("@containgp",containgp)
+            new SqlParameter("@containgp",containgp),
+            new SqlParameter("@applytype",applytype)
       };
 
         string strsql = "";

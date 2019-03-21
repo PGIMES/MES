@@ -224,7 +224,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     string del_sql = @"select a.id, a.GYGSNo, 'del' typeno, a.pgi_no, a.pgi_no_t, a.op, a.op_desc, a.op_remark, a.gzzx, a.gzzx_desc, a.IsBg, a.JgNum, a.JgSec, a.WaitSec, a.ZjSecc, a.JtNum, a.TjOpSec, a.JSec, a.JHour
                                                 , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn, isnull(a.IsXh_op,'') IsXh_op   
                                              ,(select count(1)+ROW_NUMBER() OVER (ORDER BY a.UpdateDate) from PGI_GYLX_Dtl_Form where GYGSNo='{3}') numid
-                                       from (select * from [dbo].[PGI_GYLX_Dtl] where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1)) a
+                                       from (select * from [dbo].[PGI_GYLX_Dtl] where GYGSNo=(select FormNo from PGI_GYLX_Main_Form where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1))) a                                            
                                         left join (select * from PGI_GYLX_Dtl_Form where GYGSNo='{3}') b on a.pgi_no=b.pgi_no and a.pgi_no_t=b.pgi_no_t and a.op=b.op
                                        where b.op is null
                                         order by cast(right(a.op,len(a.op)-2) as int)";
@@ -282,15 +282,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
             ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
             
-
-            if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
-            {
-                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-            }
-            else
-            {
-                ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
-            }
+            //20190320 add 注释 释放GP12可以修改
+            //if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
+            //{
+            //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+            //}
+            //else
+            //{
+            //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
+            //}
             
         }
 
@@ -625,14 +625,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
                 ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
-                if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
-                {
-                    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-                }
-                else
-                {
-                    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
-                }
+                //20190320 add 注释 释放GP12可以修改
+                //if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
+                //{
+                //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
+                //}
+                //else
+                //{
+                //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
+                //}
 
 
                 if (state != "edit" && ldt_detail.Rows[i]["ver"].ToString() != "A")
@@ -968,6 +969,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             return;
         }
 
+
         //先判断删除行，因删除行的单号，版本是上一个版本数据
         //删除行#D3D3D3
         if (e.GetValue("typeno").ToString() == "del")
@@ -1012,6 +1014,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         string sql = @"select * from PGI_GYLX_Dtl where pgi_no='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' and ver=nchar(ascii('" + ver + "')-1) and op='"+ op + "'";
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        //删除工艺
+        if (applytype.SelectedValue == "删除工艺")
+        {
+            e.Row.Style.Add("background-color", "#DCDCDC");
+            for (int i = 0; i < this.gv_d.DataColumns.Count; i++)
+            {
+                if (this.gv_d.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns[gv_d.DataColumns[i].FieldName], gv_d.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#DCDCDC");
+                }
+            }
+            return;
+        }
 
         //新增行
         bool is_add = false;
@@ -1835,7 +1852,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             try
             {
                 GYLX gylx = new GYLX();
-                IsNeedCloseWork = gylx.GYLX_IsNeedCloseWork(ldt, lstypeno, formno_main, projectno_main, pgi_no_t_main, domain_main, titlever, lscontaingp).Rows[0][0].ToString();
+                IsNeedCloseWork = gylx.GYLX_IsNeedCloseWork(ldt, lstypeno, formno_main, projectno_main, pgi_no_t_main, domain_main, titlever, lscontaingp, applytype.SelectedValue).Rows[0][0].ToString();
             }
             catch (Exception ex)
             {
@@ -2750,6 +2767,5 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
 
     #endregion
-    
 
 }

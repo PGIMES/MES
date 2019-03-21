@@ -211,6 +211,13 @@
                         <asp:ListItem Value="N">无效</asp:ListItem>
                     </asp:DropDownList>
                 </td>
+                <td style="width:70px;">工艺状态</td>
+                <td style="width:85px;">
+                    <asp:DropDownList ID="ddl_applytype" runat="server" class="form-control input-s-md " Width="80px">
+                        <asp:ListItem Value="Y">有效</asp:ListItem>
+                        <asp:ListItem Value="N">无效</asp:ListItem>
+                    </asp:DropDownList>
+                </td>
                 <td id="td_btn">  
                     <%--runat="server" onserverclick="btn_edit_Click"--%>
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    

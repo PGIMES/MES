@@ -48,7 +48,8 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         GYLX GYLX = new GYLX();
-        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue, ASPxDropDownEdit1.Text,ddl_pt_status.SelectedValue);
+        DataTable dt = GYLX.GYLX_query(txt_pgi_no.Text.Trim(), txt_pn.Text.Trim(), ddl_ver.SelectedValue, ddl_typeno.SelectedValue
+            , ASPxDropDownEdit1.Text,ddl_pt_status.SelectedValue,ddl_applytype.SelectedValue);
 
         if (ddl_typeno.SelectedValue=="机加")
         {

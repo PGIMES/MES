@@ -154,6 +154,27 @@
             }); 
            
             set_modifygp_read();
+
+            //$("select[id*='applytype']").change(function(){
+            //    var applytype=$("select[id*='applytype']").val();
+            //    if (applytype=="删除工艺") {
+            //        if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
+            //            $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {                 
+            //                $("#gzzx_i_"+index).removeClass("i_show");$("#gzzx_i_"+index).addClass("i_hidden");  
+            //                $("#IsBg_i_"+index).removeClass("i_show");$("#IsBg_i_"+index).addClass("i_hidden");
+                       
+            //            });
+            //        }
+            //        if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
+            //            $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {                  
+            //                $("#gzzx_i_yz_"+index).removeClass("i_show"); $("#gzzx_i_yz_"+index).addClass("i_hidden");   
+            //                $("#IsBg_i_yz_"+index).removeClass("i_show"); $("#IsBg_i_yz_"+index).addClass("i_hidden");
+                        
+            //            });
+            //        }
+            //    }
+
+            //});
         });
 
         function set_modifygp_read(){      
@@ -2019,6 +2040,7 @@
                                     <asp:ListItem Value="仅更改工时" Text="仅更改工时"></asp:ListItem>
                                     <asp:ListItem Value="新增工艺" Text="新增工艺"></asp:ListItem>
                                     <asp:ListItem Value="仅修改扣料工序" Text="仅修改扣料工序"></asp:ListItem>
+                                    <asp:ListItem Value="删除工艺" Text="删除工艺"></asp:ListItem>
                                 </asp:DropDownList>
                             </td>
                         </tr>
