@@ -77,7 +77,7 @@
             $.ajax({
                 type: "post",
                 url: "GYLX_Report_Query.aspx/CheckData",
-                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "'}",
+                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "','formno':'" + formno + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

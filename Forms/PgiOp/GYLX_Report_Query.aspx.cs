@@ -108,9 +108,9 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckData(string pgi_no,string pgi_no_t)
+    public static string CheckData(string pgi_no,string pgi_no_t, string formno)
     {
-        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        //------------------------------------------------------------------------------验证申请中
         string re_flag = "";
 
         string re_sql = @"select b.projectno,b.pgi_no_t,b.formno,b.createbyid,b.createbyname
@@ -124,7 +124,12 @@ public partial class Forms_PgiOp_GYLX_Report_Query : System.Web.UI.Page
             re_flag= pgi_no + "(" + pgi_no_t + ")项目正在<font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",<font color='red'>申请人:"
                 + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + "</font>)!";
         }
-
+                
+        DataTable re_dt_2 = DbHelperSQL.Query(@"select * from  PGI_GYLX_Main where formno='" + formno + "' and ApplyType='删除工艺'").Tables[0];
+        if (re_dt_2.Rows.Count > 0)
+        {
+            re_flag = re_flag + "<br />" + pgi_no + "(" + pgi_no_t + ")已经失效，不能升版本！";
+        }
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
         return result;
 
