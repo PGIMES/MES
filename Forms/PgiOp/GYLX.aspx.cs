@@ -224,7 +224,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                     string del_sql = @"select a.id, a.GYGSNo, 'del' typeno, a.pgi_no, a.pgi_no_t, a.op, a.op_desc, a.op_remark, a.gzzx, a.gzzx_desc, a.IsBg, a.JgNum, a.JgSec, a.WaitSec, a.ZjSecc, a.JtNum, a.TjOpSec, a.JSec, a.JHour
                                                 , a.col1, a.col2, a.EquipmentRate, a.col3, a.col4, a.col5, a.col6, a.col7, a.weights, a.acupoints, a.capacity, a.UpdateById, a.UpdateByName, a.UpdateDate, a.domain, a.ver, a.pn, isnull(a.IsXh_op,'') IsXh_op   
                                              ,(select count(1)+ROW_NUMBER() OVER (ORDER BY a.UpdateDate) from PGI_GYLX_Dtl_Form where GYGSNo='{3}') numid
-                                       from (select * from [dbo].[PGI_GYLX_Dtl] where GYGSNo=(select FormNo from PGI_GYLX_Main_Form where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1))) a                                            
+                                       from (select * from [dbo].[PGI_GYLX_Dtl] where GYGSNo=(select FormNo from PGI_GYLX_Main_Form where pgi_no='{0}' and pgi_no_t='{1}' and ver=nchar(ascii('{2}')-1) and ApplyType<>'删除工艺' and iscomplete=1)) a                                            
                                         left join (select * from PGI_GYLX_Dtl_Form where GYGSNo='{3}') b on a.pgi_no=b.pgi_no and a.pgi_no_t=b.pgi_no_t and a.op=b.op
                                        where b.op is null
                                         order by cast(right(a.op,len(a.op)-2) as int)";
