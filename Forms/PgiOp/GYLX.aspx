@@ -1018,6 +1018,14 @@
                 }
                 if($.trim($("#MainContent_applytype").val())==""){
                     msg+="【申请类别】不可为空.<br />";
+                }else {
+                    if ($.trim($("#MainContent_applytype").val())=="删除工艺") {
+                        var pgi_no=$("#CPXX input[id*='projectno']").val();
+                        var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
+                        if(pgi_no==pgi_no_t){
+                            msg+="【申请类别】删除工艺，【工艺流程】不可与【物料号】一样.<br />";
+                        }
+                    }
                 }
 
                 if($.trim($("#MainContent_modifyremark").val())==""){
