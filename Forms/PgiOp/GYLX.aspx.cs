@@ -1455,6 +1455,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string sql = @"select * from PGI_GYLX_Dtl where pgi_no='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' and ver=nchar(ascii('" + ver + "')-1) and op='" + op + "'";
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
+        //删除工艺
+        if (applytype.SelectedValue == "删除工艺")
+        {
+            e.Row.Style.Add("background-color", "#DCDCDC");
+            for (int i = 0; i < this.gv_d_yz.DataColumns.Count; i++)
+            {
+                if (this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(e.VisibleIndex
+                       , (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns[gv_d_yz.DataColumns[i].FieldName], gv_d_yz.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml("#DCDCDC");
+                }
+            }
+            return;
+        }
+
         //新增行
         bool is_add = false;
         if (dt == null) { is_add = true; }
