@@ -14,7 +14,7 @@ public partial class Wuliu_Qad_Report_tr_hist_Sum : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            ddl_year.SelectedValue = DateTime.Now.AddMonths(-1).ToString("YYYY"); //获取上月年份
+            ddl_year.SelectedValue = DateTime.Now.AddMonths(-1).ToString("yyyy"); //获取上月年份
             ddl_month.SelectedValue = DateTime.Now.AddMonths(-1).ToString("MM"); //获取上月月份
             QueryASPxGridView();
         }
