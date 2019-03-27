@@ -150,6 +150,38 @@
                 </div>
             </div>
         </div>
+
+       <div class=" panel panel-info col-md-6 ">
+            <div class="panel panel-heading">
+                <asp:Label ID="Label3" runat="server" Text="超180天趋势图"></asp:Label>
+            </div>
+            <div class="panel panel-body" style="  overflow:scroll">
+                <div style="float: left">
+                    
+                </div>
+            </div>
+       </div>
+       <div class=" panel panel-info col-md-6 ">
+            <div class="panel panel-heading">
+                <asp:Label ID="Label4" runat="server" Text="超180天库龄分析"></asp:Label>
+            </div>
+            <div class="panel panel-body" style="  overflow:scroll">
+                <div style="float: left">
+                    <dx:ASPxGridView ID="gv_tr_list_5" runat="server" OnHtmlRowCreated="gv_tr_list_5_HtmlRowCreated">
+                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Columns></Columns>
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
+                    <dx:WebChartControl ID="ChartE" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    </dx:WebChartControl>
+                </div>
+            </div>
+        </div>
    </div>
 
 </asp:Content>

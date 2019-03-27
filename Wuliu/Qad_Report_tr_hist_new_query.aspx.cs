@@ -65,7 +65,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartC.Series.Clear();
 
         List<Series> listC = new List<Series>();
-        Series seriesC = new Series("昆山库存金额", ViewType.Pie);
+        Series seriesC = new Series("昆山库存0-180金额", ViewType.Pie);
         for (int i = 4; i < dt_chartC.Columns.Count; i++)
         {
             string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
@@ -77,6 +77,28 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         listC.Add(seriesC);
         ChartC.Series.AddRange(listC.ToArray());
         ChartC.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
+        //grid 5
+        SetGrid(gv_tr_list_5, ds.Tables[4], 80, "typedesc");
+        gv_tr_list_5.Columns["typedesc"].Caption = "分类";
+
+        //图E
+        DataTable dt_chartE = ds.Tables[5];
+        ChartE.Series.Clear();
+
+        List<Series> listE = new List<Series>();
+        Series seriesE = new Series("昆山库存超180金额", ViewType.Pie);
+        for (int i = 1; i < dt_chartE.Columns.Count; i++)
+        {
+            string argument = dt_chartE.Columns[i].ColumnName;//参数名称 
+            decimal value = Convert.ToDecimal(dt_chartE.Rows[0][i].ToString());//参数值
+            seriesE.Points.Add(new SeriesPoint(argument, value));
+
+        }
+        seriesE.ArgumentScaleType = ScaleType.Qualitative;
+        listE.Add(seriesE);
+        ChartE.Series.AddRange(listE.ToArray());
+        ChartE.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
     }
 
     protected void gv_tr_list_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
@@ -108,6 +130,27 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
             {
                 DataTable ldt = Pgi.Auto.Control.AgvToDt(gv_tr_list_3);
                 for (int i = 2; i < ldt.Columns.Count; i++)
+                {
+                    if (ldt.Columns[i].ColumnName != "flag")
+                    {
+                        if (e.GetValue(ldt.Columns[i].ColumnName) != DBNull.Value)
+                        {
+                            e.Row.Cells[i].Text = Convert.ToString(Convert.ToDouble(e.GetValue(ldt.Columns[i].ColumnName)) * 100) + "%";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected void gv_tr_list_5_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            if (e.KeyValue.ToString().Contains("百分比"))
+            {
+                DataTable ldt = Pgi.Auto.Control.AgvToDt(gv_tr_list_5);
+                for (int i = 1; i < ldt.Columns.Count; i++)
                 {
                     if (ldt.Columns[i].ColumnName != "flag")
                     {
