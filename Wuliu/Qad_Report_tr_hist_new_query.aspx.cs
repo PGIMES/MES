@@ -60,13 +60,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartA.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 3
-        gv_tr_list_3.Columns.Clear();
-        gv_tr_list_3.AutoGenerateColumns = true;
+        SetGrid(gv_tr_list_3, ds.Tables[2], 80);
         gv_tr_list_3.KeyFieldName = "typedesc;days";
-        gv_tr_list_3.DataSource = ds.Tables[2];
-        gv_tr_list_3.DataBind();
-        gv_tr_list_3.Columns["tr_domain"].Visible = false;
-        gv_tr_list_3.Columns["sort"].Visible = false;
         gv_tr_list_3.Columns["typedesc"].Caption = "分类";
         gv_tr_list_3.Columns["days"].Caption = "在库天数";
 
@@ -99,7 +94,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
                 {
                     if (e.GetValue("amount" + i.ToString()) != DBNull.Value)
                     {
-                        e.Row.Cells[i - 1].Text = Convert.ToString(e.GetValue("amount" + i.ToString())) + "%";
+                        e.Row.Cells[i - 1].Text = Convert.ToString(Convert.ToDouble(e.GetValue("amount" + i.ToString())) * 100) + "%";
                     }
                 }
 
@@ -114,37 +109,67 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     {
         if (e.RowType == GridViewRowType.Data)
         {
-            //if (e.KeyValue.ToString().Contains("rate"))
-            //{
-            //    for (int i = 1; i < gv_tr_list.Columns.Count - 1; i++)
-            //    {
-            //        if (e.GetValue("amount" + i.ToString()) != DBNull.Value)
-            //        {
-            //            e.Row.Cells[i - 1].Text = Convert.ToString(e.GetValue("amount" + i.ToString())) + "%";
-            //        }
-            //    }
-
-            //    if (e.GetValue("ld_qty_oh_amount") != DBNull.Value)
-            //    {
-            //        e.Row.Cells[8].Text = Convert.ToString(e.GetValue("ld_qty_oh_amount")) + "00%";
-            //    }
-            //}
-
             if (e.KeyValue.ToString().Contains("百分比"))
             {
                 DataTable ldt = Pgi.Auto.Control.AgvToDt(gv_tr_list_3);
-                for (int i = 4; i < ldt.Columns.Count; i++)
+                for (int i = 2; i < ldt.Columns.Count; i++)
                 {
                     if (ldt.Columns[i].ColumnName != "flag")
                     {
                         if (e.GetValue(ldt.Columns[i].ColumnName) != DBNull.Value)
                         {
-                            //e.Row.Cells[i].Text = Convert.ToString(Convert.ToDouble(e.GetValue(ldt.Columns[i].ColumnName)) * 100) + "%";
+                            e.Row.Cells[i].Text = Convert.ToString(Convert.ToDouble(e.GetValue(ldt.Columns[i].ColumnName)) * 100) + "%";
                         }
                     }
                 }
             }
         }
+    }
+
+    private static void SetGrid(DevExpress.Web.ASPxGridView lgrid, DataTable ldt_data, Int32 lnw)
+    {
+        if (ldt_data == null)
+        {
+            return;
+        }
+
+        lgrid.AutoGenerateColumns = false;
+        int lnwidth = 0; int lnwidth_emp = 0;
+        lgrid.Columns.Clear();
+        for (int i = 0; i < ldt_data.Columns.Count; i++)
+        {
+            DevExpress.Web.GridViewDataTextColumn lcolumn = new DevExpress.Web.GridViewDataTextColumn();
+            lcolumn.Name = ldt_data.Columns[i].ColumnName.ToString();
+            lcolumn.Caption = ldt_data.Columns[i].ColumnName.ToString();
+            lcolumn.FieldName = ldt_data.Columns[i].ColumnName.ToString();
+            lcolumn.HeaderStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
+            lcolumn.CellStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
+
+            lnwidth_emp = 0;
+
+            if (lnwidth_emp > 0)
+            {
+                lcolumn.Width = lnwidth_emp;
+                lcolumn.ExportWidth = lnwidth_emp;
+                lnwidth += Convert.ToInt32(lnwidth_emp);
+            }
+            else
+            {
+                lcolumn.Width = lnw;
+                lcolumn.ExportWidth = lnw;
+                lnwidth += Convert.ToInt32(lnw);
+            }
+
+            //设置查询
+            lcolumn.Settings.AutoFilterCondition = DevExpress.Web.AutoFilterCondition.Contains;
+            lgrid.Columns.Add(lcolumn);
+            lcolumn.PropertiesTextEdit.DisplayFormatString = "{0:N0}";
+        }
+
+        //lgrid.Width = lnwidth;
+        lgrid.DataSource = ldt_data;
+        lgrid.DataBind();
+
     }
 
     //private void CreateChart(DataTable dt,WebChartControl chart, ViewType viewType)

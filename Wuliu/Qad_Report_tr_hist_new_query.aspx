@@ -162,7 +162,7 @@
             <div class="panel panel-body" style="  overflow:scroll">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_3" runat="server" OnHtmlRowCreated="gv_tr_list_3_HtmlRowCreated">
-                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value" AllowCellMerge="true" />
+                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
                         <SettingsPager PageSize="1000"></SettingsPager>
                         <Columns></Columns>
                         <Styles>
