@@ -16,25 +16,6 @@
         $(document).ready(function () {
             $("#mestitle").text("【库龄分析】");
 
-            if ($("#div_p select[id*='ddl_condition']").val() == "his") {
-                $("#td_year").css("display", "block"); $("#td_month").css("display", "block");
-                $("#div_p select[id*='ddl_year']").css("display", "block");
-                $("#div_p select[id*='ddl_month']").css("display", "block");
-            }
-
-            $("#div_p select[id*='ddl_condition']").on('change', function () {
-                if ($(this).val() == "cur") {
-                    $("#td_year").css("display", "none"); $("#td_month").css("display", "none");
-                    $("#div_p select[id*='ddl_year']").css("display", "none");
-                    $("#div_p select[id*='ddl_month']").css("display", "none");
-                }
-                if ($(this).val() == "his") {
-                    $("#td_year").css("display", "block"); $("#td_month").css("display", "block");
-                    $("#div_p select[id*='ddl_year']").css("display","block");
-                    $("#div_p select[id*='ddl_month']").css("display", "block");
-                }
-            });
-
             $("#div_p select[id*='ddl_comp']").on('change', function () {
                 $("#div_p input[id*='txt_site']").val($(this).val());
             });
@@ -46,24 +27,17 @@
     <div class="col-sm-12" id="div_p" style="margin-bottom:5px"> 
         <table style="line-height:40px;">
             <tr>
-                <td></td>
+                <td id="td_year">&nbsp;&nbsp;年份：</td>
                 <td>
-                    <asp:DropDownList ID="ddl_condition" runat="server" class="form-control input-s-sm ">
-                        <asp:ListItem Value="cur">当前数据</asp:ListItem>
-                        <asp:ListItem Value="his">历史数据</asp:ListItem>
-                    </asp:DropDownList>
-                 </td>
-                <td id="td_year" style="display:none;">&nbsp;&nbsp;年份：</td>
-                <td>
-                    <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-sm " style="display:none;">
+                    <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-sm ">
                         <asp:ListItem Value="2018">2018</asp:ListItem>
                         <asp:ListItem Value="2019">2019</asp:ListItem>
                         <asp:ListItem Value="2020">2020</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td id="td_month" style="display:none;">&nbsp;&nbsp;月份：</td>
+                <td id="td_month">&nbsp;&nbsp;月份：</td>
                 <td>
-                    <asp:DropDownList ID="ddl_month" runat="server" class="form-control input-s-sm " style="display:none;">
+                    <asp:DropDownList ID="ddl_month" runat="server" class="form-control input-s-sm ">
                         <asp:ListItem Value="01">1</asp:ListItem><asp:ListItem Value="02">2</asp:ListItem><asp:ListItem Value="03">3</asp:ListItem>   
                         <asp:ListItem Value="04">4</asp:ListItem><asp:ListItem Value="05">5</asp:ListItem><asp:ListItem Value="06">6</asp:ListItem>
                         <asp:ListItem Value="07">7</asp:ListItem><asp:ListItem Value="08">8</asp:ListItem><asp:ListItem Value="09">9</asp:ListItem>

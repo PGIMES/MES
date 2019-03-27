@@ -30,11 +30,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        string curmonth = "";
-        if (ddl_condition.SelectedValue == "his")
-        {
-            curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        }
+        string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'");
 
         //grid A
@@ -60,8 +56,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartA.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 3
-        SetGrid(gv_tr_list_3, ds.Tables[2], 80);
-        gv_tr_list_3.KeyFieldName = "typedesc;days";
+        SetGrid(gv_tr_list_3, ds.Tables[2], 80, "typedesc;days");
         gv_tr_list_3.Columns["typedesc"].Caption = "分类";
         gv_tr_list_3.Columns["days"].Caption = "在库天数";
 
@@ -126,7 +121,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         }
     }
 
-    private static void SetGrid(DevExpress.Web.ASPxGridView lgrid, DataTable ldt_data, Int32 lnw)
+    private static void SetGrid(DevExpress.Web.ASPxGridView lgrid, DataTable ldt_data, Int32 lnw,string keyfieldname)
     {
         if (ldt_data == null)
         {
@@ -167,6 +162,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         }
 
         //lgrid.Width = lnwidth;
+
+        lgrid.KeyFieldName = keyfieldname;
         lgrid.DataSource = ldt_data;
         lgrid.DataBind();
 
