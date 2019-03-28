@@ -31,7 +31,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'");
+        DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''");
 
         //grid A
         gv_tr_list.DataSource = ds.Tables[0];
@@ -55,13 +55,64 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartA.Series.AddRange(list.ToArray());
         ChartA.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
+        //grid 2
+        SetGrid(gv_tr_list_2, ds.Tables[2], 80, "typedesc");
+        gv_tr_list_2.Columns["typedesc"].Caption = "月份/金额";
+
+        //图B
+        DataTable dt_chartB = ds.Tables[3];
+        ChartB.Series.Clear();
+
+        List<Series> listB = new List<Series>();
+        Series seriesB = new Series("金额", ViewType.Area);
+        Series seriesB_2 = new Series("金额占比", ViewType.Line);
+        for (int i = 1; i < dt_chartB.Columns.Count; i++)
+        {
+            string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
+
+            decimal value = Convert.ToDecimal(dt_chartB.Rows[0][i].ToString());//参数值
+            seriesB.Points.Add(new SeriesPoint(argument, value));
+
+            decimal value_2 = Convert.ToDecimal(dt_chartB.Rows[1][i].ToString());//参数值
+            seriesB_2.Points.Add(new SeriesPoint(argument, value_2));
+
+        }
+        seriesB.ArgumentScaleType = ScaleType.Qualitative;
+        seriesB_2.ArgumentScaleType = ScaleType.Qualitative;
+
+        listB.Add(seriesB); listB.Add(seriesB_2);
+
+        ChartB.Series.AddRange(listB.ToArray());
+        ChartB.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
+        //grid 4
+        SetGrid(gv_tr_list_4, ds.Tables[4], 80, "typedesc");
+        gv_tr_list_4.Columns["typedesc"].Caption = "月份/金额";
+
+        //图D
+        DataTable dt_chartD = ds.Tables[4];
+        ChartD.Series.Clear();
+
+        List<Series> listD = new List<Series>();
+        Series seriesD = new Series("金额", ViewType.Line);
+        for (int i = 1; i < dt_chartD.Columns.Count; i++)
+        {
+            string argument = dt_chartD.Columns[i].ColumnName;//参数名称 
+            decimal value = Convert.ToDecimal(dt_chartD.Rows[0][i].ToString());//参数值
+            seriesD.Points.Add(new SeriesPoint(argument, value));
+        }
+        seriesD.ArgumentScaleType = ScaleType.Qualitative;
+        listD.Add(seriesD);
+        ChartD.Series.AddRange(listD.ToArray());
+        ChartD.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
         //grid 3
-        SetGrid(gv_tr_list_3, ds.Tables[2], 80, "typedesc;days");
+        SetGrid(gv_tr_list_3, ds.Tables[5], 80, "typedesc;days");
         gv_tr_list_3.Columns["typedesc"].Caption = "分类";
         gv_tr_list_3.Columns["days"].Caption = "在库天数";
 
         //图C
-        DataTable dt_chartC = ds.Tables[3];
+        DataTable dt_chartC = ds.Tables[6];
         ChartC.Series.Clear();
 
         List<Series> listC = new List<Series>();
@@ -79,11 +130,11 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartC.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 5
-        SetGrid(gv_tr_list_5, ds.Tables[4], 80, "typedesc");
+        SetGrid(gv_tr_list_5, ds.Tables[7], 80, "typedesc");
         gv_tr_list_5.Columns["typedesc"].Caption = "分类";
 
         //图E
-        DataTable dt_chartE = ds.Tables[5];
+        DataTable dt_chartE = ds.Tables[8];
         ChartE.Series.Clear();
 
         List<Series> listE = new List<Series>();
@@ -118,6 +169,27 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
                 if (e.GetValue("ld_qty_oh_amount") != DBNull.Value)
                 {
                     e.Row.Cells[8].Text = Convert.ToString(e.GetValue("ld_qty_oh_amount")) + "00%";
+                }
+            }
+        }
+    }
+
+    protected void gv_tr_list_2_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            if (e.KeyValue.ToString().Contains("金额占比"))
+            {
+                DataTable ldt = Pgi.Auto.Control.AgvToDt(gv_tr_list_2);
+                for (int i = 1; i < ldt.Columns.Count; i++)
+                {
+                    if (ldt.Columns[i].ColumnName != "flag")
+                    {
+                        if (e.GetValue(ldt.Columns[i].ColumnName) != DBNull.Value)
+                        {
+                            e.Row.Cells[i].Text = Convert.ToString(Convert.ToDouble(e.GetValue(ldt.Columns[i].ColumnName)) * 100) + "%";
+                        }
+                    }
                 }
             }
         }

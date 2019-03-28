@@ -125,7 +125,18 @@
             </div>
             <div class="panel panel-body" style="  overflow:scroll">
                 <div style="float: left">
-                    
+                    <dx:ASPxGridView ID="gv_tr_list_2" runat="server" OnHtmlRowCreated="gv_tr_list_2_HtmlRowCreated">
+                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Columns></Columns>
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
+                    <dx:WebChartControl ID="ChartB" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    </dx:WebChartControl>
                 </div>
             </div>
        </div>
@@ -157,7 +168,18 @@
             </div>
             <div class="panel panel-body" style="  overflow:scroll">
                 <div style="float: left">
-                    
+                    <dx:ASPxGridView ID="gv_tr_list_4" runat="server">
+                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Columns></Columns>
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
+                    <dx:WebChartControl ID="ChartD" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    </dx:WebChartControl>
                 </div>
             </div>
        </div>
