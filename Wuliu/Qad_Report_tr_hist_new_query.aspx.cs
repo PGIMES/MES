@@ -65,8 +65,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartC.Series.Clear();
 
         List<Series> listC = new List<Series>();
-        Series seriesC = new Series("昆山库存0-180金额", ViewType.Pie);
-        for (int i = 4; i < dt_chartC.Columns.Count; i++)
+        Series seriesC = new Series("昆山库存30-180金额", ViewType.Pie);
+        for (int i = 2; i < dt_chartC.Columns.Count; i++)
         {
             string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
             decimal value = Convert.ToDecimal(dt_chartC.Rows[0][i].ToString());//参数值
