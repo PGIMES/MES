@@ -1,4 +1,4 @@
-﻿<%@ Page Title="【库龄汇总报表】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Qad_Report_tr_hist_new_Sum.aspx.cs" Inherits="Wuliu_Qad_Report_tr_hist_Sum" %>
+﻿<%@ Page Title="【库龄汇总报表_new】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Qad_Report_tr_hist_new_Sum.aspx.cs" Inherits="Wuliu_Qad_Report_tr_hist_Sum" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
@@ -8,7 +8,7 @@
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#mestitle").text("【库龄汇总报表】");
+            $("#mestitle").text("【库龄汇总报表_new】");
             setHeight();
 
             $(window).resize(function () {
@@ -167,8 +167,6 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
-                    </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>

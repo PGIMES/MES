@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Maticsoft.DBUtility;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -32,13 +33,13 @@ public partial class Wuliu_Qad_Report_tr_hist_Sum : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        Wuliu_tr_hist trlist_query = new Wuliu_tr_hist();
         string curmonth = "";
         if (ddl_condition.SelectedValue == "his")
         {
             curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         }
-        DataTable dt = trlist_query.Get_tr_list_query("4", ddl_comp.SelectedValue, txt_site.Text.Trim(), txt_tr_part_start.Text.Trim(), curmonth);
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '4','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'").Tables[0];
+
         gv_tr_list.DataSource = dt;
         gv_tr_list.DataBind();
     }
@@ -67,6 +68,7 @@ public partial class Wuliu_Qad_Report_tr_hist_Sum : System.Web.UI.Page
     protected void btnimport_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ASPxGridViewExporter1.WriteXlsToResponse("库龄汇总" + System.DateTime.Now.ToShortDateString());//导出到Excel
+        gv_tr_list.ExportXlsxToResponse("库龄汇总" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+
     }
 }
