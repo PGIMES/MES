@@ -91,6 +91,7 @@
                                                 <asp:ListItem>C</asp:ListItem>
                                                 <asp:ListItem>D</asp:ListItem>
                                                 <asp:ListItem>E</asp:ListItem>
+                                                <asp:ListItem>F</asp:ListItem>
                                                 <asp:ListItem>X</asp:ListItem>
                                             </asp:DropDownList>
                                            </td>
