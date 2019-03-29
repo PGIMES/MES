@@ -466,72 +466,72 @@
                                             <a href="javascript:void(0)">1#打标机-75</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="javascript:;">查询记录</a></li>
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("1#打标机-75") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("1#打标机-75") %>" target="_blank">登入查询</a></li>                                                
+                                                 <li><a href="Production/Bmw_Db.aspx?table_name=Bmw_1_Db&order_id=<%=HttpUtility.UrlEncode("M1538") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("1#打标机-75") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("1#打标机-75") %>" target="_blank">登入查询</a></li>                                                
                                             </ul>
                                         </li>
                                         <li  class="dropdown-submenu" >
                                             <a href="javascript:void(0)">2#打标机-77</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="javascript:;">查询记录</a></li>  
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("2#打标机-77") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("2#打标机-77") %>" target="_blank">登入查询</a></li>                                                 
+                                                <li><a href="Production/Bmw_Db.aspx?table_name=Bmw_2_Db&order_id=<%=HttpUtility.UrlEncode("M1539") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("2#打标机-77") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("2#打标机-77") %>" target="_blank">登入查询</a></li>                                                 
                                             </ul>
                                         </li>                                       
                                         <li  class="dropdown-submenu" >
                                             <a href="javascript:void(0)">3#打标机-79</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                  <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1454_Db&order_id=<%=HttpUtility.UrlEncode("3#打标机-79") %>" target="_blank">查询记录</a></li>   
-                                                  <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1454&location=打标&order_id=<%=HttpUtility.UrlEncode("3#打标机-79") %>" target="_blank">产量分析</a></li>  
-                                                  <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("3#打标机-79") %>" target="_blank">登入查询</a></li>                                                
+                                                  <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1454_Db&order_id=<%=HttpUtility.UrlEncode("M1454") %>" target="_blank">查询记录</a></li>   
+                                                  <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1454&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("3#打标机-79") %>" target="_blank">产量分析</a></li>  
+                                                  <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("3#打标机-79") %>" target="_blank">登入查询</a></li>                                                
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
                                             <a href="javascript:void(0);">4#打标机-79</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1458_Db&order_id=<%=HttpUtility.UrlEncode("4#打标机-79") %>" target="_blank">查询记录</a></li>   
-                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1458&location=打标&order_id=<%=HttpUtility.UrlEncode("4#打标机-79") %>" target="_blank">产量分析</a></li>
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("4#打标机-79") %>" target="_blank">登入查询</a></li>                                        
+                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1458_Db&order_id=<%=HttpUtility.UrlEncode("M1458") %>" target="_blank">查询记录</a></li>   
+                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1458&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("4#打标机-79") %>" target="_blank">产量分析</a></li>
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("4#打标机-79") %>" target="_blank">登入查询</a></li>                                        
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
                                             <a  href="javascript:void(0);">5#打标机-73</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_5_Db&order_id=<%=HttpUtility.UrlEncode("5#打标机-73") %>" target="_blank">查询记录</a></li>  
-                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1457&location=打标&order_id=<%=HttpUtility.UrlEncode("5#打标机-73") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("5#打标机-73") %>" target="_blank">登入查询</a></li>                                           
+                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_5_Db&order_id=<%=HttpUtility.UrlEncode("M1457") %>" target="_blank">查询记录</a></li>  
+                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1457&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("5#打标机-73") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("5#打标机-73") %>" target="_blank">登入查询</a></li>                                           
                                             </ul>
                                         </li>
                                         <li  class="dropdown-submenu" >
                                             <a href="javascript:void(0)">6#打标机-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1453_Db&order_id=<%=HttpUtility.UrlEncode("6#打标机-85/81") %>" target="_blank">查询记录</a></li>  
-                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1453&location=打标&order_id=<%=HttpUtility.UrlEncode("6#打标机-85/81") %>" target="_blank">产量分析</a></li>
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("6#打标机-85/81") %>" target="_blank">登入查询</a></li>                                                
+                                               <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1453_Db&order_id=<%=HttpUtility.UrlEncode("M1453") %>" target="_blank">查询记录</a></li>  
+                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1453&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("6#打标机-85/81") %>" target="_blank">产量分析</a></li>
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("6#打标机-85/81") %>" target="_blank">登入查询</a></li>                                                
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
                                             <a href="javascript:void(0);">7#打标机-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1455_Db&order_id=<%=HttpUtility.UrlEncode("7#打标机-85/81") %>" target="_blank">查询记录</a></li> 
-                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1455&location=打标&order_id=<%=HttpUtility.UrlEncode("7#打标机-85/81") %>" target="_blank">产量分析</a></li>
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("7#打标机-85/81") %>" target="_blank">登入查询</a></li>                                            
+                                                <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1455_Db&order_id=<%=HttpUtility.UrlEncode("M1455") %>" target="_blank">查询记录</a></li> 
+                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1455&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("7#打标机-85/81") %>" target="_blank">产量分析</a></li>
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("7#打标机-85/81") %>" target="_blank">登入查询</a></li>                                            
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
                                             <a  href="javascript:void(0);">8#打标机-83</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                 <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1456_Db&order_id=<%=HttpUtility.UrlEncode("8#打标机-83") %>" target="_blank">查询记录</a></li> 
-                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1456&location=打标&order_id=<%=HttpUtility.UrlEncode("8#打标机-83") %>" target="_blank">产量分析</a></li> 
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=打标&order_id=<%=HttpUtility.UrlEncode("8#打标机-83") %>" target="_blank">登入查询</a></li>                                     
+                                                 <li ><a href="Production/Bmw_Db.aspx?table_name=Bmw_M1456_Db&order_id=<%=HttpUtility.UrlEncode("M1456") %>" target="_blank">查询记录</a></li> 
+                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1456&location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("8#打标机-83") %>" target="_blank">产量分析</a></li> 
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("打标") %>&order_id=<%=HttpUtility.UrlEncode("8#打标机-83") %>" target="_blank">登入查询</a></li>                                     
                                             </ul>
                                         </li>
                                     </ul>
@@ -551,36 +551,36 @@
                                             <a href="javascript:void(0)">1#装钢珠-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="Production/Bmw_M1460_Ygz1.aspx" target="_blank">查询记录</a></li>  
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1460&location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#装钢珠-85/81") %>" target="_blank">产量分析</a></li> 
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#装钢珠-85/81") %>" target="_blank">登入查询</a></li>                                          
+                                                <li ><a href="Production/Bmw_Ygz.aspx?table_name=Bmw_M1460_Ygz&order_id=<%=HttpUtility.UrlEncode("M1460") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1460&location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("1#装钢珠-85/81") %>" target="_blank">产量分析</a></li> 
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏")%>&order_id=<%=HttpUtility.UrlEncode("1#装钢珠-85/81") %>" target="_blank">登入查询</a></li>                                          
                                             </ul>
                                         </li>
                                         <li  class="dropdown-submenu" >
                                             <a href="javascript:void(0)">2#装钢珠-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="javascript:;">查询记录</a></li>    
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1460&location=装配测漏&order_id=<%=HttpUtility.UrlEncode("2#装钢珠-85/81") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("2#装钢珠-85/81") %>" target="_blank">登入查询</a></li>                                             
+                                              <li ><a href="Production/Bmw_Ygz.aspx?table_name=Bmw_M1526_Ygz&order_id=<%=HttpUtility.UrlEncode("M1526") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("2#装钢珠-85/81") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏")%>&order_id=<%=HttpUtility.UrlEncode("2#装钢珠-85/81") %>" target="_blank">登入查询</a></li>                                             
                                             </ul>
                                         </li>                                       
                                         <li  class="dropdown-submenu" >
                                             <a href="javascript:void(0)">1#测漏-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="Production/Bmw_M1452_Test1.aspx" target="_blank">查询记录</a></li>  
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1452&location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#测漏-85/81") %>" target="_blank">产量分析</a></li> 
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#测漏-85/81") %>" target="_blank">登入查询</a></li>                                             
+                                                <li ><a href="Production/Bmw_Test.aspx?table_name=Bmw_M1452_Test&order_id=<%=HttpUtility.UrlEncode("M1452") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1452&location=<%=HttpUtility.UrlEncode("装配测漏") %> &order_id=<%=HttpUtility.UrlEncode("1#测漏-85/81") %>" target="_blank">产量分析</a></li> 
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("1#测漏-85/81") %>" target="_blank">登入查询</a></li>                                             
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
                                             <a href="javascript:;">2#测漏-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="javascript:;">查询记录</a></li>  
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("2#测漏-85/81") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("2#测漏-85/81") %>" target="_blank">登入查询</a></li>                                                
+                                                 <li ><a href="Production/Bmw_Test.aspx?table_name=Bmw_M1528_Test&order_id=<%=HttpUtility.UrlEncode("M1528") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1528&location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("2#测漏-85/81") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("2#测漏-85/81") %>" target="_blank">登入查询</a></li>                                                
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
@@ -588,8 +588,8 @@
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
                                                <li ><a href="Production/Bmw_Yx1.aspx" target="_blank">查询记录</a></li> 
-                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1459&location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#装销钉-73") %>" target="_blank">产量分析</a></li> 
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=装配测漏&order_id=<%=HttpUtility.UrlEncode("1#装销钉-73") %>" target="_blank">登入查询</a></li>                                             
+                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1459&location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("1#装销钉-73") %>" target="_blank">产量分析</a></li> 
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("装配测漏") %>&order_id=<%=HttpUtility.UrlEncode("1#装销钉-73") %>" target="_blank">登入查询</a></li>                                             
                                             </ul>
                                         </li>
 
@@ -604,93 +604,194 @@
                             <div class="btn btn-large   btn-success" name="frm_C">
                                 <div class="btn-group">
                                     <div class="btn btn-primary " data-toggle="dropdown" name="btn_C">
-                                        包装
+                                        终检
                                     </div>
                                     <ul class="dropdown-menu" style="color: Black" role="menu">
                                         <li  class="dropdown-submenu" >
-                                            <a href="javascript:void(0)">1#包装-77</a>
+                                            <a href="javascript:void(0)">1#终检-77</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="Production/Bmw_Vision.aspx?table_name=Bmw_1_Vision&order_id=<%=HttpUtility.UrlEncode("1#包装-77") %>" target="_blank">查询记录</a></li>   
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ01&location=包装&order_id=1%23包装-77" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("1#包装-77") %>" target="_blank">登入查询</a></li>                                             
+                                                <li ><a href="Production/Bmw_Vision.aspx?table_name=Bmw_1_Vision&order_id=<%=HttpUtility.UrlEncode("M1515") %>" target="_blank">查询记录</a></li>   
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1515&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("1#终检-77") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("1#终检-77") %>" target="_blank">登入查询</a></li>                                             
                                             </ul>
                                         </li>
                                         <li  class="dropdown-submenu" >
-                                            <a href="javascript:void(0)">2#包装-77</a>
+                                            <a href="javascript:void(0)">2#终检-77</a>
                                             <ul class="dropdown-menu">
                                                 <li ><a href="javascript:;">查看生产</a></li> 
-                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_2_Vision&order_id=<%=HttpUtility.UrlEncode("2#包装-77") %>" target="_blank">查询记录</a></li>
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ02&location=包装&order_id=2%23包装-77" target="_blank">产量分析</a></li>     
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("2#包装-77") %>" target="_blank">登入查询</a></li>                                               
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_2_Vision&order_id=<%=HttpUtility.UrlEncode("M1514") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1514&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("2#终检-77") %>" target="_blank">产量分析</a></li>     
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("2#终检-77") %>" target="_blank">登入查询</a></li>                                               
                                             </ul>
                                         </li>                                       
                                         <li  class="dropdown-submenu" >
-                                            <a href="javascript:void(0)">3#包装-75</a>
+                                            <a href="javascript:void(0)">3#终检-75</a>
                                             <ul class="dropdown-menu">
                                                 <li ><a href="javascript:;">查看生产</a></li> 
-                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_3_Vision&order_id=<%=HttpUtility.UrlEncode("3#包装-75") %>" target="_blank">查询记录</a></li>
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ03&location=包装&order_id=<%=HttpUtility.UrlEncode("3#包装-75") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("3#包装-75") %>" target="_blank">登入查询</a></li>                                                
+                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_3_Vision&order_id=<%=HttpUtility.UrlEncode("M1513") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1513&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("3#终检-75") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("3#终检-75") %>" target="_blank">登入查询</a></li>                                                
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
-                                            <a href="javascript:void(0);">4#包装-71</a>
+                                            <a href="javascript:void(0);">4#终检-71</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_4_Vision&order_id=<%=HttpUtility.UrlEncode("4#包装-71") %>" target="_blank">查询记录</a></li>  
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ04&location=包装&order_id=<%=HttpUtility.UrlEncode("4#包装-71") %>" target="_blank">产量分析</a></li>   
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("4#包装-71") %>" target="_blank">登入查询</a></li>                                    
+                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_4_Vision&order_id=<%=HttpUtility.UrlEncode("M1512") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1512&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("4#终检-71") %>" target="_blank">产量分析</a></li>   
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("4#终检-71") %>" target="_blank">登入查询</a></li>                                    
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
-                                            <a  href="javascript:void(0);">5#包装-79</a>
+                                            <a  href="javascript:void(0);">5#终检-79</a>
                                             <ul class="dropdown-menu">
                                                 <li ><a href="javascript:;">查看生产</a></li>  
-                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_5_Vision&order_id=<%=HttpUtility.UrlEncode("5#包装-79") %>" target="_blank">查询记录</a></li>
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ05&location=包装&order_id=<%=HttpUtility.UrlEncode("5#包装-79") %>" target="_blank">产量分析</a></li>  
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("5#包装-79") %>" target="_blank">登入查询</a></li>                                                                                              
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_5_Vision&order_id=<%=HttpUtility.UrlEncode("M1517") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1517&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("5#终检-79") %>" target="_blank">产量分析</a></li>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("5#终检-79") %>" target="_blank">登入查询</a></li>                                                                                              
                                             </ul>
                                         </li>
                                         <li  class="dropdown-submenu" >
-                                            <a href="javascript:void(0)">6#包装-79</a>
+                                            <a href="javascript:void(0)">6#终检-79</a>
                                             <ul class="dropdown-menu">
                                                  <li ><a href="javascript:;">查看生产</a></li> 
-                                                 <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_6_Vision&order_id=<%=HttpUtility.UrlEncode("6#包装-79") %>" target="_blank">查询记录</a></li>
-                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ06&location=包装&order_id=<%=HttpUtility.UrlEncode("6#包装-79") %>" target="_blank">产量分析</a></li>   
-                                                 <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("6#包装-79") %>" target="_blank">登入查询</a></li>                                            
+                                                 <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_6_Vision&order_id=<%=HttpUtility.UrlEncode("M1516") %>" target="_blank">查询记录</a></li>
+                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1516&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("6#终检-79") %>" target="_blank">产量分析</a></li>   
+                                                 <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("6#终检-79") %>" target="_blank">登入查询</a></li>                                            
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
-                                            <a href="javascript:void(0);">7#包装-83</a>
+                                            <a href="javascript:void(0);">7#终检-83</a>
                                             <ul class="dropdown-menu">
                                                   <li ><a href="javascript:;">查看生产</a></li>   
-                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_7_Vision&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">查询记录</a></li>
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ07&location=包装&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">产量分析</a></li>   
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">登入查询</a></li>                                           
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_7_Vision&order_id=<%=HttpUtility.UrlEncode("M1518") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1518&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("7#终检-83") %>" target="_blank">产量分析</a></li>   
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("7#终检-83") %>" target="_blank">登入查询</a></li>                                           
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
-                                            <a  href="javascript:void(0);">8#包装-85/81</a>
+                                            <a  href="javascript:void(0);">8#终检-85/81</a>
                                             <ul class="dropdown-menu">
                                                   <li ><a href="javascript:;">查看生产</a></li>  
-                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_8_Vision&order_id=<%=HttpUtility.UrlEncode("8#包装-85/81") %>" target="_blank">查询记录</a></li>
-                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=BZ08&location=包装&order_id=<%=HttpUtility.UrlEncode("8#包装-85/81") %>" target="_blank">产量分析</a></li>  
-                                               <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("8#包装-85/81") %>" target="_blank">登入查询</a></li>                                             
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_8_Vision&order_id=<%=HttpUtility.UrlEncode("M1527") %>" target="_blank">查询记录</a></li>
+                                               <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1527&location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("8#终检-85/81") %>" target="_blank">产量分析</a></li>  
+                                               <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("8#终检-85/81") %>" target="_blank">登入查询</a></li>                                             
                                             </ul>
                                         </li>
                                         <li class="dropdown-submenu" >
-                                            <a  href="javascript:void(0);">9#包装-85/81</a>
+                                            <a  href="javascript:void(0);">9#终检-85/81</a>
                                             <ul class="dropdown-menu">
                                                 <li><a  href="javascript:;">查看生产</a></li>
-                                                <li ><a href="javascript:;">查询记录</a></li>       
-                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("9%23包装-85/81") %>" target="_blank">产量分析</a></li>   
-                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=包装&order_id=<%=HttpUtility.UrlEncode("9%23包装-85/81") %>" target="_blank">登入查询</a></li>                                       
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_9_Vision&order_id=<%=HttpUtility.UrlEncode("M1511") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("9#终检-85/81") %>" target="_blank">产量分析</a></li>   
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=<%=HttpUtility.UrlEncode("终检") %>&order_id=<%=HttpUtility.UrlEncode("9%23终检-85/81") %>" target="_blank">登入查询</a></li>                                       
                                             </ul>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_C" name="C">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area_block">
+                            <div class="btn btn-large   btn-success" name="frm_C">
+                                <div class="btn-group">
+                                    <div class="btn btn-primary " data-toggle="dropdown" name="btn_C">
+                                        GP12
+                                    </div>
+                                    <ul class="dropdown-menu" style="color: Black" role="menu">
+                                        <li  class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">1#GP12-77</a>
+                                            <ul class="dropdown-menu">
+                                                <%--<li><a  href="javascript:;">查看生产</a></li>
+                                                <li ><a href="Production/Bmw_Vision.aspx?table_name=Bmw_1_Vision&order_id=<%=HttpUtility.UrlEncode("M1515") %>" target="_blank">查询记录</a></li>   
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1515&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=1%23包装-77" target="_blank">产量分析</a></li>--%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("1#GP12-77") %>" target="_blank">登入查询</a></li>                                             
+                                            </ul>
+                                        </li>
+                                        <li  class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">2#GP12-77</a>
+                                            <ul class="dropdown-menu">
+                                            <%--    <li ><a href="javascript:;">查看生产</a></li> 
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_2_Vision&order_id=<%=HttpUtility.UrlEncode("M1514") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1514&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=2%23包装-77" target="_blank">产量分析</a></li>  --%>   
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("2#GP12-77") %>" target="_blank">登入查询</a></li>                                               
+                                            </ul>
+                                        </li>                                      
+                                        
+
+                                         <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0);">3#GP12-75</a>
+                                            <ul class="dropdown-menu">
+                                               <%-- <li><a  href="javascript:;">查看生产</a></li>
+                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_4_Vision&order_id=<%=HttpUtility.UrlEncode("M1512") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1512&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("4#包装-71") %>" target="_blank">产量分析</a></li> --%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("3#GP12-75") %>" target="_blank">登入查询</a></li>                                    
+                                            </ul>
+                                        </li>
+
+
+                                        <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0);">4#GP12-71</a>
+                                            <ul class="dropdown-menu">
+                                               <%-- <li><a  href="javascript:;">查看生产</a></li>
+                                               <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_4_Vision&order_id=<%=HttpUtility.UrlEncode("M1512") %>" target="_blank">查询记录</a></li>  
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1512&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("4#包装-71") %>" target="_blank">产量分析</a></li> --%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("4#GP12-71") %>" target="_blank">登入查询</a></li>                                    
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu" >
+                                            <a  href="javascript:void(0);">5#GP12-79</a>
+                                            <ul class="dropdown-menu">
+                                                <%--<li ><a href="javascript:;">查看生产</a></li>  
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_5_Vision&order_id=<%=HttpUtility.UrlEncode("M1517") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1517&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("5#包装-79") %>" target="_blank">产量分析</a></li>  --%>
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("5#GP12-79") %>" target="_blank">登入查询</a></li>                                                                                              
+                                            </ul>
+                                        </li>
+                                        <li  class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">6#GP12-79</a>
+                                            <ul class="dropdown-menu">
+                                                 <%--<li ><a href="javascript:;">查看生产</a></li> 
+                                                 <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_6_Vision&order_id=<%=HttpUtility.UrlEncode("M1516") %>" target="_blank">查询记录</a></li>
+                                                 <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1516&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("6#包装-79") %>" target="_blank">产量分析</a></li> --%>  
+                                                 <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("6#GP12-79") %>" target="_blank">登入查询</a></li>                                            
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0);">7#GP12-83</a>
+                                            <ul class="dropdown-menu">
+                                                  <%--<li ><a href="javascript:;">查看生产</a></li>   
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_7_Vision&order_id=<%=HttpUtility.UrlEncode("M1518") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1518&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">产量分析</a></li> --%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("7#GP12-83") %>" target="_blank">登入查询</a></li>                                           
+                                            </ul>
+                                        </li>
+
+                                         <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0);">8#GP12-85</a>
+                                            <ul class="dropdown-menu">
+                                                  <%--<li ><a href="javascript:;">查看生产</a></li>   
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_7_Vision&order_id=<%=HttpUtility.UrlEncode("M1518") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1518&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">产量分析</a></li> --%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("8#GP12-85") %>" target="_blank">登入查询</a></li>                                           
+                                            </ul>
+                                        </li>
+
+                                         <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0);">9#GP12-81</a>
+                                            <ul class="dropdown-menu">
+                                                  <%--<li ><a href="javascript:;">查看生产</a></li>   
+                                                <li><a href="Production/Bmw_Vision.aspx?table_name=Bmw_7_Vision&order_id=<%=HttpUtility.UrlEncode("M1518") %>" target="_blank">查询记录</a></li>
+                                                <li ><a href="ProductionData/BMW_CELOU_Query.aspx?sbno=M1518&location=<%=HttpUtility.UrlEncode("包装") %>&order_id=<%=HttpUtility.UrlEncode("7#包装-83") %>" target="_blank">产量分析</a></li> --%>  
+                                                <li ><a href="Production/Emp_LoginLog_Query.aspx?location=GP12&order_id=<%=HttpUtility.UrlEncode("9#GP12-81") %>" target="_blank">登入查询</a></li>                                           
+                                            </ul>
+                                        </li>
+                                       
+                                    </ul>
+                                </div>
+                                <div class="area" id="div_GP" name="GP">
                                 </div>
                             </div>
                         </div>

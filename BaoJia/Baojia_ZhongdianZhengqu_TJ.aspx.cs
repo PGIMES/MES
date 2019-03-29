@@ -238,10 +238,32 @@ public partial class Baojia_ZhongdianZhengqu_TJ : System.Web.UI.Page
         GridView1.Rows[GridView1.Rows.Count - 1].Cells[3].Text = "";
 
         GridView1.Rows[GridView1.Rows.Count - 1].BackColor = System.Drawing.Color.LightYellow;
-     
-        int[] cols = { 0, 1, 2, 3, 4, 5,6, 15, 17, 18,19 };
+
+        /*
+        int[] cols = { 0, 1, 2, 3, 4, 5, 6, 15, 17, 18, 19 };
 
         MergGridRow.MergeRow(GridView1, cols);
+        int visbleRow = 0;
+        for (int j = 0; j <= GridView1.Rows.Count - 1; j++)
+        {
+            if (GridView1.Rows[j].Cells[0].Visible == true)
+            {
+                visbleRow = j;
+            }
+            else
+            {
+                GridView1.Rows[visbleRow].Cells[19].Text = GridView1.Rows[j].Cells[19].Text;
+            }
+
+        }
+        */
+
+        int[] cols = { 0, 1, 2, 3, 4, 5, 6, 17, 18, 19 };
+        MergGridRow.MergeRow(GridView1, cols);
+
+        int[] cols2 = { 0, 15 };
+        MergGridRow.MergeRow(GridView1, cols2);
+
         int visbleRow = 0;
         for (int j = 0; j <= GridView1.Rows.Count - 1; j++)
         {

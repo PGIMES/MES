@@ -204,6 +204,15 @@ public class BJ_CLASS
         DataTable dt = new DataTable();
         return SQLHelper.GetDataTable("BJ_Query_PRO", param);
     }
+    public DataTable BJ_BTN_Sales_5(int requestId)
+    {
+        SqlParameter[] param = new SqlParameter[]
+           {
+               new SqlParameter("@requestId",requestId)
+           };
+        DataTable dt = new DataTable();
+        return SQLHelper.GetDataTable("BJ_BTN_Sales_5", param);
+    }
 
     public DataTable baojia_flow_select(int requestId,string flow,string stepid)
     {
@@ -262,6 +271,19 @@ public class BJ_CLASS
 
 
     }
+    public DataTable GetAgent(string empid, string empid_agent)
+    {
+
+        SqlParameter[] param = new SqlParameter[]
+       {
+           new SqlParameter("@empid",empid),
+           new SqlParameter("@empid_agent",empid_agent),
+       };
+        DataTable dt = new DataTable();
+        return SQLHelper.GetDataTable("baojia_flow_agent", param);
+
+
+    }
     public void SendMail(int requestId)
     {
         SqlParameter[] param = new SqlParameter[]
@@ -272,8 +294,9 @@ public class BJ_CLASS
         SQLHelper.ExecuteNonQuery("Baojia_Sendmail_Every_Ticket", param);
 
     }
-    public int BTN_Sales_sub(int requestId, string baojia_no, int turns, string sales_empid, string sales_name, string sales_ad, string customer_name, string end_customer_name, string customer_project, string project_size, string project_level, string is_stop, string create_by_empid, string create_by_name, string create_by_ad, string create_by_dept, string managerid, string manager, string manager_AD, string baojia_file_path, string baojia_desc, string domain,string baojia_start_date,string sfxy_bjfx,string create_date, string wl_tk,string bz_tk,string jijia_tk,string yz_tk,string sfxj_cg,string Submit)
+    public int BTN_Sales_sub(int requestId, string baojia_no, int turns, string sales_empid, string sales_name, string sales_ad, string customer_name, string end_customer_name, string customer_project, string project_size, string project_level, string is_stop, string create_by_empid, string create_by_name, string create_by_ad, string create_by_dept, string managerid, string manager, string manager_AD, string baojia_file_path, string baojia_desc, string domain,string baojia_start_date,string sfxy_bjfx,string create_date, string wl_tk,string bz_tk,string jijia_tk,string yz_tk,string sfxj_cg,string cusRequestDate, string Submit)
     {
+ 
         SqlParameter[] param = new SqlParameter[]
         { new SqlParameter("@requestId",requestId) ,
                         new SqlParameter("@baojia_no", baojia_no) ,
@@ -305,6 +328,9 @@ public class BJ_CLASS
                            new SqlParameter("@jijia_tk", jijia_tk),
                             new SqlParameter("@yz_tk", yz_tk),
                           new SqlParameter("@sfxj_cg", sfxj_cg),
+                                   new SqlParameter("@cusRequestDate", cusRequestDate),
+                                       //new SqlParameter("@Sj_baochuDate", Sj_baochuDate),
+                                   
                         new SqlParameter("@Submit",Submit)
       };
         return SQLHelper.ExecuteNonQuery("Baojia_bjxmxx_commit", param);

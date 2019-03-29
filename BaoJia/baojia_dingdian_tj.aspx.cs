@@ -103,24 +103,47 @@ public partial class baojia_dingdian_tj : System.Web.UI.Page
     }
     public void Getrowspan(string condition)
     {
-        int[] cols = { 0, 1, 2, 3, 4,5,6,14,16,17,18,19,20,21,22,23};
+        int[] cols = { 0, 1, 2, 3, 4,5,6,16,17,18,19,20,21,22,23};
         MergGridRow.MergeRow(gvdetail, cols);
         int visbleRow = 0;
+        //decimal zj = 0;
+        for (int j = 0; j <= gvdetail.Rows.Count - 1; j++)
+        {
+            if (gvdetail.Rows[j].Cells[0].Visible == true)
+            {
+                 //zj = 0;
+                visbleRow = j;
+                //zj = Convert.ToDecimal(gvdetail.Rows[j].Cells[13].Text);
+                //gvdetail.Rows[visbleRow].Cells[14].Text = zj.ToString("N0");
+            }
+            else
+            {
+                gvdetail.Rows[visbleRow].Cells[20].Text = gvdetail.Rows[j].Cells[20].Text;
+                //zj += Convert.ToDecimal(gvdetail.Rows[j].Cells[13].Text);
+                //gvdetail.Rows[visbleRow].Cells[14].Text = zj.ToString("N0");
+            }
+
+
+        }
+
+        int[] cols2 = { 0, 14 };
+        MergGridRow.MergeRow(gvdetail, cols2);
+        int visbleRow2 = 0;
         decimal zj = 0;
         for (int j = 0; j <= gvdetail.Rows.Count - 1; j++)
         {
             if (gvdetail.Rows[j].Cells[0].Visible == true)
             {
-                 zj = 0;
-                visbleRow = j;
-                zj =Convert.ToDecimal( gvdetail.Rows[j].Cells[13].Text);
-                gvdetail.Rows[visbleRow].Cells[14].Text = zj.ToString("N0");
+                zj = 0;
+                visbleRow2 = j;
+                zj = Convert.ToDecimal(gvdetail.Rows[j].Cells[13].Text);
+                gvdetail.Rows[visbleRow2].Cells[14].Text = zj.ToString("N0");
             }
             else
             {
-                gvdetail.Rows[visbleRow].Cells[20].Text = gvdetail.Rows[j].Cells[20].Text;
-                zj +=Convert.ToDecimal( gvdetail.Rows[j].Cells[13].Text);
-                gvdetail.Rows[visbleRow].Cells[14].Text = zj.ToString("N0");
+               
+                zj += Convert.ToDecimal(gvdetail.Rows[j].Cells[13].Text);
+                gvdetail.Rows[visbleRow2].Cells[14].Text = zj.ToString("N0");
             }
 
 
