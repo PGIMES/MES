@@ -9,6 +9,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
 using System.Xml.Linq;
 using System.Data.SqlClient;
+using Maticsoft.DBUtility;
 
 public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
 {
@@ -18,8 +19,8 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //txt_mz.Value = "1400";
-        lb_jlno.Text = "精炼机1#";
-       
+       // lb_jlno.Text = "精炼机1#";
+        lb_jlno.Text = Request["gongwei"];
         if (!IsPostBack)
         {
             //div2.Style.Add("display", "none");
@@ -131,7 +132,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         string luhao = txt_luhao.SelectedValue;
         int count=int.Parse(jl_dal.Get_BS(no, hejin).Tables[0].Rows[0][0].ToString());
         //if ((count + 1) % 4 == 0 || hejin == "EN47100")
-        if ((count + 1) % 4 == 0 || luhao == "E" || luhao == "A")
+        if ((count + 1) % 4 == 0 || luhao == "E" || luhao == "A" || luhao == "F")
         {
             gp_flag.Value = "Y";
             btn_gpcs.BackColor = System.Drawing.Color.Yellow;
@@ -388,7 +389,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         {
             string zybno = txt_zybno.Text;
             int result = Function_Jinglian.jinglian_insert_2(1, txt_date.Text, lb_again.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
-           txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, txt_mz.Value, txt_jz.Value, Label3.Text, gp_flag.Value);
+           txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value);
             ini_default();
         }
        // string zybno = Function_Jinglian.zybno_query(1, DateTime.Now.ToString("yyyy/MM/dd"), DateTime.Now.ToString("HH:mm:ss"), txt_shift.Text, txt_banzu.Text, txt_luhao.Text, txt_hejin.Text).Rows[0][0].ToString();
@@ -401,6 +402,12 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     protected void Button4_Click(object sender, EventArgs e)
     {
         string strAlert = "dtime='" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "';setInterval('show_cur_times()', 1000);";
+        if (txt_gh.Text == "")
+        {
+            ScriptManager.RegisterStartupScript(Button4, this.GetType(), "alert", "layer.alert('请选择工号！');" + strAlert, true);
+            return;
+        }
+
         if (txt_zybselect.Text == "")
         {
 
@@ -417,7 +424,12 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(Button4,this.GetType(), "alert", "layer.alert('请选择测氢样块表面状态！');" + strAlert, true);
             return;
         }
-        int result = Function_Jinglian.Hydrogen_insert(1, txt_zybselect.Text,txt_date.Text,txt_shift.Text,txt_banzu.Text,txt_gh.Text,txt_name.Text, txt_water.Text, txt_kq.Text, txt_midu.Text, txt_bmzt.Text);
+        if (txt_temperature.Text == "")
+        {
+            ScriptManager.RegisterStartupScript(Button4, this.GetType(), "alert", "layer.alert('请填写当前水温！');" + strAlert, true);
+            return;
+        }
+        int result = Function_Jinglian.Hydrogen_insert_Bytemperature(1, txt_zybselect.Text, txt_date.Text, txt_shift.Text, txt_banzu.Text, txt_gh.Text, txt_name.Text, txt_water.Text, txt_kq.Text, txt_midu.Text, txt_bmzt.Text,txt_temperature.Text,lb_ms.Text);
         if (result >= 1)
         {
             ScriptManager.RegisterStartupScript(Button4,this.GetType(), "alert", "layer.alert('转运包" + txt_zybselect.Text + "！测氢完成！');" + strAlert, true);
@@ -443,13 +455,18 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         SetMap();
         decimal midu_value = 0;
         decimal f = 0;
-
+        string sql = string.Format("   select density  from mes_water_density  where  temperature='{0}'  ", txt_temperature.Text);
+        DataTable dt_md = DbHelperSQL.Query(sql).Tables[0];
+        if (dt_md.Rows.Count > 0)
+        {
+            lb_ms.Text ="ρ="+ DbHelperSQL.Query(sql).Tables[0].Rows[0][0].ToString();
+        }
         if (txt_kq.Text != "" && txt_water.Text != "")
         {
 
             if (decimal.TryParse(txt_kq.Text, out f) == true && decimal.TryParse(txt_water.Text, out f) == true)
             {
-                midu_value = Math.Round(decimal.Parse(txt_kq.Text) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 2);
+                midu_value = Math.Round(decimal.Parse(txt_kq.Text) *decimal.Parse( lb_ms.Text.Replace("ρ=", "")) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 2);
                 txt_midu.Text = midu_value.ToString();
                 if (Convert.ToDouble(midu_value) >= 2.65)
                 {
@@ -509,7 +526,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     {
         string zybno = Function_Jinglian.zybno_query(1, DateTime.Now.ToString("yyyy/MM/dd"), DateTime.Now.ToString("HH:mm:ss"), txt_shift.Text, txt_banzu.Text, txt_luhao.Text, txt_hejin.Text).Rows[0][0].ToString();
         int result = Function_Jinglian.jinglian_insert_2(1, txt_date.Text, lb_start.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
-         txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, txt_mz.Value, txt_jz.Value, Label3.Text, gp_flag.Value);
+         txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value);
         //int result = Function_Jinglian.jinglian_insert(1, txt_date.Text, lb_again.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
         // txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, txt_before_wd.Text, lb_bf_time.Text, txt_after_wd.Text, lb_af_time.Text, txt_zyno.Text, txt_pz.Text, txt_mz.Value, txt_jz.Value);
 
@@ -598,7 +615,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     protected void txt_luhao_SelectedIndexChanged(object sender, EventArgs e)
     {
         string zyno = txt_zyno.SelectedValue;
-        if (txt_luhao.SelectedValue == "A" || txt_luhao.SelectedValue == "E")
+        if (txt_luhao.SelectedValue == "A" || txt_luhao.SelectedValue == "E" || txt_luhao.SelectedValue == "F")
         {
             Label1.Text = "1次/包";
         }
@@ -624,5 +641,22 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         }
        
        
+    }
+
+
+
+    //获取当前水温对应的水密度
+    [System.Web.Services.WebMethod()]
+    public static string GetMD(string temperature)
+    {
+        string result = "";
+        var sql = "";
+        sql = string.Format("  select density  from mes_water_density  where  temperature='{0}'  ", temperature);
+
+        var value = DbHelperSQL.Query(sql).Tables[0];
+        if (value.Rows.Count > 0)
+        { result = value.Rows[0][0].ToString(); }
+        result = "[{\"temperature\":\"" + result + "\"}]";
+        return result;
     }
 }

@@ -145,6 +145,31 @@ public class Function_Jinglian
 
     }
 
+    public int Hydrogen_insert_Bytemperature(int flag, string zybno, string date, string banbie, string banzhu, string gh, string name, string water, string kq, string sjmd, string bmzt, string water_wendu, string water_value)
+    {
+
+        SqlParameter[] param = new SqlParameter[]
+       {
+           new SqlParameter("@flag",flag),
+           new SqlParameter("@zybno",zybno),
+           new SqlParameter("@Hd_date",date),
+           new SqlParameter("@Hd_banbie",banbie),
+           new SqlParameter("@Hd_banzhu",banzhu),
+           new SqlParameter("@Hd_gh",gh),
+           new SqlParameter("@Hd_name",name),
+           new SqlParameter("@water",water),
+           new SqlParameter("@kq",kq),
+           new SqlParameter("@sjmd",sjmd), 
+           new SqlParameter("@bmzt",bmzt),
+           new SqlParameter("@water_wendu",water_wendu), 
+           new SqlParameter("@water_value",water_value)
+        
+
+       };
+        return SQLHelper.ExecuteNonQuery("usp_Hydrogen_insert", param);
+
+    }
+
     public DataTable Hydrogen_Query(int flag,string zybno, string hejin, string start_date, string end_date, string banci, string luhao, string czg)
     {
         SqlParameter[] param = new SqlParameter[]
@@ -163,6 +188,27 @@ public class Function_Jinglian
        };
         DataTable dt = new DataTable();
         return SQLHelper.GetDataTable("usp_Hydrogen_query", param);
+    }
+
+    public DataTable Hydrogen_Query_ByGW(int flag, string zybno, string hejin, string start_date, string end_date, string banci, string luhao, string czg, string gongwei)
+    {
+        SqlParameter[] param = new SqlParameter[]
+       {
+           new SqlParameter("@flag",flag),
+           new SqlParameter("@zybno",zybno),
+           new SqlParameter("@hejin",hejin),
+           new SqlParameter("@start_date",start_date),
+           new SqlParameter("@end_date",end_date),
+           new SqlParameter("@banci",banci),
+           new SqlParameter("@luhao",luhao),
+           new SqlParameter("@czg",czg),
+          new SqlParameter("@gongwei",gongwei)
+
+          
+          
+       };
+        DataTable dt = new DataTable();
+        return SQLHelper.GetDataTable("usp_Hydrogen_query_ByGW", param);
     }
 
 
@@ -392,7 +438,7 @@ public class Function_Jinglian
 
        };
         DataTable dt = new DataTable();
-        return SQLHelper.GetDataTable("usp_GP_Query_xx", param);
+        return SQLHelper.GetDataTable("usp_GP_DetailQuery", param);
     }
     public DataTable GPDetail_Query(int flag, string year, string month, string start_date, string end_date, string dh, string source, string element, string luhao, string hejin, string gys,string type)
     {

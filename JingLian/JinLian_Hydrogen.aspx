@@ -10,7 +10,19 @@
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script src="../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script type="text/javascript" language="javascript">
-        $(document).ready(function () {                
+        $(document).ready(function () {
+
+
+            if ($("input[id*='txt_temperature']").val() == "50") {
+                $("#MainContent_lb_ms").text("ρ=0.98804");
+            }
+
+            $("input[id*='txt_temperature']").change(function () {
+                var temperature = $("input[id*='txt_temperature']").val();
+                GetMDValue(temperature);
+
+
+            });
 
             setInterval(show, 3000);
             function show() {
@@ -23,12 +35,12 @@
                     jsonp: "callback", //传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
                     success: function (json) {
                         setWeight(json.value);
-                        $("input[id*='txt_mz']").addClass("disabled").attr("readonly","true");
-                        
+                        $("input[id*='txt_mz']").addClass("disabled").attr("readonly", "true");
+
                     },
-                    error: function () { 
-                       $("input[id*='txt_mz']").removeClass("disabled").removeAttr("readonly");
-                       //alert('fail');  
+                    error: function () {
+                        $("input[id*='txt_mz']").removeClass("disabled").removeAttr("readonly");
+                        //alert('fail');  
                     },
                     jsonpCallback: "weightHandler" //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
 
@@ -37,7 +49,11 @@
 
 
 
-        });//endready
+        });           //endready
+
+
+
+
         function setWeight(result) {
                     if (result != "") {
                         $("input[id*='txt_mz']").val(result);
@@ -47,7 +63,55 @@
                     }
 
         }
-       
+        function GetResult() {
+            var mdvalue = "";
+            if ($("input[id*='txt_kq']").val() == "" || $("input[id*='txt_water']").val() == "") {
+                alert("请分别填写空气中重量和水中重量");
+            }
+            else {
+                mdvalue = Number(($("input[id*='txt_kq']").val() * $("#MainContent_lb_ms").text().replace("ρ=", "")) / ($("input[id*='txt_kq']").val() - $("input[id*='txt_water']").val())).toFixed(2);
+                if (mdvalue >= 2.65) {
+                    $("input[id*='MainContent_txt_midu']").val("ρ=" + mdvalue + "" + "  " + "OK");
+                    $("input[id*='MainContent_txt_midu']").css("background", "Green");
+                }
+                else {
+                    $("input[id*='MainContent_txt_midu']").val("ρ=" + mdvalue + "" + "  " + "NG");
+                    $("input[id*='MainContent_txt_midu']").css("background", "Red");
+                }
+            }
+           
+        }
+
+        //猎取密度
+
+        function GetMDValue( temperature) {
+            $.ajax({
+                type: "post",
+                url: "JinLian_Hydrogen.aspx/GetMD",
+                data: "{'temperature':'" + temperature + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false, //默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj = eval(data.d);
+                    if (obj[0].temperature != "") {
+                        // objs.val(" ρ=" + obj[0].temperature);
+                        //alert(obj[0].temperature);
+                        $("#MainContent_lb_ms").text(" ρ=" + obj[0].temperature);
+                    }
+                    else {
+                        alert("请填写正确的水温!");
+                        // objs.val("");
+                        $("#MainContent_lb_ms").text("");
+                        $("#MainContent_lb_ms").focus();
+                        // objs.focus();
+                    }
+                }
+
+            });
+        }
+
+
         $("#mestitle").text("【精炼测氢】");
         var dtime = "";
         function show_cur_times() {
@@ -321,7 +385,7 @@
                                         <asp:TextBox ID="txt_after_wd" class="form-control input-small"
                                             runat="server" ReadOnly="True"></asp:TextBox></div>
                                     <div class="col-sm-12" style="color: #FF0000">
-                                        *精炼后温度要求680至730<br />*精炼后必须除渣，方可做测氢和光谱样件</div>
+                                        *精炼后温度要求680至730<br />*精炼后必须除渣，方可做测氢样件<br />*石墨转轴残铝必须清理干净</div>
                                     <div class="col-sm-12 col-md-offset-5">
                                         <div id="Div10" runat="server" style="padding: 0; position: relative;
                                             float: left; top: 0px; left: 0px; width: 200px; height: 70px;">
@@ -490,6 +554,26 @@
             <div class="col-sm-4">
              <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
                                             <ContentTemplate>
+                                                 <script type="text/jscript">
+                                                     var prm = Sys.WebForms.PageRequestManager.getInstance();
+                                                     prm.add_endRequest(function () {
+                                                         $("input[id*='txt_temperature']").change(function () {
+                                                             var temperature = $("input[id*='txt_temperature']").val();
+                                                             GetMDValue(temperature);
+                                                             GetResult();
+                                                         });
+
+                                                         $("input[id*='txt_kq']").change(function () {
+                                                             if ($("input[id*='txt_temperature']").val() != "" && $("input[id*='txt_kq']").val() != "") {
+                                                                 var temperature = $("input[id*='txt_temperature']").val();
+                                                                 GetMDValue(temperature);
+                                                                 GetResult();
+                                                             }
+                                                         });
+
+                                                     });
+                                        </script>
+
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <strong>测氢</strong>
@@ -510,6 +594,15 @@
                         <div class="col-sm-6">
                             <asp:TextBox ID="txt_water" class="form-control input-small"
                                 runat="server" AutoPostBack="True" OnTextChanged="txt_water_TextChanged"></asp:TextBox></div>
+                                 <div class="col-sm-6">
+                            水温(℃)：  
+                                     <asp:Label ID="lb_ms" runat="server" Text="" style="color: #FF0000" ></asp:Label>
+                                         </div>
+                        <div class="col-sm-6">
+                            <asp:TextBox ID="txt_temperature" class="form-control input-small"   Text="50"
+                                runat="server"  ></asp:TextBox></div>
+                            <div class="col-sm-12" style="color: #FF0000">
+                            默认温度为50℃,可手动填写当前实际温度</div>
                         <div class="col-sm-6">
                             实际密度(g/cm3)：</div>
                         <div class="col-sm-6">
