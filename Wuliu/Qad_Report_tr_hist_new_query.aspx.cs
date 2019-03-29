@@ -41,6 +41,11 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         DataTable dt_chartA = ds.Tables[1];
         ChartA.Series.Clear();
 
+        dt_chartA.Columns["amount1"].ColumnName = "10以内金额"; dt_chartA.Columns["amount2"].ColumnName = "10-20金额";
+        dt_chartA.Columns["amount3"].ColumnName = "20-30金额"; dt_chartA.Columns["amount4"].ColumnName = "30-60金额";
+        dt_chartA.Columns["amount5"].ColumnName = "60-90金额"; dt_chartA.Columns["amount6"].ColumnName = "90-180金额";
+        dt_chartA.Columns["amount7"].ColumnName = "180-360金额"; dt_chartA.Columns["amount8"].ColumnName = "360以上金额";
+
         List<Series> list = new List<Series>();
         Series series = new Series("昆山库存金额", ViewType.Pie);
         for (int i = 1; i <= 8; i++)
@@ -48,9 +53,11 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
             string argument = dt_chartA.Columns[i].ColumnName;//参数名称 
             decimal value = Convert.ToDecimal(dt_chartA.Rows[0][i].ToString());//参数值
             series.Points.Add(new SeriesPoint(argument, value));
-
+            series.LabelsVisibility = DefaultBoolean.True;
         }
         series.ArgumentScaleType = ScaleType.Qualitative;
+        series.Label.TextPattern = "{A}:{VP:P2}";
+
         list.Add(series);
         ChartA.Series.AddRange(list.ToArray());
         ChartA.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
@@ -61,11 +68,15 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         //图B
         DataTable dt_chartB = ds.Tables[3];
+        if (ChartB.Diagram != null)
+        {
+            ((XYDiagram)ChartB.Diagram).SecondaryAxesY.Clear();
+        }
         ChartB.Series.Clear();
 
         List<Series> listB = new List<Series>();
-        Series seriesB = new Series("金额", ViewType.Area);
-        Series seriesB_2 = new Series("金额占比", ViewType.Line);
+        Series seriesB = new Series("金额", ViewType.Bar);
+        Series seriesB_2 = new Series("金额占比", ViewType.Line); 
         for (int i = 1; i < dt_chartB.Columns.Count; i++)
         {
             string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
@@ -85,13 +96,19 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartB.Series.AddRange(listB.ToArray());
         ChartB.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
+        var diagram = ((XYDiagram)ChartB.Diagram);
+        SecondaryAxisY secondaryYAxis = new SecondaryAxisY("Population Axis");
+        secondaryYAxis.Label.TextPattern = "{VP:P0}";
+        diagram.SecondaryAxesY.Add(secondaryYAxis);
+        ((LineSeriesView)seriesB_2.View).AxisY = secondaryYAxis;
+
         //grid 4
         SetGrid(gv_tr_list_4, ds.Tables[4], 80, "typedesc");
         gv_tr_list_4.Columns["typedesc"].Caption = "月份/金额";
 
         //图D
         DataTable dt_chartD = ds.Tables[4];
-        ChartD.Series.Clear();
+        ChartD.Series.Clear(); 
 
         List<Series> listD = new List<Series>();
         Series seriesD = new Series("金额", ViewType.Line);
@@ -117,7 +134,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listC = new List<Series>();
         Series seriesC = new Series("昆山库存30-180金额", ViewType.Pie);
-        for (int i = 2; i < dt_chartC.Columns.Count; i++)
+        for (int i = 2; i < dt_chartC.Columns.Count - 1; i++)
         {
             string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
             decimal value = Convert.ToDecimal(dt_chartC.Rows[0][i].ToString());//参数值
@@ -125,6 +142,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         }
         seriesC.ArgumentScaleType = ScaleType.Qualitative;
+        seriesC.Label.TextPattern = "{A}:{VP:P2}";
+
         listC.Add(seriesC);
         ChartC.Series.AddRange(listC.ToArray());
         ChartC.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
@@ -139,7 +158,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listE = new List<Series>();
         Series seriesE = new Series("昆山库存超180金额", ViewType.Pie);
-        for (int i = 1; i < dt_chartE.Columns.Count; i++)
+        for (int i = 1; i < dt_chartE.Columns.Count - 1; i++)
         {
             string argument = dt_chartE.Columns[i].ColumnName;//参数名称 
             decimal value = Convert.ToDecimal(dt_chartE.Rows[0][i].ToString());//参数值
@@ -147,6 +166,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         }
         seriesE.ArgumentScaleType = ScaleType.Qualitative;
+        seriesE.Label.TextPattern = "{A}:{VP:P2}";
+
         listE.Add(seriesE);
         ChartE.Series.AddRange(listE.ToArray());
         ChartE.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;

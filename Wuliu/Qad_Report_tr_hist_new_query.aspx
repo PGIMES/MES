@@ -114,7 +114,7 @@
                     </Styles>
                 </dx:ASPxGridView>
 
-                <dx:WebChartControl ID="ChartA" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                <dx:WebChartControl ID="ChartA" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
                 </dx:WebChartControl>
             </div>
         </div>
@@ -135,7 +135,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:WebChartControl ID="ChartB" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    <dx:WebChartControl ID="ChartB" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
                     </dx:WebChartControl>
                 </div>
             </div>
@@ -156,7 +156,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:WebChartControl ID="ChartC" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    <dx:WebChartControl ID="ChartC" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
                     </dx:WebChartControl>
                 </div>
             </div>
@@ -178,7 +178,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:WebChartControl ID="ChartD" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    <dx:WebChartControl ID="ChartD" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
                     </dx:WebChartControl>
                 </div>
             </div>
@@ -199,7 +199,7 @@
                             <Footer HorizontalAlign="Right"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:WebChartControl ID="ChartE" runat="server" CrosshairEnabled="True" Height="220px" Width="500px">
+                    <dx:WebChartControl ID="ChartE" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
                     </dx:WebChartControl>
                 </div>
             </div>
