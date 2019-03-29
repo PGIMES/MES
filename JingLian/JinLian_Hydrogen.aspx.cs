@@ -466,7 +466,10 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
 
             if (decimal.TryParse(txt_kq.Text, out f) == true && decimal.TryParse(txt_water.Text, out f) == true)
             {
-                midu_value = Math.Round(decimal.Parse(txt_kq.Text) *decimal.Parse( lb_ms.Text.Replace("ρ=", "")) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 2);
+                //midu_value = Math.Round(decimal.Parse(txt_kq.Text) *decimal.Parse( lb_ms.Text.Replace("ρ=", "")) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 2);
+                //modify by 20190329:数值的区别就在小数点第三位，只取两位不够精确
+                midu_value = Math.Round(decimal.Parse(txt_kq.Text) * decimal.Parse(lb_ms.Text.Replace("ρ=", "")) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 3);
+
                 txt_midu.Text = midu_value.ToString();
                 if (Convert.ToDouble(midu_value) >= 2.65)
                 {
