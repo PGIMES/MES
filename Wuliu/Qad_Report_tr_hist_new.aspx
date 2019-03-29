@@ -127,7 +127,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="2260px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
+                    <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" Width="2330px" OnPageIndexChanged="gv_tr_list_PageIndexChanged" OnHtmlDataCellPrepared="gv_tr_list_HtmlDataCellPrepared">
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }"  />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" AutoExpandAllGroups="True" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="1000"></SettingsPager>
@@ -164,7 +164,7 @@
                             <dx:GridViewDataTextColumn Caption="库存金额" FieldName="ld_qty_oh_amount" Width="80px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="零件状态" FieldName="pt_status" Width="60px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="产品线" FieldName="pt_prod_line" Width="50px"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="计划员" FieldName="pt_buyer" Width="50px"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="计划员" FieldName="pt_buyer" Width="120px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="超180天数量" FieldName="qty9" Width="90px"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="超180天金额" FieldName="amount9"  Width="90px"></dx:GridViewDataTextColumn>
                         </Columns>
