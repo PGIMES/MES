@@ -87,7 +87,11 @@
             Text="recevie" />
         <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
         <asp:TextBox ID="TextBox2" runat="server" Height="324px" Width="573px"></asp:TextBox>
-    
+
+
+        <asp:TextBox ID="TextBox3" runat="server" OnTextChanged="TextBox3_TextChanged" AutoPostBack="true"></asp:TextBox>
+        <asp:TextBox ID="TextBox4" runat="server" OnTextChanged="TextBox3_TextChanged" AutoPostBack="true"></asp:TextBox>
+        <asp:TextBox ID="TextBox5" runat="server" OnTextChanged="TextBox3_TextChanged"></asp:TextBox>
     </div>
     </form>
 </body>

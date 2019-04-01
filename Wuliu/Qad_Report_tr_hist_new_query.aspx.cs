@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Aspose.Cells;
 
 public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 {
@@ -47,7 +48,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         dt_chartA.Columns["amount7"].ColumnName = "180-360金额"; dt_chartA.Columns["amount8"].ColumnName = "360以上金额";
 
         List<Series> list = new List<Series>();
-        Series series = new Series("昆山库存金额", ViewType.Pie);
+        Series series = new Series("昆山库存金额", DevExpress.XtraCharts.ViewType.Pie);
         for (int i = 1; i <= 8; i++)
         {
             string argument = dt_chartA.Columns[i].ColumnName;//参数名称 
@@ -75,8 +76,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartB.Series.Clear();
 
         List<Series> listB = new List<Series>();
-        Series seriesB = new Series("金额", ViewType.Bar);
-        Series seriesB_2 = new Series("金额占比", ViewType.Line); 
+        Series seriesB = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
+        Series seriesB_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line); 
         for (int i = 1; i < dt_chartB.Columns.Count; i++)
         {
             string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
@@ -111,7 +112,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartD.Series.Clear(); 
 
         List<Series> listD = new List<Series>();
-        Series seriesD = new Series("金额", ViewType.Line);
+        Series seriesD = new Series("金额", DevExpress.XtraCharts.ViewType.Line);
         for (int i = 1; i < dt_chartD.Columns.Count; i++)
         {
             string argument = dt_chartD.Columns[i].ColumnName;//参数名称 
@@ -133,7 +134,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartC.Series.Clear();
 
         List<Series> listC = new List<Series>();
-        Series seriesC = new Series("昆山库存30-180金额", ViewType.Pie);
+        Series seriesC = new Series("昆山库存30-180金额", DevExpress.XtraCharts.ViewType.Pie);
         for (int i = 2; i < dt_chartC.Columns.Count - 1; i++)
         {
             string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
@@ -157,7 +158,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         ChartE.Series.Clear();
 
         List<Series> listE = new List<Series>();
-        Series seriesE = new Series("昆山库存超180金额", ViewType.Pie);
+        Series seriesE = new Series("昆山库存超180金额", DevExpress.XtraCharts.ViewType.Pie);
         for (int i = 1; i < dt_chartE.Columns.Count - 1; i++)
         {
             string argument = dt_chartE.Columns[i].ColumnName;//参数名称 
@@ -305,52 +306,103 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
     }
 
-    //private void CreateChart(DataTable dt,WebChartControl chart, ViewType viewType)
-    //{
-    //    chart.Series.Clear();
-
-    //    //动态创建多个Series 图形的对象
-    //    List<Series> list = new List<Series>();
-    //    int j = 0;
-    //    for (int i = 0; i < dt.Rows.Count; i++)
-    //    {
-    //        list.Add(CreateSeries(dt.Rows[i][1].ToString(), viewType, dt, j));
-    //        j++;
-    //    }
-
-    //    chart.Series.AddRange(list.ToArray());
-    //    chart.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
-    //}
-
-
 
     /// <summary>
-    /// 根据数据创建一个图形展现
+    /// 将DataTable生成Excel
     /// </summary>
-    /// <param name="caption">图形标题</param>
-    /// <param name="viewType">图形类型</param>
-    /// <param name="dt">数据DataTable</param>
-    /// <param name="rowIndex">图形数据的行序号</param>
-    /// <returns></returns>
-    //private Series CreateSeries(string caption, ViewType viewType, DataTable dt, int rowIndex)
-    //{
-    //    Series series = new Series(caption, viewType);
-    //    for (int i = 1; i < dt.Columns.Count - 1; i++)
-    //    {
-    //        if (i < 10)
-    //        {
-    //            string argument = dt.Columns[i].ColumnName;//参数名称 
-    //            decimal value = 0;
-    //            if (dt.Rows[rowIndex][i].ToString() != null && dt.Rows[rowIndex][i].ToString() != "")
-    //            {
-    //                value = Convert.ToDecimal(dt.Rows[rowIndex][i].ToString());//参数值
-    //            }
-    //            series.Points.Add(new SeriesPoint(argument, value));
-    //        }
-    //    }
-    //    //必须设置ArgumentScaleType的类型，否则显示会转换为日期格式，导致不是希望的格式显示
-    //    //也就是说，显示字符串的参数，必须设置类型为ScaleType.Qualitative
-    //    series.ArgumentScaleType = ScaleType.Qualitative;
-    //    return series;
-    //}
+    /// <param name="dtList">DataTable</param>
+    /// <param name="fileName">文件名</param>
+    /// <returns>返回文件路径名</returns>
+    #region DataTable生成Excel
+    public string ExportToExcel(DataTable dtList, string fileName)
+    {
+        string ExportFilesPath = MapPath("~") + "ExportFile\\Kulin" + "\\";
+
+        //这里是利用Aspose.Cells.dll 生成excel文件的
+        string pathToFiles = System.Web.HttpContext.Current.Server.MapPath(ExportFilesPath);
+        string etsName = ".xls";
+        //获取保存路径
+        string path = pathToFiles + fileName + etsName;
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        Cells cell = ws.Cells;
+
+        //设置行高
+        //cell.SetRowHeight(0, 20);
+
+        //表头样式
+        Aspose.Cells.Style stHeadLeft = wb.Styles[wb.Styles.Add()];
+        stHeadLeft.HorizontalAlignment = TextAlignmentType.Left;       //文字居中
+        stHeadLeft.Font.Name = "宋体";
+        stHeadLeft.Font.IsBold = true;                                 //设置粗体
+        stHeadLeft.Font.Size = 14;                                     //设置字体大小
+        Aspose.Cells.Style stHeadRight = wb.Styles[wb.Styles.Add()];
+        stHeadRight.HorizontalAlignment = TextAlignmentType.Right;       //文字居中
+        stHeadRight.Font.Name = "宋体";
+        stHeadRight.Font.IsBold = true;                                  //设置粗体
+        stHeadRight.Font.Size = 14;                                      //设置字体大小
+
+        //内容样式
+        Aspose.Cells.Style stContentLeft = wb.Styles[wb.Styles.Add()];
+        stContentLeft.HorizontalAlignment = TextAlignmentType.Left;
+        stContentLeft.Font.Size = 10;
+        Aspose.Cells.Style stContentRight = wb.Styles[wb.Styles.Add()];
+        stContentRight.HorizontalAlignment = TextAlignmentType.Right;
+        stContentRight.Font.Size = 10;
+
+        //赋值给Excel内容
+        for (int col = 0; col < dtList.Columns.Count; col++)
+        {
+            //Style stHead = null;
+            ////Style stContent = null;
+            ////设置表头
+            //string columnType = dtList.Columns[col].DataType.ToString();
+            //switch (columnType.ToLower())
+            //{
+            //    //如果类型是string，则靠左对齐(对齐方式看项目需求修改)
+            //    case "system.string":
+            //        stHead = stHeadLeft;
+            //        //stContent = stContentLeft;
+            //        break;
+            //    default:
+            //        stHead = stHeadRight;
+            //        //stContent = stContentRight;
+            //        break;
+            //}
+            putValue(cell, dtList.Columns[col].ColumnName, 0, col);
+
+            for (int row = 0; row < dtList.Rows.Count; row++)
+            {
+                putValue(cell, dtList.Rows[row][col], row + 1, col);
+            }
+        }
+        wb.Save(path);
+
+        return ExportFilesPath + fileName + etsName;
+    }
+    #endregion
+
+    private static void putValue(Cells cell, object value, int row, int column)
+    {
+        //填充数据到excel中
+        cell[row, column].PutValue(value);
+        // cell[row, column].SetStyle(st);
+    }
+
+
+    protected void btn_export_ServerClick(object sender, EventArgs e)
+    {
+        string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+
+        string filename = ExportToExcel(dt, "30-180天库存清单");
+    }
+
+    protected void btn_export2_ServerClick(object sender, EventArgs e)
+    {
+        string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+
+        string filename = ExportToExcel(dt, "超180天库存清单");
+    }
 }

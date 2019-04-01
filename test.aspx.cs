@@ -137,4 +137,17 @@ public partial class test : System.Web.UI.Page
         Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "GPSGetDataTimer()", true);
 
     }
+
+    protected void TextBox3_TextChanged(object sender, EventArgs e)
+    {
+        decimal midu_value = 0; decimal f = 0;
+        if (decimal.TryParse(TextBox3.Text,out f) == true && decimal.TryParse(TextBox4.Text, out f) == true)
+        {
+            //midu_value = Math.Round(decimal.Parse(txt_kq.Text) *decimal.Parse( lb_ms.Text.Replace("ρ=", "")) / (decimal.Parse(txt_kq.Text) - decimal.Parse(txt_water.Text)), 2);
+            //modify by 20190329:数值的区别就在小数点第三位，只取两位不够精确
+            //midu_value = Math.Round(decimal.Parse(TextBox3.Text) * decimal.Parse("0.9824100") / (decimal.Parse(TextBox3.Text) - decimal.Parse(TextBox4.Text)), 3, MidpointRounding.AwayFromZero);
+            midu_value = Math.Round(decimal.Parse(TextBox3.Text) * decimal.Parse("0.9842100") / (decimal.Parse(TextBox3.Text) - decimal.Parse(TextBox4.Text)), 3);
+            TextBox5.Text = midu_value.ToString();
+        }
+    }
 }
