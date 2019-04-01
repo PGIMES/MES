@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Aspose.Cells;
+using System.IO;
 
 public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 {
@@ -307,102 +308,95 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     }
 
 
-    /// <summary>
-    /// 将DataTable生成Excel
-    /// </summary>
-    /// <param name="dtList">DataTable</param>
-    /// <param name="fileName">文件名</param>
-    /// <returns>返回文件路径名</returns>
-    #region DataTable生成Excel
-    public string ExportToExcel(DataTable dtList, string fileName)
+    
+    public void ExportToExcel(DataTable dtList, string fileName)
     {
-        string ExportFilesPath = MapPath("~") + "ExportFile\\Kulin" + "\\";
-
-        //这里是利用Aspose.Cells.dll 生成excel文件的
-        string pathToFiles = System.Web.HttpContext.Current.Server.MapPath(ExportFilesPath);
+        string pathToFiles = MapPath("~") + @"ExportFile\Kulin" + @"\";
         string etsName = ".xls";
-        //获取保存路径
-        string path = pathToFiles + fileName + etsName;
+        string path = pathToFiles + fileName + etsName; //获取保存路径
+
         Workbook wb = new Workbook();
         Worksheet ws = wb.Worksheets[0];
         Cells cell = ws.Cells;
 
         //设置行高
-        //cell.SetRowHeight(0, 20);
+        cell.SetRowHeight(0, 20);
 
-        //表头样式
-        Aspose.Cells.Style stHeadLeft = wb.Styles[wb.Styles.Add()];
-        stHeadLeft.HorizontalAlignment = TextAlignmentType.Left;       //文字居中
-        stHeadLeft.Font.Name = "宋体";
-        stHeadLeft.Font.IsBold = true;                                 //设置粗体
-        stHeadLeft.Font.Size = 14;                                     //设置字体大小
-        Aspose.Cells.Style stHeadRight = wb.Styles[wb.Styles.Add()];
-        stHeadRight.HorizontalAlignment = TextAlignmentType.Right;       //文字居中
-        stHeadRight.Font.Name = "宋体";
-        stHeadRight.Font.IsBold = true;                                  //设置粗体
-        stHeadRight.Font.Size = 14;                                      //设置字体大小
+        Aspose.Cells.Style style_head = wb.Styles[wb.Styles.Add()];
+        style_head.ForegroundColor = System.Drawing.Color.FromArgb(0, 176, 240);
+        style_head.Pattern = BackgroundType.Solid;
+        style_head.Font.IsBold = true;
+        style_head.Font.Name = "宋体";
+        style_head.Font.Size = 11;
+        style_head.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+        style_head.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+        style_head.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+        style_head.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
 
-        //内容样式
-        Aspose.Cells.Style stContentLeft = wb.Styles[wb.Styles.Add()];
-        stContentLeft.HorizontalAlignment = TextAlignmentType.Left;
-        stContentLeft.Font.Size = 10;
-        Aspose.Cells.Style stContentRight = wb.Styles[wb.Styles.Add()];
-        stContentRight.HorizontalAlignment = TextAlignmentType.Right;
-        stContentRight.Font.Size = 10;
+        Aspose.Cells.Style style_con = wb.Styles[wb.Styles.Add()];
+        style_con.Font.Name = "宋体";
+        style_con.Font.Size = 11;
+        style_con.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+        style_con.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+        style_con.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+        style_con.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
 
-        //赋值给Excel内容
+        //赋值给Excel表头
         for (int col = 0; col < dtList.Columns.Count; col++)
         {
-            //Style stHead = null;
-            ////Style stContent = null;
-            ////设置表头
-            //string columnType = dtList.Columns[col].DataType.ToString();
-            //switch (columnType.ToLower())
-            //{
-            //    //如果类型是string，则靠左对齐(对齐方式看项目需求修改)
-            //    case "system.string":
-            //        stHead = stHeadLeft;
-            //        //stContent = stContentLeft;
-            //        break;
-            //    default:
-            //        stHead = stHeadRight;
-            //        //stContent = stContentRight;
-            //        break;
-            //}
-            putValue(cell, dtList.Columns[col].ColumnName, 0, col);
+            cell[0, col].PutValue(dtList.Columns[col].ColumnName);
+            cell[0, col].SetStyle(style_head);
+            cell.SetColumnWidth(col, 15);
 
-            for (int row = 0; row < dtList.Rows.Count; row++)
+            if (dtList.Columns[col].ColumnName.Contains("原因"))
             {
-                putValue(cell, dtList.Rows[row][col], row + 1, col);
+                var s = cell[0, col].GetStyle();
+                s.ForegroundColor = System.Drawing.Color.FromArgb(255, 255, 0);
+                cell[0, col].SetStyle(s);
             }
         }
+
+        //赋值给Excel内容
+        for (int row = 0; row < dtList.Rows.Count; row++)
+        {
+            for (int col = 0; col < dtList.Columns.Count; col++)
+            {
+                cell[row + 1, col].PutValue(dtList.Rows[row][col]);
+                cell[row + 1, col].SetStyle(style_con);
+            }
+        }
+
         wb.Save(path);
 
-        return ExportFilesPath + fileName + etsName;
+        //以字符流的形式下载文件
+        FileStream fs = new FileStream(path, FileMode.Open);
+        byte[] bytes = new byte[(int)fs.Length];
+        fs.Read(bytes, 0, bytes.Length);
+        fs.Close();
+        Response.ContentType = "application/octet-stream";
+        //通知浏览器下载文件而不是打开
+        Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(fileName + etsName, System.Text.Encoding.UTF8));
+        Response.BinaryWrite(bytes);
+        Response.Flush();
+        Response.End();
     }
-    #endregion
-
-    private static void putValue(Cells cell, object value, int row, int column)
-    {
-        //填充数据到excel中
-        cell[row, column].PutValue(value);
-        // cell[row, column].SetStyle(st);
-    }
+   
 
 
     protected void btn_export_ServerClick(object sender, EventArgs e)
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+        DataTable dtList = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
 
-        string filename = ExportToExcel(dt, "30-180天库存清单");
+        ExportToExcel(dtList, "30-180天库存清单_"+ curmonth);
     }
 
     protected void btn_export2_ServerClick(object sender, EventArgs e)
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '7','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
 
-        string filename = ExportToExcel(dt, "超180天库存清单");
+        ExportToExcel(dt, "超180天库存清单_" + curmonth);
     }
+   
 }

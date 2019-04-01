@@ -143,7 +143,9 @@
        <div class=" panel panel-info col-md-6 ">
             <div class="panel panel-heading">
                 <asp:Label ID="Label2" runat="server" Text="库龄30-180天库龄分析"></asp:Label>
-                <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_ServerClick"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
+                <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_ServerClick" style="padding:0px 0px">
+                    <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
+                </button>
             </div>
             <div class="panel panel-body" style="  overflow:scroll">
                 <div style="float: left">
@@ -187,7 +189,9 @@
        <div class=" panel panel-info col-md-6 ">
             <div class="panel panel-heading">
                 <asp:Label ID="Label4" runat="server" Text="超180天库龄分析"></asp:Label>
-                <button id="btn_export2" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export2_ServerClick"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
+                <button id="btn_export2" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export2_ServerClick" style="padding:0px 0px">
+                    <i class="fa fa-download fa-fw"></i>&nbsp;导出导出清单
+                </button>
             </div>
             <div class="panel panel-body" style="  overflow:scroll">
                 <div style="float: left">
