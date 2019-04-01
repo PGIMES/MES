@@ -70,7 +70,7 @@
             }
             else {
                 //mdvalue = Number(($("input[id*='txt_kq']").val() * $("#MainContent_lb_ms").text().replace("ρ=", "")) / ($("input[id*='txt_kq']").val() - $("input[id*='txt_water']").val())).toFixed(2);
-                mdvalue = Number(($("input[id*='txt_kq']").val() * $("#MainContent_lb_ms").text().replace("ρ=", "")) / ($("input[id*='txt_kq']").val() - $("input[id*='txt_water']").val())).toFixed(3);
+				mdvalue = Number(($("input[id*='txt_kq']").val() * $("#MainContent_lb_ms").text().replace("ρ=", "")) / ($("input[id*='txt_kq']").val() - $("input[id*='txt_water']").val())).toFixed(3);
                 if (mdvalue >= 2.65) {
                     $("input[id*='MainContent_txt_midu']").val("ρ=" + mdvalue + "" + "  " + "OK");
                     $("input[id*='MainContent_txt_midu']").css("background", "Green");
