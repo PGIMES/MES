@@ -461,12 +461,18 @@ public partial class Pur_Po : System.Web.UI.Page
         //                from qad_ad_mstr 
         //                    inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
         //                where ad_type='supplier' and ad_domain='" + lsdomain+"'";
+        //string lssql = @"select distinct ad_addr,ad_name
+        //                        ,case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end vd_taxc
+        //                        ,ad_addr+'|'+ad_name+'|'+case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end as v  
+        //                from qad_ad_mstr 
+        //                    inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
+        //                where ad_type='supplier' and ad_domain='" + lsdomain + "'";
         string lssql = @"select distinct ad_addr,ad_name
-                                ,case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end vd_taxc
-                                ,ad_addr+'|'+ad_name+'|'+case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end as v  
+                                ,case when isnull(vd_taxc,'')='17' then '13' when isnull(vd_taxc,'')='11' then '9' else vd_taxc end vd_taxc
+                                ,ad_addr+'|'+ad_name+'|'+case when isnull(vd_taxc,'')='17' then '13' when isnull(vd_taxc,'')='11' then '9' else vd_taxc end as v   
                         from qad_ad_mstr 
                             inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
-                        where ad_type='supplier' and ad_domain='" + lsdomain + "'";
+                        where ad_type='supplier' and vd_taxc<>'' and ad_domain='" + lsdomain + "'";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
 
         ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).ValueField = "v";
