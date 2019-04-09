@@ -83,8 +83,10 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
         DataTable dt = null;
         if (StartDate.Text != "" && EndDate.Text != "")
         {
-            dt = DbHelperSQL.Query("exec Report_InventoryA '" + ddl_typeno.SelectedValue + "','" + ddl_domain.SelectedValue + "','" + StartDate.Text + "','" + EndDate.Text
-                + "','" + ddl_fuhao2.SelectedValue + "','" + ASPxDropDownEdit2.Text + "','" + ddl_fuhao1.SelectedValue + "','" + ASPxDropDownEdit1.Text + "'").Tables[0];
+            //dt = DbHelperSQL.Query("exec Report_InventoryA '" + ddl_typeno.SelectedValue + "','" + ddl_domain.SelectedValue + "','" + StartDate.Text + "','" + EndDate.Text
+            //    + "','" + ddl_fuhao2.SelectedValue + "','" + ASPxDropDownEdit2.Text + "','" + ddl_fuhao1.SelectedValue + "','" + ASPxDropDownEdit1.Text + "'").Tables[0];
+            dt = Query("exec Report_InventoryA '" + ddl_typeno.SelectedValue + "','" + ddl_domain.SelectedValue + "','" + StartDate.Text + "','" + EndDate.Text
+               + "','" + ddl_fuhao2.SelectedValue + "','" + ASPxDropDownEdit2.Text + "','" + ddl_fuhao1.SelectedValue + "','" + ASPxDropDownEdit1.Text + "'").Tables[0];
         }
 
         gv.Columns.Clear(); gv.TotalSummary.Clear();
@@ -322,6 +324,25 @@ public partial class Fin_InventoryAccount_Report : System.Web.UI.Page
 
     }
 
+    public static DataSet Query(string SQLString)
+    {
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings["ConnectionStringMES"]))
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                connection.Open();
+                SqlDataAdapter command = new SqlDataAdapter(SQLString, connection);
+                command.SelectCommand.CommandTimeout = 0;
+                command.Fill(ds, "ds");
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return ds;
+        }
+    }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     #region ASPxGridView3 编辑
