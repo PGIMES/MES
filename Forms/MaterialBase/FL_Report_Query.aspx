@@ -17,19 +17,89 @@
                 window.open('/Platform/WorkFlowRun/Default.aspx?flowid=9d591dd9-b615-4e8f-b2f8-d3a7161af952&appid=')
             });
 
+            $('#btn_edit').click(function () {
+                if (selList.GetItemCount() != 1) { layer.alert("请选择一条记录!"); return; }
+
+                var item = selList.GetItem(0);
+                grid.GetRowValues(parseInt(item.value), 'formno;domain;wlh', OnGetRowValues);
+
+            });
+
+//            $('#btn_edit').click(function () {
+//                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=9d591dd9-b615-4e8f-b2f8-d3a7161af952&state=edit&formno=FL8120001&domain=200&wlh=Z10014912')
+//            });
+
             setHeight();
 
             $(window).resize(function () {
                 setHeight();
             });
 
-            mergecells();
 
         });
 
 
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
+        }
+
+        function RefreshRow(vi) {
+            var chk = eval('chk' + vi);
+            selList.BeginUpdate();
+            try {
+                var count = selList.GetItemCount();
+                for (var i = count - 1; i >= 0; i--) {
+                    var item = selList.GetItem(i);
+                    if (item.text == vi.toString() && item.value == vi.toString()) {
+                        selList.RemoveItem(i);
+                    }
+                }
+
+                if (chk.GetValue()) {
+                    selList.AddItem(vi.toString(), vi.toString());
+                }
+
+            } finally {
+                selList.EndUpdate();
+            }
+        }
+
+        function OnGetRowValues(values) {
+            var formno = values[0];
+            var comp = values[1];
+            var part_no = values[2];
+      
+
+            $.ajax({
+                type: "post",
+                url: "FL_Report_Query.aspx/CheckData",
+                data: "{'part_no':'" + part_no + "','comp':'" + comp + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false, //默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj = eval(data.d);
+
+                    if (obj[0].re_flag != "") {
+                        layer.alert(obj[0].re_flag);
+                    } else {
+                        window.open('/Platform/WorkFlowRun/Default.aspx?flowid=9d591dd9-b615-4e8f-b2f8-d3a7161af952&state=edit&formno=' + formno + '&domain=' + comp + '&wlh=' + part_no);
+                    }
+                }
+
+            });
+
+        }
+
+
+        function clear() {
+            selList.BeginUpdate();
+            try {
+                selList.ClearItems();
+
+            } finally {
+                selList.EndUpdate();
+            }
         }
          	
     </script>
@@ -123,6 +193,7 @@
                     &nbsp;&nbsp; <%--runat="server" onserverclick="btn_edit_Click"--%>
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>    
                     <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>  
+                     <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button>  
                     <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
                 </td>
             </tr>                      
@@ -130,6 +201,7 @@
                    
     </div>
 
+        <div style="display:none;"><dx:ASPxListBox ID="ASPxListBox1" ClientInstanceName="selList" runat="server" Height="150px" Width="500px" ValueType="System.String"></dx:ASPxListBox></div>
     <div class="col-sm-12">
         <table>
             <tr>
@@ -138,7 +210,7 @@
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
-                                    mergecells();setHeight();
+                                    setHeight();
         	                    }"  />
                         <SettingsPager PageSize="200" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -146,18 +218,29 @@
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>
            
-                                           
-                            <dx:GridViewDataTextColumn Caption="表单号" FieldName="formno" Width="130px" VisibleIndex="1"   >
+                              <dx:GridViewDataTextColumn FieldName="" Width="40px" VisibleIndex="0" Name="chk">
+                                <Settings  />
+                                <DataItemTemplate>
+                                    <dx:ASPxCheckBox ID="ASPxCheckBox1" runat="server" ClientInstanceName='<%# "chk"+Container.VisibleIndex.ToString() %>'
+                                         ClientSideEvents-CheckedChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>'></dx:ASPxCheckBox>
+                                </DataItemTemplate>
+                            </dx:GridViewDataTextColumn>                   
+                          <%--  <dx:GridViewDataTextColumn Caption="表单号" FieldName="formno" Width="130px" VisibleIndex="1"   >
                                
-                          <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
+                          <DataItemTemplate>--%>
+                            <%--        <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'  
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=9d591dd9-b615-4e8f-b2f8-d3a7161af952&state=edit&formno="+ Eval("FormNo")+"&domain="+ Eval("domain")+"&wlh="+ Eval("wlh")%>'
                                          Target="_blank"
                                         >                                        
-                                    </dx:ASPxHyperLink>
-                                </DataItemTemplate> 
-                            </dx:GridViewDataTextColumn>
+                                    </dx:ASPxHyperLink>--%>
+
+                                    
+                           <%--     </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>--%>
                              
+                                <dx:GridViewDataTextColumn Caption="表单号" FieldName="formno" Width="80px" VisibleIndex="2">
+                            </dx:GridViewDataTextColumn>
+
                              <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" Width="80px" VisibleIndex="2">
                             </dx:GridViewDataTextColumn>
                                <dx:GridViewDataTextColumn Caption="公司别" 
@@ -188,7 +271,7 @@
                                 Width="65px" VisibleIndex="16">
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="产品线" FieldName="line" 
-                                Width="80px" VisibleIndex="17">
+                                Width="100px" VisibleIndex="17">
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="材料一" FieldName="cailiao1" 
                                 Width="80px" VisibleIndex="18">

@@ -160,7 +160,7 @@
              { msg+="请选择【申请工厂】.<br />";} 
            
            var type=$("#fltype").find("option:selected").text();
-          // alert(type);
+           //alert(type);
              if(type=="")
              { msg+="请选择【辅料类型】.<br />";} 
          
@@ -185,8 +185,8 @@
              if($("#unit").val()=="")
              { msg+="请选择【单位】.<br />";  } 
 
-//            if($("#pt_status").val()=="")
-//            {msg+="请选择【产品状态(申请)】.<br />"; } 
+            if($("#pt_status").val()=="")
+            {msg+="请选择【产品状态(申请)】.<br />"; } 
 
            if($("#remark").val()=="")
             { msg+="【提交说明】不可为空.<br />";} 
@@ -227,8 +227,7 @@
              { msg+="请选择【辅料类型】.<br />";} 
               if($("#domain").val()=="") 
              { msg+="请选择【申请工厂】.<br />";} 
-
-               if($("#upload").val()=="" && (UidRole=="") && $("#upload").length>0 ){
+               if($("#upload").val()=="" && (UidRole=="Applyer") ){
                {  
                msg+="请选择文件上传.<br />"};  
                 }   
@@ -275,15 +274,7 @@
         <div class="col-md-12  ">
             <div class="col-md-10  ">
                 <div class="form-inline " style="text-align: right">
-                 <%--   <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>--%>
-                            <script type="text/jscript">
-                                var prm = Sys.WebForms.PageRequestManager.getInstance();
-                                prm.add_endRequest(function () {
-                                    // re-bind your jquery events here
-                                    SetButtons();
-                                });
-                            </script>
+       
                             <asp:Button ID="btnSave" runat="server" Text="保存" 
                                 CssClass="btn btn-default btn-xs btnSave"   
                                 OnClick="btnSave_Click" ToolTip="临时保存此流程" Height="23px" />
@@ -293,9 +284,7 @@
                             <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
                             <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
                             <input id="btntaskEnd" type="button" value="终止流程" onclick="parent.taskEnd(true);" class="btn btn-default btn-xs btntaskEnd" />
-                       <%-- </ContentTemplate>
-                    </asp:UpdatePanel>--%>
-
+    
                 </div>
             </div>
         </div>
@@ -453,23 +442,7 @@
                      </div>
                      <div class="panel-body   collapse in" id="FJimport">
                          <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
-                            <%-- <div id="DivImport" runat="server">
-                                 <table style="width: 80%" border="0" runat="server" id="tblWLImport">
-                                     <tr>
-                                         <td style="width: 27%">
-                                             批量导入
-                                         </td>
-                                         <td style="width: 500px">
-                                             <input id="File1" style="width: 300px" type="file" runat="server" />
-                                         </td>
-                                         <td>
-                                             <asp:Button ID="Button2" runat="server" Text="导入预览" class="btn  btn-primary"
-                                                 Width="100px" OnClick="Button2_Click" />
-                                         </td>
-                                     </tr>
-                                 </table>
-                             
-                             </div>--%>
+
                                             <div class="form-inline">
                                                
                                                 <br />

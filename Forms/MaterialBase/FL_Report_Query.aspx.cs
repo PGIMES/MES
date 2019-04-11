@@ -24,7 +24,7 @@ public partial class Forms_MaterialBase_FL_Report_Query : System.Web.UI.Page
         if (this.gv.IsCallback == true)//页面搜索条件使用
         {
             QueryASPxGridView();
-            ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "setHeight();", true);
+            ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
         }
     }
 
@@ -51,7 +51,7 @@ public partial class Forms_MaterialBase_FL_Report_Query : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckData(string wlh, string gc_version, string bz_version, string comp, string part_no)
+    public static string CheckData(string part_no,string comp)
     {
         //------------------------------------------------------------------------------
         string re_flag = "";
@@ -78,13 +78,13 @@ public partial class Forms_MaterialBase_FL_Report_Query : System.Web.UI.Page
     protected void gv_PageIndexChanged(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "setHeight();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
     }
 
     protected void btn_search_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "setHeight();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "clear();setHeight();", true);
     }
     protected void btn_import_Click(object sender, EventArgs e)
     {

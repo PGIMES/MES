@@ -88,13 +88,6 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
         #region "IsPostBack"
         if (!IsPostBack)
         {
-            //文件上传在updatepanel需用此方法+enctype = "multipart/form-data" ，否则无法上传文件
-            //PostBackTrigger trigger = new PostBackTrigger();
-            //trigger.ControlID = btnflowSend.UniqueID;
-            //UpdatePanel1.Triggers.Add(trigger);
-            //PostBackTrigger trigger2 = new PostBackTrigger();
-            //trigger2.ControlID = btnSave.UniqueID;
-            //UpdatePanel1.Triggers.Add(trigger2);
 
             Session["gvdtl"] = null;
             if (LogUserModel != null)
@@ -176,6 +169,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
         }
         loadControl(IsAttach);
      
+     
    
         //发起【修改申请】初始化值给画面
         var wlh = Request["wlh"];
@@ -242,7 +236,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
                 DefaultValue = CreateByDept.Text,
                 ColumnName = "createbydept"
             };
-            DataColumn  aqkc = new DataColumn()
+            DataColumn aqkc = new DataColumn()
             {
                 DefaultValue = qad_aqkc,
                 ColumnName = "qad_aqkc"
@@ -271,7 +265,13 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             Pgi.Auto.Control.SetControlValue("FL_Main", "", this, dtMst.Rows[0]);
             formstate.Text = dtMst.Rows[0]["formstate"] == null ? "" : dtMst.Rows[0]["formstate"].ToString();
             id = dtMst.Rows[0]["id"].ToString();
+            //显示QAD当前实际库存
+            if (dtMst != null && dtMst.Rows.Count > 0  && !string.IsNullOrEmpty (dtMst.Rows[0]["wlh"].ToString()))
+            {
+                string str_kc = string.Format("select pt_sfty_stk from qad_pt_mstr where pt_part='{0}' and pt_domain='{1}'", dtMst.Rows[0]["wlh"], company);
+                ((TextBox)this.FindControl("qad_aqkc")).Text = DbHelperSQL.Query(str_kc).Tables[0].Rows.Count > 0 ? DbHelperSQL.Query(str_kc).Tables[0].Rows[0][0].ToString() : "0";
 
+            }
         }
 
         //获取每步骤栏位状态设定值，方便前端控制其可编辑性（不需修改）
@@ -1177,6 +1177,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             flag = false;
         }
         return flag;
+     
     }
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script
