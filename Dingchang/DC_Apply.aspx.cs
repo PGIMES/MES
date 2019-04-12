@@ -46,7 +46,7 @@ public partial class DC_DC_Apply : System.Web.UI.Page
             }
 
 
-          // Session["empid"] = "01901";
+            //Session["empid"] = "01757";
             if (Request["requestid"] != null)
             {
                 if (Session["empid"] != null)
@@ -431,7 +431,8 @@ public partial class DC_DC_Apply : System.Web.UI.Page
            // {
                 btn_sale.Text = "修改";
                 //Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('销售申请修改成功！')", true);
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "setcss", @"layer.alert('销售申请修改成功！');sendmail('" + no + "','0');", true);
+                //Page.ClientScript.RegisterStartupScript(this.GetType(), "setcss", @"layer.alert('销售申请修改成功！');sendmail('" + no + "','0');", true);                
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "setcss", @"layer.alert('销售申请修改成功！');sendmail('" + Convert.ToInt16(Request["requestid"].ToString()) + "','0');", true);
            // }
         }
             
