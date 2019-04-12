@@ -560,19 +560,20 @@ public partial class DC_DC_Apply : System.Web.UI.Page
         if (gv_ddmx.Rows.Count > 0)
         {
 
-            string comp = gv_ddmx.Rows[0].Cells[14].Text.ToString();
+            //修改物流人员,默认为郁利亚
+            //string comp = gv_ddmx.Rows[0].Cells[14].Text.ToString();
             
 
-            if (comp == "200")
-            {
-                DropDC_Uid.SelectedItem.Text = "王敏";
-                DropDC_Uid.SelectedItem.Value = "02167";
-            }
-            else if (comp == "100")
-            {
-                DropDC_Uid.SelectedItem.Text = "郁利亚";
-                DropDC_Uid.SelectedItem.Value = "00490";
-            }
+            //if (comp == "200")
+            //{
+            //    DropDC_Uid.SelectedItem.Text = "王敏";
+            //    DropDC_Uid.SelectedItem.Value = "02167";
+            //}
+            //else if (comp == "100")
+            //{
+                DropDC_Uid.SelectedItem.Text = "何艳";
+                DropDC_Uid.SelectedItem.Value = "02594";
+           // }
         }
         
     }
