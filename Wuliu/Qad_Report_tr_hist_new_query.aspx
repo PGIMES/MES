@@ -114,7 +114,10 @@
                     </Styles>
                 </dx:ASPxGridView>
 
-                <dx:WebChartControl ID="ChartA" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
+                <dx:WebChartControl ID="ChartA" runat="server" CrosshairEnabled="True" Height="300px" Width="500px" Visible="false">
+                </dx:WebChartControl>
+
+                <dx:WebChartControl ID="ChartA_1" runat="server" CrosshairEnabled="True" Height="300px" Width="810px">
                 </dx:WebChartControl>
             </div>
         </div>

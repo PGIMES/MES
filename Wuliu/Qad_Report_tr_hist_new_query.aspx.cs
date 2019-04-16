@@ -40,13 +40,13 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         gv_tr_list.DataBind();
 
         //图A
+        ds.Tables[1].Columns["amount1"].ColumnName = "10以内金额"; ds.Tables[1].Columns["amount2"].ColumnName = "10-20金额";
+        ds.Tables[1].Columns["amount3"].ColumnName = "20-30金额"; ds.Tables[1].Columns["amount4"].ColumnName = "30-60金额";
+        ds.Tables[1].Columns["amount5"].ColumnName = "60-90金额"; ds.Tables[1].Columns["amount6"].ColumnName = "90-180金额";
+        ds.Tables[1].Columns["amount7"].ColumnName = "180-360金额"; ds.Tables[1].Columns["amount8"].ColumnName = "360以上金额";
+
         DataTable dt_chartA = ds.Tables[1];
         ChartA.Series.Clear();
-
-        dt_chartA.Columns["amount1"].ColumnName = "10以内金额"; dt_chartA.Columns["amount2"].ColumnName = "10-20金额";
-        dt_chartA.Columns["amount3"].ColumnName = "20-30金额"; dt_chartA.Columns["amount4"].ColumnName = "30-60金额";
-        dt_chartA.Columns["amount5"].ColumnName = "60-90金额"; dt_chartA.Columns["amount6"].ColumnName = "90-180金额";
-        dt_chartA.Columns["amount7"].ColumnName = "180-360金额"; dt_chartA.Columns["amount8"].ColumnName = "360以上金额";
 
         List<Series> list = new List<Series>();
         Series series = new Series("昆山库存金额", DevExpress.XtraCharts.ViewType.Pie);
@@ -63,6 +63,48 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
         list.Add(series);
         ChartA.Series.AddRange(list.ToArray());
         ChartA.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
+        //图A_1
+        ds.Tables[0].Columns["amount1"].ColumnName = "10以内金额"; ds.Tables[0].Columns["amount2"].ColumnName = "10-20金额";
+        ds.Tables[0].Columns["amount3"].ColumnName = "20-30金额"; ds.Tables[0].Columns["amount4"].ColumnName = "30-60金额";
+        ds.Tables[0].Columns["amount5"].ColumnName = "60-90金额"; ds.Tables[0].Columns["amount6"].ColumnName = "90-180金额";
+        ds.Tables[0].Columns["amount7"].ColumnName = "180-360金额"; ds.Tables[0].Columns["amount8"].ColumnName = "360以上金额";
+
+        DataTable dt_chartA_1 = ds.Tables[0];
+        if (ChartA_1.Diagram != null)
+        {
+            ((XYDiagram)ChartA_1.Diagram).SecondaryAxesY.Clear();
+        }
+        ChartA_1.Series.Clear();
+
+        List<Series> listA_1 = new List<Series>();
+        Series seriesA_1_1 = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
+        Series seriesA_1_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line);
+        for (int i = 1; i <=8; i++)
+        {
+            string argument = dt_chartA_1.Columns[i].ColumnName;//参数名称 
+
+            decimal value = Convert.ToDecimal(dt_chartA_1.Rows[0][i].ToString());//参数值
+            seriesA_1_1.Points.Add(new SeriesPoint(argument, value));
+
+            decimal value_2 = Convert.ToDecimal(dt_chartA_1.Rows[1][i].ToString());//参数值
+            seriesA_1_2.Points.Add(new SeriesPoint(argument, value_2));
+
+        }
+        seriesA_1_1.ArgumentScaleType = ScaleType.Qualitative;
+        seriesA_1_2.ArgumentScaleType = ScaleType.Qualitative;
+
+        listA_1.Add(seriesA_1_1); listA_1.Add(seriesA_1_2);
+
+        ChartA_1.Series.AddRange(listA_1.ToArray());
+        ChartA_1.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
+        var diagramA_1 = ((XYDiagram)ChartA_1.Diagram);
+        SecondaryAxisY secondaryYAxisA_1 = new SecondaryAxisY("Population Axis");
+        secondaryYAxisA_1.Label.TextPattern = "{VP:P0}";
+        diagramA_1.SecondaryAxesY.Add(secondaryYAxisA_1);
+        ((LineSeriesView)seriesA_1_2.View).AxisY = secondaryYAxisA_1;
+
 
         //grid 2
         SetGrid(gv_tr_list_2, ds.Tables[2], 80, "typedesc");
