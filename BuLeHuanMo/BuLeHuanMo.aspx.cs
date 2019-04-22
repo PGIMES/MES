@@ -24,7 +24,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             
             this.txtShiJian.Value = DateTime.Now.ToString("HH:mm:ss");
             //初始话下拉登入此台设备人员
-            string strSQL = "select * from MES_EmpLogin where emp_shebei='"+Request["deviceid"]+"' and status=1 ";
+            string strSQL = "select * from MES_EmpLogin where emp_shebei='" + Request["deviceid"] + "' and status=1 and emp_no in (select empid from Emp_Tiaoshi) ";
             DataTable tbl = DbHelperSQL.Query(strSQL).Tables[0];
             if (tbl.Rows.Count > 0)
             {
@@ -157,6 +157,11 @@ public partial class BuLeHuanMo : System.Web.UI.Page
     protected void btn_Start_Click(object sender, EventArgs e)
     {
         MES_HuanMo_DAL HuanMo_DAL = new MES_HuanMo_DAL();
+        if (dropGongHao.SelectedValue == "")
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请选择操作人员工号！')", true);
+            return;
+        }
         if (selLeiBie.SelectedValue == "上模" || selLeiBie.SelectedValue == "先卸模再上模")
         {
             if (HuanMo_DAL.GetMoju_statsu(txtMoJuHaoS.Text).Tables[0].Rows.Count == 0)
@@ -440,6 +445,14 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             txtleibie.Text = "上模";
             divXiaMo.Visible = false;
             divShangMo.Visible = true;
+            //清空下模数据
+            ddlmoju_down.Items.Clear();
+            txtmojutype_down.Text = "";
+            txtLingJianMing.Text = "";
+            txtMoHao.Text = "";
+            txtKuWei.Text = "";
+           // dropZhuangTai.Items.Clear();
+            txtShuoMing.Text = "";
         }
         else if (selYuanYin.SelectedIndex == 3 || selYuanYin.SelectedIndex == 4 || selYuanYin.SelectedIndex == 5 )
         {
@@ -448,6 +461,13 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             txtleibie.Text = "下模";
             divShangMo.Visible = false;
             divXiaMo.Visible = true;
+            //清空上模数据
+            txtMoJuHaoS.Text = "";
+            txtmojutype_up.Text = "";
+            txtLingJianMingS.Text = "";
+            txtMoHaoS.Text = "";
+            txtKuWeiS.Text = "";
+
             DataTable dt = moju.MoJu_Down_query(Request["deviceid"], "");
 
             ddlmoju_down.DataSource = dt;
