@@ -57,7 +57,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" 
-                        AutoGenerateColumns="False" Width="1010px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                        AutoGenerateColumns="False" Width="1040px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -68,7 +68,7 @@
                             <dx:GridViewDataDateColumn Caption="操作日期" FieldName="CreateTime" Width="90px" VisibleIndex="1" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="设备简称" FieldName="equip_name" Width="100px" VisibleIndex="2"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="设备简称" FieldName="equip_name" Width="130px" VisibleIndex="2"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="类别" FieldName="change_type" Width="70px" VisibleIndex="3"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="开始使用模次" FieldName="start_mc" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="本次使用模次" FieldName="deal_mc" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>
