@@ -75,8 +75,10 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         if (code == "")//绑定赋值
         {
 
-            DataTable dt = DbHelperSQL.Query(@"select *,case when gys='A' then '铸泰' when gys='B' then '宜龙' else '' end gys_name
-                                            from [dbo].[MES_YaSheTou_Status] where equip_no='" + equip_no + "' and enddate is null").Tables[0];
+            DataTable dt = DbHelperSQL.Query(@"select a.*,case when a.gys='A' then '铸泰' when a.gys='B' then '宜龙' else '' end gys_name,b.lj_mc start_mc
+                                            from [dbo].[MES_YaSheTou_Status] a
+                                                 left join MES_YaSheTou_Base b on a.code=b.code
+                                            where a.equip_no='" + equip_no + "' and a.enddate is null").Tables[0];
             ddl_code.DataSource = dt;
             ddl_code.DataValueField = "code";
             ddl_code.DataTextField = "code";
@@ -94,8 +96,10 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         }
         else//change事件
         {
-            DataTable dt = DbHelperSQL.Query(@"select *,case when gys='A' then '铸泰' when gys='B' then '宜龙' else '' end gys_name
-                                            from [dbo].[MES_YaSheTou_Status] where equip_no='" + equip_no + "' and code='" + code + "' and enddate is null").Tables[0];
+            DataTable dt = DbHelperSQL.Query(@"select a.*,case when a.gys='A' then '铸泰' when a.gys='B' then '宜龙' else '' end gys_name,b.lj_mc start_mc
+                                            from [dbo].[MES_YaSheTou_Status] 
+                                                 left join MES_YaSheTou_Base b on a.code=b.code
+                                            where a.equip_no='" + equip_no + "' and a.code='" + code + "' and a.enddate is null").Tables[0];
             if (dt.Rows.Count == 1)
             {
                 txt_mc.Text = dt.Rows[0]["mc"].ToString();
@@ -182,7 +186,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         else if (ddl_change_type.SelectedValue == "仅下")
         {
             divShangMo.Visible = false;
-            divXiaMo.Visible = true;
+            divXiaMo.Visible = true; lbl_xs.Text = "下";
 
             btn_Save.Enabled = true;
             btn_Save.CssClass = "btn btn-large btn-primary ";
@@ -200,6 +204,17 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
 
             Bind_code(Request["deviceid"], "");
             Bind_code_S("");
+        }
+        else if (ddl_change_type.SelectedValue == "不更换")
+        {
+            divShangMo.Visible = false;
+            divXiaMo.Visible = true; lbl_xs.Text = "不更换";
+
+            btn_Save.Enabled = true;
+            btn_Save.CssClass = "btn btn-large btn-primary ";
+
+            Bind_code(Request["deviceid"], "");
+
         }
         else
         {
@@ -263,7 +278,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         string changetype = ddl_change_type.SelectedValue;
         if (changetype == "仅上")
         {
-            if (ddl_code_S.SelectedValue=="")
+            if (ddl_code_S.SelectedValue == "")
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【压射头编码】不可为空！')", true);
                 return;
@@ -307,6 +322,23 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                 ls_sum.Add(item);
             }
         }
+        else if (ddl_change_type.SelectedValue == "不更换")
+        {
+            if (ddl_code.SelectedValue == "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【压射头编码】不可为空！')", true);
+                return;
+            }
+            if (numRegex.IsMatch(txt_deal_mc.Text) == false)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【本次使用模次】请输入正整数')", true);
+                txt_end_mc.Text = "";
+                return;
+            }
+
+            ls_sum = sql(changetype);
+        }
+
         int ln = 0;
         try
         {
@@ -315,8 +347,8 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         catch (Exception ex)
         {
             ln = 0;
-        }    
-        
+        }
+
         if (ln > 0)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('确认成功！')", true);
@@ -335,9 +367,9 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         Pgi.Auto.Common ls_status_insert = new Pgi.Auto.Common();
-        string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, code, mc, gys, zj, start_mc, startdate)
+        string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, code, mc, gys, zj, startdate)
                            select '{0}','{1}','{2}','{3}','{4}','{5}',getdate()";
-        sql_status_insert = string.Format(sql_status_insert, txtSheBeiHao.Value, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text, txt_start_mc.Text);
+        sql_status_insert = string.Format(sql_status_insert, txtSheBeiHao.Value, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text);
         ls_status_insert.Sql = sql_status_insert;
         ls_sum.Add(ls_status_insert);
 
@@ -360,12 +392,15 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
     public List<Pgi.Auto.Common> sql(string changetype)
     {
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
-
-        Pgi.Auto.Common ls_status_update = new Pgi.Auto.Common();
-        string sql_status_update = @"update MES_YaSheTou_Status set enddate=getdate(), deal_mc='{2}' , end_mc='{3}' where equip_no='{0}' and code='{1}' and enddate is null";
-        sql_status_update = string.Format(sql_status_update, txtSheBeiHao.Value, ddl_code.SelectedValue, txt_deal_mc.Text, txt_end_mc.Text);
-        ls_status_update.Sql = sql_status_update;
-        ls_sum.Add(ls_status_update);
+       
+        if (changetype == "仅下")
+        {
+            Pgi.Auto.Common ls_status_update = new Pgi.Auto.Common();
+            string sql_status_update = @"update MES_YaSheTou_Status set enddate=getdate() where equip_no='{0}' and code='{1}' and enddate is null";
+            sql_status_update = string.Format(sql_status_update, txtSheBeiHao.Value, ddl_code.SelectedValue);
+            ls_status_update.Sql = sql_status_update;
+            ls_sum.Add(ls_status_update);
+        }
 
         Pgi.Auto.Common ls_Record_insert = new Pgi.Auto.Common();
         string sql_Record_insert = @"insert into MES_YaSheTou_Record(emp_no, emp_name, emp_banbie, emp_banzhu, equip_no, equip_name

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="YST_Maintain_Modify.aspx.cs" Inherits="YaSheTou_YST_Maintain_Modify" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="YST_Maintain_Modify - 20190423.aspx.cs" Inherits="YaSheTou_YST_Maintain_Modify" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
@@ -17,47 +17,22 @@
            
         });
         function validate() {
-            //if (zj.GetValue() == "" || zj.GetValue() == null) {
-            //    layer.alert("【压射头直径】不可为空");
-            //    return false;
-            //}
-            //if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
-            //    layer.alert("【压射头直径】格式必须正确");
-            //    return false;
-            //}
-            //if (mc.GetValue() == "" || mc.GetValue() == null) {
-            //    layer.alert("【额定模次】不可为空");
-            //    return false;
-            //}
-            if ($("#ddl_zj").val() == "") {
-                layer.alert("【压射头直径】不可为空！");
+            if (zj.GetValue() == "" || zj.GetValue() == null) {
+                layer.alert("【压射头直径】不可为空");
+                return false;
+            }
+            if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                layer.alert("【压射头直径】格式必须正确");
+                return false;
+            }
+            if (mc.GetValue() == "" || mc.GetValue() == null) {
+                layer.alert("【额定模次】不可为空");
                 return false;
             }
             if ($("#ddl_gys").val() == "") {
-                layer.alert("【供应商】不可为空！");
+                layer.alert("【供应商】不可为空");
                 return false;
             }
-            if ($("#txt_part").val() == "") {
-                layer.alert("【物料号】不可为空！");
-                return false;
-            }
-            $.ajax({
-                type: "post",
-                url: "YST_Maintain_Modify.aspx/check_data",
-                data: "{'part':'" + $("#txt_part").val() + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                success: function (data) {
-                    var obj = eval(data.d);
-                    if (obj[0].re_flag!="") {
-                        layer.alert(obj[0].re_flag);
-                        return false;
-                    }
-                }
-
-            });
-
             return true;
         }
 
@@ -84,7 +59,7 @@
                         <tr>
                             <td>压射头直径</td>
                             <td>
-                                <%--<span style="float:left;">
+                                <span style="float:left;">
                                     <dx:ASPxTextBox ID="lbl_zj" Width="15px" Height="27px"  runat="server" ClientInstanceName="lbl_zj" CssClass="lineread" Text="D">
                                     </dx:ASPxTextBox>
                                 </span>
@@ -94,32 +69,17 @@
                                             <RegularExpression ErrorText="请输入正整数！" ValidationExpression="^[1-9]+[0-9]*$" />
                                         </ValidationSettings>
                                     </dx:ASPxTextBox>
-                                </span>--%>
-                                <asp:DropDownList ID="ddl_zj" runat="server" class="form-control input-s-sm " CssClass="linewrite" Height="27px" Width="150px">
-                                    <asp:ListItem></asp:ListItem>
-                                    <asp:ListItem Value="D50" Text="D50"></asp:ListItem>
-                                    <asp:ListItem Value="D60" Text="D60"></asp:ListItem>
-                                    <asp:ListItem Value="D70" Text="D70"></asp:ListItem>
-                                    <asp:ListItem Value="D80" Text="D80"></asp:ListItem>
-                                    <asp:ListItem Value="D90" Text="D90"></asp:ListItem>
-                                    <asp:ListItem Value="D100" Text="D100"></asp:ListItem>
-                                    <asp:ListItem Value="D110" Text="D110"></asp:ListItem>
-                                    <asp:ListItem Value="D120" Text="D120"></asp:ListItem>
-                                    <asp:ListItem Value="D130" Text="D130"></asp:ListItem>
-                                    <asp:ListItem Value="D140" Text="D140"></asp:ListItem>
-                                    <asp:ListItem Value="D150" Text="D150"></asp:ListItem>
-                                </asp:DropDownList>
+                                </span>
                             </td>
                         </tr>
                         <tr>
                             <td>额定模次</td>
                             <td>
-                                <%--<dx:ASPxTextBox ID="txt_mc" Width="150px" Height="27px"  runat="server" ClientInstanceName="mc" CssClass="linewrite" BackColor="#FDF7D9">
+                                <dx:ASPxTextBox ID="txt_mc" Width="150px" Height="27px"  runat="server" ClientInstanceName="mc" CssClass="linewrite" BackColor="#FDF7D9">
                                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
                                         <RegularExpression ErrorText="请输入正整数！" ValidationExpression="^[1-9]+[0-9]*$" />
                                     </ValidationSettings>
-                                </dx:ASPxTextBox>--%>
-                                <asp:TextBox ID="txt_mc" Width="150px" Height="27px"  runat="server" ClientInstanceName="mc" CssClass="lineread" ReadOnly="true"></asp:TextBox>
+                                </dx:ASPxTextBox>
                             </td>
                         </tr>
                         <tr>
@@ -131,12 +91,6 @@
                                     <asp:ListItem Value="B" Text="宜龙"></asp:ListItem>
                                 </asp:DropDownList>
                             </td> 
-                        </tr>
-                        <tr>
-                            <td>物料号</td>
-                            <td>
-                                <asp:TextBox ID="txt_part" Width="150px" Height="27px"  runat="server" ClientInstanceName="part" CssClass="linewrite"></asp:TextBox>
-                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align:center;">

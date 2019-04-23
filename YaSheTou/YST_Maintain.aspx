@@ -90,7 +90,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" 
-                        AutoGenerateColumns="False" Width="520px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" OnHtmlRowCreated="gv_HtmlRowCreated">
+                        AutoGenerateColumns="False" Width="730px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -100,10 +100,12 @@
                             <dx:GridViewCommandColumn ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0">
                             </dx:GridViewCommandColumn>    
                             <dx:GridViewDataTextColumn Caption="压射头编码" FieldName="code" Width="120px" VisibleIndex="1" ></dx:GridViewDataTextColumn>                
-                            <dx:GridViewDataTextColumn Caption="压射头直径" FieldName="zj" Width="80px" VisibleIndex="2" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="供应商" FieldName="gys_name" Width="120px" VisibleIndex="3"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="额定模次" FieldName="mc" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="累计模次" FieldName="lj_mc" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="压射头直径" FieldName="zj" Width="80px" VisibleIndex="2" ></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="额定模次" FieldName="mc" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>    
+                            <dx:GridViewDataTextColumn Caption="供应商" FieldName="gys_name" Width="120px" VisibleIndex="4"></dx:GridViewDataTextColumn>  
+                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="part" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="累计模次" FieldName="lj_mc" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="位置" FieldName="wz" Width="130px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99"
                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>

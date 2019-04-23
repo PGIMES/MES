@@ -110,7 +110,7 @@
                                         <asp:ListItem Value ="仅上">仅上</asp:ListItem>
                                         <asp:ListItem Value ="仅下">仅下</asp:ListItem>
                                         <asp:ListItem Value ="先下再上">先下再上</asp:ListItem>
-
+                                        <asp:ListItem Value ="不更换">不更换</asp:ListItem>
                                     </asp:DropDownList>
 
                                 </td>
@@ -132,7 +132,7 @@
                 <div class="col-sm-6 col-md-5" id="divXiaMo" runat ="server"  >
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <strong>下压缩头（卸）</strong>
+                            <strong><asp:Label ID="lbl_xs" runat="server" Text=""></asp:Label>压缩头（卸）</strong>
                         </div>
                         <div class="panel-body">
                             <div class="form-group">

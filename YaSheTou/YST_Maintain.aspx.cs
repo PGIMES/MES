@@ -79,7 +79,7 @@ public partial class YaSheTou_YST_Maintain : System.Web.UI.Page
 
         if (Convert.ToInt32(e.GetValue("mc").ToString()) < Convert.ToInt32(e.GetValue("lj_mc").ToString()))
         {
-            e.Row.Cells[5].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[6].Style.Add("background-color", "#EEEE00");
         }
     }
 }
