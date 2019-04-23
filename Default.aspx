@@ -891,6 +891,7 @@
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-1 " target="_blank">模具报修.维修.确认</a></li>
 
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-1" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-1" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-1 " target="_blank">模具报修查询</a></li>
@@ -898,6 +899,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-1" target="_blank">压射头查询</a></li>
                                          <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -909,6 +911,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                          <li><a href="JingLian/YZQB_SH.aspx" target="_blank">审核</a></li>
                                          <li><a href="shenhe/YZGX_XJ.aspx?deviceid=1-1" target="_blank">压铸工序检查</a></li>
@@ -935,6 +938,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-2" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-2 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-2" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-2" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-2 " target="_blank">模具报修查询</a></li>
@@ -942,6 +946,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-2" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -952,6 +957,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-2" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -973,6 +979,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-3" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-3 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-3" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-3" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-3 " target="_blank">模具报修查询</a></li>
@@ -980,6 +987,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-3" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -990,6 +998,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-3" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1011,6 +1020,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-4" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-4 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-4" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-4" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-4 " target="_blank">模具报修查询</a></li>
@@ -1018,6 +1028,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-4" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1028,6 +1039,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="#E_data/EData_Query.aspx?deviceid=1-4" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1049,6 +1061,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-5" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-5 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-5" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-5" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-5 " target="_blank">模具报修查询</a></li>
@@ -1056,6 +1069,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-5" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1066,6 +1080,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-5" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1087,6 +1102,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-6" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-6 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-6" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-6" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-6 " target="_blank">模具报修查询</a></li>
@@ -1094,6 +1110,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-6" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1104,6 +1121,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-6" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1125,13 +1143,15 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-7" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-7 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-7" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-7" target="_blank">换模查询</a></li>
-                                        <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-7 " target="_blank">模具报修查询</a></li>
+                                        <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-7 " target="_blank">模具报修查询</a></li>
                                         <li><a href="http://172.16.5.6:8080/SheBei/Job%20monitoring.aspx " target="_blank">设备报修查询</a></li>
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-7" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1142,6 +1162,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-7" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1163,6 +1184,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-8" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-8 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-8" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-8" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-8 " target="_blank">模具报修查询</a></li>
@@ -1170,6 +1192,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-8" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1180,6 +1203,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-8" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1214,6 +1238,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=1-9" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=1-9 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=1-9" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=1-9" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=1-9 " target="_blank">模具报修查询</a></li>
@@ -1221,6 +1246,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz1q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz1q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=1-9" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1231,6 +1257,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=1-9" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1278,6 +1305,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-1" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-1 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-1" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-1" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-1 " target="_blank">模具报修查询</a></li>
@@ -1285,6 +1313,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-1" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1295,6 +1324,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-1" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1316,6 +1346,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-2" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-2 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-2" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-2" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-2 " target="_blank">模具报修查询</a></li>
@@ -1323,6 +1354,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-2" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1333,6 +1365,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-2" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1354,6 +1387,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-3" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-3 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-3" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-3" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-3 " target="_blank">模具报修查询</a></li>
@@ -1361,6 +1395,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-3" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1371,6 +1406,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-3" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1392,6 +1428,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-4" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-4 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-4" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-4" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-4 " target="_blank">模具报修查询</a></li>
@@ -1399,6 +1436,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-4" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1409,6 +1447,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-4" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1430,6 +1469,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-5" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-5 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-5" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-5" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-5 " target="_blank">模具报修查询</a></li>
@@ -1437,6 +1477,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-5" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1447,6 +1488,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-5" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1468,6 +1510,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-6" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-6 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-6" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-6" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-6 " target="_blank">模具报修查询</a></li>
@@ -1475,6 +1518,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-6" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1485,6 +1529,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-6" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1506,6 +1551,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=2-7" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=2-7" target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=2-7" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=2-7" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=2-7 " target="_blank">模具报修查询</a></li>
@@ -1513,6 +1559,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz2q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz2q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=2-7" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1523,6 +1570,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=2-7" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1569,6 +1617,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-1" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-1 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-1" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-1" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-1 " target="_blank">模具报修查询</a></li>
@@ -1576,6 +1625,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-1" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1586,6 +1636,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-1" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1607,6 +1658,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-2" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-2 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-2" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-2" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-2 " target="_blank">模具报修查询</a></li>
@@ -1614,6 +1666,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-2" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1624,6 +1677,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-2" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1645,6 +1699,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-3" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-3 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-3" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-3" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-3 " target="_blank">模具报修查询</a></li>
@@ -1652,6 +1707,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-3" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1662,6 +1718,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-3" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1683,6 +1740,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-4" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-4 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-4" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-4" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-4 " target="_blank">模具报修查询</a></li>
@@ -1690,6 +1748,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-4" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1700,6 +1759,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-4" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1721,6 +1781,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-5" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-5 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-5" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-5" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-5 " target="_blank">模具报修查询</a></li>
@@ -1728,6 +1789,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-5" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1738,6 +1800,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-5" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1759,6 +1822,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-6" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-6 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-6" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-6" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-6 " target="_blank">模具报修查询</a></li>
@@ -1766,6 +1830,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-6" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1776,6 +1841,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-6" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1797,6 +1863,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-7" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-7 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-7" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-7" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-7 " target="_blank">模具报修查询</a></li>
@@ -1804,6 +1871,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-7" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1814,6 +1882,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-7" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1835,6 +1904,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-8" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-8 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-8" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-8" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-8 " target="_blank">模具报修查询</a></li>
@@ -1842,6 +1912,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-8" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1852,6 +1923,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-8" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1873,6 +1945,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=3-9" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=3-9 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=3-9" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=3-9" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=3-9 " target="_blank">模具报修查询</a></li>
@@ -1880,6 +1953,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz3q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz3q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=3-9" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1890,6 +1964,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query_Modify.aspx?deviceid=3-9" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1936,6 +2011,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-1" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-1 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-1" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-1" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-1 " target="_blank">模具报修查询</a></li>
@@ -1943,6 +2019,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-1" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1953,6 +2030,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-1" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -1974,6 +2052,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-2" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-2 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-2" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-2" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-2 " target="_blank">模具报修查询</a></li>
@@ -1981,6 +2060,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-2" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -1991,6 +2071,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-2" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2012,6 +2093,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-3" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-3 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-3" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-3" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-3 " target="_blank">模具报修查询</a></li>
@@ -2019,6 +2101,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-3" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2029,6 +2112,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-3" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2050,6 +2134,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-4" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-4 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-4" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-4" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-4" target="_blank">模具报修查询</a></li>
@@ -2057,6 +2142,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-4" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2067,6 +2153,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-4" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2088,6 +2175,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-5" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-5 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-5" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-5" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-5 " target="_blank">模具报修查询</a></li>
@@ -2095,6 +2183,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-5" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2105,6 +2194,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-5" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2126,6 +2216,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-6" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-6 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-6" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-6" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-6 " target="_blank">模具报修查询</a></li>
@@ -2133,6 +2224,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-6" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2143,6 +2235,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-6" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2164,6 +2257,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-7" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-7 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-7" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-7" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-7 " target="_blank">模具报修查询</a></li>
@@ -2171,6 +2265,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-7" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2181,6 +2276,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-7" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2202,6 +2298,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-8" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-8 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-8" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-8" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-8 " target="_blank">模具报修查询</a></li>
@@ -2209,6 +2306,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-8" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2219,6 +2317,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-8" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2240,6 +2339,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=4-9" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=4-9 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=4-9" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=4-9" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=4-9 " target="_blank">模具报修查询</a></li>
@@ -2247,6 +2347,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz4q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz4q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=4-9" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2257,6 +2358,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=4-9" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2303,6 +2405,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=5-1" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=5-1 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=5-1" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=5-1" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=5-1 " target="_blank">模具报修查询</a></li>
@@ -2310,6 +2413,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz5q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz5q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=5-1" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2320,6 +2424,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=5-1" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2341,6 +2446,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=5-2" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=5-2 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=5-2" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=5-2" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=5-2 " target="_blank">模具报修查询</a></li>
@@ -2348,6 +2454,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz5q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz5q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=5-2" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2358,6 +2465,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=5-2" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
@@ -2379,6 +2487,7 @@
                                         <li><a href="BuLeHuanMo/BuLeHuanMo.aspx?deviceid=5-3" target="_blank">换模记录</a></li>
                                         <li><a href="MoJu/MoJuBX.aspx?deviceid=5-3 " target="_blank">模具报修.维修.确认</a></li>
                                         <li><a href="http://172.16.5.7:8088/JobPortal/login.aspx" target="_blank">设备报修</a></li>
+                                        <li><a href="/YaSheTou/YST_Record.aspx?deviceid=5-3" target="_blank">压射头记录</a></li>
                                         <li class="divider"></li>
                                         <li><a href="JingLian/ChangeMo_Query.aspx?deviceid=5-3" target="_blank">换模查询</a></li>
                                         <li><a href="MoJu/MojuBX_Query.aspx?deviceid=5-3 " target="_blank">模具报修查询</a></li>
@@ -2386,6 +2495,7 @@
                                         <li><a href="TJ/Guzhang_Rate_Report.aspx?quyu=yz5q" target="_blank">设备报修统计</a></li>
                                         <li><a href="TJ/ChangeMo_TJ_Report.aspx?quyu=yz5q" target="_blank">换模统计</a></li>
                                         <li><a href="MoJu/Moju_BX_TongJi.aspx" target="_blank">模具报修统计</a></li>
+                                        <li><a href="/YaSheTou/YST_Query.aspx?deviceid=5-3" target="_blank">压射头查询</a></li>
                                         <li class="divider"></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuQuery.aspx" target="_blank">模具清单</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuPJ_List.aspx" target="_blank">模具备件</a></li>
@@ -2396,6 +2506,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuCL_List.aspx" target="_blank">模具处理</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
+                                        <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
                                         <li class="divider"></li>
                                         <li><a href="E_data/EData_Query.aspx?deviceid=5-3" target="_blank">机台数据查询</a></li>
                                         <li><a href="#" target="_blank">机台数据统计</a></li>
