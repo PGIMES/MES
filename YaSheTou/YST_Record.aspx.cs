@@ -367,9 +367,9 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         Pgi.Auto.Common ls_status_insert = new Pgi.Auto.Common();
-        string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, code, mc, gys, zj, startdate)
-                           select '{0}','{1}','{2}','{3}','{4}',getdate()";
-        sql_status_insert = string.Format(sql_status_insert, txtSheBeiHao.Value, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text);
+        string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, equip_name, code, mc, gys, zj, startdate)
+                           select '{0}','{1}','{2}','{3}','{4}','{5}',getdate()";
+        sql_status_insert = string.Format(sql_status_insert, txtSheBeiHao.Value, txtSheBeiJianCheng.Value, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text);
         ls_status_insert.Sql = sql_status_insert;
         ls_sum.Add(ls_status_insert);
 
