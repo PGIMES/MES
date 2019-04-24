@@ -14,7 +14,30 @@
     <script src="/Content/js/layer/layer.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-           
+            $("#txt_mc").attr("readonly", "readonly");
+
+            $("select[id*='ddl_zj']").change(function () {
+                var zj = $("#ddl_zj").val();
+                var mc;
+                switch (zj) {
+                    case "D50": case "D60":
+                        mc = "22000";
+                        break;
+                    case "D70": case "D80":
+                        mc = "18000";
+                        break;
+                    case "D90": case "D100":
+                        mc = "15000";
+                        break;
+                    case "D110": case "D120": case "D130": case "D140": case "D150":
+                        mc = "8000";
+                        break;
+                    default:
+                        mc = "0";
+                        break;
+                }
+                $("#txt_mc").val(mc);
+            });
         });
         function validate() {
             //if (zj.GetValue() == "" || zj.GetValue() == null) {
@@ -41,22 +64,6 @@
                 layer.alert("【物料号】不可为空！");
                 return false;
             }
-            $.ajax({
-                type: "post",
-                url: "YST_Maintain_Modify.aspx/check_data",
-                data: "{'part':'" + $("#txt_part").val() + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                success: function (data) {
-                    var obj = eval(data.d);
-                    if (obj[0].re_flag!="") {
-                        layer.alert(obj[0].re_flag);
-                        return false;
-                    }
-                }
-
-            });
 
             return true;
         }
@@ -119,7 +126,7 @@
                                         <RegularExpression ErrorText="请输入正整数！" ValidationExpression="^[1-9]+[0-9]*$" />
                                     </ValidationSettings>
                                 </dx:ASPxTextBox>--%>
-                                <asp:TextBox ID="txt_mc" Width="150px" Height="27px"  runat="server" ClientInstanceName="mc" CssClass="lineread" ReadOnly="true"></asp:TextBox>
+                                <asp:TextBox ID="txt_mc" Width="150px" Height="27px"  runat="server" ClientInstanceName="mc" CssClass="lineread"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>

@@ -153,9 +153,8 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
 
     }
 
-    protected void ddl_change_type_SelectedIndexChanged(object sender, EventArgs e)
+    public void clear()
     {
-        ddl_code.Items.Clear();
         txt_mc.Text = "";
         txt_gys_Name.Text = "";
         txt_gys.Text = "";
@@ -164,14 +163,25 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         txt_deal_mc.Text = "";
         txt_end_mc.Text = "";
         txt_kaishi.Text = "";
+    }
 
-        ddl_code_S.Items.Clear();
+    public void clear_S()
+    {
         txt_mc_S.Text = "";
         txt_gys_Name_S.Text = "";
         txt_gys_S.Text = "";
         txt_zj_S.Text = "";
         txt_remark_S.Text = "";
         txt_start_mc.Text = "";
+    }
+
+    protected void ddl_change_type_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddl_code.Items.Clear();
+        clear();
+
+        ddl_code_S.Items.Clear();
+        clear_S();
 
         if (ddl_change_type.SelectedValue == "仅上")
         {
@@ -228,22 +238,13 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
 
     protected void ddl_code_SelectedIndexChanged(object sender, EventArgs e)
     {
-        txt_mc.Text = "";
-        txt_gys_Name.Text = "";
-        txt_gys.Text = "";
-        txt_zj.Text = "";
-        txt_remark.Text = "";
-
+        clear();
         Bind_code(Request["deviceid"], ddl_code.SelectedValue);
     }
+
     protected void ddl_code_S_SelectedIndexChanged(object sender, EventArgs e)
     {
-        txt_mc_S.Text = "";
-        txt_gys_Name_S.Text = "";
-        txt_gys_S.Text = "";
-        txt_zj_S.Text = "";
-        txt_remark_S.Text = "";
-
+        clear_S();
         Bind_code_S(ddl_code_S.SelectedValue);
     }
     protected void txt_deal_mc_TextChanged(object sender, EventArgs e)
