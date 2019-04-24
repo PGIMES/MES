@@ -97,7 +97,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         else//change事件
         {
             DataTable dt = DbHelperSQL.Query(@"select a.*,case when a.gys='A' then '铸泰' when a.gys='B' then '宜龙' else '' end gys_name,b.lj_mc start_mc
-                                            from [dbo].[MES_YaSheTou_Status] 
+                                            from [dbo].[MES_YaSheTou_Status] a
                                                  left join MES_YaSheTou_Base b on a.code=b.code
                                             where a.equip_no='" + equip_no + "' and a.code='" + code + "' and a.enddate is null").Tables[0];
             if (dt.Rows.Count == 1)
@@ -368,7 +368,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
 
         Pgi.Auto.Common ls_status_insert = new Pgi.Auto.Common();
         string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, code, mc, gys, zj, startdate)
-                           select '{0}','{1}','{2}','{3}','{4}','{5}',getdate()";
+                           select '{0}','{1}','{2}','{3}','{4}',getdate()";
         sql_status_insert = string.Format(sql_status_insert, txtSheBeiHao.Value, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text);
         ls_status_insert.Sql = sql_status_insert;
         ls_sum.Add(ls_status_insert);
