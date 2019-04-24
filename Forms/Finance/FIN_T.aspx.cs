@@ -69,6 +69,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
             DataTable ldt_detail_hr = null;
             string lssql_hr = @"";
+            
 
             if (this.m_sid == "")
             {
@@ -146,7 +147,7 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
 
             setGridIsRead(ldt_detail, ldt_detail_hr);
-
+           
         }
         else
         {
@@ -252,6 +253,9 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
 
         ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).Enabled = false;
         ((DropDownList)this.FindControl("ctl00$MainContent$TravelType")).CssClass = "lineread";
+
+        ((DropDownList)this.FindControl("ctl00$MainContent$TravelClass")).Enabled = false;
+        ((DropDownList)this.FindControl("ctl00$MainContent$TravelClass")).CssClass = "lineread";
 
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetStandardCost"], "BudgetStandardCost")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["BudgetStandardCost"], "BudgetStandardCost")).BorderStyle = BorderStyle.None;

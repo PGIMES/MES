@@ -57,7 +57,7 @@
 
             Ini_Set_IsHrReserve();//初始化部分行金额控件是否只读
 
-            $("#CJJH select[id*='TravelType']").change(function () {  
+            $("#CJJH select[id*='TravelType'],select[id*='TravelClass']").change(function () {  
                 Auto_Calculate_T007();
             });
             is_hr_yz_set();
@@ -184,11 +184,11 @@
                 var PA_Arry=($("#CJJH input[id*='PlanAttendant']").val()).split(',');
                 PA_len=PA_Arry.length;
             }
-
+            var TravelClass=$("#CJJH select[id*='TravelClass']").val();
             var TravelType=$("#CJJH select[id*='TravelType']").val();
             var cost=0;
-            if(TravelType=="国内"){cost=100;}
-            if(TravelType=="国外"){cost=500;}
+            if(TravelType=="国内" && TravelClass!="培训"){cost=100;}
+            if(TravelType=="国外" && TravelClass!="培训"){cost=500;}
 
             BTC_T007=PlanDays*(PA_len+1)*cost;//随行人员+申请人  *  天数 * 每天费用
 
@@ -1235,7 +1235,9 @@
             if($("#SQXX input[id*='ApplyDeptId']").val()=="" || $("#SQXX input[id*='ApplyDeptName']").val()==""){
                 msg+="【申请人部门】不可为空.<br />";
             }
-
+            if($("#CJJH select[id*='TravelClass']").val()==""){
+                msg+="【出差类别】不可为空.<br />";
+            }
             if($("#CJJH input[id*='PlanStartTime']").val()==""){
                 msg+="【预计出发日期】不可为空.<br />";
             }
@@ -1245,9 +1247,7 @@
             if($("#CJJH input[id*='PlanDays']").val()==""){
                 msg+="【预计出差天数】不可为空.<br />";
             }
-            //if($("#CJJH input[id*='PlanAttendant']").val()==""){
-            //    msg+="【随行人员】不可为空.<br />";
-            //}
+            
             if($("#CJJH input[id*='TravelPlace']").val()==""){
                 msg+="【出差地点】不可为空.<br />";
             }
@@ -1653,6 +1653,16 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
                         <table style="width: 100%">
                             <tr>
+                                <td><font color="red">*</font>出差类型</td><%--laydate.now(1)--%>
+                                <td><asp:DropDownList ID="TravelClass" runat="server" class="linewrite"  style="width:260px" Height="23px"> 
+                                        <asp:ListItem Text="" Value="" Selected="True"></asp:ListItem>                                                                               
+                                        <asp:ListItem Text="商务活动" Value="商务活动"></asp:ListItem>
+                                        <asp:ListItem Text="培训" Value="培训"></asp:ListItem>
+                                    </asp:DropDownList></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
                                 <td><font color="red">*</font>预计出发日期</td><%--laydate.now(1)--%>
                                 <td><asp:TextBox ID="PlanStartTime" runat="server" class="linewrite" ReadOnly="True" Width="260px" 
                                     onclick="laydate({type: 'date',format: 'YYYY/MM/DD',start:laydate.now(),min:laydate.now(),max:$('#CJJH input[id*=\'PlanEndTime\']').val(),choose: function(dates){Auto_Calculate();}});" /></td>
@@ -1671,7 +1681,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><font color="red">*</font>出差类型</td>
+                                <td><font color="red">*</font>出差区域</td>
                                 <td>
                                     <asp:DropDownList ID="TravelType" runat="server" class="linewrite"  style="width:260px" Height="23px">
                                         <asp:ListItem Text="市内" Value="市内"></asp:ListItem>
