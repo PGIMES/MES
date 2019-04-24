@@ -7,6 +7,8 @@
             $("#mestitle").html("【压射头更换记录】");
 
             $("div[class='mainTopRight']").hide();
+            $("div[class='btn-group']").hide();
+            $("#headTitle").html($.trim($("#headTitle").html()).replace("PGI管理系统", ""));
         });
     </script>
     <style>
