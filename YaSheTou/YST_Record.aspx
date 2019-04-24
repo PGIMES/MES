@@ -6,7 +6,7 @@
         $(document).ready(function () {
             $("#mestitle").html("【压射头更换记录】");
 
-
+            $("div[class='mainTopRight']").hide();
         });
     </script>
     <style>
