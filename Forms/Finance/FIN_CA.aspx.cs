@@ -381,6 +381,8 @@ public partial class Forms_Finance_FIN_CA : System.Web.UI.Page
             {
                 tb2.Date = Convert.ToDateTime(ldt.Rows[i]["EndDateTime"].ToString());
             }
+            tb1.MinDate = DateTime.Now.AddDays(-1);
+            tb2.MinDate = DateTime.Now.AddDays(-1);
         }
     }
 
