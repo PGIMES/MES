@@ -47,15 +47,16 @@ public partial class YaSheTou_YST_Maintain_Modify : System.Web.UI.Page
 
         //DataTable dt = DbHelperSQL.Query("exec [usp_MES_YaSheTou_Base_Select] 2,'','" + lbl_zj.Text + txt_zj.Text + "',"
         //    + txt_mc.Text + ",'" + ddl_gys.SelectedValue + "','" + UserId + "','" + UserName + "'").Tables[0];
+
         DataTable dt = DbHelperSQL.Query("exec [usp_MES_YaSheTou_Base_Select] 2,'','" + ddl_zj.SelectedValue + "',"
            + txt_mc.Text + ",'" + ddl_gys.SelectedValue + "','" + txt_part.Text + "','" + UserId + "','" + UserName + "'").Tables[0];
 
         string msg = ""; string lsstr = "";
-        if (dt.Rows[0][0].ToString() == "Y")
-        {
-            msg = "保存失败：直径" + ddl_zj.SelectedValue + "，供应商" + ddl_gys.SelectedValue + "，物料号" + txt_part.Text + "已经存在，不能新增！";
-            lsstr = "layer.alert('" + msg + "',function(index) {layer.close(index);})";
-        }
+        //if (dt.Rows[0][0].ToString() == "Y")
+        //{
+        //    msg = "保存失败：直径" + ddl_zj.SelectedValue + "，供应商" + ddl_gys.SelectedValue + "，物料号" + txt_part.Text + "已经存在，不能新增！";
+        //    lsstr = "layer.alert('" + msg + "',function(index) {layer.close(index);})";
+        //}
         if (dt.Rows[0][0].ToString() == "N")
         {
             msg = "保存成功！";
