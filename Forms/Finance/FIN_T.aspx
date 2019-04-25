@@ -643,7 +643,10 @@
                   padding-left:24px;
                   border:0
         }  
-
+        .btntaskEnd{ background:url(/Images/ico/del.gif) no-repeat  0.3em;
+                  padding-left:24px;
+                  border:0
+        }
     </style>
     <style>
         
@@ -1485,8 +1488,10 @@
                 <input id="btnaddWrite" type="button" value="加签" onclick="parent.addWrite(true);" class="btn btn-default btn-xs btnaddWrite" />
                 <input id="btnflowBack" type="button" value="退回" onclick="parent.flowBack(true);" class="btn btn-default btn-xs btnflowBack" />
                 <input id="btnflowCompleted" type="button" value="完成" onclick="parent.flowCompleted(true);" class="btn btn-default btn-xs btnflowCompleted" />
+                <input id="btntaskEnd" type="button" value="终止" onclick="parent.taskEnd(true);" class="btn btn-default btn-xs btntaskEnd" />
                 <input id="btnshowProcess" type="button" value="查看流程" onclick="parent.showProcess(true);" class="btn btn-default btn-xs btnshowProcess" />
                 <%--<asp:Button ID="btnStopFlow" runat="server" Text="终止" CssClass="btn btn-default btn-xs btnstopflow" OnClientClick="return confirm('您真的要终止当前流程吗?');" OnClick="btnStopFlow_Click" />--%>
+
             </div>
         </div>
     </div>
