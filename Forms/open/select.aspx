@@ -20,7 +20,6 @@
                 <tr>
                     <td align="center" colspan="2">
 
-                        <asp:Label ID="lb_msg" runat="server" Text="" ForeColor="Red"></asp:Label>
                         <asp:GridView ID="GridView1"  Width="100%"
                             AllowMultiColumnSorting="True" AllowPaging="True" AutoGenerateColumns="true"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
@@ -31,7 +30,7 @@
                             <PagerSettings FirstPageText="首页" LastPageText="尾页"
                                 Mode="NextPreviousFirstLast" NextPageText="下页" PreviousPageText="上页" />
                             <PagerStyle ForeColor="Red" />
-                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333"  HorizontalAlign="Left"/>
                             <EditRowStyle BackColor="#999999" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" HorizontalAlign="Center" />
@@ -42,6 +41,7 @@
                                 <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
                                     ShowSelectButton="True" HeaderText="选择" />
                             </Columns>
+                            <EmptyDataTemplate>查无资料</EmptyDataTemplate>
                             <%--<PagerTemplate >
                                 <table width="100%" style="display:none" >
                                     <tr>
