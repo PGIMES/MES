@@ -55,7 +55,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1640px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1780px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -84,6 +84,14 @@
                             <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="80px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="fy_formno" Width="140px" VisibleIndex="15">
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_fy_formno" runat="server" Text='<%# Eval("fy_formno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=4d085987-9001-48f7-b189-ffee43a7da71&appid=11305A6A-CC6A-4AEC-8841-8EF2B8E57FAD&display=1&InstanceID="+ Eval("fy_formno") %>'  
+                                         Target="_blank">                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate>
+                            </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
@@ -102,7 +110,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="920px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
+                    <dx:ASPxGridView ID="gv_sj" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1060px" OnPageIndexChanged="gv_sj_PageIndexChanged"  ClientInstanceName="grid_sj">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -126,6 +134,14 @@
                             <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="fy_formno" Width="140px" VisibleIndex="15">
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_fy_formno" runat="server" Text='<%# Eval("fy_formno")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=4d085987-9001-48f7-b189-ffee43a7da71&appid=11305A6A-CC6A-4AEC-8841-8EF2B8E57FAD&display=1&InstanceID="+ Eval("fy_formno") %>'  
+                                         Target="_blank">                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate>
+                            </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
