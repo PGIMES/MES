@@ -29,13 +29,14 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     }
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "','" + ddl_domain.SelectedValue + "'").Tables[0];
+        //DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "','" + ddl_domain.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show_new] '" + ddl_year.SelectedValue + "','" + ddl_dept.SelectedValue + "'").Tables[0];
         SetGrid(this.gv, dt, 90);
     }
     protected void btn_export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        gv.ExportXlsxToResponse("Planning_" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+        gv.ExportXlsxToResponse("Planning_"+ ddl_dept.SelectedValue+"_" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
     }
 
     private static void SetGrid(DevExpress.Web.ASPxGridView lgrid, DataTable ldt_data, Int32 lnw)
@@ -58,7 +59,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             lcolumn.CellStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
 
             lnwidth_emp = 0;
-            if (ldt_data.Columns[i].ColumnName.ToString() == "描述") { lnwidth_emp = 170; }
+            if (ldt_data.Columns[i].ColumnName.ToString() == "typedesc") { lnwidth_emp = 170; lcolumn.Caption = "描述"; }
 
             if (lnwidth_emp > 0)
             {
@@ -77,13 +78,13 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             lcolumn.Settings.AutoFilterCondition = DevExpress.Web.AutoFilterCondition.Contains;
             lgrid.Columns.Add(lcolumn);
 
-            if (lcolumn.FieldName == "typedesc_depta_all" || lcolumn.FieldName == "dept")
+            if (lcolumn.FieldName == "dept")
             {
                 lcolumn.Visible = false;
             }
             lcolumn.PropertiesTextEdit.DisplayFormatString = "{0:N0}";
 
-            if (lcolumn.FieldName == "描述" || lcolumn.FieldName == "Total" || lcolumn.FieldName == "Average") 
+            if (lcolumn.FieldName == "typedesc" || lcolumn.FieldName == "Total" || lcolumn.FieldName == "Average") 
             {
                 lcolumn.FixedStyle = GridViewColumnFixedStyle.Left;
             }
@@ -100,10 +101,6 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     {
         if (e.RowType == GridViewRowType.Data)
         {
-            //if (e.KeyValue.ToString().Contains("计划生产订单数量"))
-            //{
-            //    e.Row.Cells[0].Style.Add("background-color", "#EEEE00");
-            //}
             if (e.KeyValue.ToString().Contains("完成率"))
             {
                 for (int i = 1; i < gv.Columns.Count - 4; i++)
@@ -114,28 +111,9 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
                     }
                 }
 
-                //e.Row.Style.Add("background-color", "#BFEFFF");
             }
             else
             {
-                //if (e.KeyValue.ToString().Contains("生产2部") || e.KeyValue.ToString().Contains("生产1部") || e.KeyValue.ToString().Contains("生产4部") || e.KeyValue.ToString().Contains("压铸")
-                //    || e.KeyValue.ToString().Contains("实际发货数量"))
-                //{
-                //    for (int i = 1; i < gv.Columns.Count - 4; i++)
-                //    {
-                //        if (e.GetValue("W" + i.ToString()) != DBNull.Value)
-                //        {
-                //            if (Convert.ToDouble(e.GetValue("W" + i.ToString()))!=0)
-                //            {
-                //                e.Row.Cells[i + 2].Style.Add("color", "blue");
-                //                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"
-                //                    + e.GetValue("typedesc_depta_all").ToString().Replace("(" + e.GetValue("dept").ToString() + ")", "") + "','" + i.ToString() + "')");
-                //            }
-
-                //        }
-                //    }
-
-                //}
 
                 if (e.KeyValue.ToString().Contains("计划生产订单数量") || e.KeyValue.ToString().Contains("废品数量")
                      || e.KeyValue.ToString().Contains("未完成订单数量") || e.KeyValue.ToString().Contains("实际发货数量"))
@@ -147,8 +125,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
                             if (Convert.ToDouble(e.GetValue("W" + i.ToString())) != 0)
                             {
                                 e.Row.Cells[i + 2].Style.Add("color", "blue");
-                                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"
-                                    + e.GetValue("typedesc_depta_all").ToString().Replace("(" + e.GetValue("dept").ToString() + ")", "") + "','" + i.ToString() + "')");
+                                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"+ e.GetValue("typedesc").ToString() + "','" + i.ToString() + "')");
                             }
 
                         }

@@ -33,10 +33,12 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             sql_date = string.Format(sql_date, Request.QueryString["year"], Request.QueryString["week"]);
             DataTable dt_date = DbHelperSQL.Query(sql_date).Tables[0];
 
-            sql = @"select *
+            sql = @"
+                    select *
                     from qad.dbo.qad_tr_hist a
+                        inner join qad.dbo.qad_pt_mstr b on a.tr_part=b.pt_part and a.tr_domain=b.pt_domain
                     where a.tr_type in('ISS-SO','ISS-TR') and tr_loc='9060' and a.tr_part like 'P0%'
-	                     and a.tr_domain='{0}' and tr_date>='{1}' and tr_date<'{2}'
+	                        and tr_date>='{1}' and tr_date<'{2}' and b.scx_workshop='{0}'                       
                     order by tr_trnbr";
 
             sql = string.Format(sql, Request.QueryString["dept_str"], dt_date.Rows[0]["week_startdate"], dt_date.Rows[0]["week_enddate"]);
@@ -77,11 +79,13 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             {
                 gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = false;
                 gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = false;
+                gv_xx_wo_mstr.Columns["sydept"].Visible = false;
             }
             else
             {
                 gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = true;
                 gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = true;
+                gv_xx_wo_mstr.Columns["sydept"].Visible = true;
             }
         }
         if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量") || Request.QueryString["typedesc"].ToString().Contains("废品数量"))

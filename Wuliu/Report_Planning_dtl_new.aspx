@@ -58,6 +58,7 @@
                 <dx:GridViewDataTextColumn Caption="区域" FieldName="scx_area" Width="80px" VisibleIndex="1"></dx:GridViewDataTextColumn>  
                 <dx:GridViewDataTextColumn Caption="生产线" FieldName="scx" Width="110px" VisibleIndex="2"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="父工单号" FieldName="xxwo_nbr" Width="70px" VisibleIndex="3"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="使用部门" FieldName="sydept" Width="70px" VisibleIndex="3"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="物料号" FieldName="xxwo_part" Width="70px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="零件号" FieldName="pt_desc1" Width="110px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="生产线(QAD)" FieldName="xxwo_line" Width="75px" VisibleIndex="6"></dx:GridViewDataTextColumn>

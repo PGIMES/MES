@@ -27,7 +27,7 @@
             var url = "select_plan_upload.aspx";
 
             layer.open({
-                title: '上传计划发货数量',
+                title: '上传计划发货数量：<font color=red>生产1部、生产2部、压铸部、生产4部</font>',
                 closeBtn: 2,
                 type: 2,
                 area: ['500px', '400px'],
@@ -71,13 +71,23 @@
                         <asp:ListItem Value="2019">2019</asp:ListItem>
                     </asp:DropDownList>
                 </td>
-                <td style="width:30px;">域</td>
+                <%--<td style="width:30px;">域</td>
                 <td style="width:100px;">
                     <asp:DropDownList ID="ddl_domain" runat="server" class="form-control input-s-md " Width="90px">
                         <asp:ListItem Value="200">200</asp:ListItem>
                         <asp:ListItem Value="100">100</asp:ListItem>
                     </asp:DropDownList>
-                </td>     
+                </td>   --%>  
+                <td style="width:30px;">部门</td>
+                <td style="width:120px;">
+                    <asp:DropDownList ID="ddl_dept" runat="server" class="form-control input-s-md " Width="115px">
+                        <asp:ListItem Value=""></asp:ListItem>
+                        <asp:ListItem Value="一车间">生产1部</asp:ListItem>
+                        <asp:ListItem Value="二车间">生产2部</asp:ListItem>
+                        <asp:ListItem Value="三车间">压铸部</asp:ListItem>
+                        <asp:ListItem Value="四车间">生产4部</asp:ListItem>
+                    </asp:DropDownList>
+                </td>   
                 <td id="td_btn">  
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>  
                     <button id="btn_export" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_export_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
@@ -93,7 +103,7 @@
             <table>
                 <tr> <%-- --%>
                     <td>
-                        <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc_depta_all" AutoGenerateColumns="False"
+                        <dx:ASPxGridView ID="gv"  ClientInstanceName="grid" runat="server" KeyFieldName="typedesc;dept" AutoGenerateColumns="False"
                             OnHtmlRowCreated="gv_HtmlRowCreated" OnExportRenderBrick="gv_ExportRenderBrick" Width="1000px">
                             <SettingsPager PageSize="1000" ></SettingsPager>
                             <SettingsBehavior AllowFocusedRow="false" ColumnResizeMode="Control" />

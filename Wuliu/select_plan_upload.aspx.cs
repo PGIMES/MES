@@ -51,7 +51,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
         {
             string sql = @"delete Planning_base_upload 
                         from  Planning_base_upload a 
-	                        inner join  Planning_base_upload_temp b on a.domain=b.domain and a.years=b.years and a.weeks=b.weeks";
+	                        inner join  Planning_base_upload_temp b on a.domain=b.domain and a.dept=b.dept and a.years=b.years and a.weeks=b.weeks";
             DbHelperSQL.ExecuteSql(sql);
             sql = @"insert into Planning_base_upload select * from Planning_base_upload_temp";
             DbHelperSQL.ExecuteSql(sql);
@@ -80,11 +80,12 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
 
             DataTable dt = new DataTable();
             DataColumn col_0 = new DataColumn("domain", typeof(string));
-            DataColumn col_1 = new DataColumn("years", typeof(int));
-            DataColumn col_2 = new DataColumn("weeks", typeof(string));
-            DataColumn col_3 = new DataColumn("Qty", typeof(int));
-            DataColumn col_4 = new DataColumn("CreateById", typeof(string));
-            dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4);
+            DataColumn col_1 = new DataColumn("dept", typeof(string));
+            DataColumn col_2 = new DataColumn("years", typeof(int));
+            DataColumn col_3 = new DataColumn("weeks", typeof(string));
+            DataColumn col_4 = new DataColumn("Qty", typeof(int));
+            DataColumn col_5 = new DataColumn("CreateById", typeof(string));
+            dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4); dt.Columns.Add(col_5);
 
 
             for (int k = 0; k < dtExcel.Rows.Count; k++)
@@ -92,7 +93,12 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
                 DataRow dr = dtExcel.Rows[k];
 
                 DataRow dt_r = dt.NewRow();
-                dt_r["domain"] = dr["域"].ToString();
+                dt_r["domain"] = dr["部门"].ToString() == "生产1部" ? "100" : "200";
+                if (dr["部门"].ToString() == "生产1部") { dt_r["dept"] = "一车间"; }
+                if (dr["部门"].ToString() == "生产2部") { dt_r["dept"] = "二车间"; }
+                if (dr["部门"].ToString() == "压铸部") { dt_r["dept"] = "三车间"; }
+                if (dr["部门"].ToString() == "生产4部") { dt_r["dept"] = "四车间"; }
+
                 dt_r["years"] = dr["年份"].ToString();
                 dt_r["weeks"] = dr["周数"].ToString();
                 dt_r["Qty"] = dr["数量"].ToString().Replace(",", "").Trim() == "" ? "0" : dr["数量"].ToString().Replace(",", "").Trim();
@@ -144,6 +150,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
                     bulkCopy.DestinationTableName = DesTableName;//要插入的表的表名
                     bulkCopy.BatchSize = dt.Rows.Count;
                     bulkCopy.ColumnMappings.Add("domain", "domain");//映射字段名 DataTable列名 ,数据库 对应的列名   
+                    bulkCopy.ColumnMappings.Add("dept", "dept");//映射字段名 DataTable列名 ,数据库 对应的列名  
                     bulkCopy.ColumnMappings.Add("years", "years");//映射字段名 DataTable列名 ,数据库 对应的列名  
                     bulkCopy.ColumnMappings.Add("weeks", "weeks");//映射字段名 DataTable列名 ,数据库 对应的列名  
                     bulkCopy.ColumnMappings.Add("Qty", "Qty");
