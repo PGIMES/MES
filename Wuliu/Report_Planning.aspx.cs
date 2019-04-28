@@ -36,7 +36,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     protected void btn_export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        gv.ExportXlsxToResponse("Planning_"+ ddl_dept.SelectedValue+"_" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+        gv.ExportXlsxToResponse("Planning_"+ ddl_dept.SelectedItem.Text+"_" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
     }
 
     private static void SetGrid(DevExpress.Web.ASPxGridView lgrid, DataTable ldt_data, Int32 lnw)
