@@ -37,7 +37,9 @@ public partial class Wuliu_Qad_Report_tr_hist_new : System.Web.UI.Page
         {
             curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         }
-        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '2','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ddl_line.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '2','" + ddl_comp.SelectedValue 
+            + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" 
+            + curmonth + "'").Tables[0];
 
         gv_tr_list.DataSource = dt;
         gv_tr_list.DataBind();

@@ -33,7 +33,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''");
+        DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" 
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'");
 
         //grid A
         gv_tr_list.DataSource = ds.Tables[0];
@@ -428,7 +429,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     protected void btn_export_ServerClick(object sender, EventArgs e)
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataTable dtList = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+        DataTable dtList = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" 
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'").Tables[0];
 
         ExportToExcel(dtList, "30-180天库存清单_"+ curmonth);
     }
@@ -436,7 +438,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     protected void btn_export2_ServerClick(object sender, EventArgs e)
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
-        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '7','" + ddl_comp.SelectedValue + "','" + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "',''").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '7','" + ddl_comp.SelectedValue + "','" 
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'").Tables[0];
 
         ExportToExcel(dt, "超180天库存清单_" + curmonth);
     }

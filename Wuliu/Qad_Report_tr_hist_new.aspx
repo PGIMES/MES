@@ -102,14 +102,7 @@
                 <td>&nbsp;&nbsp;地点：</td>
                 <td>
                     <asp:TextBox ID="txt_site" class="form-control" runat="server" Width="100px" Text="100"></asp:TextBox>
-                </td>  
-                <td>&nbsp;&nbsp;物料类别：</td>
-                <td>
-                    <asp:DropDownList ID="ddl_line" runat="server" class="form-control input-s-sm ">
-                        <asp:ListItem Value="Y">生产性物料</asp:ListItem>
-                        <asp:ListItem Value="N">非生产性物料</asp:ListItem>
-                    </asp:DropDownList>
-                </td>              
+                </td>               
                 <%--<td><i class="fa fa-search" onclick="Get_Site()"></i></td>--%>
                 <td>&nbsp;&nbsp;物料编码：</td>
                 <td>
