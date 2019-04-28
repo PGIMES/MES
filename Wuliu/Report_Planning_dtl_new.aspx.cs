@@ -28,7 +28,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         string sql = "";
         if (Request.QueryString["typedesc"].ToString().Contains("实际发货数量"))
         {
-            string sql_date = @"select distinct DATEADD(dd,-1,week_startdate) week_startdate,DATEADD(dd,-1,week_enddate)  week_enddate
+            /*string sql_date = @"select distinct DATEADD(dd,-1,week_startdate) week_startdate,DATEADD(dd,-1,week_enddate)  week_enddate
                                from[dbo].[Work_Calendar] where [year]='{0}' and  [week]='{1}'";
             sql_date = string.Format(sql_date, Request.QueryString["year"], Request.QueryString["week"]);
             DataTable dt_date = DbHelperSQL.Query(sql_date).Tables[0];
@@ -43,6 +43,10 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
 
             sql = string.Format(sql, Request.QueryString["dept_str"], dt_date.Rows[0]["week_startdate"], dt_date.Rows[0]["week_enddate"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+            */
+            sql = "exec [Report_Planning_dtl_show] 0,'{0}','{1}','{2}'";
+            sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
+            DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
             gv_tr_hist.Visible = true;
 
@@ -51,7 +55,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         }
         if (Request.QueryString["typedesc"].ToString() == "计划生产订单数量")
         {
-            sql = @"select *
+            /*sql = @"select *
                         ,case scx_workshop when '二车间' then kaishi_qty/1.5 else kaishi_qty end as jihua_qty
                         ,case scx_workshop when '二车间' then kaishi_qty/1.5-chaifei_qty else kaishi_qty-touchan_qty end as chayi_qty 
                         ,ROW_NUMBER() OVER (ORDER BY xxwo_nbr) rownum
@@ -59,6 +63,9 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
                     where years='{0}' and weeks='{1}' and scx_workshop='{2}'
                     order by xxwo_nbr,xxwo_part";
 
+                sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
+            */
+            sql = "exec [Report_Planning_dtl_show] 1,'{0}','{1}','{2}'";
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
@@ -90,7 +97,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         }
         if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量") || Request.QueryString["typedesc"].ToString().Contains("废品数量"))
         {
-            string sql_date = @"select distinct DATEADD(dd,-1,week_startdate) week_startdate,DATEADD(dd,-1,week_enddate)  week_enddate
+            /*string sql_date = @"select distinct DATEADD(dd,-1,week_startdate) week_startdate,DATEADD(dd,-1,week_enddate)  week_enddate
                                from[dbo].[Work_Calendar] where [year]='{0}' and  [week]='{1}'";
             sql_date = string.Format(sql_date, Request.QueryString["year"], Request.QueryString["week"]);
             DataTable dt_date = DbHelperSQL.Query(sql_date).Tables[0];
@@ -108,7 +115,15 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
                 sql = sql + " and xxwo_status='P'";
             }
             sql = sql + " order by workorder,pgino";
-
+            */
+            if (Request.QueryString["typedesc"].ToString().Contains("废品数量"))
+            {
+                sql = "exec [Report_Planning_dtl_show] 2,'{0}','{1}','{2}'";
+            }
+            if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量"))
+            {
+                sql = "exec [Report_Planning_dtl_show] 3,'{0}','{1}','{2}'";
+            }
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
