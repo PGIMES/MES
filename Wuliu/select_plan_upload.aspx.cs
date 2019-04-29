@@ -96,7 +96,7 @@ public partial class CapacityPlan_select_plan_upload : System.Web.UI.Page
                 dt_r["domain"] = dr["部门"].ToString() == "生产1部" ? "100" : "200";
                 if (dr["部门"].ToString() == "生产1部") { dt_r["dept"] = "一车间"; }
                 if (dr["部门"].ToString() == "生产2部") { dt_r["dept"] = "二车间"; }
-                if (dr["部门"].ToString() == "压铸部") { dt_r["dept"] = "三车间"; }
+                if (dr["部门"].ToString() == "生产3部") { dt_r["dept"] = "三车间"; }
                 if (dr["部门"].ToString() == "生产4部") { dt_r["dept"] = "四车间"; }
 
                 dt_r["years"] = dr["年份"].ToString();

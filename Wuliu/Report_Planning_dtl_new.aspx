@@ -134,7 +134,7 @@
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="尚缺数量2" FieldName="sque_qty2" Width="70px" VisibleIndex="10"
-                    ToolTip="若投产：数量=[压铸(投产数量)][其他车间(订单数量)]-已完成数量；若没投产：数量=0">
+                    ToolTip="若投产：数量=[生产3部(投产数量)][其他车间(订单数量)]-已完成数量；若没投产：数量=0">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="报废入库数量" FieldName="baofei_qty" Width="70px" VisibleIndex="11">

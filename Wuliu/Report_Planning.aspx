@@ -27,7 +27,7 @@
             var url = "select_plan_upload.aspx";
 
             layer.open({
-                title: '上传计划发货数量：<font color=red>生产1部、生产2部、压铸部、生产4部</font>',
+                title: '上传计划发货数量：<font color=red>生产1部、生产2部、生产3部、生产4部</font>',
                 closeBtn: 2,
                 type: 2,
                 area: ['500px', '400px'],
@@ -43,7 +43,7 @@
             if (dept_str == "生产2部") { dept_str = "二车间"; }
             if (dept_str == "生产4部") { dept_str = "四车间"; }
             if (dept_str == "生产1部") { dept_str = "一车间"; }
-            if (dept_str == "压铸") { dept_str = "三车间"; }
+            if (dept_str == "生产3部") { dept_str = "三车间"; }
 
             var url = "/wuliu/Report_Planning_dtl_new.aspx?dept=" + dept + "&dept_str=" + dept_str + "&typedesc=" + typedesc + "&week=" + week + "&year=" + $("select[name$='ddl_year'] option[selected]").val();
 
@@ -84,7 +84,7 @@
                         <asp:ListItem Value=""></asp:ListItem>
                         <asp:ListItem Value="一车间">生产1部</asp:ListItem>
                         <asp:ListItem Value="二车间">生产2部</asp:ListItem>
-                        <asp:ListItem Value="三车间">压铸部</asp:ListItem>
+                        <asp:ListItem Value="三车间">生产3部</asp:ListItem>
                         <asp:ListItem Value="四车间">生产4部</asp:ListItem>
                     </asp:DropDownList>
                 </td>   
