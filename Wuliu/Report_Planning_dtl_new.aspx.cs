@@ -74,13 +74,13 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             gv_xx_wo_mstr.DataSource = dt;
             gv_xx_wo_mstr.DataBind();
 
-            if (Request.QueryString["dept_str"].ToString() != "二车间")
+            if (Request.QueryString["dept_str"].ToString() == "二车间" || Request.QueryString["dept_str"].ToString() == "四车间")
             {
-                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = false;
+                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = true;
             }
             else
             {
-                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = true;
+                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = false;
             }
             if (Request.QueryString["dept_str"].ToString() != "三车间")
             {
