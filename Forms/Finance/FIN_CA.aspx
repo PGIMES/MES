@@ -636,7 +636,7 @@
                                             <DataItemTemplate>
                                                 <dx:ASPxDateEdit ID="StartDateTime" runat="server" EditFormat="Custom" Width="130"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd HH:mm"
                                                     ClientInstanceName='<%# "StartDateTime"+Container.VisibleIndex.ToString() %>'
-                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black">
+                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black" AllowUserInput="false">
                                                     <TimeSectionProperties Visible="true">
                                                         <TimeEditProperties EditFormatString="HH:mm" />
                                                     </TimeSectionProperties>
@@ -649,7 +649,7 @@
                                             <DataItemTemplate>
                                                 <dx:ASPxDateEdit ID="EndDateTime" runat="server" EditFormat="Custom" Width="130"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd HH:mm"
                                                     ClientInstanceName='<%# "EndDateTime"+Container.VisibleIndex.ToString() %>'
-                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black" >
+                                                    DisabledStyle-Border-BorderStyle="None" DisabledStyle-ForeColor="Black" AllowUserInput="false">
                                                     <TimeSectionProperties Visible="true">
                                                         <TimeEditProperties EditFormatString="HH:mm" />
                                                     </TimeSectionProperties>
