@@ -11,8 +11,11 @@ using System.Web.UI.WebControls;
 
 public partial class Forms_Finance_T_CA_Report_Query : System.Web.UI.Page
 {
+    LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
+        LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
+
         if (!IsPostBack)
         {
             QueryASPxGridView();
@@ -32,7 +35,7 @@ public partial class Forms_Finance_T_CA_Report_Query : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec  Report_Fin_T_CA '" + ddl_domain.SelectedValue + "','" + ddl_typeno.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec  Report_Fin_T_CA '" + ddl_domain.SelectedValue + "','" + ddl_typeno.SelectedValue + "','" + LogUserModel.UserId + "','" + LogUserModel.DepartName + "'").Tables[0];
         if (ddl_typeno.SelectedValue == "差旅")
         {
             gv.Visible = true;
