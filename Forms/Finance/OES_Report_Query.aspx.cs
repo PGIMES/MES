@@ -11,8 +11,11 @@ using System.Web.UI.WebControls;
 
 public partial class Forms_Finance_OES_Report_Query : System.Web.UI.Page
 {
+    LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
+        LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
+
         if (!IsPostBack)
         {
             QueryASPxGridView();
@@ -32,7 +35,7 @@ public partial class Forms_Finance_OES_Report_Query : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec  Report_Fin_OES '" + ddl_domain.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec  Report_Fin_OES '" + ddl_domain.SelectedValue + "','"+ LogUserModel.UserId + "','" + LogUserModel.DepartName + "'").Tables[0];
         gv.DataSource = dt;
         gv.DataBind();
     }
