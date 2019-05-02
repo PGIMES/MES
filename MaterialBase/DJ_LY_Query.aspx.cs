@@ -19,7 +19,7 @@ public partial class MaterialBase_DJ_LY_Query : System.Web.UI.Page
     {
         if (!IsPostBack)
         {   //初始化日期
-            txtDateFrom.Text = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd");
+            txtDateFrom.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
           
              txtDateTo.Text = DateTime.Now.ToString("yyyy-MM-dd");
              QueryASPxGridView();
@@ -41,7 +41,7 @@ public partial class MaterialBase_DJ_LY_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
        //
-        DataTable dt = DbHelperSQL.Query("exec DJ_LY_Querx  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec DJ_LY_Querx  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "','"+txtwlh.Text+"'").Tables[0];
         Pgi.Auto.Control.SetGrid("DJLY", "", this.GV_PART, dt);
         
 

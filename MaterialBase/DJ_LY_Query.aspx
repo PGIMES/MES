@@ -106,6 +106,12 @@
                                           <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                                            </asp:DropDownList>
                                                         </td>
+                                                          <td>
+                                    物料号:
+                                </td>
+                                 <td >
+                                   <asp:TextBox ID="txtwlh" class="form-control"  runat="server" Width="100px"></asp:TextBox>
+                                </td>
                                                         <td>
                                     领用日期:
                                 </td>
@@ -121,13 +127,13 @@
                                    
                                     <td  style=" width:200px">  </td>
                                      <td>
-                                    <asp:LinkButton ID="btn_tj" runat="server" Text="查看月统计"  style="color: white"
+                                    <asp:LinkButton ID="btn_tj" runat="server" Text="查看领用趋势"  style="color: white"
                                             class="btn btn-large btn-primary"  Width="120px" 
                                              href="/sales/Sale_DJQuery.aspx"  target="_blank" />
                                     </td>
                                     <td  style=" width:20px">  </td>
                                     <td>
-                                    <asp:LinkButton ID="Bt_qs" runat="server" Text="查看领用趋势"  style="color: white"
+                                    <asp:LinkButton ID="Bt_qs" runat="server" Text="查看领用统计"  style="color: white"
                                             class="btn btn-large btn-primary"  Width="120px" 
                                              href="/MaterialBase/DJ_LY_QS.aspx"  target="_blank" />
                                     </td>
