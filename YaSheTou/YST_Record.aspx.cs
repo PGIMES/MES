@@ -163,6 +163,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         txt_deal_mc.Text = "";
         txt_end_mc.Text = "";
         txt_kaishi.Text = "";
+        ddl_xwz.SelectedValue = "";
     }
 
     public void clear_S()
@@ -197,6 +198,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         {
             divShangMo.Visible = false;
             divXiaMo.Visible = true; lbl_xs.Text = "下";
+            lbl_xwz.Visible = true; ddl_xwz.Visible = true;
 
             btn_Save.Enabled = true;
             btn_Save.CssClass = "btn btn-large btn-primary ";
@@ -207,7 +209,8 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         else if (ddl_change_type.SelectedValue == "先下再上")
         {
             divXiaMo.Visible = true;
-            divShangMo.Visible = true;
+            divShangMo.Visible = true; lbl_xs.Text = "下";
+            lbl_xwz.Visible = true; ddl_xwz.Visible = true;
 
             btn_Save.Enabled = true;
             btn_Save.CssClass = "btn btn-large btn-primary ";
@@ -219,6 +222,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         {
             divShangMo.Visible = false;
             divXiaMo.Visible = true; lbl_xs.Text = "不更换";
+            lbl_xwz.Visible = false; ddl_xwz.Visible = false;
 
             btn_Save.Enabled = true;
             btn_Save.CssClass = "btn btn-large btn-primary ";
@@ -315,6 +319,11 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                 txt_end_mc.Text = "";
                 return;
             }
+            if (ddl_xwz.SelectedValue == "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【下位置】不可为空！')", true);
+                return;
+            }
             ls_sum = sql(changetype);
 
             List<Pgi.Auto.Common> ls_sum_2 = sql_S(changetype);
@@ -406,13 +415,13 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         Pgi.Auto.Common ls_Record_insert = new Pgi.Auto.Common();
         string sql_Record_insert = @"insert into MES_YaSheTou_Record(emp_no, emp_name, emp_banbie, emp_banzhu, equip_no, equip_name
                                                 , change_type, code, mc, gys, zj, yzt_status, deal_mc
-                                                , end_mc, remark, CreateId, CreateName, CreateTime)
+                                                , end_mc, remark, xwz, CreateId, CreateName, CreateTime)
                            select '{0}','{1}','{2}','{3}','{4}','{5}'
                                  ,'{6}','{7}','{8}','{9}','{10}','{11}','{12}'
-                                 ,'{13}','{14}','{15}','{16}',getdate()";
+                                 ,'{13}','{14}','{15}','{16}','{17}',getdate()";
         sql_Record_insert = string.Format(sql_Record_insert, dropGongHao.SelectedValue.Trim(), txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value
                                         , changetype, ddl_code.SelectedValue, txt_mc.Text, txt_gys.Text, txt_zj.Text, ddl_status.SelectedValue, txt_deal_mc.Text
-                                        , txt_end_mc.Text, txt_remark.Text, LogUserModel.UserId, LogUserModel.UserName);
+                                        , txt_end_mc.Text, ddl_xwz.SelectedValue, txt_remark.Text, LogUserModel.UserId, LogUserModel.UserName);
         ls_Record_insert.Sql = sql_Record_insert;
         ls_sum.Add(ls_Record_insert);
 

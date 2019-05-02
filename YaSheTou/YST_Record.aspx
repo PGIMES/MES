@@ -110,7 +110,7 @@
                                         OnSelectedIndexChanged="ddl_change_type_SelectedIndexChanged" AutoPostBack="true">
                                         <asp:ListItem Value ="">--请选择--</asp:ListItem>
                                         <asp:ListItem Value ="仅上">仅上</asp:ListItem>
-                                        <asp:ListItem Value ="仅下">仅下</asp:ListItem>
+                                        <%--<asp:ListItem Value ="仅下">仅下</asp:ListItem>--%>
                                         <asp:ListItem Value ="先下再上">先下再上</asp:ListItem>
                                         <asp:ListItem Value ="不更换">不更换</asp:ListItem>
                                     </asp:DropDownList>
@@ -183,7 +183,26 @@
                                     <asp:DropDownList ID="ddl_status" class="form-control input-s-sm" 
                                         runat="server" BackColor="Yellow">
                                         <asp:ListItem Value="正常">正常</asp:ListItem>
-                                        <asp:ListItem Value="异常">异常</asp:ListItem>
+                                        <asp:ListItem Value="报废">报废</asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span class="col-sm-4"><asp:Label ID="lbl_xwz" runat="server" Text="下位置："></asp:Label></span>
+                                <div class="col-sm-8">
+                                    <asp:DropDownList ID="ddl_xwz" class="form-control input-s-sm" 
+                                        runat="server" BackColor="Yellow">
+                                        <asp:ListItem Value=""></asp:ListItem>
+                                        <asp:ListItem Value="1号工作台">1号工作台</asp:ListItem>
+                                        <asp:ListItem Value="2号工作台">2号工作台</asp:ListItem>
+                                        <asp:ListItem Value="3号工作台">3号工作台</asp:ListItem>
+                                        <asp:ListItem Value="4号工作台">4号工作台</asp:ListItem>
+                                        <asp:ListItem Value="5号工作台">5号工作台</asp:ListItem>
+                                        <asp:ListItem Value="6号工作台">6号工作台</asp:ListItem>
+                                        <asp:ListItem Value="7号工作台">7号工作台</asp:ListItem>
+                                        <asp:ListItem Value="8号工作台">8号工作台</asp:ListItem>
+                                        <asp:ListItem Value="9号工作台">9号工作台</asp:ListItem>
+                                        <asp:ListItem Value="10号工作台">10号工作台</asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>
@@ -242,7 +261,7 @@
                                     <asp:DropDownList ID="ddl_status_S" class="form-control input-s-sm" 
                                         runat="server" BackColor="Yellow">
                                         <asp:ListItem Value="正常">正常</asp:ListItem>
-                                        <asp:ListItem Value="异常">异常</asp:ListItem>
+                                        <asp:ListItem Value="报废">报废</asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>
