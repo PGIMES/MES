@@ -106,7 +106,7 @@
                                           <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                                            </asp:DropDownList>
                                 </td>
-                                <td>部门：</td>
+                                <td>车间：</td>
                                 <td> <asp:DropDownList ID="ddl_dept" runat="server" class="form-control input-s-sm " Width="90px">
                                           <asp:ListItem Value="">ALL</asp:ListItem>
                                           <asp:ListItem Value="一车间">一车间</asp:ListItem>
