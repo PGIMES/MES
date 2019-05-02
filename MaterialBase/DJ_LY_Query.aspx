@@ -100,13 +100,22 @@
                         <table class="tblCondition" >
                             <tr>
                                 <td>工厂：</td>
-                                <td> <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm ">
+                                <td> <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm " Width="100px">
                                           <asp:ListItem Value="">ALL</asp:ListItem>
                                           <asp:ListItem Value="100">上海工厂</asp:ListItem>
                                           <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                                            </asp:DropDownList>
-                                                        </td>
-                                                          <td>
+                                </td>
+                                <td>部门：</td>
+                                <td> <asp:DropDownList ID="ddl_dept" runat="server" class="form-control input-s-sm " Width="90px">
+                                          <asp:ListItem Value="">ALL</asp:ListItem>
+                                          <asp:ListItem Value="一车间">一车间</asp:ListItem>
+                                          <asp:ListItem Value="二车间">二车间</asp:ListItem>
+                                          <asp:ListItem Value="三车间">三车间</asp:ListItem>
+                                          <asp:ListItem Value="四车间">四车间</asp:ListItem>
+                                           </asp:DropDownList>
+                                </td>
+                                <td>
                                     物料号:
                                 </td>
                                  <td >
@@ -123,37 +132,37 @@
                                    <asp:TextBox ID="txtDateTo" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
                                 </td>
                                 <td>
-                                    <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   </td>
+                                    <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" />   </td>
                                    
-                                    <td  style=" width:200px">  </td>
-                                     <td>
+                                  
+                                     <td> &nbsp;
                                     <asp:LinkButton ID="btn_tj" runat="server" Text="查看领用趋势"  style="color: white"
-                                            class="btn btn-large btn-primary"  Width="120px" 
+                                            class="btn btn-large btn-primary"  Width="110px" 
                                              href="/sales/Sale_DJQuery.aspx"  target="_blank" />
                                     </td>
-                                    <td  style=" width:20px">  </td>
-                                    <td>
+                                   
+                                    <td> &nbsp;
                                     <asp:LinkButton ID="Bt_qs" runat="server" Text="查看领用统计"  style="color: white"
-                                            class="btn btn-large btn-primary"  Width="120px" 
+                                            class="btn btn-large btn-primary"  Width="110px" 
                                              href="/MaterialBase/DJ_LY_QS.aspx"  target="_blank" />
                                     </td>
-                                    <td  style=" width:20px">  </td>
-                                    <td>
+                                    
+                                    <td>&nbsp;
                                     <asp:LinkButton ID="Bt_amt" runat="server" Text="Top领用金额"  style="color: white"
-                                            class="btn btn-large btn-primary"  Width="120px" 
+                                            class="btn btn-large btn-primary"  Width="110px" 
                                              href="/MaterialBase/DJLY_BYTop.aspx"  target="_blank" />
                                    
                                     </td>
-                                    <td  style=" width:20px">  </td>
-                                     <td>
+                                    
+                                     <td>&nbsp;
                                     <asp:LinkButton ID="Btn_CBSS" runat="server" Text="Top成本损失"  style="color: white"
-                                            class="btn btn-large btn-primary"  Width="120px" 
+                                            class="btn btn-large btn-primary"  Width="110px" 
                                              href="/MaterialBase/DJ_LY_CBSS.aspx"  target="_blank" />
                                     </td>
-                                    <td  style=" width:20px">  </td>
-                                     <td>
+                                    
+                                     <td>&nbsp;
                                     <asp:LinkButton ID="Btn_YC" runat="server" Text="Top异常"  style="color: white"
-                                            class="btn btn-large btn-primary"  Width="120px" 
+                                            class="btn btn-large btn-primary"  Width="110px" 
                                              href="/MaterialBase/DJ_LY_YC.aspx"  target="_blank" />
 
                                     </td>

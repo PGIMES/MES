@@ -41,7 +41,7 @@ public partial class MaterialBase_DJ_LY_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
        //
-        DataTable dt = DbHelperSQL.Query("exec DJ_LY_Querx  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "','"+txtwlh.Text+"'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec DJ_LY_Querx  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "','"+txtwlh.Text+ "','" + ddl_dept.SelectedValue + "'").Tables[0];
         Pgi.Auto.Control.SetGrid("DJLY", "", this.GV_PART, dt);
         
 
