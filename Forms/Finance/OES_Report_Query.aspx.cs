@@ -14,7 +14,7 @@ public partial class Forms_Finance_OES_Report_Query : System.Web.UI.Page
     LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
+        LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
 
         if (!IsPostBack)
         {
