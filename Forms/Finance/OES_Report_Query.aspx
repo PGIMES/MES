@@ -47,7 +47,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1780px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1475px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -55,7 +55,7 @@
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>                        
-                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="130px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="110px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" />
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
@@ -67,17 +67,17 @@
                             <dx:GridViewDataTextColumn Caption="申请日期" FieldName="ApplyDate" Width="80px" VisibleIndex="2">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="70px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="60px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                            
                             <dx:GridViewDataTextColumn Caption="申请部门" FieldName="ApplyDept" Width="110px" VisibleIndex="4">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="80px" VisibleIndex="5">
+                            <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="70px" VisibleIndex="5">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="220px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="200px" VisibleIndex="7">
+                            <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="180px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="150px" VisibleIndex="7">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_instanceid" runat="server" Text='<%# Eval("instanceid")%>' Cursor="pointer" ClientInstanceName='<%# "instanceid"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# Eval("budgetsour") %>'  
@@ -85,21 +85,21 @@
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="费用发生日期/期间" FieldName="feedate" Width="160px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="费用说明" FieldName="feenote" Width="250px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="limit" Width="100px" VisibleIndex="10">
+                            <dx:GridViewDataTextColumn Caption="发生日期/期间" FieldName="feedate" Width="85px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="费用说明" FieldName="feenote" Width="240px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="额度/预算" FieldName="limit" Width="70px" VisibleIndex="10" CellStyle-HorizontalAlign="Right">
                                 <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="报销金额" FieldName="amount" Width="100px" VisibleIndex="11">
+                            <dx:GridViewDataTextColumn Caption="报销金额" FieldName="amount" Width="70px" VisibleIndex="11">
                                 <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="80px" VisibleIndex="12">
+                            <dx:GridViewDataTextColumn Caption="已申请天数" FieldName="GoDays" Width="70px" VisibleIndex="12">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="100px" VisibleIndex="13">
+                            <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="90px" VisibleIndex="13">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="100px" VisibleIndex="14">
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="90px" VisibleIndex="14">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                         </Columns>
