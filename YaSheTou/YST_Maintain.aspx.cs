@@ -52,6 +52,12 @@ public partial class YaSheTou_YST_Maintain : System.Web.UI.Page
         QueryASPxGridView();
         ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "setHeight();", true);
     }
+    protected void btnimport_Click(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+        gv.ExportXlsxToResponse("压射头明细" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+    }
+
 
     [WebMethod]
     public static string del_data(string code)
