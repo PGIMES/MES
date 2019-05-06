@@ -9,16 +9,16 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 public partial class YaSheTou_YST_Query : System.Web.UI.Page
 {
-    public string UserId = "";
-    public string UserName = "";
-    LoginUser LogUserModel = null;
+    //public string UserId = "";
+    //public string UserName = "";
+    //LoginUser LogUserModel = null;
     Function_Jinglian Function_Jinglian = new Function_Jinglian();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
-        UserId = LogUserModel.UserId;
-        UserName = LogUserModel.UserName;
+        //LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        //UserId = LogUserModel.UserId;
+        //UserName = LogUserModel.UserName;
 
         if (!IsPostBack)
         {

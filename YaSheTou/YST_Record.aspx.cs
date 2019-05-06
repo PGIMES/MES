@@ -10,10 +10,10 @@ using System.Web.UI.WebControls;
 
 public partial class YaSheTou_YST_Record : System.Web.UI.Page
 {
-    LoginUser LogUserModel = null;
+    //LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        //LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
 
         if (!Page.IsPostBack)
         {
@@ -118,7 +118,8 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         {
             string sql = @"select *,case when gys='A' then '铸泰' when gys='B' then '宜龙' else '' end gys_name
                         from [dbo].[MES_YaSheTou_Base] a 
-                        where code not in(select code from [dbo].[MES_YaSheTou_Status] where enddate is null)";
+                        where code not in(select code from [dbo].[MES_YaSheTou_Status] where enddate is null)
+                        order by cast(right(zj,LEN(zj)-1) as int),gys,code";
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
             ddl_code_S.DataSource = dt;
             ddl_code_S.DataValueField = "code";
@@ -392,7 +393,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                                  ,'{13}','{14}','{15}',getdate()";
         sql_Record_insert = string.Format(sql_Record_insert, dropGongHao.SelectedValue.Trim(), txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value
                                         , changetype, ddl_code_S.SelectedValue, txt_mc_S.Text, txt_gys_S.Text, txt_zj_S.Text, ddl_status_S.SelectedValue, txt_start_mc.Text
-                                        , txt_remark_S.Text, LogUserModel.UserId, LogUserModel.UserName);
+                                        , txt_remark_S.Text, "", "");//, LogUserModel.UserId, LogUserModel.UserName
         ls_Record_insert.Sql = sql_Record_insert;
         ls_sum.Add(ls_Record_insert);
 
@@ -421,7 +422,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                                  ,'{13}','{14}','{15}','{16}','{17}',getdate()";
         sql_Record_insert = string.Format(sql_Record_insert, dropGongHao.SelectedValue.Trim(), txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value
                                         , changetype, ddl_code.SelectedValue, txt_mc.Text, txt_gys.Text, txt_zj.Text, ddl_status.SelectedValue, txt_deal_mc.Text
-                                        , txt_end_mc.Text, ddl_xwz.SelectedValue, txt_remark.Text, LogUserModel.UserId, LogUserModel.UserName);
+                                        , txt_end_mc.Text, ddl_xwz.SelectedValue, txt_remark.Text, "", "");//, LogUserModel.UserId, LogUserModel.UserName
         ls_Record_insert.Sql = sql_Record_insert;
         ls_sum.Add(ls_Record_insert);
 
