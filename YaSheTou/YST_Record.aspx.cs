@@ -118,7 +118,11 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         {
             string sql = @"select *,case when gys='A' then '铸泰' when gys='B' then '宜龙' else '' end gys_name
                         from [dbo].[MES_YaSheTou_Base] a 
-                        where code not in(select code from [dbo].[MES_YaSheTou_Status] where enddate is null)
+                        where code not in(
+	                        select code from [dbo].[MES_YaSheTou_Status] where enddate is null
+	                        union
+	                        select code from MES_YaSheTou_Record where yzt_status='报废'
+	                        )
                         order by cast(right(zj,LEN(zj)-1) as int),gys,code";
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
             ddl_code_S.DataSource = dt;
