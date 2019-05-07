@@ -541,7 +541,7 @@ protected void Page_Load(object sender, EventArgs e)
 				                    when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
 				                    end as pt_prod_line_mc 
 		                    from qad.dbo.qad_pl_mstr
-		                    where left(pl_prod_line,1) in ('1') and pl_prod_line like '1%'
+		                    where left(pl_prod_line,1) in ('1','3')
 		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
                     where 
                         (
