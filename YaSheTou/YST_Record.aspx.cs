@@ -404,7 +404,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
     {
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
        
-        if (changetype == "仅下")
+        if (changetype == "仅下" || changetype == "先下再上")
         {
             Pgi.Auto.Common ls_status_update = new Pgi.Auto.Common();
             string sql_status_update = @"update MES_YaSheTou_Status set enddate=getdate() where equip_no='{0}' and code='{1}' and enddate is null";
