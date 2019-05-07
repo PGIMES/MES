@@ -55,7 +55,10 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
                         select a.pt_part,a.pt_desc1,a.pt_desc2,a.pt_status,a.pt_prod_line,a.pt_domain
                             , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
                         from qad_pt_mstr a
-                            where a.pt_pm_code = 'P' and a.pt_part like 'P%' and a.pt_prod_line like '1%' and(a.pt_status <> 'DEAD' and a.pt_status <> 'OBS')                         
+                            where (
+                                    (a.pt_pm_code = 'P' and a.pt_part like 'P%' and a.pt_prod_line like '1%' and(a.pt_status <> 'DEAD' and a.pt_status <> 'OBS') )                                      
+                                 or (a.pt_part='P0170AA')  
+                                )                   
                                 and a.pt_domain = '{0}' and a.pt_part like '%{1}%' and a.pt_desc1 like '%{2}%'
                          ) aa where ispodsched=0
                     order by aa.pt_part";
