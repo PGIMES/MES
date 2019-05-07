@@ -422,7 +422,7 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                                  ,'{13}','{14}','{15}','{16}','{17}',getdate()";
         sql_Record_insert = string.Format(sql_Record_insert, dropGongHao.SelectedValue.Trim(), txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value
                                         , changetype, ddl_code.SelectedValue, txt_mc.Text, txt_gys.Text, txt_zj.Text, ddl_status.SelectedValue, txt_deal_mc.Text
-                                        , txt_end_mc.Text, ddl_xwz.SelectedValue, txt_remark.Text, "", "");//, LogUserModel.UserId, LogUserModel.UserName
+                                        , txt_end_mc.Text, txt_remark.Text, ddl_xwz.SelectedValue, "", "");//, LogUserModel.UserId, LogUserModel.UserName
         ls_Record_insert.Sql = sql_Record_insert;
         ls_sum.Add(ls_Record_insert);
 
