@@ -174,6 +174,10 @@
                                     <asp:ListItem Value="14号工作台">14号工作台</asp:ListItem>
                                     <asp:ListItem Value="15号工作台">15号工作台</asp:ListItem>
                                     <asp:ListItem Value="16号工作台">16号工作台</asp:ListItem>
+                                    <asp:ListItem Value="17号工作台">17号工作台</asp:ListItem>
+                                    <asp:ListItem Value="18号工作台">18号工作台</asp:ListItem>
+                                    <asp:ListItem Value="19号工作台">19号工作台</asp:ListItem>
+                                    <asp:ListItem Value="20号工作台">20号工作台</asp:ListItem>
                                 </asp:DropDownList>
                             </td>
                         </tr>
