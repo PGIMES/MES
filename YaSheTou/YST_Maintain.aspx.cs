@@ -71,7 +71,7 @@ public partial class YaSheTou_YST_Maintain : System.Web.UI.Page
         }
         else
         {
-            re_flag = "删除失败：压射头编号" + code + ",设备号"+ dt.Rows[0][0].ToString() + "使用中，不能删除！";
+            re_flag = "删除失败：压射头编号" + code + ",设备号"+ dt.Rows[0][0].ToString() + "已使用，不能删除！";
         }
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
         return result;

@@ -24,7 +24,7 @@
                     title: '新增-压射头',
                     closeBtn: 2,
                     type: 2,
-                    area: ['400px', '250px'],
+                    area: ['400px', '300px'],
                     fixed: false, //不固定
                     maxmin: true, //开启最大化最小化按钮
                     content: url

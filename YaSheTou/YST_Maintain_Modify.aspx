@@ -60,6 +60,14 @@
                 layer.alert("【供应商】不可为空！");
                 return false;
             }
+            if ($("#txt_code").val() == "") {
+                layer.alert("【压射头编码】不可为空！");
+                return false;
+            }
+            if ($("#ddl_xwz").val() == "") {
+                layer.alert("【位置】不可为空！");
+                return false;
+            }
             if ($("#txt_part").val() == "") {
                 layer.alert("【物料号】不可为空！");
                 return false;
@@ -140,9 +148,39 @@
                             </td> 
                         </tr>
                         <tr>
+                            <td>压射头编码</td>
+                            <td>
+                                <asp:TextBox ID="txt_code" Width="150px" Height="27px"  runat="server" CssClass="linewrite"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>位置</td>
+                            <td>
+                               <asp:DropDownList ID="ddl_xwz" class="form-control input-s-sm" CssClass="linewrite" runat="server" Height="27px" Width="150px">
+                                    <asp:ListItem Value=""></asp:ListItem>
+                                    <asp:ListItem Value="1号工作台">1号工作台</asp:ListItem>
+                                    <asp:ListItem Value="2号工作台">2号工作台</asp:ListItem>
+                                    <asp:ListItem Value="3号工作台">3号工作台</asp:ListItem>
+                                    <asp:ListItem Value="4号工作台">4号工作台</asp:ListItem>
+                                    <asp:ListItem Value="5号工作台">5号工作台</asp:ListItem>
+                                    <asp:ListItem Value="6号工作台">6号工作台</asp:ListItem>
+                                    <asp:ListItem Value="7号工作台">7号工作台</asp:ListItem>
+                                    <asp:ListItem Value="8号工作台">8号工作台</asp:ListItem>
+                                    <asp:ListItem Value="9号工作台">9号工作台</asp:ListItem>
+                                    <asp:ListItem Value="10号工作台">10号工作台</asp:ListItem>
+                                    <asp:ListItem Value="11号工作台">11号工作台</asp:ListItem>
+                                    <asp:ListItem Value="12号工作台">12号工作台</asp:ListItem>
+                                    <asp:ListItem Value="13号工作台">13号工作台</asp:ListItem>
+                                    <asp:ListItem Value="14号工作台">14号工作台</asp:ListItem>
+                                    <asp:ListItem Value="15号工作台">15号工作台</asp:ListItem>
+                                    <asp:ListItem Value="16号工作台">16号工作台</asp:ListItem>
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>物料号</td>
                             <td>
-                                <asp:TextBox ID="txt_part" Width="150px" Height="27px"  runat="server" ClientInstanceName="part" CssClass="linewrite"></asp:TextBox>
+                                <asp:TextBox ID="txt_part" Width="150px" Height="27px"  runat="server" CssClass="linewrite"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>

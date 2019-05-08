@@ -203,6 +203,12 @@
                                         <asp:ListItem Value="8号工作台">8号工作台</asp:ListItem>
                                         <asp:ListItem Value="9号工作台">9号工作台</asp:ListItem>
                                         <asp:ListItem Value="10号工作台">10号工作台</asp:ListItem>
+                                        <asp:ListItem Value="11号工作台">11号工作台</asp:ListItem>
+                                        <asp:ListItem Value="12号工作台">12号工作台</asp:ListItem>
+                                        <asp:ListItem Value="13号工作台">13号工作台</asp:ListItem>
+                                        <asp:ListItem Value="14号工作台">14号工作台</asp:ListItem>
+                                        <asp:ListItem Value="15号工作台">15号工作台</asp:ListItem>
+                                        <asp:ListItem Value="16号工作台">16号工作台</asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>
