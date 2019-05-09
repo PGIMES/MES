@@ -91,7 +91,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" 
-                        AutoGenerateColumns="False" Width="810px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" OnHtmlRowCreated="gv_HtmlRowCreated">
+                        AutoGenerateColumns="False" Width="950px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -108,6 +108,9 @@
                             <dx:GridViewDataTextColumn Caption="累计模次" FieldName="lj_mc" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="位置" FieldName="wz" Width="130px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="状态" FieldName="yzt_status" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="创建时间" FieldName="CreateTime" Width="140px" VisibleIndex="7">
+                                <PropertiesTextEdit DisplayFormatString="yyyy/MM/dd HH:mm:ss"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99"
                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
