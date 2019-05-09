@@ -16,20 +16,20 @@
         var taskList = taskLists.OrderBy(p => p.Sort);
     %>
     <style type="text/css">
-        .commenttable { margin:12px auto 0 auto; width:97%; background:#ededee; }
+        .commenttable { margin:12px auto 0 13px; width:1200px; background:#ededee; }
         .commenttable tr th { text-align:left; height:25px; background:#e7ecf5; font-weight:normal;}
-        .commenttable tr td { height:28px; background:#ffffff;}
+        .commenttable tr td { height:20px; background:#ffffff;}
     </style>
     <%
         if (taskList.Count() > 0) {  %>
             <table cellpadding="1" cellspacing="1" border="0" class="commenttable">
         <tr>
-            <th style="width:10%;">&nbsp;步骤</th>
-            <th style="width:10%;">&nbsp;处理人</th>
+            <th style="width:180px;">&nbsp;步骤</th>
+            <th style="width:80px;">&nbsp;处理人</th>
            <%-- <th style="width:10%;">&nbsp;收件时间</th>--%>
-            <th style="width:10%;">&nbsp;完成时间</th>
-            <th style="width:5%;">&nbsp;耗时(工作日)</th>
-            <th style="width:25%;">&nbsp;处理意见</th>
+            <th style="width:120px;">&nbsp;完成时间</th>
+            <th style="width:120px;">&nbsp;耗时(工作日)</th>
+            <th style="width:60%;">&nbsp;处理意见</th>
            
         </tr>
 <% 
@@ -45,9 +45,11 @@
             {
                 signSrc = string.Concat("../../Files/UserSigns/", task.ReceiveID, ".gif");
             }
-            string st = task.Type.ToString().Replace("5"," [抄送]").Replace("4"," [退回]") ;
+            string st = task.Status.ToString().Replace("3"," 【退回】") ;
             st = st.Length <= 1 ? "" : st;
-            st = "";
+            string type=task.Type.ToString().Replace("5"," 【抄送】") ;
+            type = type.Length <= 1 ? "" : type;
+           // st = "";
             //耗时
             DateTime DateTime1,
             DateTime2 = task.SenderTime;//现在时间  
@@ -90,14 +92,14 @@
     %>
     
         <tr>
-            <td style="width:10%;">&nbsp;<%=bwf.GetStepName(task.StepID, task.FlowID) %></td>
-            <td style="width:10%;">&nbsp;<%=task.ReceiveName   %></td>
+            <td style="width:180px;">&nbsp;<%=bwf.GetStepName(task.StepID, task.FlowID)+st+type %></td>
+            <td style="width:80px;">&nbsp;<%=task.ReceiveName   %></td>
             <%--<td style="width:10%;">&nbsp;<%=task.ReceiveTime.ToDateTimeStringS() %></td>--%>
-            <td style="width:10%;">&nbsp;<%=task.CompletedTime1.HasValue?task.CompletedTime1.Value.ToDateTimeStringS():"" %></td>
-            <td style="width:5%;">&nbsp;<%=dateDiff %></td>
-            <td style="width:25%;">&nbsp;
-                <div style="float:left; height:26px; padding:2px 0 0 2px; "> <%=task.Comment %> </div>
-                <div style="float:left; height:26px; width:77px; margin:1px 2px 0 1px; background:url(<%=signSrc%>) no-repeat left center;">&nbsp;</div></td>
+            <td style="width:150px;">&nbsp;<%=task.CompletedTime1.HasValue?task.CompletedTime1.Value.ToDateTimeStringS():"" %></td>
+            <td style="width:120px;">&nbsp;<%=dateDiff %></td>
+            <td style="width:60%;">&nbsp;
+                <div style="float:left; height:20px; padding:2px 0 0 2px; "> <%=task.Comment %> </div>
+                <div style="float:left; height:20px; width:77px; margin:1px 2px 0 1px; background:url(<%=signSrc%>) no-repeat left center;">&nbsp;</div></td>
         </tr>        
         <%if(!task.Files.IsNullOrEmpty()){ %>
         <tr>
