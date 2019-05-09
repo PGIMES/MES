@@ -12,12 +12,14 @@ using System.Data.SqlClient;
 using System.Web.UI.HtmlControls;
 using DevExpress.Web;
 using RoadFlow.Platform;
+using System.IO;
+
 public partial class Fin_FeiYongBX : PGIBasePage
 {
     public string fieldStatus;
     public string DisplayModel;
     public string ValidScript = "";
-
+    public string StepName = "";
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.EnableViewState = true;
@@ -119,10 +121,20 @@ public partial class Fin_FeiYongBX : PGIBasePage
                 supervisor.Text = dtMst.Rows[0]["supervisor"].ToString();
                 deptm.Text = dtMst.Rows[0]["deptm"].ToString();
                 deptmfg.Text = dtMst.Rows[0]["deptmfg"].ToString();
+                chuna.Value = dtMst.Rows[0]["chuna"].ToString();
+                if (dtMst.Rows[0]["files"].ToString() != "")
+                {
+                    this.ip_filelist_db.Value = dtMst.Rows[0]["files"].ToString();
+                    bindtab();
+                }
             }
             // show grid data
             bindData();
             ShowHZ();
+        }
+        else
+        {
+            bindtab();
         }
 
         #endregion
@@ -135,6 +147,7 @@ public partial class Fin_FeiYongBX : PGIBasePage
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+        StepName = BWorkFlow.GetStepName(StepID.ToGuid(), FlowID.ToGuid());
         ViewState["fieldStatus"] = fieldStatus;
 
     }
@@ -174,6 +187,91 @@ public partial class Fin_FeiYongBX : PGIBasePage
         grid.DataSource = dtDtl;
         grid.DataBind();
 
+    }
+
+    void bindtab()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" 
+            + Request.QueryString["stepid"] + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + Request.QueryString["flowid"] 
+            + "' as varchar(36)) and instanceid='" + ViewState["aplno"] + "' and stepname='申请人'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
+
+        tab1.Rows.Clear();
+        string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_2 = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            Label lb = new Label();
+
+            if (ls_files_2.Length == 3)
+            {
+                hl.Text = ls_files_2[0].ToString();
+                hl.NavigateUrl = ls_files_2[1].ToString();
+                hl.Target = "_blank";
+
+                lb.Text = ls_files_2[2].ToString();
+            }
+            else//之前的文件，只有一个路径
+            {
+
+                hl.Text = "文件浏览";
+                hl.NavigateUrl = ls_files_2[0].ToString();
+                hl.Target = "_blank";
+
+                lb.Text = "";
+            }
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+            td2.CssClass = "hidden";
+
+            if (is_del)
+            {
+                //Button Btn = new Button(); 
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1.Rows.Add(tempRow);
+        }
+    }
+
+    void Btn_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db.Value;
+        string[] ls_files = filedb.Split(';');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + ";"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db.Value = files;
+
+        bindtab();
     }
 
 
@@ -269,10 +367,10 @@ public partial class Fin_FeiYongBX : PGIBasePage
     public static string DelFile(string P1, string P2)
     {
         string result = "";
-        var sql = string.Format(" update   PUR_pr_main_Form set files=replace(files,'{0}','')  where prno='{1}' ", P1, P2);
-        var value = DbHelperSQL.ExecuteSql(sql);
-        if (value > 0)
-        { result = value.ToString(); }
+       //// var sql = string.Format(" update   PUR_pr_main_Form set files=replace(files,'{0}','')  where prno='{1}' ", P1, P2);
+       // var value = DbHelperSQL.ExecuteSql(sql);
+       // if (value > 0)
+       // { result = value.ToString(); }
         return result;
     }
     /// <summary>
@@ -284,7 +382,7 @@ public partial class Fin_FeiYongBX : PGIBasePage
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[HR_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
+        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "'  or workcode='"+dept+"' ) )");
         object obj = DbHelperSQL.GetSingle(sb.ToString());
         return obj == null ? "" : obj.ToString();
     }
@@ -308,10 +406,28 @@ public partial class Fin_FeiYongBX : PGIBasePage
     [System.Web.Services.WebMethod()]
     public static string getChargeLeaderByUser(string userid)
     {
-        RoadFlow.Platform.Users users = new Users();
-        var M = users.GetByAccount(userid);
-        string obj = users.GetChargeLeader(M.ID);
-
+        // RoadFlow.Platform.Users users = new Users();
+        // var M = users.GetByAccount(userid);
+        // string obj = users.GetChargeLeader(M.ID);
+        string obj = "";
+        if ("财务二部，采购二部,副总经理室,人事二部,IT部,销售二部,总经理室,质量二部".IndexOf(userid) >= 0)
+        {//徐总
+            obj = "u_1459D7BC-C19C-41AD-8221-191600BF14B6";
+        }
+        else if("工程二部,工程三部,工程四部,技术副总经理室,项目管理部,压铸技术部,".IndexOf(userid) >= 0)
+        { //施总
+            obj = "u_49F04DEE-3969-46E5-94EF-A98000C6A917";
+        }
+        else if ("设备二部,生产三部（压铸）,生产四部,物流二部,运营副总经理室1".IndexOf(userid) >= 0)
+        {//沈总
+            obj = "u_AE087A29-F74D-469E-A5D6-24CDFCC0C7EC";
+        }
+        else if("财务一部,人事一部,设备一部,生产一部,物流一部,质量一部,工程一部,生产二部,".IndexOf(userid) >= 0)
+        { //汤总
+            obj = "u_66690388-4673-4A7E-A619-8361B5E3278F";
+        }
+        
+                
         return obj == null ? "" : obj.ToString();
     }
 
@@ -355,19 +471,19 @@ public partial class Fin_FeiYongBX : PGIBasePage
                 aplno.Text = ViewState["aplno"].ToString();
             }
 
-            # region Main_form Dtl_Form             
+            # region Main_form  & Dtl_Form             
             List<CommandInfo> cmdlist = new List<CommandInfo>();
             //Main_form
             CommandInfo cmdmain = new CommandInfo();
             if (DbHelperSQL.Exists("select count(1) from fin_feiyongBX_main_form where aplno='" + straplno + "'") == true)
             {
                 cmdmain.CommandText = "update Fin_FeiYongBX_main_form set aplno=@aplno, createdate=@createdate, createid=@createid, createname=@createname, createdept=@createdept, aplid=@aplid, aplname=@aplname, apldept=@apldept"
-                    + ", apljob=@apljob, aplphone=@aplphone, apldomain=@apldomain, totalfee=@totalfee, supervisor=@supervisor, deptm=@deptm, deptmfg=@deptmfg, onlyflag=@onlyflag ,costcenter=@costcenter,deptcode=@deptcode   where  aplno=@aplno ";
+                    + ", apljob=@apljob, aplphone=@aplphone, apldomain=@apldomain, totalfee=@totalfee, supervisor=@supervisor, deptm=@deptm, deptmfg=@deptmfg, onlyflag=@onlyflag ,costcenter=@costcenter,deptcode=@deptcode,chuna=@chuna   where  aplno=@aplno ";
             }
             else
             {
-                cmdmain.CommandText = "insert into fin_feiyongBX_main_form( aplno, createdate, createid, createname, createdept, aplid, aplname, apldept, apljob, aplphone, apldomain, totalfee, supervisor, deptm, deptmfg,  onlyflag, costcenter, deptcode)values"
-                                                                       + "(@aplno, @createdate,@createid,@createname,@createdept,@aplid,@aplname,@apldept,@apljob,@aplphone,@apldomain,@totalfee,@supervisor,@deptm,@deptmfg,@onlyflag,@costcenter,@deptcode )";
+                cmdmain.CommandText = "insert into fin_feiyongBX_main_form( aplno, createdate, createid, createname, createdept, aplid, aplname, apldept, apljob, aplphone, apldomain, totalfee, supervisor, deptm, deptmfg,  onlyflag, costcenter, deptcode,chuna)values"
+                                                                       + "(@aplno, @createdate,@createid,@createname,@createdept,@aplid,@aplname,@apldept,@apljob,@aplphone,@apldomain,@totalfee,@supervisor,@deptm,@deptmfg,@onlyflag,@costcenter,@deptcode,@chuna )";
             }
             SqlParameter[] parammain = {
                           new SqlParameter() { ParameterName="@aplno",  SqlDbType=SqlDbType.VarChar, Value= straplno },
@@ -388,6 +504,7 @@ public partial class Fin_FeiYongBX : PGIBasePage
                           new SqlParameter() { ParameterName="@onlyflag",  SqlDbType=SqlDbType.VarChar, Value=  onlyflag.Text },
                           new SqlParameter() { ParameterName="@costcenter",  SqlDbType=SqlDbType.VarChar, Value=  Request["costcenter"] },
                           new SqlParameter() { ParameterName="@deptcode",  SqlDbType=SqlDbType.VarChar, Value=  deptcode.Text },
+                          new SqlParameter() { ParameterName="@chuna",  SqlDbType=SqlDbType.VarChar, Value=  chuna.Value },
                     };
             cmdmain.Parameters = parammain;
             cmdlist.Add(cmdmain);
@@ -462,7 +579,13 @@ public partial class Fin_FeiYongBX : PGIBasePage
             DbHelperSQL.ExecuteSqlTran(cmdlist);
             dt.AcceptChanges();
             script += "if($('#txtInstanceID').val()==''){$('#txtInstanceID').val('" + straplno + "');$('#aplno').val('" + straplno + "');};";
-
+            //Validate 是否重复
+            //var sql = "select costcateid,feedate from Fin_FeiYongBX_dtl_form where aplno='" + straplno + "' and costcateid in('P001','P002')	group by costcateid,feedate having count(1)>1";
+            //var dtValid = DbHelperSQL.Query(sql).Tables[0];
+            //if (dtValid.Rows.Count > 0)
+            //{
+            //    script += "layer.alert('"+ dtValid.Rows[0][0].ToString() + "费用区间重复.');return false;";
+            //}
         }
         catch (Exception e)
         {
@@ -481,20 +604,70 @@ public partial class Fin_FeiYongBX : PGIBasePage
         {
             instanceid = Request.Form["txtInstanceID"] == "" ? (Request["instanceid"]) : (txtInstanceID.Text);
         }
-        //Save file
-        var fileup = (FileUpload)this.FindControl("file");
-        var filepath = "";
-        if (fileup != null)
-        { if (fileup.HasFile)
+        //////Save file
+        ////var fileup = (FileUpload)this.FindControl("file");
+        ////var filepath = "";
+        ////if (fileup != null)
+        ////{ if (fileup.HasFile)
+        ////    {
+        ////        var filename = fileup.FileName;
+        ////        SaveFile(fileup, straplno, out filepath, filename, filename);
+        ////        //更新文件目录
+        ////        string sqlupdatefilecolum = string.Format("update fin_feiyongbx_main_form set files='{0}' where prno='{1}'", filepath, straplno);
+        ////        DbHelperSQL.ExecuteSql(sqlupdatefilecolum);
+        ////        flag = true;
+        ////    }
+        ////}
+
+
+        //===========================
+
+        string filepath = "";//string filepath=this.UploadFiles(this.uploadcontrol);
+        string[] ls_files = ip_filelist.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files)
+        {
+            string[] ls_files_2 = item.Split(',');
+            if (ls_files_2.Length == 3)//挪动路径到po单号下面
             {
-                var filename = fileup.FileName;
-                SaveFile(fileup, straplno, out filepath, filename, filename);
-                //更新文件目录
-                string sqlupdatefilecolum = string.Format("update fin_feiyongbx_main_form set files='{0}' where prno='{1}'", filepath, straplno);
-                DbHelperSQL.ExecuteSql(sqlupdatefilecolum);
-                flag = true;
+                FileInfo fi = new FileInfo(MapPath("~") + ls_files_2[1]);
+
+                var sorpath = @"\UploadFile\FIN_BX\";
+                var despath = MapPath("~") + sorpath + @"\" + straplno + @"\";
+                if (!System.IO.Directory.Exists(despath))
+                {
+                    System.IO.Directory.CreateDirectory(despath);
+                }
+                string tmp = despath + ls_files_2[1].Replace(sorpath, "");
+                if (File.Exists(tmp))
+                {
+                    File.Delete(tmp);
+                }
+                fi.MoveTo(tmp);
+
+                filepath += item.Replace(@"\UploadFile\FIN_BX\", @"\UploadFile\FIN_BX\" + straplno + @"\") + ";";
+            }
+            else
+            {
+                filepath += item + ";";
             }
         }
+
+        string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db)
+        {
+            filepath += item + ";";
+        }
+        if (filepath != "") { filepath = filepath.Substring(0, filepath.Length - 1); }
+
+        string sqlupdatefilecolum = string.Format("update fin_feiyongbx_main_form set files='{0}' where aplno='{1}'", filepath, straplno);
+        DbHelperSQL.ExecuteSql(sqlupdatefilecolum);
+        flag = true;
+        //==============================
+
+
+
+
+
         //执行流程相关事宜
         if (instanceid != "0" && instanceid != "")//0 影响行数; "" 没有prno
         {
@@ -667,7 +840,7 @@ public partial class Fin_FeiYongBX : PGIBasePage
     #region "上传文件"
 
     //保存上传文件路径
-    public static string savepath = "UploadFile\\Purchase";
+    public static string savepath = "UploadFile\\FIN_BX";
     public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldName,string newName )
     {
         var path = MapPath("~") +  savepath + "\\" + subpath;
@@ -873,6 +1046,22 @@ public partial class Fin_FeiYongBX : PGIBasePage
     protected void btnSearchReImbursed_Click(object sender, EventArgs e)
     {
         ShowHZ_Un();
+    }
+
+    protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
+    {
+
+        string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
+        string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
+        string resultFilePath = MapPath("~") + savepath + "\\" + resultFileName;
+        e.UploadedFile.SaveAs(resultFilePath);
+
+        string name = e.UploadedFile.FileName;
+        long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+        string sizeText = sizeInKilobytes.ToString() + " KB";
+
+        e.CallbackData = name + "|" + "\\" + savepath + "\\" + resultFileName + "|" + sizeText;
+
     }
 }
 

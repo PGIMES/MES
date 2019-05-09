@@ -33,10 +33,10 @@ public partial class selectform : System.Web.UI.Page
 
 
             sql +=  " where iscomplete=1 and '"+ _costcateid + "'<>'T009' and applyid='" + Request["aplid"]+"'";
-            sql +=  " and FormNo not in( select instanceid from Fin_feiyongBX_dtl_Form where aplno<>'"+aplno+"' )"; //卡主出差单不可二次报销
+            sql += " and FormNo not in(  select instanceid from Fin_feiyongBX_dtl_Form  d join Fin_feiyongBX_main_Form m  on m.aplno=d.aplno  where isnull(iscomplete,0)<>2 and m.aplno<>'" + aplno+"' )"; //卡主出差单不可二次报销
 
             sql2 += " where iscomplete=1 and '" + _costcateid + "'='T009'  and applyid='" + Request["aplid"] + "'";
-            sql2 += " and FormNo not in( select instanceid from Fin_feiyongBX_dtl_Form   where aplno<>'" + aplno + "' )  ";//卡主私车公用单不可二次报销
+            sql2 += " and FormNo not in(  select instanceid from Fin_feiyongBX_dtl_Form  d join Fin_feiyongBX_main_Form m  on m.aplno=d.aplno  where isnull(iscomplete,0)<>2 and m.aplno<>'" + aplno + "' )  ";//卡主私车公用单不可二次报销
             sql2 += " and FormNo not in(" + formatCond(Request["formno"]) + ")";
             ViewState["sql"] = sql+" union all "+sql2;
             GetData(ViewState["sql"].ToString());
