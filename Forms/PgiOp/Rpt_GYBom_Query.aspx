@@ -79,7 +79,7 @@
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
                     <dx:ASPxGridView ID="gv" runat="server" 
-                        AutoGenerateColumns="False" Width="1350px" 
+                        AutoGenerateColumns="False" Width="1450px" 
                         OnPageIndexChanged="gv_PageIndexChanged" 
                         oncustomcellmerge="gv_CustomCellMerge"    >
                         
@@ -115,6 +115,7 @@
                             <dx:GridViewDataTextColumn Caption="申请(变更)说明" FieldName="ModifyRemark" Width="180px" VisibleIndex="13"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="当前签核人" FieldName="GY_currnode" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="批准日期" FieldName="gy_approvetime" Width="80px" VisibleIndex="15"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="计划员" FieldName="pt_buyer" Width="100px" VisibleIndex="15"></dx:GridViewDataTextColumn>
                             
                        
                            
