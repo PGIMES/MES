@@ -87,5 +87,10 @@ public partial class YaSheTou_YST_Maintain : System.Web.UI.Page
         {
             e.Row.Cells[6].Style.Add("background-color", "#EEEE00");
         }
+        if (e.GetValue("yzt_status").ToString()=="报废")
+        {
+            e.Row.Cells[8].Style.Add("background-color", "#FF0000");
+            e.Row.Cells[8].Style.Add("color", "#FFFFFF");
+        }
     }
 }
