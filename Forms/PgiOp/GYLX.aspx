@@ -544,7 +544,7 @@
             if (JtNum_value != 0) { JSec_value = TjOpSec_value / JtNum_value; }
             JSec.SetText(JSec_value.toFixed(2));
 
-            //单件工时(时)
+            //单台单件工序工时(时)
             var JHour_value = TjOpSec_value/3600;
             JHour.SetText(JHour_value.toFixed(10));
 
@@ -648,7 +648,7 @@
             if (JtNum_value != 0) { JSec_value = TjOpSec_value / JtNum_value; }
             JSec.SetText(JSec_value.toFixed(2));
 
-            //单件工时(时)
+            //单台单件工序工时(时)
             var JHour_value = TjOpSec_value/3600;
             JHour.SetText(JHour_value.toFixed(10));
 
@@ -1519,7 +1519,7 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
+                                        <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="JHour" Width="90px" runat="server" Value='<%# Eval("JHour")%>' 
                                                     ClientInstanceName='<%# "JHour"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
@@ -1882,7 +1882,7 @@
                                             </DataItemTemplate>
                                             <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单件工<br />时(小时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
+                                        <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(时)" FieldName="JHour" Width="90px" VisibleIndex="17"><%--Width="55px"--%>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="JHour" Width="90px" runat="server" Value='<%# Eval("JHour")%>' 
                                                     ClientInstanceName='<%# "JHour_yz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">

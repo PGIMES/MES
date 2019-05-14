@@ -235,7 +235,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2165px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2170px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -289,7 +289,7 @@
                             <dx:GridViewDataTextColumn Caption="单件工<br />时(秒)" FieldName="JSec" Width="50px" VisibleIndex="16">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单件工时<br />(小时)" FieldName="JHour" Width="65px" VisibleIndex="17">
+                            <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(时)" FieldName="JHour" Width="70px" VisibleIndex="17">
                                     <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台需<br />要人数" FieldName="col1" Width="55px" VisibleIndex="18"></dx:GridViewDataTextColumn>
@@ -330,7 +330,7 @@
         <table>
             <tr>
                 <td><%-- OnHtmlDataCellPrepared="gv_HtmlDataCellPrepared"--%>
-                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2295px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
+                    <dx:ASPxGridView ID="gv_yz" runat="server" KeyFieldName="id_dtl" AutoGenerateColumns="False" Width="2300px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" 
                           OnCustomCellMerge="gv_yz_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {           //if(MainContent_gv_DXMainTable.cpPageChanged == 1)     //grid为控件的客户端id
             	                   // window.alert('Page changed!');
@@ -390,7 +390,7 @@
                             <dx:GridViewDataTextColumn Caption="单件工<br />时(秒)" FieldName="JSec" Width="50px" VisibleIndex="16">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="单件工时<br />(小时)" FieldName="JHour" Width="65px" VisibleIndex="17">
+                            <dx:GridViewDataTextColumn Caption="单台单件<br />工序工时(时)" FieldName="JHour" Width="70px" VisibleIndex="17">
                                 <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单台需<br />要人数" FieldName="col1" Width="55px" VisibleIndex="18"></dx:GridViewDataTextColumn>
