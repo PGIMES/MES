@@ -324,9 +324,9 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                 txt_end_mc.Text = "";
                 return;
             }
-            if (ddl_xwz.SelectedValue == "")
+            if (ddl_status.SelectedValue == "正常" && ddl_xwz.SelectedValue == "")
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【下位置】不可为空！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【状态】为 正常,【下位置】不可为空！')", true);
                 return;
             }
             ls_sum = sql(changetype);
