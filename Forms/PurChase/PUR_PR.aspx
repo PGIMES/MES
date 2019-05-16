@@ -13,7 +13,7 @@
     <script src="../../Content/js/layer/layer.js"></script>
     <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
-    <link href="../../Content/css/custom.css" rel="stylesheet" />
+    <link href="../../Content/css/custom.css?t=20190516" rel="stylesheet" />
     <link href="/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <style>
         body {
