@@ -11,7 +11,7 @@
     <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
     <link href="../../Content/js/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <script src="../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
-    <link href="../../Content/css/custom.css" rel="stylesheet" />
+    <link href="../../Content/css/custom.css?t=20190516" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {
