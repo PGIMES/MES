@@ -440,8 +440,8 @@
     </script>
     <style>
         body {
-            overflow-x: auto;
-            overflow-y: hidden;
+            /*overflow-x: auto;
+            overflow-y: hidden;*/
         }
 
         hidden {
