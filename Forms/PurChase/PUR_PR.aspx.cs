@@ -8,6 +8,11 @@ using Maticsoft.DBUtility;
 using System.Text;
 using System.Linq;
 using DevExpress.Web;
+using System.Web.Services;
+using System.Configuration;
+using System.Data.SqlClient;
+using Pgi.Auto;
+using System.IO;
 
 public partial class PUR_PR : PGIBasePage
 {
@@ -15,6 +20,7 @@ public partial class PUR_PR : PGIBasePage
     public string fieldStatus;    
     public string DisplayModel;
     public string ValidScript="";
+    public string IsRead = "N";
 
     public string SQ_StepID = "6F4C466E-6673-4C18-A541-333565FBF545";
 
@@ -229,19 +235,27 @@ protected void Page_Load(object sender, EventArgs e)
 
             //var tbltype = DbHelperSQL.Query("select '存货' as value ,'存货' as text").Tables[0];
             //20181107 add heguiqin 新增采购类别
-            var tbltype = DbHelperSQL.Query("select '存货(刀具类)' as value ,'存货(刀具类)' as text union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text union select '存货(原材料及前期样件)' as value ,'存货(原材料及前期样件)' as text").Tables[0];
-            fun.initDropDownList(prtype, tbltype, "value", "text");
+            //string tbltype_sql = @"select '存货(刀具类)' as value ,'存货(刀具类)' as text 
+            //                union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text 
+            //                union select '存货(原材料及前期样件)' as value ,'存货(原材料及前期样件)' as text";
+            //string tbltype_sql = @"select '存货(刀具类)' as value ,'存货(刀具类)' as text 
+            //                union select '存货(其他辅料类)' as value ,'存货(其他辅料类)' as text 
+            //                union select '存货(原材料及前期样件)' as value ,'存货(原材料及前期样件)' as text
+            //                union select '费用类' as value ,'费用类' as text
+            //                union select '合同类' as value ,'合同类' as text";
+            //var tbltype = DbHelperSQL.Query(tbltype_sql).Tables[0];
+            //fun.initDropDownList(prtype, tbltype, "value", "text");
 
-            BaseFun.loadDepartment(applydept, domain.SelectedValue);//申请部门
-            applydept.Items.Insert(0, "");
+            //BaseFun.loadDepartment(applydept, domain.SelectedValue);//申请部门
+            //applydept.Items.Insert(0, "");
 
-            if (LogUserModel != null)
-            {
-                //当前登陆人员
-                txt_LogUserId.Value = LogUserModel.UserId;
-                txt_LogUserName.Value = LogUserModel.UserName;
-                txt_LogUserDept.Value = LogUserModel.DepartName;
-            }
+            //if (LogUserModel != null)
+            //{
+            //    //当前登陆人员
+            //    txt_LogUserId.Value = LogUserModel.UserId;
+            //    txt_LogUserName.Value = LogUserModel.UserName;
+            //    txt_LogUserDept.Value = LogUserModel.DepartName;
+            //}
 
             DataTable ldt_detail = null;
             string lssql = @"select *,'查看' attachments_name from pur_pr_dtl_form";
@@ -252,14 +266,19 @@ protected void Page_Load(object sender, EventArgs e)
                 if (LogUserModel != null)
                 {
                     CreateDate.Text = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    //CreateById.Text = "02433";
                     CreateById.Text = LogUserModel.UserId;
                     CreateByName.Text = LogUserModel.UserName;
                     this.domain.Text = LogUserModel.DomainName;
                     DeptName.Text = LogUserModel.DepartName;
                     this.phone.Text = LogUserModel.Telephone;
-                    txt_LogUserId.Value = LogUserModel.UserId;
-                    txt_LogUserName.Value = LogUserModel.UserName;
+                    //txt_LogUserId.Value = LogUserModel.UserId;
+                    //txt_LogUserName.Value = LogUserModel.UserName;
+
+                    bind_deptname();
+                    bind_prtype(CreateById.Text);
                 }
+                this.prtype.SelectedIndex = 0;
 
                 lssql += " where 1=0";
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
@@ -276,28 +295,38 @@ protected void Page_Load(object sender, EventArgs e)
                     CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
                     CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
                     CreateDate.Text = dtMst.Rows[0]["CreateDate"].DateFormat("yyyy-MM-dd").ToString().Left(10);
+                    domain.SelectedValue= dtMst.Rows[0]["domain"].ToString();
+
+                    bind_deptname();
+                    bind_prtype(CreateById.Text);
 
                     //将表单主表值给页面
                     Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main_new", this, dtMst.Rows[0]);
 
                     //显示文件
-                    ShowFile(dtMst.Rows[0]["files"] == null ? "" : dtMst.Rows[0]["files"].ToString(), '|');
+                    //ShowFile(dtMst.Rows[0]["files"] == null ? "" : dtMst.Rows[0]["files"].ToString(), '|');
+                    if (dtMst.Rows[0]["files"].ToString() != "")
+                    {
+                        this.ip_filelist_db.Value = dtMst.Rows[0]["files"].ToString();
+                        bindtab();
+                    }
                 }
 
-                if (prtype_value != "存货(刀具类)" && prtype_value != "")
+                if (prtype_value != "刀具类" && prtype_value != "")
                 {
                     lssql = @"select *,'无' attachments_name from pur_pr_dtl_form";
                 }
                 lssql += @" where prno = '" + m_sid + "' order by rowid asc";
 
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
-                
-            }
+
+            }          
+
 
             PRNo.Text = m_sid;
-            ViewState["PRNo"] = m_sid;
-            ViewState["dtl"] = ldt_detail;
-            loadControl();
+            //ViewState["PRNo"] = m_sid;
+            //ViewState["dtl"] = ldt_detail;
+            loadControl(ldt_detail);
 
             setGridIsRead(ldt_detail, prtype_value);
 
@@ -305,13 +334,129 @@ protected void Page_Load(object sender, EventArgs e)
         else
         {
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
-            //ViewState["dtl"] = ldt;
-            loadControl();
+            loadControl(ldt);
+            bindtab();
         }
-
+         
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+
+    }
+
+    void bindtab()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query(@"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                                        where cast(stepid as varchar(36))=cast('" + Request.QueryString["stepid"] + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" 
+                                        + Request.QueryString["flowid"] + "' as varchar(36)) and instanceid='" + this.m_sid + "' and stepname='申请'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
+
+        tab1.Rows.Clear();
+        string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_2 = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            Label lb = new Label();
+
+            if (ls_files_2.Length == 3)
+            {
+                hl.Text = ls_files_2[0].ToString();
+                hl.NavigateUrl = ls_files_2[1].ToString();
+                hl.Target = "_blank";
+
+                lb.Text = ls_files_2[2].ToString();
+            }
+            else//之前的文件，只有一个路径
+            {
+
+                string s = ls_files_2[0].ToString();
+                string[] ss= s.Split(new string[] { @"\" }, StringSplitOptions.RemoveEmptyEntries);
+                hl.Text = ss[ss.Length - 1].ToString(); //"文件浏览";
+
+                hl.NavigateUrl = ls_files_2[0].ToString();
+                hl.Target = "_blank";
+
+                lb.Text = "";
+            }
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                //Button Btn = new Button(); 
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1.Rows.Add(tempRow);
+        }
+    }
+
+    void Btn_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db.Value;
+        string[] ls_files = filedb.Split('|');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + "|"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db.Value = files;
+
+        bindtab();
+    }
+
+    //绑定申请部门
+    public void bind_deptname()
+    {
+        var tbldept = DbHelperSQL.Query("exec Pur_GetDeptByPerson '" + CreateById.Text + "','" + domain.SelectedValue + "'");
+        applydept.DataSource = tbldept;
+        applydept.DataTextField = "Dept_Name";
+        applydept.DataValueField = "Dept_Name";
+        applydept.DataBind();
+    }
+
+    //绑定采购类别
+    public void bind_prtype(string CreateById)
+    {
+        BaseFun fun = new BaseFun();
+
+        //string tbltype_sql = @"exec Pur_GetClassByPerson '" + CreateById + "','','PR'";
+        string tbltype_sql = @"select * from (
+                                select '刀具类' as type ,1 as sort
+                                union select '非刀具辅料类' as type ,2 as sort
+                                union select '原材料' as type  ,3 as sort
+                                union select '费用服务类' as type  ,4 as sort
+                                union select '合同类' as type ,5 as sort
+                                            ) a order by sort";
+        var tbltype = DbHelperSQL.Query(tbltype_sql).Tables[0];
+        DataRow dr = tbltype.NewRow(); dr["type"] = ""; tbltype.Rows.InsertAt(dr, 0);
+        fun.initDropDownList(prtype, tbltype, "type", "type");
 
     }
 
@@ -346,6 +491,8 @@ protected void Page_Load(object sender, EventArgs e)
 
     public void setread(int i,string formtype)
     {
+        IsRead = "Y";
+
         btnAddDetl.Visible = false;
         btnDelete.Visible = false;
 
@@ -361,30 +508,35 @@ protected void Page_Load(object sender, EventArgs e)
         prtype.Enabled = false;
 
         //file.Visible = false;
+        this.uploadcontrol.Visible = false;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BackColor = System.Drawing.Color.Transparent;
-
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).ReadOnly = true;
-
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
-
-        if (formtype == "存货(刀具类)")
+        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh") is TextBox)
+        {
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BackColor = System.Drawing.Color.Transparent;
+        }
+        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice") is TextBox)
+        {
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+        }
+        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype") is TextBox)
         {
             ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
         }
-        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype") is TextBox)
         {
             ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
         }
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle= BorderStyle.None;
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(72);
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit") is ASPxComboBox)
+        {
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+        }
 
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
@@ -396,12 +548,19 @@ protected void Page_Load(object sender, EventArgs e)
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(110);
         ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).ReadOnly = true;
-        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["targetPrice"], "targetPrice")).BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).ReadOnly = true;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).ReadOnly = true;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
+                
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BorderStyle = BorderStyle.None;
+        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BorderStyle = BorderStyle.None;
 
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
@@ -414,30 +573,23 @@ protected void Page_Load(object sender, EventArgs e)
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BackColor = System.Drawing.Color.Transparent;
-
-        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).ReadOnly = true;
-        //((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["paraDesc"], "paraDesc")).BorderStyle = BorderStyle.None;
-
+        
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
         ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BackColor = System.Drawing.Color.Transparent;
 
-        //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(72);
+        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc") is ASPxComboBox)
         {
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
         }
-
-        //((DropDownList)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
-
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
     }
 
     public  string GetDanHao()
@@ -450,13 +602,9 @@ protected void Page_Load(object sender, EventArgs e)
     }
 
     #region "WebMethod"
-   /// <summary>
-    /// 获取指定物料最低历史单价
-    /// </summary>
-    /// <param name="P1">物料号</param>
-    /// <param name="P2">暂不使用，空即可</param>
-    /// <returns></returns>
-     [System.Web.Services.WebMethod()] 
+
+    //获取指定物料最低历史单价
+    [WebMethod] 
     public static string GetHistoryPrice(string P1, string P2)
     {
         /*string result = "";
@@ -474,18 +622,48 @@ protected void Page_Load(object sender, EventArgs e)
         return result;*/
 
         string result = "";//历史采购最低价  未税
-        string sql = @"select top 1 [pod_pur_cost]
-                    from[qad].[dbo].[qad_pod_det]  
-                    where pod_nbr<> '11801'  and pod_type<> 'm'   and pod_part = '{0}' and pod_domain = '{1}'   
-                    order by [pod_pur_cost] asc ";
+        //string sql = @"select top 1 [pod_pur_cost]
+        //            from[qad].[dbo].[qad_pod_det]  
+        //            where pod_nbr<> '11801'  and pod_type<> 'm'   and pod_part = '{0}' and pod_domain = '{1}'   
+        //            order by [pod_pur_cost] asc ";
 
-        sql = string.Format(sql, P1, P2);
+        //有物料号取采购记录和价格单最低价
+        string sql = @"select top 1 [pod_pur_cost]
+                        from(
+                            select[pod_pur_cost]
+                            from[qad].[dbo].[qad_pod_det]--采购历史记录
+                            where pod_nbr <> '11801'  and pod_type <> 'm'   and pod_part = '{0}' and pod_domain = '{1}'
+                            union all
+                            select[pc_amt[1]]] [pod_pur_cost]
+                            from qad.dbo.qad_pc_mstr --价格单记录
+                            where pc_part='{0}' and pc_domain='{1}'
+                            ) t
+                        order by [pod_pur_cost] asc ";
+
+       sql = string.Format(sql, P1, P2);
 
         var value = DbHelperSQL.GetSingle(sql);
-        result = value == null ? "" : value.ToString();
+        result = value == null ? "0.0000" : value.ToString();
         return result;
     }
-    [System.Web.Services.WebMethod()]
+    [WebMethod]
+    public static string getHisToryPrice_By_mc_ms(string mc, string ms,string p2)
+    {
+        string result = "";
+        //开窗选择，根据名称及描述
+        string sql = @"exec [z_SelectWindow] 'historyprice','{0},','{1}','','',''";
+
+        sql = string.Format(sql, mc + "," + ms, p2);
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        result = dt.Rows[0]["价格"].ToString();
+        if (dt.Rows.Count >= 2)
+        {
+            result = dt.Rows[1]["价格"].ToString();
+        }
+        return result;
+    }
+
+    [WebMethod]
     public static string GetDaoJuMatInfo(string P1, string P2, string P3)
     {
         /*
@@ -504,19 +682,19 @@ protected void Page_Load(object sender, EventArgs e)
         //20181108 modify heguiqin
         string result = "";
         string sql = "";
-        if (P3 == "存货(刀具类)")
+        if (P3 == "刀具类")
         {
-            sql = @"select a.wlh,a.wlmc,a.ms,a.class,a.type,a.upload,b.pt_status
-	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.domain and [pod_sched]=1 and [pod_part]=a.wlh  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+            //暂时取pt_mstr表的名称、描述，不然历史价格开窗会有问题
+            //sql = @"select a.wlh,a.wlmc,a.ms,a.class,a.type,a.upload,b.pt_status
+            sql = @"select a.wlh,b.pt_desc1 wlmc,b.pt_desc2 ms,a.class,a.type,a.upload,b.pt_status
                     from dbo.PGI_BASE_PART_DATA a 
 	                    left join dbo.qad_pt_mstr b on a.domain=b.pt_domain and a.wlh=b.pt_part
-                    where a.wlh='{0}' and a.domain='{1}' and (b.pt_status<>'DEAD' and b.pt_status<>'OBS')";
+                    where a.wlh='{0}' and a.domain='{1}' and RIGHT(a.wlh,1)<>'X' and (b.pt_status<>'DEAD' and b.pt_status<>'OBS')";
         }
 
-        if (P3 == "存货(其他辅料类)")
+        if (P3 == "非刀具辅料类")
         {
             sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
-	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
                     from dbo.qad_pt_mstr a
 	                    left join(
 		                    select distinct pl_domain, PL_PROD_LINE 
@@ -527,13 +705,12 @@ protected void Page_Load(object sender, EventArgs e)
 		                    where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
 		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
                     where pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'z%' and pt_prod_line<>'4010'
-                        and pt_part='{0}' and pt_domain='{1}' ";// and(pt_prod_line = '4090' or pt_prod_line = '4060')
+                        and pt_part='{0}' and pt_domain='{1}' ";
         }
 
-        if (P3 == "存货(原材料及前期样件)")
+        if (P3 == "原材料")
         {
             sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
-	                    , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
                     from dbo.qad_pt_mstr a
 	                    left join(
 		                    select distinct pl_domain, PL_PROD_LINE 
@@ -550,28 +727,26 @@ protected void Page_Load(object sender, EventArgs e)
                         )
                         and pt_part='{0}' and pt_domain='{1}' ";
         }
-
-
         var value = DbHelperSQL.Query(string.Format(sql, P1, P2)).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
         return result;
     }
-    [System.Web.Services.WebMethod()]
-    public static string GetDeptByDomain(string P1)
+
+    //获取申请部门
+    [WebMethod]
+    public static string GetDeptByDomain(string domain, string applyid)
     {
         string result = "";
-        var sql = string.Format(" select distinct dept_name as value,dept_name as text from  HR_EMP_MES   where domain='{0}' or gc='{1}' ", P1,P1);
+        var sql = string.Format("exec Pur_GetDeptByPerson '{0}','{1}'", applyid, domain);
         var value = DbHelperSQL.Query(sql).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
         return result;
     }
-    /// <summary>
-    /// 根据部门取部门主管
-    /// </summary>
-    /// <returns></returns>
-    [System.Web.Services.WebMethod()]
+
+    //部门取部门主管
+    [WebMethod]
     public static string getDeptLeaderByDept(string domain, string dept)
     {
         StringBuilder sb = new StringBuilder();
@@ -725,7 +900,7 @@ protected void Page_Load(object sender, EventArgs e)
             //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
             formtype = prtype.SelectedValue;
             string domain_value = domain.SelectedValue;
-            string applydept_value = applydept.SelectedValue;
+            //string applydept_value = applydept.SelectedValue;//签核的时候可以读取到，新申请界面 读取不到，这个控件绑定 是通过前台绑定的
 
             List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new", this);
 
@@ -733,14 +908,14 @@ protected void Page_Load(object sender, EventArgs e)
             {
                 if (ls[i].Code.ToLower() == "prtype") { ls[i].Value = formtype; }
                 if (ls[i].Code.ToLower() == "domain") { ls[i].Value = domain_value; }
-                if (ls[i].Code.ToLower() == "applydept") { ls[i].Value = applydept_value; }
+                //if (ls[i].Code.ToLower() == "applydept") { ls[i].Value = applydept_value; }
             }
 
             //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
             DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
 
             //获取单号
-            this.m_sid = ViewState["PRNo"].ToString();
+            //this.m_sid = ViewState["PRNo"].ToString();
             if (this.m_sid == "")//产生请购单号
             {
                 this.m_sid = GetDanHao();
@@ -750,32 +925,76 @@ protected void Page_Load(object sender, EventArgs e)
                     {
                         ls[i].Value = this.m_sid;
                         PRNo.Text = this.m_sid;
-                        ViewState["PRNo"] = this.m_sid;
+                        //ViewState["PRNo"] = this.m_sid;
                     }
                 }
                 
             }
 
             //自定义，上传文件Save file
-            var fileup = (FileUpload)this.FindControl("file");
+            //var fileup = (FileUpload)this.FindControl("file");
             
-            if (fileup != null)
+            //if (fileup != null)
+            //{
+            //    if (fileup.HasFile)
+            //    {
+            //        var filename = fileup.FileName;
+            //        var filepath = "";
+
+            //        SaveFile(fileup, this.m_sid, out filepath, filename, filename);
+
+            //        //增加上传文件列
+            //        Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+            //        lcfile.Code = "files";
+            //        lcfile.Key = "";
+            //        lcfile.Value = filepath;
+            //        ls.Add(lcfile);
+            //    }
+            //}
+
+            string filepath = "";//string filepath=this.UploadFiles(this.uploadcontrol);
+            string[] ls_files = ip_filelist.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in ls_files)
             {
-                if (fileup.HasFile)
+                string[] ls_files_2 = item.Split(',');
+                if (ls_files_2.Length == 3)//挪动路径到po单号下面
                 {
-                    var filename = fileup.FileName;
-                    var filepath = "";
+                    FileInfo fi = new FileInfo(MapPath("~") + ls_files_2[1]);
 
-                    SaveFile(fileup, this.m_sid, out filepath, filename, filename);
+                    var sorpath = @"\UploadFile\Purchase\";
+                    var despath = MapPath("~") + sorpath + @"\" + m_sid + @"\";
+                    if (!System.IO.Directory.Exists(despath))
+                    {
+                        System.IO.Directory.CreateDirectory(despath);
+                    }
+                    string tmp = despath + ls_files_2[1].Replace(sorpath, "");
+                    if (File.Exists(tmp))
+                    {
+                        File.Delete(tmp);
+                    }
+                    fi.MoveTo(tmp);
 
-                    //增加上传文件列
-                    Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
-                    lcfile.Code = "files";
-                    lcfile.Key = "";
-                    lcfile.Value = filepath;
-                    ls.Add(lcfile);
+                    filepath += item.Replace(@"\UploadFile\Purchase\", @"\UploadFile\Purchase\" + m_sid + @"\") + "|";
+                }
+                else
+                {
+                    filepath += item + "|";
                 }
             }
+
+            string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in ls_files_db)
+            {
+                filepath += item + "|";
+            }
+            if (filepath != "") { filepath = filepath.Substring(0, filepath.Length - 1); }
+
+            // 增加上传文件列
+            Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+            lcfile.Code = "files";
+            lcfile.Key = "";
+            lcfile.Value = filepath;
+            ls.Add(lcfile);
 
 
             //主表相关字段赋值到明细表
@@ -788,7 +1007,7 @@ protected void Page_Load(object sender, EventArgs e)
             {
                 dtl.Rows[i]["prno"] = formno_main;
 
-                if (formtype == "存货(刀具类)")//刀具类 隐藏了这两列
+                if (formtype == "刀具类")//刀具类 隐藏了这两列
                 {
                     dtl.Rows[i]["wltype"] = "4010-刀具类";
                     dtl.Rows[i]["unit"] = "EA";
@@ -844,7 +1063,6 @@ protected void Page_Load(object sender, EventArgs e)
             {
                 flag = false;
             }
-
             return;
 
         }
@@ -892,141 +1110,219 @@ protected void Page_Load(object sender, EventArgs e)
 
     //保存上传文件路径
     public static string savepath = "UploadFile\\Purchase";
-    public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldName,string newName )
-    {
-        var path = MapPath("~") +  savepath + "\\" + subpath;
-        filepath = "";
-        //Create directory
-        if (!System.IO.Directory.Exists(path))
-        {
-            System.IO.Directory.CreateDirectory(path);
-        }
-        //save file
-        var filename = "";
-        if (fileupload.HasFile)
-        {
-            var list = fileupload.PostedFiles;
-            foreach (var item in list)
-            {
-                filename = item.FileName ;
-                 
-                var Svrpath = path  +"\\" + filename;            
-                item.SaveAs(Svrpath.Replace("&", "_").TrimStart(' '));
+    //public void SaveFile(FileUpload fileupload,string subpath,out string filepath,string oldName,string newName )
+    //{
+    //    var path = MapPath("~") +  savepath + "\\" + subpath;
+    //    filepath = "";
+    //    //Create directory
+    //    if (!System.IO.Directory.Exists(path))
+    //    {
+    //        System.IO.Directory.CreateDirectory(path);
+    //    }
+    //    //save file
+    //    var filename = "";
+    //    if (fileupload.HasFile)
+    //    {
+    //        var list = fileupload.PostedFiles;
+    //        foreach (var item in list)
+    //        {
+    //            filename = item.FileName ;
 
-                filepath  = filepath + "\\" + savepath + "\\" + subpath + "\\" + filename.Replace("&", "_").TrimStart(' ')+"|";
-            }
-                      
-        }
-        //return save path
-        filepath = filepath.TrimEnd('|');
-        //filepath ="\\"+ savepath + "\\" + subpath+ "\\"+filename.Replace("&", "_").TrimStart(' ');
+    //            var Svrpath = path  +"\\" + filename;            
+    //            item.SaveAs(Svrpath.Replace("&", "_").TrimStart(' '));
+
+    //            filepath  = filepath + "\\" + savepath + "\\" + subpath + "\\" + filename.Replace("&", "_").TrimStart(' ')+"|";
+    //        }
+
+    //    }
+    //    //return save path
+    //    filepath = filepath.TrimEnd('|');
+    //    //filepath ="\\"+ savepath + "\\" + subpath+ "\\"+filename.Replace("&", "_").TrimStart(' ');
+    //}
+
+    //public void ShowFile(string filestring,char splitchar)
+    //{
+    //    var arrFile = filestring.Split(splitchar);
+    //    foreach(string file in arrFile)
+    //    {
+    //        var filename = file.Substring(file.LastIndexOf(@"\")+1);
+    //        HyperLink link = new HyperLink() {
+    //            ID = "lnk_" + file,
+    //            NavigateUrl = file,
+    //            Text = filename,
+    //            Target = "_blank"
+
+    //        };
+    //        link.Attributes.Add("style","padding-left:10px;");
+    //        filecontainer.Controls.AddAt(0,link);
+    //    }
+    //    if (arrFile.Length == 0) {
+    //        Label lbl = new Label() { Text = "无附件" };
+    //        filecontainer.Controls.AddAt(0,lbl ); }
+    //}
+
+    protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
+    {
+        string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
+        string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
+        string resultFilePath = MapPath("~") + savepath + "\\" + resultFileName;
+        e.UploadedFile.SaveAs(resultFilePath);
+
+        string name = e.UploadedFile.FileName;
+        long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+        string sizeText = sizeInKilobytes.ToString() + " KB";
+
+        e.CallbackData = name + "," + "\\" + savepath + "\\" + resultFileName + "," + sizeText;
+
     }
 
-    public void ShowFile(string filestring,char splitchar)
-    {
-        var arrFile = filestring.Split(splitchar);
-        foreach(string file in arrFile)
-        {
-            var filename = file.Substring(file.LastIndexOf(@"\")+1);
-            HyperLink link = new HyperLink() {
-                ID = "lnk_" + file,
-                NavigateUrl = file,
-                Text = filename,
-                Target = "_blank"
-                
-            };
-            link.Attributes.Add("style","padding-left:10px;");
-            filecontainer.Controls.AddAt(0,link);
-        }
-        if (arrFile.Length == 0) {
-            Label lbl = new Label() { Text = "无附件" };
-            filecontainer.Controls.AddAt(0,lbl ); }
-    }
     #endregion
 
 
-    public void loadControl()
-    {/*
-        string formtype = prtype.SelectedValue;
+    //public void loadControl()
+    //{/*
+    //    string formtype = prtype.SelectedValue;
 
-        gvdtl.Columns.Clear();
-        //var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
-        //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl_new_1", this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        GetGrid(ViewState["dtl"] as DataTable, formtype);
-        */
+    //    gvdtl.Columns.Clear();
+    //    //var mode = Request["mode"] == null ? "" : "_" + Request["mode"].ToString();
+    //    //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form" + mode, "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+    //    //Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+    //    Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", "dtl_new_1", this.gvdtl, ViewState["dtl"] as DataTable, 2);
+    //    GetGrid(ViewState["dtl"] as DataTable, formtype);
+    //    */
 
-        string formtype = prtype.SelectedValue;
-        gvdtl.Columns.Clear();
+    //    string formtype = prtype.SelectedValue;
+    //    gvdtl.Columns.Clear();
 
-        string formdiv = "";
-        if (formtype == "存货(刀具类)") { formdiv = "dtl_new_1"; }
-        if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)") { formdiv = "dtl_new_2"; }
-        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ViewState["dtl"] as DataTable, 2);
-        GetGrid(ViewState["dtl"] as DataTable, formtype);
+    //    string formdiv = "";
+    //    if (formtype == "存货(刀具类)") { formdiv = "dtl_new_1"; }
+    //    else if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)") { formdiv = "dtl_new_2"; }
+    //    else { formdiv = "dtl_new_3"; }
+    //    Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ViewState["dtl"] as DataTable, 2);
+    //    GetGrid(ViewState["dtl"] as DataTable, formtype);
 
-        for (int i = 0; i < ((DataTable)ViewState["dtl"]).Rows.Count; i++)
+    //    for (int i = 0; i < ((DataTable)ViewState["dtl"]).Rows.Count; i++)
+    //    {
+    //        if (formtype == "存货(刀具类)" || formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+    //        {
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).Enabled = false;//.ReadOnly = true;
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).Enabled = false;//.ReadOnly = true;
+
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
+    //        }
+
+    //        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype") is TextBox)
+    //        {
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
+    //        }
+    //        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype") is TextBox)
+    //        {
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
+    //        }
+    //        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype") is ASPxComboBox)
+    //        {
+    //            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).Width = Unit.Pixel(160);
+    //        }
+    //        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit") is ASPxComboBox)
+    //        {
+    //            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
+    //        }
+    //        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice") is TextBox)
+    //        {
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+    //            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+    //        }
+
+    //        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
+    //        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(120); 
+    //        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(50);            
+
+    //        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
+    //        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
+    //    }
+
+    //}
+
+    public void loadControl(DataTable ldt)
+    {
+        string domain_code = domain.SelectedValue;
+        string formtype = prtype.SelectedValue; 
+        this.gvdtl.Columns.Clear();
+
+        string formdiv = "dtl_daoju";
+        if (formtype == "刀具类") { formdiv = "dtl_daoju"; }
+        else if (formtype == "非刀具辅料类" || formtype == "原材料") { formdiv = "dtl_ndj_ycl"; }
+        else if (formtype == "费用服务类") { formdiv = "dtl_fw"; }
+        else if (formtype == "合同类") { formdiv = "dtl_ht"; }
+
+        Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ldt, 2);
+        GetGrid(ldt, formtype, domain_code);
+
+        for (int i = 0; i < ldt.Rows.Count; i++)
         {
-            if (formtype == "存货(刀具类)" || formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit") is ASPxComboBox)
             {
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).Enabled = false;//.ReadOnly = true;
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).Enabled = false;//.ReadOnly = true;
-
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
             }
-
-            if (formtype == "存货(刀具类)")
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice") is TextBox)
             {
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
-            }
-            if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
-            {
-                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
             }
 
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(120);
-            if (formtype == "存货(其他辅料类)" || formtype == "存货(原材料及前期样件)")
-            {
-                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(45);
-            }
-
             ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(50);
 
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
 
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc") is ASPxComboBox)
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
+            }
         }
 
     }
 
-    protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        string formtype = prtype.SelectedValue;
+    //protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    string formtype = prtype.SelectedValue;
 
-        if (ViewState["PRNo"] != null && ViewState["PRNo"].ToString() != "")
-        {
-            var dtl = DbHelperSQL.Query(@"select *,'查看' attachments_name from pur_pr_dtl_form 
-                                        where prno=(select prno from PUR_PR_Main_Form where prno='" + ViewState["PRNo"].ToString() + "' and PRType='" + formtype + @"') 
-                                        order by rowid asc").Tables[0];
-            ViewState["dtl"] = dtl;
-        }
-        else
-        {
-            var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
-            ViewState["dtl"] = dtl; ;
-        }
-        loadControl();
-    }
+    //    //if (ViewState["PRNo"] != null && ViewState["PRNo"].ToString() != "")
+    //    //{
+    //    //    var dtl = DbHelperSQL.Query(@"select *,'查看' attachments_name from pur_pr_dtl_form 
+    //    //                                where prno=(select prno from PUR_PR_Main_Form where prno='" + ViewState["PRNo"].ToString() + "' and PRType='" + formtype + @"') 
+    //    //                                order by rowid asc").Tables[0];
+    //    //    ViewState["dtl"] = dtl;
+    //    //}
+    //    //else
+    //    //{
+    //    //    var dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
+    //    //    ViewState["dtl"] = dtl; ;
+    //    //}
+    //    //loadControl();
+
+    //    var dtl = new DataTable();
+    //    if (this.m_sid != null && this.m_sid != "")
+    //    {
+    //        dtl = DbHelperSQL.Query(@"select *,'查看' attachments_name from pur_pr_dtl_form 
+    //                                    where prno=(select prno from PUR_PR_Main_Form where prno='" + ViewState["PRNo"].ToString() + "' and PRType='" + formtype + @"') 
+    //                                    order by rowid asc").Tables[0];
+    //    }
+    //    else
+    //    {
+    //        dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
+    //    }
+    //    loadControl(dtl);
+    //}
 
     protected void btnAddDetl_Click(object sender, EventArgs e)
     {
         DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
-        var dr= dtl.NewRow();
+
+        var dr = dtl.NewRow();
         dr["prno"] = PRNo.Text;
 
         object maxObject;
@@ -1034,26 +1330,26 @@ protected void Page_Load(object sender, EventArgs e)
         if (maxObject.ToString() == "") { maxObject = 0; }
         dr["rowid"] = (Convert.ToInt16(maxObject) + 1).ToString();
 
-        dr["attachments_name"] = prtype.SelectedValue == "存货(刀具类)" ? "查看" : "无";
+        dr["attachments_name"] = prtype.SelectedValue == "刀具类" ? "查看" : "无";
         dtl.Rows.Add(dr);
         var sortrowid = 0;
-        for(int  row=0;row<dtl.Rows.Count;row++)
+        for (int row = 0; row < dtl.Rows.Count; row++)
         {
-                        
+
             if (dtl.Rows[row]["id"].ToString().Trim() != "")
             {
                 sortrowid = Convert.ToInt16(dtl.Rows[row]["rowid"]);
             }
             else
-            {                
+            {
                 dtl.Rows[row]["rowid"] = (sortrowid + 1).ToString();
                 sortrowid = Convert.ToInt16(dtl.Rows[row]["rowid"]);
             }
-            
+
         }
 
-        ViewState["dtl"] = dtl;
-        loadControl();
+        //ViewState["dtl"] = dtl;
+        loadControl(dtl);
     }
 
     protected void btnDelete_Click(object sender, EventArgs e)
@@ -1061,15 +1357,15 @@ protected void Page_Load(object sender, EventArgs e)
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gvdtl);
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
-            ldt.Rows[i]["attachments_name"] = prtype.SelectedValue == "存货(刀具类)" ? "查看" : "无";
+            ldt.Rows[i]["attachments_name"] = prtype.SelectedValue == "刀具类" ? "查看" : "无";
             if (ldt.Rows[i]["flag"].ToString() == "1")
             {
                 ldt.Rows[i].Delete();
             }
         }
         ldt.AcceptChanges();
-        ViewState["dtl"] = ldt;       
-        loadControl();
+        //ViewState["dtl"] = ldt;       
+        loadControl(ldt);
         Pgi.Auto.Public.MsgBox(this.Page, "alert", "删除成功!");
     }
 
@@ -1110,12 +1406,13 @@ protected void Page_Load(object sender, EventArgs e)
     }
     */
 
-    protected void GetGrid(DataTable DT, string prtype_v)
+    protected void GetGrid(DataTable DT, string prtype_v,string domain_code)
     {
+        /*
         DataTable ldt = DT;
         int index = gvdtl.VisibleRowCount;
         string sql = @"select ''  value";
-        if (prtype_v!="存货(刀具类)")
+        if (prtype_v != "存货(刀具类)")
         {
             sql += @" union all select '无'  value";
         }
@@ -1127,6 +1424,22 @@ protected void Page_Load(object sender, EventArgs e)
         }
         DataTable ldt_usefor = DbHelperSQL.Query(sql).Tables[0];
 
+        */
+
+        //用于产品/项目
+        string sql_usefor = @"select ''  value";
+        if (prtype_v != "刀具类")
+        {
+            sql_usefor += @" union all select '无'  value";
+        }
+        sql_usefor += @" union all SELECT replace(pgino+[version]+'/'+productcode,' ','')   FROM [dbo].[form3_Sale_Product_DetailTable]";
+
+        if (prtype_v == "非刀具辅料类")
+        {
+            sql_usefor += @" union all select replace(XMBH+'/'+XMMS,' ','') from [dbo].[formtable_main_55_ZDHXM]";
+        }
+        DataTable ldt_usefor = DbHelperSQL.Query(sql_usefor).Tables[0];
+
         for (int i = 0; i < gvdtl.VisibleRowCount; i++)
         {
             ASPxComboBox tb1 = ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor"));
@@ -1134,12 +1447,39 @@ protected void Page_Load(object sender, EventArgs e)
             tb1.TextField = "value";
             tb1.ValueField = "value";
             tb1.DataBind();
-            tb1.Value = ldt.Rows[i]["usefor"].ToString();
-
+            tb1.Value = DT.Rows[i]["usefor"].ToString();
         }
+
+
     }
 
+
+    protected void gvdtl_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
+    {
+        string param = e.Parameters.Trim();
+        string formtype = param;
+
+        var dtl = new DataTable();
+        if (this.m_sid != null && this.m_sid != "")
+        {
+            dtl = DbHelperSQL.Query(@"select *,'查看' attachments_name from pur_pr_dtl_form 
+                                        where prno=(select prno from PUR_PR_Main_Form where prno='" + this.m_sid + "' and PRType='" + formtype + @"') 
+                                        order by rowid asc").Tables[0];
+            //ViewState["dtl"] = dtl;
+        }
+        else
+        {
+            dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
+            //ViewState["dtl"] = dtl; ;
+        }
+
+        loadControl(dtl);
+    }
+
+
 }
+
+
 
 public class GridViewTemplate : ITemplate
 {

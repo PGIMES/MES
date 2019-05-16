@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="03/15/2019 10:51:39" ReportInfo.Modified="05/09/2019 16:28:21" ReportInfo.CreatorVersion="2016.1.0.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+XyQMQ6xGJO7lhrDCwLPlHHw==">
+      <TableDataSource Name="main" DataType="System.Int32" PropName="Table" Enabled="true" TableName="main" SelectCommand="exec rpt_Po_Print 'K9030015','main'">
+        <Column Name="VName" DataType="System.String"/>
+        <Column Name="VAdress" DataType="System.String"/>
+        <Column Name="VLine2" DataType="System.String"/>
+        <Column Name="VLine4" DataType="System.String"/>
+        <Column Name="ShipToLine1" DataType="System.String"/>
+        <Column Name="ShipToLine2" DataType="System.String"/>
+        <Column Name="ShipToLine3" DataType="System.String"/>
+        <Column Name="ShipToLine4" DataType="System.String"/>
+        <Column Name="采购订单" DataType="System.String"/>
+        <Column Name="订单日期" DataType="System.String"/>
+        <Column Name="打印日期" DataType="System.String"/>
+        <Column Name="供应商" DataType="System.String"/>
+        <Column Name="票据开往" DataType="System.String"/>
+        <Column Name="attr1" DataType="System.String"/>
+        <Column Name="采购员" DataType="System.String"/>
+        <Column Name="确认" DataType="System.String"/>
+        <Column Name="注意" DataType="System.String"/>
+        <Column Name="支付方式" DataType="System.String"/>
+        <Column Name="支付方式E" DataType="System.String"/>
+        <Column Name="发货方式" DataType="System.String"/>
+        <Column Name="备注" DataType="System.String"/>
+        <Column Name="申请人2" DataType="System.String"/>
+        <Column Name="经办" DataType="System.String"/>
+        <Column Name="flag" DataType="System.String"/>
+        <Column Name="税率" DataType="System.Decimal"/>
+        <Column Name="币别" DataType="System.String"/>
+        <CommandParameter Name="PoNo" DataType="22" Size="20"/>
+        <CommandParameter Name="tbl" DataType="22" Size="20"/>
+      </TableDataSource>
+      <TableDataSource Name="dtl" DataType="System.Int32" PropName="Table7" Enabled="true" TableName="dtl" SelectCommand="exec rpt_Po_Print 'K9030015','dtl'">
+        <Column Name="行" DataType="System.Int32"/>
+        <Column Name="物料号" DataType="System.String"/>
+        <Column Name="描述1" DataType="System.String"/>
+        <Column Name="描述2" DataType="System.String"/>
+        <Column Name="截止日期" DataType="System.DateTime"/>
+        <Column Name="flag" DataType="System.String"/>
+        <Column Name="数量" DataType="System.Int32"/>
+        <Column Name="单价(未税)" DataType="System.Decimal"/>
+        <Column Name="税率" DataType="System.Decimal"/>
+        <Column Name="采购金额(未税)" DataType="System.Decimal"/>
+        <Column Name="税金价" DataType="System.Decimal"/>
+        <Column Name="采购金额(含税)" DataType="System.Decimal"/>
+        <Column Name="QAD单号" DataType="System.String"/>
+        <CommandParameter Name="PoNo" DataType="22" Size="20"/>
+        <CommandParameter Name="tbl" DataType="22" Size="20"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="PoNo" DataType="System.String"/>
+    <Parameter Name="tbl" DataType="System.String"/>
+    <Total Name="未税合计" Expression="[dtl.采购金额(未税)]" Evaluator="Data2"/>
+    <Total Name="税金合计" Expression="[dtl.税金价]" Evaluator="Data2"/>
+    <Total Name="价税合计" Expression="[dtl.采购金额(含税)]" Evaluator="Data2"/>
+  </Dictionary>
+  <ReportPage Name="Page1" RawPaperSize="9" LeftMargin="2" RightMargin="2" Guides="708.75,708.75,708.75,708.75,708.75,708.75,708.75,708.75">
+    <DataBand Name="Data1" Width="778.68" Height="359.1" StartNewPage="true" DataSource="main">
+      <TableObject Name="Table2" Left="13.23" Top="9.45" Width="207.9" Height="94.48">
+        <TableColumn Name="Column1" Width="207.9"/>
+        <TableRow Name="Row1" Height="23.62">
+          <TableCell Name="Cell1" Text="[main.ShipToLine1]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row2" Height="23.62">
+          <TableCell Name="Cell6" Text="[main.ShipToLine2]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row3" Height="23.62">
+          <TableCell Name="Cell11" Text="[main.ShipToLine3]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row4" Height="23.62">
+          <TableCell Name="Cell16" Text="[main.ShipToLine4]" Font="宋体, 9pt"/>
+        </TableRow>
+      </TableObject>
+      <TableObject Name="Table3" Left="438.48" Top="9.45" Width="330.75" Height="94.48" Border.Lines="All" Border.Color="LightGray">
+        <TableColumn Name="Column2" Width="110.25"/>
+        <TableColumn Name="Column3" Width="110.25"/>
+        <TableColumn Name="Column4" Width="110.25"/>
+        <TableRow Name="Row5" Height="23.62">
+          <TableCell Name="Cell17" Border.Lines="All" Border.Color="LightGray" Text="采购订单" Font="宋体, 9pt"/>
+          <TableCell Name="Cell18" Text="订单日期" Font="宋体, 9pt"/>
+          <TableCell Name="Cell19" Border.Lines="All" Border.Color="LightGray" Text="打印日期" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row6" Height="23.62">
+          <TableCell Name="Cell22" Border.Lines="All" Border.Color="LightGray" Text="[main.采购订单]" HorzAlign="Right" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell23" Border.Lines="All" Border.Color="LightGray" Text="[main.订单日期]" HorzAlign="Right" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell24" Border.Lines="All" Border.Color="LightGray" Text="[main.打印日期]" HorzAlign="Right" VertAlign="Bottom" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row7" Height="23.62">
+          <TableCell Name="Cell27" Border.Lines="All" Border.Color="LightGray" Text="供应商" Font="宋体, 9pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" Border.Color="LightGray" Text="票据开往" Font="宋体, 9pt"/>
+          <TableCell Name="Cell29" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row8" Height="23.62">
+          <TableCell Name="Cell32" Border.Lines="All" Border.Color="LightGray" Text="[main.供应商]" HorzAlign="Right" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell33" Border.Lines="All" Border.Color="LightGray" Text="[main.票据开往]" HorzAlign="Right" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell34" Border.Lines="All" Border.Color="LightGray" Font="宋体, 9pt"/>
+        </TableRow>
+      </TableObject>
+      <TableObject Name="Table4" Left="51.03" Top="151.2" Width="307.11" Height="94.48">
+        <TableColumn Name="Column5" Width="307.11"/>
+        <TableRow Name="Row9" Height="23.62">
+          <TableCell Name="Cell52" Text="[main.VName]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row10" Height="23.62">
+          <TableCell Name="Cell40" Text="[main.VAdress]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row11" Height="23.62">
+          <TableCell Name="Cell45" Text="[main.VLine2]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row12" Height="23.62">
+          <TableCell Name="Cell50" Text="[main.VLine4]" Font="宋体, 9pt"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text1" Left="13.23" Top="151.2" Width="28.35" Height="94.5" Text="供&#13;&#10;&#13;&#10;应&#13;&#10;&#13;&#10;商" Font="宋体, 9pt"/>
+      <TableObject Name="Table2" Left="457.38" Top="151.2" Width="309.96" Height="94.48">
+        <TableColumn Name="Column6" Width="309.96"/>
+        <TableRow Name="Row13" Height="23.62">
+          <TableCell Name="Cell53" Text="[main.ShipToLine1]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row14" Height="23.62">
+          <TableCell Name="Cell54" Text="[main.ShipToLine2]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row15" Height="23.62">
+          <TableCell Name="Cell55" Text="[main.ShipToLine3]" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row16" Height="23.62">
+          <TableCell Name="Cell56" Text="[main.ShipToLine4]" Font="宋体, 9pt"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text2" Left="395.78" Top="151.2" Width="28.35" Height="94.5" Text="发&#13;&#10;&#13;&#10;货&#13;&#10;&#13;&#10;至" Font="宋体, 9pt"/>
+      <TextObject Name="Text3" Left="277.83" Top="113.4" Width="103.95" Height="18.9" Text="采购订单" HorzAlign="Center" Font="宋体, 15pt, style=Bold"/>
+      <TableObject Name="Table5" Left="13.23" Top="255.15" Width="752.22" Height="66.15" Border.Lines="All" Border.Color="LightGray">
+        <TableColumn Name="Column7" Width="112.78"/>
+        <TableColumn Name="Column8" Width="235.63"/>
+        <TableColumn Name="Column9" Width="126.93"/>
+        <TableColumn Name="Column10" Width="276.88"/>
+        <TableRow Name="Row17" Height="22.05">
+          <TableCell Name="Cell57" Border.Lines="All" Border.Color="LightGray" Text="税率" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell58" Border.Lines="All" Border.Color="LightGray" Text="[main.税率]" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell64" Border.Lines="All" Border.Color="LightGray" Text="币别" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell69" Border.Lines="All" Border.Color="LightGray" Text="[main.币别]" VertAlign="Bottom" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row18" Height="22.05">
+          <TableCell Name="Cell62" Border.Lines="All" Border.Color="LightGray" Text="支付方式" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell63" Border.Lines="All" Border.Color="LightGray" Text="[main.支付方式]" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell65" Border.Lines="All" Border.Color="LightGray" Text="[main.支付方式E]" VertAlign="Bottom" Font="宋体, 9pt" ColSpan="2"/>
+          <TableCell Name="Cell70" Font="宋体, 9pt"/>
+        </TableRow>
+        <TableRow Name="Row19" Height="22.05">
+          <TableCell Name="Cell66" Text="备注" VertAlign="Bottom" Font="宋体, 9pt"/>
+          <TableCell Name="Cell67" Border.Lines="All" Border.Color="LightGray" Text="[main.备注]" VertAlign="Bottom" Font="宋体, 9pt" ColSpan="3"/>
+          <TableCell Name="Cell68" Font="宋体, 9pt"/>
+          <TableCell Name="Cell71" Font="宋体, 9pt"/>
+        </TableRow>
+      </TableObject>
+      <TextObject Name="Text6" Left="18.9" Top="330.75" Width="28.35" Height="26.46" Text="行" Font="宋体, 9pt"/>
+      <TextObject Name="Text11" Left="113.4" Top="330.75" Width="75.6" Height="26.46" Text="描述1" Font="宋体, 9pt"/>
+      <TextObject Name="Text12" Left="47.25" Top="330.75" Width="66.15" Height="26.46" Text="物料号" Font="宋体, 9pt"/>
+      <TextObject Name="Text13" Left="189" Top="330.75" Width="85.05" Height="26.46" Text="描述2" Font="宋体, 9pt"/>
+      <TextObject Name="Text14" Left="340.2" Top="330.75" Width="37.8" Height="26.46" Text="数量" Font="宋体, 9pt"/>
+      <TextObject Name="Text15" Left="274.05" Top="330.75" Width="66.15" Height="26.46" Text="截止日期" Font="宋体, 9pt"/>
+      <TextObject Name="Text17" Left="378" Top="330.75" Width="71.82" Height="26.46" Text="单价(未税)" HorzAlign="Right" Font="宋体, 9pt"/>
+      <TextObject Name="Text18" Left="453.6" Top="330.75" Width="79.38" Height="26.46" Text="采购金额&#13;&#10;(未税)" HorzAlign="Right" Font="宋体, 9pt"/>
+      <TextObject Name="Text19" Left="699.3" Top="330.75" Width="66.15" Height="26.46" Text="QAD单号" Font="宋体, 9pt"/>
+      <TextObject Name="Text32" Left="538.65" Top="330.75" Width="75.6" Height="26.46" Text="税金价" HorzAlign="Right" Font="宋体, 9pt"/>
+      <TextObject Name="Text33" Left="614.25" Top="330.75" Width="79.38" Height="26.46" Text="采购金额&#13;&#10;(含税)" HorzAlign="Right" Font="宋体, 9pt"/>
+      <TextObject Name="Text37" Left="-9450" Top="-9450" Width="75.6" Height="18.9" Text="税金合计：" Padding="2, 0, 0, 0" Font="宋体, 9pt"/>
+      <DataBand Name="Data2" Top="363.1" Width="778.68" Height="30.24" FirstRowStartsNewPage="true" DataSource="dtl" Filter="[main.flag]==[dtl.flag]">
+        <TextObject Name="Text20" Left="18.9" Width="28.35" Height="26.46" Text="[dtl.行]" Font="宋体, 9pt"/>
+        <TextObject Name="Text21" Left="113.4" Width="75.6" Height="26.46" Text="[dtl.描述1]" Font="宋体, 9pt"/>
+        <TextObject Name="Text22" Left="47.25" Width="66.15" Height="26.46" Text="[dtl.物料号]" Font="宋体, 9pt"/>
+        <TextObject Name="Text23" Left="189" Width="85.05" Height="26.46" Text="[dtl.描述2]" Font="宋体, 9pt"/>
+        <TextObject Name="Text24" Left="340.2" Width="37.8" Height="26.46" Text="[dtl.数量]" HorzAlign="Center" Font="宋体, 9pt"/>
+        <TextObject Name="Text25" Left="274.05" Width="66.15" Height="26.46" Text="[dtl.截止日期]" Format="Date" Format.Format="d" Font="宋体, 9pt"/>
+        <TextObject Name="Text27" Left="378" Width="71.82" Height="26.46" Text="[dtl.单价(未税)]" HorzAlign="Right" Font="宋体, 9pt"/>
+        <TextObject Name="Text28" Left="453.6" Width="79.38" Height="26.46" Text="[dtl.采购金额(未税)]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="宋体, 9pt"/>
+        <TextObject Name="Text29" Left="699.3" Width="66.15" Height="26.46" Text="[dtl.QAD单号]" Font="宋体, 9pt"/>
+        <TextObject Name="Text34" Left="538.65" Width="75.6" Height="26.46" Text="[dtl.税金价]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="宋体, 9pt"/>
+        <TextObject Name="Text35" Left="614.25" Width="79.38" Height="26.46" Text="[dtl.采购金额(含税)]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="宋体, 9pt"/>
+      </DataBand>
+      <DataFooterBand Name="DataFooter1" Top="397.34" Width="778.68" Height="66.15" RepeatOnEveryPage="true">
+        <TextObject Name="Text4" Left="37.8" Top="47.25" Width="47.25" Height="18.9" Text="采购人" Font="宋体, 9pt"/>
+        <TextObject Name="Text5" Left="94.5" Top="47.25" Width="151.2" Height="18.9" Border.Lines="Bottom" Text="[main.采购员]" Font="宋体, 9pt"/>
+        <TextObject Name="Text9" Left="368.55" Top="47.25" Width="66.15" Height="18.9" Text="采购经理" Font="宋体, 9pt"/>
+        <TextObject Name="Text10" Left="444.15" Top="47.25" Width="151.2" Height="18.9" Border.Lines="Bottom" Text="[main.经办]" Font="宋体, 9pt"/>
+        <TextObject Name="Text7" Left="18.9" Width="75.6" Height="18.9" Text="合计：" Padding="2, 0, 0, 0" Font="微软雅黑, 9pt, style=Bold"/>
+        <TextObject Name="Text26" Left="614.25" Width="79.38" Height="18.9" Text="[价税合计]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="微软雅黑, 9pt, style=Bold"/>
+        <TextObject Name="Text8" Left="453.6" Width="79.38" Height="18.9" Text="[未税合计]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="微软雅黑, 9pt, style=Bold"/>
+        <TextObject Name="Text16" Left="538.65" Width="75.6" Height="18.9" Text="[税金合计]" Format="Number" Format.UseLocale="true" HorzAlign="Right" Font="微软雅黑, 9pt, style=Bold"/>
+      </DataFooterBand>
+    </DataBand>
+  </ReportPage>
+</Report>

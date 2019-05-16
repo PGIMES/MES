@@ -124,8 +124,7 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     protected void Bt_Export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-
-        ASPxGridViewExporter1.WriteXlsToResponse("请购单"+ System.DateTime.Now.ToString("yyyyMMdd"));//导出到Excel
+        GV_PART.ExportXlsxToResponse("请购单" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
     }
     protected void GV_PART_PageIndexChanged(object sender, EventArgs e)
     {

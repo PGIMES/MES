@@ -35,17 +35,18 @@
         <table>
             <tr>
                 <td style="padding:0px 5px 5px 0px;">
-                    <asp:Button ID="btnselect" runat="server" Text="选择" class="btn btn-large btn-primary" Width="100px" OnClick="btnselect_Click"  />
+                    <asp:Button ID="btnselect" runat="server" Text="选择" class="btn btn-large btn-default" Width="100px" OnClick="btnselect_Click"  />
                 </td>
             </tr>
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server"  Width="1000px" ClientInstanceName="grid"  KeyFieldName="id"  EnableTheming="True" >
-                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True"  />
+                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowEllipsisInText="true" />
               <SettingsPager PageSize="1000">
                      
                 </SettingsPager>
-                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True"/>
+                  <Settings ShowFilterRow="True" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True"  ShowFooter="True"
+                      VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="260"/>
                          <SettingsCommandButton>
                              <SelectButton ButtonType="Button" RenderMode="Button">
                              </SelectButton>
@@ -56,11 +57,14 @@
             
                             
                               <Styles>
-                  <Header BackColor="#1E82CD" ForeColor="White" >
-                </Header>
-                                     <Footer HorizontalAlign="Right">
-                                  </Footer>
-            </Styles>
+                                <%--<Header BackColor="#1E82CD" ForeColor="White" ></Header>--%>
+                                  <%--<Footer HorizontalAlign="Right"></Footer>--%>
+
+                                  <Header BackColor="#31708f" Font-Bold="True" ForeColor="white" Border-BorderStyle="None" HorizontalAlign="Left" VerticalAlign="Top"></Header>
+                                  <Footer HorizontalAlign="Right" BackColor="#cfcfcf" Font-Bold="True" ForeColor="red" Font-Size="11pt"></Footer>
+                                <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
+                                <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None" HorizontalAlign="Left"></CommandColumn>
+                            </Styles>
 
                         <Columns>
            <%-- <dx:GridViewDataTextColumn FieldName="SelectAll" VisibleIndex="0" Caption="选择" >

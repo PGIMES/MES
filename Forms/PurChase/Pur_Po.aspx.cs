@@ -26,10 +26,10 @@ public partial class Pur_Po : System.Web.UI.Page
     public string fieldStatus;
     public string DisplayModel;
     public string ValidScript = "";
-   
+
     protected void Page_Load(object sender, EventArgs e)
     {
-       // Page.MaintainScrollPositionOnPostBack = true;
+        // Page.MaintainScrollPositionOnPostBack = true;
         ViewState["lv"] = "";
         string FlowID = "A";
         string StepID = "A";
@@ -39,7 +39,7 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             this.m_sid = Request.QueryString["instanceid"].ToString();
         }
-        
+
 
         LoginUser LogUserModel = null;
         if (Request.ServerVariables["LOGON_USER"].ToString() == "")
@@ -53,67 +53,42 @@ public partial class Pur_Po : System.Web.UI.Page
 
         Session["LogUser"] = LogUserModel;
 
+        SetBuyerName();
+        SetWgPayCon();
 
-        //加载表头控件
-        //List<TableRow> ls = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD", 2, "", "", "form-control input-s-sm");
-        List<TableRow> ls = ShowControl("PUR_PO_Main_Form", "HEAD_New_1", 4, "", "", "lineread", "linewrite");
-        for (int i = 0; i < ls.Count; i++)
-        {
-            this.tblWLLeibie.Rows.Add(ls[i]);
-        }
-
-        //List<TableRow> ls_pay = Pgi.Auto.Control.ShowControl("PUR_PO_Main_Form", "HEAD_PAY", 1, "", "", "form-control input-s-sm");
-        List<TableRow> ls_pay = ShowControl("PUR_PO_Main_Form", "HEAD_PAY", 1, "", "", "lineread", "linewrite");
-        for (int i = 0; i < ls_pay.Count; i++)
-        {
-            this.tablePay.Rows.Add(ls_pay[i]);
-        }
-
-
+        SetContractType();
 
         if (!IsPostBack)
         {
 
             //获取每步骤栏位状态设定值，方便前端控制其可编辑性
 
-            if (Request.QueryString["flowid"]!=null)
+            if (Request.QueryString["flowid"] != null)
             {
                 FlowID = Request.QueryString["flowid"];
             }
-           
-            if (Request.QueryString["stepid"]!=null)
+
+            if (Request.QueryString["stepid"] != null)
             {
-                 StepID = Request.QueryString["stepid"];
+                StepID = Request.QueryString["stepid"];
             }
-           
-          
-           
-            
 
             DataTable ldt_detail = null;
             DataTable ldt_pay = null;
             string lssql = "";
-            //lssql = "select po.*,pr.wlType,pr.wlSubType,pr.wlh,pr.wlmc,pr.wlms,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName";
-            //lssql += ",pr.ApointVendorId,pr.unit,pr.historyPrice,pr.targetPrice,pr.deliveryDate,(pr.targetPrice*pr.qty) as targetTotalPrice,pr.attachments";
-            //lssql += ",'查看' as attachments_name,qad_pt_mstr.pt_status";
-            //lssql += " from PUR_PO_Dtl_Form po";
-            //lssql += " left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid";
-            //lssql += " left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno";
-            //lssql += " inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
 
-            /*lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
-                        ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                        ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
-                        ,'查看' as attachments_name,qad_pt_mstr.pt_status
-                    from PUR_PO_Dtl_Form po
-                        left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
-                        left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
-                        inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain";
-           */
-            lssql = @"select po.*,'['+pr.wlh+']'+case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'/'+pr.wlSubType else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+            /*
+            ,case when left(pr.wlType,4)='4010' then '['+pr.wlh+']'+right(pr.wlType,LEN(pr.wlType)-5) +'/'+pr.wlSubType 
+		                        else (case when isnull(pr.wlh,'')<>'' then '['+pr.wlh+']'+ right(pr.wlType,LEN(pr.wlType)-5) else pr.wlType end ) end wlType
+            ,case when CHARINDEX('刀具',pr_main.PRType)>0 or CHARINDEX('辅料',pr_main.PRType)>0 or CHARINDEX('原材料',pr_main.PRType)>0 then '' else pr.note end note2
+            */
+            lssql = @"select po.*
+                        ,ISNULL(pr.wlh,'无') wlType
                         ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
                         ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                        ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                        ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate
+                        ,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                        ,case when CHARINDEX('刀具',pr_main.PRType)>0 or CHARINDEX('辅料',pr_main.PRType)>0 or CHARINDEX('原材料',pr_main.PRType)>0 then isnull(pr.wlSubType,pr.wlType) else pr.note end note2
                         ,'查看' as attachments_name
                     from PUR_PO_Dtl_Form po
                         left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
@@ -124,29 +99,27 @@ public partial class Pur_Po : System.Web.UI.Page
                 if (LogUserModel != null)
                 {
                     //新增时表头基本信息
-                    ((TextBox)this.FindControl("ctl00$MainContent$CreateDate")).Text = System.DateTime.Now.ToString();
-                    ((TextBox)this.FindControl("ctl00$MainContent$CreateByName")).Text = LogUserModel.UserName;
-                    ((TextBox)this.FindControl("ctl00$MainContent$DeptName")).Text = LogUserModel.DepartName;
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).Value = LogUserModel.UserId + "|" + LogUserModel.UserName;
-                     ((TextBox)this.FindControl("ctl00$MainContent$IsToQAD")).Text = "是";
+                    CreateDate.Text = System.DateTime.Now.ToString();
+                    CreateByName.Text = LogUserModel.UserName;
+                    DeptName.Text = LogUserModel.DepartName;
+                    BuyerName.Value = LogUserModel.UserId + "|" + LogUserModel.UserName;
                 }
 
                 lssql += " where 1=0";
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
-                                
-                loadControl(ldt_detail);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
+                loadControl(ldt_detail);
+
                 ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where 1=0").Tables[0];
-                
-                Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PO_PAY", this.gv2, ldt_pay);
+                loadControl_Pay(ldt_pay);
 
             }
             else
             {
                 //编辑  
                 //表头赋值
-                DataTable ldt= DbHelperSQL.Query("select * from PUR_PO_Main_Form where PoNo='"+this.m_sid+"'").Tables[0];
-                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_New_1", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                if (ldt.Rows[0]["attachments"].ToString()!="")
+                DataTable ldt = DbHelperSQL.Query("select * from PUR_PO_Main_Form where PoNo='" + this.m_sid + "'").Tables[0];
+                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_New_2", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                if (ldt.Rows[0]["attachments"].ToString() != "")
                 {
                     //this.txtfile.NavigateUrl = ldt.Rows[0]["attachments"].ToString();
                     //this.txtfile.Visible = true;
@@ -155,121 +128,60 @@ public partial class Pur_Po : System.Web.UI.Page
                     bindtab();
                 }
 
+                Pgi.Auto.Control.SetControlValue("PUR_PO_Main_Form", "HEAD_PAY", this.Page, ldt.Rows[0], "ctl00$MainContent$");
 
-                lssql += " where pono='" + this.m_sid + "'  order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc,po.rowid"; 
+                lssql += " where pono='" + this.m_sid + "'  order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc,po.rowid";
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
 
 
                 //特殊处理
-                ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = "";
+                PoVendorId.Value = "";
                 string lsrate = "0";
-                if (ldt_detail.Rows.Count>0)
+                if (ldt_detail.Rows.Count > 0)
                 {
-                    //if (ldt_detail.Rows[0]["TaxRate"].ToString() == "16")
-                    //{
-                    //   lsrate = "17";
-                    //}
-                    //else if (ldt_detail.Rows[0]["TaxRate"].ToString() == "10")
-                    //{
-                    //    lsrate = "11";
-                    //}
-                    //else
-                    //{
-                    //  lsrate = ldt_detail.Rows[0]["TaxRate"].ToString();
-                    //}
-
                     lsrate = ldt_detail.Rows[0]["TaxRate"].ToString();
                 }
 
 
-                ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString() + "|" + lsrate;
+                PoVendorId.Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString() + "|" + lsrate;
+                BuyerName.Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
+                if (ldt.Rows[0]["PoVendorId"].ToString()=="31567" && ldt.Rows[0]["PoVendorName"].ToString() == "网购")
+                {
+                    WgPayCon.Value = ldt.Rows[0]["WgPayCon"].ToString() + "|" + ldt.Rows[0]["WgPayConDesc"].ToString();
+                }
+                ContractType.Value = ldt.Rows[0]["contracttype"].ToString() + "|" + ldt.Rows[0]["contracttypedesc"].ToString();
 
-                ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
+                loadControl(ldt_detail);
 
-
-
-                loadControl(ldt_detail);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt_detail,2);
-
-
+                ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where pono='" + this.m_sid + "'").Tables[0];
+                loadControl_Pay(ldt_pay);
             }
+
+            #region 设置样式 ldt_detail
+
+            //特殊处理
+            string sql_flow = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                            where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
+                                and instanceid='{2}' and stepname='{3}'";
+            sql_flow = string.Format(sql_flow, StepID, FlowID, this.m_sid, "采购负责人");
+            DataTable ldt_flow = DbHelperSQL.Query(sql_flow).Tables[0];
 
             //增加事件
             for (int i = 0; i < ldt_detail.Rows.Count; i++)
             {
-
                 ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).TextChanged += new EventHandler(txt_TextChanged);
-                //特殊处理
-                DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('" + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='" + this.m_sid + "' and stepname='采购负责人'").Tables[0];
 
                 if (ldt_flow.Rows.Count == 0)
                 {
-
-                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
-                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
-
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(30);
                     ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
-
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
-                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BackColor = System.Drawing.Color.Transparent;
-
-                    //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
-
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(72);
-                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.BackColor= System.Drawing.Color.Transparent;
-
-                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
-                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
-
-                    this.btndel.Visible = false;
-                    this.btnadd.Visible = false;
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Enabled = false;
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled = false;
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
-                    //this.FileUpload1.Visible = false;
-                    this.uploadcontrol.Visible = false;
-                    this.btnflowSend.Text = "批准";
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).CssClass = "lineread";
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).CssClass = "lineread";
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
-
-                    //签核的时候，加上%
-                    if (((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value.ToString().Right(1) != "%")
-                    {
-                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value + "%";
-                    }
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#333333");
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#333333");
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).DisabledStyle.Font.Bold = true;
-                }
-                if(Request.QueryString["display"]!=null)
-                {
-                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
-                    //((DropDownList)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).BorderStyle = BorderStyle.None;
-
-                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
-                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(28);
-                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).Enabled = false;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).Width = Unit.Pixel(80);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
@@ -279,42 +191,172 @@ public partial class Pur_Po : System.Web.UI.Page
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
                     ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BackColor = System.Drawing.Color.Transparent;
-
-                    //((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).ReadOnly = true;
 
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(72);
                     ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).ReadOnly = true;
-                    //((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["otherDesc"], "otherDesc")).BorderStyle = BorderStyle.None;
+                    this.btndel.Visible = false;
+                    this.btnadd.Visible = false;
+
+                    PoVendorId.Enabled = false;
+                    BuyerName.Enabled = false;
+                    PoType.Enabled = false;
+                    PoDomain.Enabled = false;
+                    AssetsAtt.Enabled = false;
+                    WgPayCon.Enabled = false;
+
+                    //this.FileUpload1.Visible = false;
+                    this.uploadcontrol.Visible = false;
+                    this.btnflowSend.Text = "批准";
+
+                    PoDomain.CssClass = "lineread";
+                    AssetsAtt.CssClass = "lineread";
+
+                    wgvendor.BackColor = System.Drawing.Color.Transparent;
+
+                    //签核的时候，加上%
+                    if (PoVendorId.Value.ToString().Right(1) != "%")
+                    {
+                        PoVendorId.Value = PoVendorId.Value + "%";
+                    }
+                }
+                if (Request.QueryString["display"] != null)
+                {
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Enabled = false;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(28);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).Enabled = false;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).Width = Unit.Pixel(80);
+                    ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).ReadOnly = true;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("text-align", "right");
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).BackColor = System.Drawing.Color.Transparent;
+
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).ReadOnly = true;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PriceDesc"], "PriceDesc")).BackColor = System.Drawing.Color.Transparent;
+
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Enabled = false;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).Width = Unit.Pixel(72);
+                    ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
                     this.btndel.Visible = false;
                     this.btnadd.Visible = false;
 
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Enabled = false;
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled = false;
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Enabled = false;
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).Enabled = false;
+                    PoVendorId.Enabled = false;
+                    BuyerName.Enabled = false;
+                    PoType.Enabled = false;
+                    PoDomain.Enabled = false;
+                    AssetsAtt.Enabled = false;
+                    WgPayCon.Enabled = false;
+
                     // this.FileUpload1.Visible = false;
                     this.uploadcontrol.Visible = false;
 
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).CssClass = "lineread";
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).CssClass = "lineread";
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).CssClass = "lineread";
-                    ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).CssClass = "lineread";
+                    PoDomain.CssClass = "lineread";
+                    AssetsAtt.CssClass = "lineread";
+
+                    wgvendor.BackColor = System.Drawing.Color.Transparent;
 
                     //签核的时候，加上%
-                    if (((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value.ToString().Right(1)!="%")
+                    if (PoVendorId.Value.ToString().Right(1) != "%")
                     {
-                        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).Value + "%";
+                        PoVendorId.Value = PoVendorId.Value + "%";
                     }
-
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$povendorid")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
-                    ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ControlStyle.BackColor = System.Drawing.Color.FromName("#FFFFFF");
                 }
             }
+
+            for (int i = 0; i < ldt_pay.Rows.Count; i++)
+            {
+                //AutoPostBack = true 已经在 数据库配置好，list_type_ref设定
+                ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).TextChanged += new EventHandler(txt_pay_TextChanged);
+
+                if (ldt_flow.Rows.Count == 0)
+                {
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).Enabled = false;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BackColor = System.Drawing.Color.Transparent;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).Style.Add("text-align", "right");
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).Width = Unit.Pixel(150);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).Width = Unit.Pixel(150);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).Width = Unit.Pixel(180);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).Enabled = false;
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).Width = Unit.Pixel(80);
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    this.btnadd_contract.Visible = false;
+                    this.btndel_contract.Visible = false;
+
+                    PayType.Enabled = false;
+                    PayType.CssClass = "lineread";
+
+                    contractname.BackColor = System.Drawing.Color.Transparent;
+
+                    ContractType.Enabled = false;
+                }
+                if (Request.QueryString["display"] != null)
+                {
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).Enabled = false;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BackColor = System.Drawing.Color.Transparent;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BorderStyle = BorderStyle.None;
+                    ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).Style.Add("text-align", "right");
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).Width = Unit.Pixel(150);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).Width = Unit.Pixel(150);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).Enabled = false;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).Width = Unit.Pixel(180);
+                    ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).Enabled = false;
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).Width = Unit.Pixel(80);
+                    ((ASPxDateEdit)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PlanPayDate"], "PlanPayDate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+                    this.btnadd_contract.Visible = false;
+                    this.btndel_contract.Visible = false;
+
+                    PayType.Enabled = false;
+                    PayType.CssClass = "lineread";
+
+                    contractname.BackColor = System.Drawing.Color.Transparent;
+
+                    ContractType.Enabled = false;
+                    
+                }
+            }
+
+            #endregion
 
         }
         else
@@ -323,32 +365,19 @@ public partial class Pur_Po : System.Web.UI.Page
             DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
             this.gv.Columns.Clear();
 
-            loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
+            loadControl(ldt);
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
-
-                ((TextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).TextChanged += new EventHandler(txt_TextChanged);
-
+                ((TextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).TextChanged += new EventHandler(txt_TextChanged);
             }
-
             bindtab();
         }
 
-
-       
-        
-
-        ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).AutoPostBack = true;
-         ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).TextChanged += new EventHandler(PoDomain_TextChanged);
+        //获取采购类别
+        SetPoType(BuyerName.Value.ToString());
 
         //获取供应商信息
-        SetPoVendor(((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).Text);
-
-        // ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).AutoPostBack = true;
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).ClientSideEvents.ValueChanged = "function(s, e) {vendorid(s);}";
-
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).ClientSideEvents.ValueChanged = "function(s, e) { buyername_potype_change();}";
-
+        SetPoVendor(PoDomain.Text);
 
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
@@ -416,17 +445,6 @@ public partial class Pur_Po : System.Web.UI.Page
         }
     }
 
-    public void loadControl(DataTable ldt_detail)
-    {
-        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New_2", this.gv, ldt_detail, 2);
-
-        for (int i = 0; i < ldt_detail.Rows.Count; i++)
-        {
-            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(48);
-        }
-    }
-
-
     void Btn_Click(object sender, EventArgs e)
     {
         //var btn = sender as Button;
@@ -448,25 +466,101 @@ public partial class Pur_Po : System.Web.UI.Page
         bindtab();
     }
 
-    private void PoDomain_TextChanged(object sender, EventArgs e)
+    public void loadControl(DataTable ldt_detail)
+    {
+        /*string potype = "";
+        if (((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).Value != null)
+        {
+            potype = ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).Value.ToString();
+        }
+
+        this.gv.Columns.Clear();
+
+        string formdiv = "";
+        if (potype.Contains("存货")) { formdiv = "DETAIL_New_2"; }
+        else { formdiv = "DETAIL_New_3"; }
+
+        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", formdiv, this.gv, ldt_detail, 2);*/
+
+        string potype = "";
+        if (PoType.Value != null)
+        {
+            potype = PoType.Value.ToString();
+        }
+
+        this.gv.Columns.Clear();
+        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_all", this.gv, ldt_detail, 2);
+        GetGrid(ldt_detail, potype);
+
+        for (int i = 0; i < ldt_detail.Rows.Count; i++)
+        {
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).Width = Unit.Pixel(80);
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["currency"], "currency")).Width = Unit.Pixel(48);
+        }
+
+        //更新付款明细表
+        DataTable ldt_2 = Pgi.Auto.Control.AgvToDt(this.gv2);
+        double paytotal = Convert.ToDouble(gv.GetTotalSummaryValue(gv.TotalSummary["TotalPrice"]));
+        if (paytotal > 0)
+        {
+            for (int i = 0; i < ldt_2.Rows.Count; i++)
+            {
+                if (ldt_2.Rows[i]["PayRate"].ToString() != "")
+                {
+                    ldt_2.Rows[i]["PayMoney"] = paytotal * (Convert.ToDouble(ldt_2.Rows[i]["PayRate"]) / 100);
+                }
+            }
+        }
+        else
+        {
+            ldt_2.Rows.Clear();
+            PayType.SelectedValue = "";
+        }
+        this.gv2.Columns.Clear();
+        loadControl_Pay(ldt_2);
+    }
+
+    public void PoDomain_TextChanged(object sender, EventArgs e)
     {
         SetPoVendor(((DropDownList)sender).SelectedValue);
        
     }
 
+    //绑定采购负责人
+    public void SetBuyerName()
+    {
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).Columns.Clear();
+        string lssql = @"select workcode,lastname,workcode+'|'+lastname as v from HRM_EMP_MES  where dept_name='采购二部' and jobtitlename<>'采购经理'";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).ValueField = "v";
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).Columns.Add("workcode", "采购人工号", 80);
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).Columns.Add("lastname", "采购人姓名", 80);
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).TextFormatString = "{0}|{1}";
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).DataSource = ldt;
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$BuyerName")).DataBind();
+    }
+
+    //绑定采购类别
+    public void SetPoType(string buyername)
+    {
+        string[] buyername_arry = buyername.Split('|');
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).Columns.Clear();
+        //string lssql = @"exec Pur_GetClassByPerson '" + buyername_arry[0] + "','','PO'";
+        string lssql = @"select 'PO' type union select '合同' type";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).ValueField = "type";
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).Columns.Add("type", "采购类别", 80);
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).TextFormatString = "{0}";
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).DataSource = ldt;
+        ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).DataBind();
+    }
+
+    //采购供应商
     private void SetPoVendor(string lsdomain)
     {
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Columns.Clear();
-        //string lssql = @"select distinct ad_addr,ad_name,vd_taxc,ad_addr+'|'+ad_name+'|'+vd_taxc as v  
-        //                from qad_ad_mstr 
-        //                    inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
-        //                where ad_type='supplier' and ad_domain='" + lsdomain+"'";
-        //string lssql = @"select distinct ad_addr,ad_name
-        //                        ,case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end vd_taxc
-        //                        ,ad_addr+'|'+ad_name+'|'+case when isnull(vd_taxc,'')='17' then '16' when isnull(vd_taxc,'')='11' then '10' else '0' end as v  
-        //                from qad_ad_mstr 
-        //                    inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
-        //                where ad_type='supplier' and ad_domain='" + lsdomain + "'";
+        PoVendorId.Columns.Clear();
         string lssql = @"select distinct ad_addr,ad_name
                                 ,case when isnull(vd_taxc,'')='17' then '13' when isnull(vd_taxc,'')='11' then '9' else vd_taxc end vd_taxc
                                 ,ad_addr+'|'+ad_name+'|'+case when isnull(vd_taxc,'')='17' then '13' when isnull(vd_taxc,'')='11' then '9' else vd_taxc end as v   
@@ -475,13 +569,44 @@ public partial class Pur_Po : System.Web.UI.Page
                         where ad_type='supplier' and vd_taxc<>'' and ad_domain='" + lsdomain + "'";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
 
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).ValueField = "v";
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Columns.Add("ad_addr","代码",40);
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Columns.Add("ad_name","名称",80);
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Columns.Add("vd_taxc","纳税级别",60);
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).TextFormatString = "{0}|{1}|{2}";
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).DataSource = ldt;
-        ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).DataBind();
+        PoVendorId.ValueField = "v";
+        PoVendorId.Columns.Add("ad_addr","代码",40);
+        PoVendorId.Columns.Add("ad_name","名称",80);
+        PoVendorId.Columns.Add("vd_taxc","纳税级别",60);
+        PoVendorId.TextFormatString = "{0}|{1}|{2}";
+        PoVendorId.DataSource = ldt;
+        PoVendorId.DataBind();
+    }
+
+    //绑定支付方式
+    public void SetWgPayCon()
+    {
+        WgPayCon.Columns.Clear();
+        string lssql = @"select [PaymentConditionCode],[PaymentConditionDescript],PaymentConditionCode+'|'+PaymentConditionDescript as v from [qad].[dbo].[qad_paymentcondition]  
+                        where [PaymentConditionIsActive]=1";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+        WgPayCon.ValueField = "v";
+        WgPayCon.Columns.Add("PaymentConditionCode", "代码", 80);
+        WgPayCon.Columns.Add("PaymentConditionDescript", "描述", 80);
+        WgPayCon.TextFormatString = "{0}|{1}";
+        WgPayCon.DataSource = ldt;
+        WgPayCon.DataBind();
+    }
+
+    //合同类别
+    public void SetContractType()
+    {
+        ContractType.Columns.Clear();
+        string lssql = @"select code_value,code_cmmt,code_value+'|'+code_cmmt as v from [qad].[dbo].[qad_code_mstr] where code_fldname='AP-CONTRACT'";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+        ContractType.ValueField = "v";
+        ContractType.Columns.Add("code_value", "代码", 80);
+        ContractType.Columns.Add("code_cmmt", "名称", 80);
+        ContractType.TextFormatString = "{0}|{1}";
+        ContractType.DataSource = ldt;
+        ContractType.DataBind();
     }
 
     protected void gv_RowCommand(object sender, DevExpress.Web.ASPxGridViewRowCommandEventArgs e)
@@ -504,20 +629,31 @@ public partial class Pur_Po : System.Web.UI.Page
             
         }
     }
+       
     private bool SaveData()
     {
         bool bflag = false;
         string lspgi_no = "";
-        string lsdomain = ((DropDownList)this.FindControl("ctl00$MainContent$PoDomain")).SelectedValue;
+        string lsdomain = PoDomain.SelectedValue;
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
         //获取表头
-        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_New_1", this, "ctl00$MainContent${0}");
-        string buyer = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Value.ToString();
-        string povendor = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Value.ToString();
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_New_2", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls_head_pay = Pgi.Auto.Control.GetControlValue("PUR_PO_Main_Form", "HEAD_PAY", this, "ctl00$MainContent${0}");
+
+        string cggysId = "";string cggysName = "";
+        string wgfkfsId = ""; string wgfkfsDesc = "";
+
+        string contracttype = "";
+        string potype = PoType.Value.ToString();//采购类型
+       
+        //var potype_con_sql = string.Format("select check_accept from [dbo].[PUR_Permission_category] where type='{0}' or type2='{0}'", potype);
+        //var potype_con_obj = DbHelperSQL.GetSingle(potype_con_sql);
+        //string potype_con = potype_con_obj == null ? "" : potype_con_obj.ToString();
 
         //表体生成SQL
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+        DataTable ldt_pay = Pgi.Auto.Control.AgvToDt(this.gv2);
 
         ldt.AcceptChanges();
 
@@ -534,19 +670,27 @@ public partial class Pur_Po : System.Web.UI.Page
                 return false;
             }
         }
+
+        if (potype=="合同")//(potype_con == "合同模块")
+        {
+            if (ldt_pay.Rows.Count == 0)
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", "付款信息不能为空!");
+                return false;
+            }
+
+            contracttype = ContractType.Value.ToString();
+        }
         
         //特殊数据处理
         for (int i = 0; i < ls.Count; i++)
         {
             if (ls[i].Code == "podomain") { ls[i].Value = lsdomain; }
+            if (ls[i].Code == "potype") { ls[i].Value = potype; }
 
             if (ls[i].Code.ToLower() == "buyername")
             {
-                //string[] lsstr = ls[i].Value.ToString().Split('|');
-                //string[] lsstr = buyer.Split('|');
-
-                string[] lsstr = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$buyername")).Enabled == true ?
-                    ls[i].Value.ToString().Split('|') : buyer.Split('|');
+                string[] lsstr = BuyerName.Enabled == true ? ls[i].Value.ToString().Split('|') : BuyerName.Value.ToString().Split('|');
 
                 if (lsstr.Length == 2)
                 {
@@ -564,15 +708,11 @@ public partial class Pur_Po : System.Web.UI.Page
 
             if (ls[i].Code.ToLower() == "povendorid")
             {
-                //string[] lsstr = ls[i].Value.ToString().Split('|');
-                //string[] lsstr = povendor.Split('|');
-
-                string[] lsstr = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Enabled == true ?
-                    ls[i].Value.ToString().Split('|') : povendor.Split('|');
+                string[] lsstr = PoVendorId.Enabled == true ? ls[i].Value.ToString().Split('|') : PoVendorId.Value.ToString().Split('|');
 
                 if (lsstr.Length == 3)
                 {
-                    ls[i].Value = lsstr[0];
+                    ls[i].Value = lsstr[0]; cggysId = lsstr[0];
 
                     //增加供应商名称
                     Pgi.Auto.Common lcpovendname = new Pgi.Auto.Common();
@@ -580,12 +720,44 @@ public partial class Pur_Po : System.Web.UI.Page
                     lcpovendname.Key = "";
                     lcpovendname.Value = lsstr[1];
                     ls.Add(lcpovendname);
+
+                    cggysName = lsstr[1];
                 }
             }
-
         }
 
-       
+        //以上采购供应商值定下来之后，才能确定 网购供应商及 网购支付方式
+        for (int i = 0; i < ls.Count; i++)
+        {
+
+            if (ls[i].Code.ToLower() == "wgpaycon")
+            {
+                if (cggysId != "31567" || cggysName != "网购")
+                {
+                    wgfkfsId = "";
+                    wgfkfsDesc = "";
+                }
+                else
+                {
+                    string[] lsstr = WgPayCon.Enabled == true ? ls[i].Value.ToString().Split('|') : WgPayCon.Value.ToString().Split('|');
+
+                    if (lsstr.Length == 2)
+                    {
+                        wgfkfsId = lsstr[0];
+                        wgfkfsDesc = lsstr[1];
+                    }
+                }
+
+                ls[i].Value = wgfkfsId;
+
+                //增加采购负责人ID
+                Pgi.Auto.Common lcwgpaycon = new Pgi.Auto.Common();
+                lcwgpaycon.Code = "wgpaycondesc";
+                lcwgpaycon.Key = "";
+                lcwgpaycon.Value = wgfkfsDesc;
+                ls.Add(lcwgpaycon);
+            }
+        }       
       
         if (this.m_sid == "")
         {
@@ -602,7 +774,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 if (ls[i].Code.ToLower() == "pono")
                 {
                     ls[i].Value = this.m_sid;
-                    ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text = this.m_sid;
+                    PoNo.Text = this.m_sid;
                 }
 
             }
@@ -674,13 +846,78 @@ public partial class Pur_Po : System.Web.UI.Page
         lcfile.Value = filepath;
         ls.Add(lcfile);
 
+        //---------------------------------------------------------------------------合同 主表 列新增----------------------------------------------------------------------
+        string paytype = ""; string contracttype_y = "";string contracttypedesc_y = "";
+        string contractname = "";string actualcontractno = "";
 
-        //主表相关字段赋值到明细表
+        if (potype == "合同")
+        {
+            for (int i = 0; i < ls_head_pay.Count; i++)
+            {
+                if (ls_head_pay[i].Code.ToLower() == "paytype")//付款类型
+                {
+                    paytype= ls_head_pay[i].Value;
+                }
+                if (ls_head_pay[i].Code.ToLower() == "contracttype")//合同类别
+                {
+                    string[] lsstr = ContractType.Enabled == true ? ls_head_pay[i].Value.ToString().Split('|') : contracttype.Split('|');
+
+                    if (lsstr.Length == 2)
+                    {
+                        contracttype_y = lsstr[0];
+                        contracttypedesc_y = lsstr[1];
+                    }
+                }
+                if (ls_head_pay[i].Code.ToLower() == "contractname")//合同名称
+                {
+                    contractname= ls_head_pay[i].Value;
+                }
+                if (ls_head_pay[i].Code.ToLower() == "actualcontractno")//实际合同号
+                {
+                    actualcontractno = this.m_sid;
+                }
+            }
+        }
+
+            
+        Pgi.Auto.Common lcpaytype = new Pgi.Auto.Common();
+        lcpaytype.Code = "paytype";
+        lcpaytype.Key = "";
+        lcpaytype.Value = paytype;
+        ls.Add(lcpaytype);
+           
+        Pgi.Auto.Common lccontracttype = new Pgi.Auto.Common();
+        lccontracttype.Code = "contracttype";
+        lccontracttype.Key = "";
+        lccontracttype.Value = contracttype_y;
+        ls.Add(lccontracttype);
+
+        Pgi.Auto.Common lccontracttypedesc = new Pgi.Auto.Common();
+        lccontracttypedesc.Code = "contracttypedesc";
+        lccontracttypedesc.Key = "";
+        lccontracttypedesc.Value = contracttypedesc_y;
+        ls.Add(lccontracttypedesc);
+                        
+        Pgi.Auto.Common lccontractname = new Pgi.Auto.Common();
+        lccontractname.Code = "contractname";
+        lccontractname.Key = "";
+        lccontractname.Value = contractname;
+        ls.Add(lccontractname);
+           
+        Pgi.Auto.Common lcactualcontractno = new Pgi.Auto.Common();
+        lcactualcontractno.Code = "actualcontractno";
+        lcactualcontractno.Key = "";
+        lcactualcontractno.Value = actualcontractno;
+        ls.Add(lcactualcontractno);
+
+        //----------------------------------------------------------------------------------------主表相关字段赋值到明细表
         string formno_main = "";
         for (int j = 0; j < ls.Count; j++)
         {
             if (ls[j].Code.ToLower() == "pono") { formno_main = ls[j].Value; }
         }
+
+        DataTable dt_po_class = DbHelperSQL.Query("select * from PUR_PO_CLASS").Tables[0];
 
         decimal lntotalpay = 0;
         string pricetype = ""; decimal notax_historyPrice = 0, NoTaxPrice = 0, notax_historyPrice_num = 0, NoTaxPrice_num = 0;
@@ -698,16 +935,33 @@ public partial class Pur_Po : System.Web.UI.Page
 
             if (NoTaxPrice <= notax_historyPrice) { notax_historyPrice_num++; }
             else if (NoTaxPrice > notax_historyPrice) { NoTaxPrice_num++; }
+
+            //赋值flag_qad
+            DataRow[] dr_class = dt_po_class.Select("LB='" + ldt.Rows[i]["po_wltype"].ToString() + "'");
+            if (dr_class.Length == 1)
+            {
+                ldt.Rows[i]["flag_qad"] = dr_class[0]["MS_CODE"].ToString() == "1" ? "是" : "否";
+            }
+            else
+            {
+                ldt.Rows[i]["flag_qad"] = "否";
+            }
         }
 
-        //从明细表中合计采购总金额
+        for (int i = 0; i < ldt_pay.Rows.Count; i++)
+        {
+            ldt_pay.Rows[i]["pono"] = formno_main;
+        }
+
+
+        //----------------------------------------------------------------------------------------从明细表中合计采购总金额
         Pgi.Auto.Common lcTotalPay = new Pgi.Auto.Common();
         lcTotalPay.Code = "totalpay";
         lcTotalPay.Key = "";
         lcTotalPay.Value = lntotalpay.ToString();// ((LoginUser)Session["LogUser"]).UserId;
         ls.Add(lcTotalPay);
 
-        //从明细表中得出 PriceType
+        //----------------------------------------------------------------------------------------从明细表中得出 PriceType
         if (notax_historyPrice_num == ldt.Rows.Count) { pricetype = "0"; }
         else if (NoTaxPrice_num == ldt.Rows.Count) { pricetype = "1"; }
         else { pricetype = "2"; }
@@ -719,48 +973,134 @@ public partial class Pur_Po : System.Web.UI.Page
         ls.Add(lcPriceType);
 
 
-        //获取的表头信息，自动生成SQL，增加到SUM中
+        //----------------------------------------------------------------------------------------获取的表头信息，自动生成SQL，增加到SUM中
         ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PUR_PO_Main_Form"));
 
 
-        //明细数据自动生成SQL，并增入SUM
-        List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PUR_PO_Dtl_Form", "id"
-            , "flag,wlType,wlSubType,wlh,wlmc,wlms,wldesc,notax_targetPrice,notax_targetTotalPrice,RecmdVendorName,notax_historyPrice,deliveryDate,RecmdVendorId,attachments,attachments_name,pt_status");
-        for (int i = 0; i < ls1.Count; i++)
+        //----------------------------------------------------------------------------------------付款信息
+        if (potype == "合同" && ldt_pay.Rows.Count > 0) //(potype_con == "合同模块" && ldt_pay.Rows.Count > 0)
         {
-            ls_sum.Add(ls1[i]);
-        }
-
-        //明细删除增加到list中
-        if (Session["del"]!=null)
-        {
-            DataTable ldt_del = (DataTable)Session["del"];
-            for (int i = 0; i < ldt_del.Rows.Count; i++)
+            Pgi.Auto.Common ls_del_pay = new Pgi.Auto.Common();
+            string dtl_pay_ids = "";
+            for (int i = 0; i < ldt_pay.Rows.Count; i++)
             {
-                Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
-                ls_del.Sql = "delete from PUR_PO_Dtl_Form where id="+ldt_del.Rows[i]["id"].ToString()+"";
-                ls_del.Sql += ";update PUR_PR_Dtl_Form set  Status='0' where prno='" + ldt_del.Rows[i]["prno"].ToString()+"' and rowid='"+ldt_del.Rows[i]["prrowid"].ToString()+"'";
-                ls_sum.Add(ls_del);
+                if (ldt_pay.Rows[i]["id"].ToString() != "") { dtl_pay_ids = dtl_pay_ids + ldt_pay.Rows[i]["id"].ToString() + ","; }
             }
-            Session["del"] = null;
+            if (dtl_pay_ids != "")
+            {
+                dtl_pay_ids = dtl_pay_ids.Substring(0, dtl_pay_ids.Length - 1);
+                ls_del_pay.Sql = "delete from PUR_PO_ContractPay_Form where pono='" + m_sid + "' and id not in(" + dtl_pay_ids + ")";    //删除数据库中的数据不在网页上展示出来的        
+            }
+            else
+            {
+                ls_del_pay.Sql = "delete from PUR_PO_ContractPay_Form where pono='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+            }
+            ls_sum.Add(ls_del_pay);
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> ls_pay = Pgi.Auto.Control.GetList(ldt_pay, "PUR_PO_ContractPay_Form", "id", "flag");
+            for (int i = 0; i < ls_pay.Count; i++)
+            {
+                ls_sum.Add(ls_pay[i]);
+            }
+
+            //更新系统合同号
+            Pgi.Auto.Common ls_sysconctractno = new Pgi.Auto.Common();
+            ls_sysconctractno.Sql = @"update PUR_PO_Main_Form set SysContractNo=a.SysContractNo
+                                    from (select case when MAX(SysContractNo) is null then 
+				                                        (select  '{0}'+ right('000000' + cast(isnull(MAX(a.xxcontract_nbr),0)+1 as varchar),6)  
+				                                        from qad.[dbo].[qad_xxcontract_mstr] a
+				                                        where cast(a.[xxcontract_charfld[2]]] as nvarchar)='{0}' and a.xxcontract_domain='{1}')
+			                                        else '{0}'+ right('000000' + cast(isnull(MAX(SysContractNo),0)+1 as varchar),6) 
+			                                        end SysContractNo
+	                                        from PUR_PO_Main_Form where ContractType='{0}' and PoDomain='{1}' and PoNo<>'{2}'
+	                                        ) a
+                                    where  pono='{2}'";
+            ls_sysconctractno.Sql = string.Format(ls_sysconctractno.Sql, contracttype_y,lsdomain, m_sid);
+            ls_sum.Add(ls_sysconctractno);
+        }
+        else
+        {
+            Pgi.Auto.Common ls_del_pay = new Pgi.Auto.Common();
+            ls_del_pay.Sql = "delete from PUR_PO_ContractPay_Form where pono='" + m_sid + "'";
+            ls_sum.Add(ls_del_pay);
+
+            Pgi.Auto.Common ls_sysconctractno = new Pgi.Auto.Common();
+            ls_sysconctractno.Sql = @"update PUR_PO_Main_Form set SysContractNo=null where  pono='{0}'";
+            ls_sysconctractno.Sql = string.Format(ls_sysconctractno.Sql, m_sid);
+            ls_sum.Add(ls_sysconctractno);
         }
 
-        //处理PR明细表状态
-        if (ldt.Rows.Count>0)
+        //----------------------------------------------------------------------------------------明细数据
+        if (ldt.Rows.Count > 0)
         {
-            Pgi.Auto.Common ls_status = new Pgi.Auto.Common();
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            string dtl_ids = "";
             for (int i = 0; i < ldt.Rows.Count; i++)
             {
-                ls_status.Sql += "update PUR_PR_Dtl_Form set status=2 where prno='" + ldt.Rows[i]["prno"].ToString() + "' and rowid='" + ldt.Rows[i]["prrowid"].ToString() + "'";
-                if (i > 0)
-                {
-                    ls_status.Sql += ";";
-                }
+                if (ldt.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
             }
-            ls_sum.Add(ls_status);
+            if (dtl_ids != "")
+            {
+                dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
+                ls_del.Sql = "delete from PUR_PO_Dtl_Form where pono='" + m_sid + "' and id not in(" + dtl_ids + ");";    //删除数据库中的数据不在网页上展示出来的 
+
+                DataTable dt_del = DbHelperSQL.Query("select * from PUR_PO_Dtl_Form where pono='" + m_sid + "' and id not in(" + dtl_ids + ")").Tables[0];
+                for (int i = 0; i < dt_del.Rows.Count; i++)
+                {
+                    ls_del.Sql += "update PUR_PR_Dtl_Form set Status='0' where prno='" + dt_del.Rows[i]["prno"].ToString() + "' and rowid='" + dt_del.Rows[i]["prrowid"].ToString() + "'";
+                    if (i > 0)
+                    {
+                        ls_del.Sql += ";";
+                    }
+                }
+                ls_sum.Add(ls_del);
+            }
+            else
+            {
+                ls_del.Sql = "delete from PUR_PO_Dtl_Form where pono='" + m_sid + "';";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+
+                DataTable ldt_del = DbHelperSQL.Query("select * from PUR_PO_Dtl_Form where pono='" + m_sid + "'").Tables[0];
+                for (int i = 0; i < ldt_del.Rows.Count; i++)
+                {
+                    ls_del.Sql += "update PUR_PR_Dtl_Form set Status='0' where prno='" + ldt_del.Rows[i]["prno"].ToString() + "' and rowid='" + ldt_del.Rows[i]["prrowid"].ToString() + "'";
+                    if (i > 0)
+                    {
+                        ls_del.Sql += ";";
+                    }
+                }
+                ls_sum.Add(ls_del);
+            }
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PUR_PO_Dtl_Form", "id"
+                , "flag,wlType,wlSubType,wlh,wlmc,wlms,wldesc,notax_targetPrice,notax_targetTotalPrice,RecmdVendorName,notax_historyPrice,deliveryDate,RecmdVendorId,attachments,attachments_name,pt_status,note2");
+            for (int i = 0; i < ls1.Count; i++)
+            {
+                ls_sum.Add(ls1[i]);
+            }
+
+            //处理PR明细表状态
+            if (ldt.Rows.Count > 0)
+            {
+                Pgi.Auto.Common ls_status = new Pgi.Auto.Common();
+                for (int i = 0; i < ldt.Rows.Count; i++)
+                {
+                    ls_status.Sql += "update PUR_PR_Dtl_Form set status=2 where prno='" + ldt.Rows[i]["prno"].ToString() + "' and rowid='" + ldt.Rows[i]["prrowid"].ToString() + "'";
+                    if (i > 0)
+                    {
+                        ls_status.Sql += ";";
+                    }
+                }
+                ls_sum.Add(ls_status);
+            }
         }
-        
-        
+        else
+        {
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            ls_del.Sql = "delete from PUR_PO_Dtl_Form where pono='" + m_sid + "'";
+            ls_sum.Add(ls_del);
+        }
 
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
@@ -1070,41 +1410,15 @@ public partial class Pur_Po : System.Web.UI.Page
         return bflag;
     }*/
 
-    protected void Button1_Click(object sender, EventArgs e)
-    {
-
-        bool bflag = this.SaveData();
-        if (bflag == true)
-        {
-            Pgi.Auto.Public.MsgBox(Page, "alert", "保存成功!");
-
-        }
-        else
-        {
-            Pgi.Auto.Public.MsgBox(Page, "alert", "保存失败!");
-        }
-    }
 
     protected void txt_TextChanged(object sender, EventArgs e)
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
-        string[] lsrate = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Text.Split('|');
+        string[] lsrate = PoVendorId.Text.Split('|');
         string lsrate1 = "0";
         if (lsrate.Length == 3)
         {
             lsrate1 = lsrate[2];
-            //if (lsrate[2] == "17")
-            //{
-            //    lsrate1 = "16";
-            //}
-            //else if (lsrate[2] == "11")
-            //{
-            //    lsrate1 = "10";
-            //}
-            //else
-            //{
-            //    lsrate1 = lsrate[2];
-            //}
         }
 
         for (int i = 0; i < ldt.Rows.Count; i++)
@@ -1129,17 +1443,9 @@ public partial class Pur_Po : System.Web.UI.Page
             }
         }
         this.gv.Columns.Clear();
-        loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
+        loadControl(ldt);
 
     }
-
-
-    protected void PoVendorName_TextChanged(object sender, EventArgs e) {
-
-    }
-
-
-
 
 
     #region "保存，发送流程固定用法，不可随意变更"
@@ -1199,18 +1505,48 @@ public partial class Pur_Po : System.Web.UI.Page
                 ldr["PRRowId"] = ldt1.Rows[i]["rowid"].ToString();
                 //ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString();
                 //ldr["wlSubType"] = ldt1.Rows[i]["wlSubType"].ToString();
-                if (ldt1.Rows[i]["wlType"].ToString().Substring(0, 4) == "4010")
-                {
-                    ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]" + ldt1.Rows[i]["wlType"].ToString().Substring(5) + "/" + ldt1.Rows[i]["wlSubType"].ToString();
-                }
-                else
-                {
-                    ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]" + ldt1.Rows[i]["wlType"].ToString().Substring(5);
-                }
                 //ldr["wlh"] = ldt1.Rows[i]["wlh"].ToString();
                 //ldr["wlmc"] = ldt1.Rows[i]["wlmc"].ToString();
                 //ldr["wlms"] = ldt1.Rows[i]["wlms"].ToString();
+
+                //if (ldt1.Rows[i]["wlType"].ToString().StartsWith("4010"))//ldt1.Rows[i]["wlType"].ToString().Substring(0, 4) == "4010"
+                //{
+                //    ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]" + ldt1.Rows[i]["wlType"].ToString().Substring(5) + "/" + ldt1.Rows[i]["wlSubType"].ToString();
+                //}
+                //else
+                //{
+                //    if (ldt1.Rows[i]["wlh"].ToString() != "无")//ldt1.Rows[i]["wlh"].ToString() != ""
+                //    {
+                //        ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]" + ldt1.Rows[i]["wlType"].ToString().Substring(5);
+                //    }
+                //    else
+                //    {
+                //        ldr["wlType"] = ldt1.Rows[i]["wlType"].ToString();//费用 合同类
+                //    }
+                //}
+
+
+                //if (ldt1.Rows[i]["wlType"].ToString().StartsWith("4") == true || ldt1.Rows[i]["wlType"].ToString().StartsWith("1"))
+                //{
+                //    ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]" + ldt1.Rows[i]["wlType"].ToString().Substring(5);
+
+                //    if (ldt1.Rows[i]["wlType"].ToString().StartsWith("4010"))
+                //    {
+                //        ldr["wlType"] = ldr["wlType"] + "/" + ldt1.Rows[i]["wlSubType"].ToString();
+                //    }
+                //}
+                //else
+                //{
+                //    if (ldt1.Rows[i]["wlh"].ToString() != "")
+                //    {
+                //        ldr["wlType"] = "[" + ldt1.Rows[i]["wlh"].ToString() + "]";
+                //    }
+                //    ldr["wlType"] = ldr["wlType"] + ldt1.Rows[i]["wlType"].ToString();//费用 合同类
+                //}
+                ldr["wlType"] = ldt1.Rows[i]["wlh"].ToString() == "" ? "无" : ldt1.Rows[i]["wlh"].ToString();
+
                 ldr["wldesc"] = ldt1.Rows[i]["wlmc"].ToString() + "[" + ldt1.Rows[i]["wlms"].ToString() + "]";
+                ldr["note2"] = ldt1.Rows[i]["note2"].ToString();
                 ldr["currency"] = ldt1.Rows[i]["currency"].ToString();
                 ldr["notax_targetPrice"] = ldt1.Rows[i]["notax_targetPrice"].ToString();
                 ldr["PurQty"] = ldt1.Rows[i]["qty"].ToString();
@@ -1220,19 +1556,6 @@ public partial class Pur_Po : System.Web.UI.Page
                 string[] lsrate = ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Text.Split('|');
                 if (lsrate.Length == 3)
                 {
-                    //if (lsrate[2].ToString().Trim() == "17")
-                    //{
-                    //    ldr["taxrate"] = "16";
-                    //}
-                    //else if (lsrate[2].ToString().Trim() == "11")
-                    //{
-                    //    ldr["taxrate"] = "10";
-                    //}
-                    //else
-                    //{
-                    //    ldr["taxrate"] = lsrate[2].ToString().Trim();
-                    //}
-
                     ldr["taxrate"] = lsrate[2].ToString().Trim();
 
                     if (ldt1.Rows[i]["notax_targetPrice"].ToString() != "")
@@ -1257,9 +1580,12 @@ public partial class Pur_Po : System.Web.UI.Page
                 {
                     ldr["TotalPrice"] = (Convert.ToDecimal(ldr["TaxPrice"]) * Convert.ToDecimal(ldt1.Rows[i]["qty"].ToString())).ToString("0.0000");
                 }
+
                 ldr["notax_historyPrice"] = ldt1.Rows[i]["notax_historyPrice"].ToString() == "" ? "新单价" : ldt1.Rows[i]["notax_historyPrice"].ToString();
+
                 ldr["attachments"] = ldt1.Rows[i]["attachments"].ToString();
                 ldr["attachments_name"] = "查看";
+
                 ln += 1;
                 ldt.Rows.Add(ldr);
             }
@@ -1285,45 +1611,39 @@ public partial class Pur_Po : System.Web.UI.Page
             {
                 DataTable ldt = null;
                 string lssql = "";
-                /*lssql = @"select po.*,case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'['+pr.wlSubType+']' else right(pr.wlType,LEN(pr.wlType)-5) end wlType
-                            ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor,pr.RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                            ,pr.ApointVendorId,pr.unit,pr.notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
-                            ,'查看' as attachments_name,qad_pt_mstr.pt_status
-                        from PUR_PO_Dtl_Form po
-                            left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
-                            left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
-                            inner join qad_pt_mstr on pr.wlh=qad_pt_mstr.pt_part and pr_main.domain=qad_pt_mstr.pt_domain
-                        where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
-                        order by po.rowid";*/
-                lssql = @"select po.*,'['+pr.wlh+']'+case when left(pr.wlType,4)='4010' then right(pr.wlType,LEN(pr.wlType)-5) +'/'+pr.wlSubType else right(pr.wlType,LEN(pr.wlType)-5) end wlType
+                //where pono = (select pono from PUR_PO_Main_Form where pono = '{0}' and PoType = '{1}' and(buyerid + '|' + buyername) = '{2}') 
+                lssql = @"
+                        select po.*
+                            ,ISNULL(pr.wlh,'无') wlType
                             ,pr.wlSubType,pr.wlh,pr.wlmc+'['+pr.wlms+']' wldesc,pr.usefor
                             ,replace(right(pr.RecmdVendorName,LEN(pr.RecmdVendorName)-CHARINDEX('_',pr.RecmdVendorName)),'有限公司','') RecmdVendorName,pr.RecmdVendorId,pr.ApointVendorName
-                            ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                            ,pr.ApointVendorId,pr.unit,isnull(cast(pr.notax_historyPrice as nvarchar(max)),'新单价') notax_historyPrice,pr.notax_targetPrice,pr.deliveryDate
+                            ,(pr.notax_targetPrice*pr.qty) as notax_targetTotalPrice,pr.attachments
+                            ,case when CHARINDEX('刀具',pr_main.PRType)>0 or CHARINDEX('辅料',pr_main.PRType)>0 or CHARINDEX('原材料',pr_main.PRType)>0 then isnull(pr.wlSubType,pr.wlType) else pr.note end note2
                             ,'查看' as attachments_name
                         from PUR_PO_Dtl_Form po
                             left join PUR_PR_Dtl_Form pr on po.prno=pr.prno and po.PRRowId=pr.rowid
                             left join PUR_PR_Main_Form pr_main on pr.prno=pr_main.prno
-                        where pono=(select pono from PUR_PO_Main_Form where pono='{0}' and PoType='{1}' and (buyerid+'|'+buyername)='{2}')  
+                        where pono='{0}' 
                         order by po.NoTaxPrice-ISNULL(pr.notax_historyPrice,0) desc,po.rowid";
+
                 lssql = string.Format(lssql, ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text
-                    , ((DropDownList)this.FindControl("ctl00$MainContent$PoType")).SelectedValue
+                    , ((ASPxComboBox)this.FindControl("ctl00$MainContent$PoType")).Value.ToString()
                     , param);
+
                 ldt = DbHelperSQL.Query(lssql).Tables[0];
 
                 this.gv.Columns.Clear();
-                loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt, 2);
+                loadControl(ldt);
             }
             else//i== 2//采购供应商  下拉动态改变
             {
-
                 txt_TextChanged(sender, e);
             }
         }
 
         
     }
-
-
 
 
     #region "上传文件"
@@ -1380,45 +1700,55 @@ public partial class Pur_Po : System.Web.UI.Page
     }
     #endregion
 
+    //protected void btndel_Click(object sender, EventArgs e)
+    //{
+    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+    //    DataTable ldt_del = ldt.Clone();
+    //    for (int i = ldt.Rows.Count-1; i >=0; i--)
+    //    {
+    //        if (ldt.Rows[i]["flag"].ToString()=="1" && ldt.Rows[i]["id"].ToString()=="")
+    //        {
+    //            ldt.Rows[i].Delete();
+    //        }
+    //        else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
+    //        {
+    //            ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
+    //            ldt.Rows[i].Delete();
+    //        }
+    //    }
+    //    ldt.AcceptChanges();
+    //    if (ldt_del.Rows.Count>0)
+    //    {
+    //        if (Session["del"] !=null)
+    //        {
+    //            for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
+    //            {
+    //                ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
+    //            }
 
+    //        }
+    //        Session["del"] = ldt_del;
+    //    }
+    //    loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
+    //    //Pgi.Auto.Public.MsgBox(this.Page,"alert","删除成功!");
+    //}
 
     protected void btndel_Click(object sender, EventArgs e)
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
-        DataTable ldt_del = ldt.Clone();
-        for (int i = ldt.Rows.Count-1; i >=0; i--)
+        for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
-            if (ldt.Rows[i]["flag"].ToString()=="1" && ldt.Rows[i]["id"].ToString()=="")
+            if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
             {
                 ldt.Rows[i].Delete();
             }
             else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
             {
-                ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
                 ldt.Rows[i].Delete();
             }
         }
         ldt.AcceptChanges();
-        if (ldt_del.Rows.Count>0)
-        {
-            if (Session["del"] !=null)
-            {
-                for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
-                {
-                    ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
-                }
-               
-            }
-            Session["del"] = ldt_del;
-        }
-        loadControl(ldt);//Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "DETAIL_New", this.gv, ldt,2);
-        //Pgi.Auto.Public.MsgBox(this.Page,"alert","删除成功!");
-    }
-
-    protected void Button2_Click(object sender, EventArgs e)
-    {
-      
-        Pgi.Auto.Public.MsgBox(this.Page, "alert", ((DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId")).Text);
+        loadControl(ldt);
     }
 
     protected void gv_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
@@ -1427,7 +1757,18 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             return;
         }
-        
+        string potype = "";
+        if (PoType is ASPxComboBox)
+        {
+            if (PoType.Value != null)
+            {
+                potype = PoType.Value.ToString();
+            }
+        }
+        else
+        {
+            return;
+        }
 
         int lncindex = 0; int prnoindex = 0; int RecmdVendorNameindex = 0;
         for (int i = 0; i < this.gv.DataColumns.Count; i++)
@@ -1445,6 +1786,15 @@ public partial class Pur_Po : System.Web.UI.Page
                 RecmdVendorNameindex = i;
             }
         }
+        //int lncindex_cell= lncindex - 1; int prnoindex_cell = prnoindex + 1; int RecmdVendorNameindex_cell = RecmdVendorNameindex - 2;// RecmdVendorNameindex - 1;
+        //if (potype != "存货")
+        //{
+        //    lncindex_cell = lncindex + 1;
+        //}
+
+        int lncindex_cell = lncindex - 2; int prnoindex_cell = prnoindex + 1; int RecmdVendorNameindex_cell = RecmdVendorNameindex - 2;
+
+
         decimal lmbzj = Convert.ToDecimal(e.GetValue("notax_targetTotalPrice"));//目标总价(未税)
         decimal lzj = Convert.ToDecimal(e.GetValue("notax_TotalPrice").ToString() == "" ? "0" : e.GetValue("notax_TotalPrice").ToString());//采购总价(未税)
         //decimal ln = ((lzj - lmbzj) / lmbzj) *100;
@@ -1456,24 +1806,23 @@ public partial class Pur_Po : System.Web.UI.Page
 
         if (ln > 0 && ln <= 20)
         {
-            e.Row.Cells[lncindex - 1].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[lncindex_cell].Style.Add("background-color", "#EEEE00");
         }
         else if (ln > 20)
         {
-            e.Row.Cells[lncindex - 1].Style.Add("color", "white");
-            e.Row.Cells[lncindex - 1].Style.Add("background-color", "red");
+            e.Row.Cells[lncindex_cell].Style.Add("color", "white");
+            e.Row.Cells[lncindex_cell].Style.Add("background-color", "red");
         }
 
         string PRNo = Convert.ToString(e.GetValue("PRNo"));
-        e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-            + e.GetValue("PRNo") + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
+        e.Row.Cells[prnoindex_cell].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
+            + PRNo + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
 
         //add by heguiqin20180515 采购供应商跟推荐供应商不一致，背景色黄色
-        DevExpress.Web.ASPxComboBox acb_pvi = (DevExpress.Web.ASPxComboBox)this.FindControl("ctl00$MainContent$PoVendorId");
         string PoVendor = "";
-        if (acb_pvi != null)
+        if (PoVendorId != null)
         {
-            string[] pvarr = acb_pvi.Text.Split('|');
+            string[] pvarr = PoVendorId.Text.Split('|');
             if (pvarr.Length >= 2)
             {
                 //PoVendor = pvarr[0] + "_" + pvarr[1];
@@ -1483,22 +1832,22 @@ public partial class Pur_Po : System.Web.UI.Page
 
         if (e.GetValue("RecmdVendorName").ToString() != PoVendor.Replace("有限公司", "") && e.GetValue("RecmdVendorName").ToString() !="")
         {
-            e.Row.Cells[RecmdVendorNameindex - 1].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[RecmdVendorNameindex_cell].Style.Add("background-color", "#EEEE00");
         }
 
         //新增价格 背景色 
         #region color
-        if (this.FindControl("ctl00$MainContent$PoNo") is Control)
+        if (this.PoNo is Control)
         {
-            string PoNo = ((TextBox)this.FindControl("ctl00$MainContent$PoNo")).Text;
-            if (PoNo != "")
+            string pono = PoNo.Text;
+            if (pono != "")
             {
 
                 string stepname_po = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='ce701853-e13b-4c39-9cd6-b97e18656d31' and InstanceID='"
-                            + PoNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                            + pono + "' order by sort desc").Tables[0].Rows[0][0].ToString();
                 if (stepname_po != "采购负责人")//申请步骤
                 {
-                    string pricetype = DbHelperSQL.Query("select pricetype from PUR_PO_Main_Form where pono='" + PoNo + "'").Tables[0].Rows[0][0].ToString();
+                    string pricetype = DbHelperSQL.Query("select pricetype from PUR_PO_Main_Form where pono='" + pono + "'").Tables[0].Rows[0][0].ToString();
                     if (pricetype == "2")
                     {
                         decimal notax_historyPrice = Convert.ToDecimal(e.GetValue("notax_historyPrice").ToString() == "新单价" ? "0" : e.GetValue("notax_historyPrice").ToString());
@@ -1522,8 +1871,8 @@ public partial class Pur_Po : System.Web.UI.Page
                             e.Row.Style.Add("font-style", "italic");
                             e.Row.Style.Add("color", "#969696");
 
-                            e.Row.Cells[prnoindex + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-                + e.GetValue("PRNo") + "&display=1' target='_blank' style='color:#969696'>" + PRNo.ToString() + "</a>";
+                            e.Row.Cells[prnoindex_cell].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
+                + PRNo + "&display=1' target='_blank' style='color:#969696'>" + PRNo.ToString() + "</a>";
 
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["wlType"], "wlType")).Style.Add("color", "#CDC5BF");
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["RecmdVendorName"], "RecmdVendorName")).Style.Add("color", "#CDC5BF");
@@ -1539,9 +1888,9 @@ public partial class Pur_Po : System.Web.UI.Page
                             ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
                             ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Font.Italic = true;
 
-                            e.Row.Cells[RecmdVendorNameindex - 1].Style.Remove("background-color");
-                            e.Row.Cells[lncindex - 1].Style.Add("color", "#969696");
-                            e.Row.Cells[lncindex - 1].Style.Remove("background-color");
+                            e.Row.Cells[RecmdVendorNameindex_cell].Style.Remove("background-color");
+                            e.Row.Cells[lncindex_cell].Style.Add("color", "#969696");
+                            e.Row.Cells[lncindex_cell].Style.Remove("background-color");
 
 
                         }
@@ -1552,6 +1901,11 @@ public partial class Pur_Po : System.Web.UI.Page
 
         #endregion
 
+    }
+
+    protected void gv_DataBound(object sender, EventArgs e)
+    {
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "init_pay();change_paytype();appendSearch();", true);
     }
 
     protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
@@ -1588,6 +1942,257 @@ public partial class Pur_Po : System.Web.UI.Page
     }
 
 
+    protected void gv2_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
+    {
+        string param = e.Parameters.Trim();
+        if (param == "change")//采购类别改变
+        {
+            string paytype_page = PayType.SelectedValue;//当前付款类型
+            DataTable ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where 1=0").Tables[0];
+
+            string sql = @"select * from PUR_PO_ContractPay_Form where pono='" + PoNo.Text + "' order by rowid";
+            DataTable ldt_pay_db = DbHelperSQL.Query(sql).Tables[0];
+
+            double paytotal = Convert.ToDouble(gv.GetTotalSummaryValue(gv.TotalSummary["TotalPrice"]));
+
+            int flag = 0;
+            if (ldt_pay_db != null)
+            {
+                if (ldt_pay_db.Rows.Count > 1)
+                {
+                    flag = 1;//数据库有多笔数据
+                }
+                if (ldt_pay_db.Rows.Count == 1)
+                {
+                    if (ldt_pay_db.Rows[0]["PayRate"].ToString() == "100")
+                    {
+                        flag = 2;//数据库有一笔数据 且 比例是100%
+                    }
+                    
+                }
+            }
+
+            if (paytype_page == "")
+            {
+                this.gv2.Columns.Clear();
+                loadControl_Pay(ldt_pay);
+            }
+            else if (paytype_page.Contains("一次性"))
+            {
+                if (flag == 2)
+                {
+                    this.gv2.Columns.Clear();
+                    loadControl_Pay(ldt_pay_db);
+                }
+                else
+                {
+                    DataRow ldr = ldt_pay.NewRow();
+                    ldr["rowid"] = "10";
+                    ldr["PayRate"] = 100;
+                    ldr["PayMoney"] = paytotal;
+                    ldt_pay.Rows.Add(ldr);
+
+                    this.gv2.Columns.Clear();
+                    loadControl_Pay(ldt_pay);
+                }
+
+            }
+            else//合同
+            {
+                if (flag == 1)
+                {
+                    this.gv2.Columns.Clear();
+                    loadControl_Pay(ldt_pay_db);
+                }
+                else
+                {
+                    DataRow ldr = ldt_pay.NewRow();
+                    ldr["rowid"] = "10";
+                    ldt_pay.Rows.Add(ldr);
+
+                    this.gv2.Columns.Clear();
+                    loadControl_Pay(ldt_pay);
+                }
+
+            }
+
+        }
+
+        if (param == "load")//新增，修改采购供应商 gv 回传后，调用
+        {
+            DataTable ldt_2 = Pgi.Auto.Control.AgvToDt(this.gv2);
+            double paytotal = Convert.ToDouble(gv.GetTotalSummaryValue(gv.TotalSummary["TotalPrice"]));
+            if (paytotal > 0)
+            {
+                for (int i = 0; i < ldt_2.Rows.Count; i++)
+                {
+                    if (ldt_2.Rows[i]["PayRate"].ToString() != "")
+                    {
+                        ldt_2.Rows[i]["PayMoney"] = paytotal * (Convert.ToDouble(ldt_2.Rows[i]["PayRate"]) / 100);
+                    }
+                }
+            }
+            else
+            {
+                ldt_2.Rows.Clear();
+                PayType.SelectedValue = "";
+            }
+            
+            this.gv2.Columns.Clear();
+            loadControl_Pay(ldt_2);
+        }
+    }
+
+    public void loadControl_Pay(DataTable ldt_pay)
+    {
+        string paytype_page = PayType.SelectedValue;//当前付款类型
+
+        Pgi.Auto.Control.SetGrid("PUR_PO_Main_Form", "PO_PAY", this.gv2, ldt_pay, 2);
+
+        for (int i = 0; i < ldt_pay.Rows.Count; i++)
+        {
+            ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayClause"], "PayClause")).Width = Unit.Pixel(120);
+            ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFunc"], "PayFunc")).Width = Unit.Pixel(120);
+            ((ASPxComboBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayFile"], "PayFile")).Width = Unit.Pixel(150);
+
+            //AutoPostBack = true 已经在 数据库配置好，list_type_ref设定
+            ((TextBox)this.gv2.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).TextChanged += new EventHandler(txt_pay_TextChanged);
+        }
+
+        if (ldt_pay.Rows.Count == 1 && paytype_page.Contains("一次性"))
+        {
+            ((TextBox)this.gv2.FindRowCellTemplateControl(0, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).Enabled = false;
+            ((TextBox)this.gv2.FindRowCellTemplateControl(0, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gv2.FindRowCellTemplateControl(0, (GridViewDataColumn)this.gv2.Columns["PayRate"], "PayRate")).BorderStyle = BorderStyle.None;
+        }
+    }
+
+    protected void txt_pay_TextChanged(object sender, EventArgs e)
+    {
+        DataTable ldt_2 = Pgi.Auto.Control.AgvToDt(this.gv2);
+        double paytotal = Convert.ToDouble(gv.GetTotalSummaryValue(gv.TotalSummary["TotalPrice"]));
+
+        for (int i = 0; i < ldt_2.Rows.Count; i++)
+        {
+            if (ldt_2.Rows[i]["PayRate"].ToString() != "")
+            {
+                ldt_2.Rows[i]["PayMoney"] = paytotal * (Convert.ToDouble(ldt_2.Rows[i]["PayRate"]) / 100);
+            }
+            else
+            {
+                ldt_2.Rows[i]["PayMoney"] = null;
+            }
+        }
+        this.gv2.Columns.Clear();
+        loadControl_Pay(ldt_2);
+
+    }
+    
+    protected void btnadd_contract_Click(object sender, EventArgs e)
+    {
+        //double paytotal = Convert.ToDouble(gv.GetTotalSummaryValue(gv.TotalSummary["TotalPrice"]));
+        //if (paytotal <= 0)
+        //{
+        //    Pgi.Auto.Public.MsgBox(this, "alert", "采购总价(含税)不可为0!");
+        //    return;
+        //}
+        DataTable ldt_pay = Pgi.Auto.Control.AgvToDt(this.gv2);
+        int ln = 0;
+
+        for (int i = 0; i < ldt_pay.Rows.Count; i++)
+        {
+            if (Convert.ToInt32(ldt_pay.Rows[i]["rowid"].ToString()) > ln)
+            {
+                ln = Convert.ToInt32(ldt_pay.Rows[i]["rowid"].ToString());
+            }
+        }
+
+        DataRow ldr = ldt_pay.NewRow();
+        ldr["rowid"] = (ln + 10).ToString();
+        ldt_pay.Rows.Add(ldr);
+
+        this.gv2.Columns.Clear();
+        loadControl_Pay(ldt_pay);
+    }
+
+    protected void btndel_contract_Click(object sender, EventArgs e)
+    {
+        DataTable ldt_pay = Pgi.Auto.Control.AgvToDt(this.gv2);
+        for (int i = ldt_pay.Rows.Count - 1; i >= 0; i--)
+        {
+            if (ldt_pay.Rows[i]["flag"].ToString() == "1" && ldt_pay.Rows[i]["id"].ToString() == "")
+            {
+                ldt_pay.Rows[i].Delete();
+            }
+            else if (ldt_pay.Rows[i]["flag"].ToString() == "1" && ldt_pay.Rows[i]["id"].ToString() != "")
+            {
+                ldt_pay.Rows[i].Delete();
+            }
+        }
+        ldt_pay.AcceptChanges();
+
+        this.gv2.Columns.Clear();
+        loadControl_Pay(ldt_pay);
+    }
+
+    protected void GetGrid(DataTable DT, string potype)
+    {
+        //用于产品/项目
+        string sql_po_wltype = @"";
+        if (potype == "PO")
+        {
+            sql_po_wltype = @"select LB as value from PUR_PO_CLASS where ms_code<>'3'";
+        }
+        else
+        {
+            sql_po_wltype = @"select LB as value from PUR_PO_CLASS";
+        }
+        DataTable ldt_po_wltype = DbHelperSQL.Query(sql_po_wltype).Tables[0];
+
+        for (int i = 0; i < gv.VisibleRowCount; i++)
+        {
+            ASPxComboBox tb1 = ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype"));
+            tb1.DataSource = ldt_po_wltype;
+            tb1.TextField = "value";
+            tb1.ValueField = "value";
+            tb1.DataBind();
+
+            //复制时候判断，存在与否
+            if (ldt_po_wltype.Select("value='" + DT.Rows[i]["po_wltype"].ToString() + "'").Length <= 0)
+            {
+                tb1.Value = "";
+            }
+            else
+            {
+                tb1.Value = DT.Rows[i]["po_wltype"].ToString();
+            }
+            
+        }
+
+
+    }
+
+    //#region "WebMethod"
+
+    ////获取 是否是 合同模块
+    //[WebMethod]
+    //public static string getType_Contain(string potype)
+    //{
+    //    var sql = string.Format("select check_accept from [dbo].[PUR_Permission_category] where type='{0}' or type2='{0}'", potype);
+    //    var obj = DbHelperSQL.GetSingle(sql);
+    //    return obj == null ? "" : obj.ToString();
+    //}
+
+    //pdf按钮是否显示
+    [WebMethod]
+    public static string get_iscomplete(string PoNo)
+    {
+        var sql = string.Format("select isnull(iscomplete,'') iscomplete from [dbo].[PUR_PO_Main_Form] where PoNo='{0}'", PoNo);
+        var obj = DbHelperSQL.GetSingle(sql);
+        return obj == null ? "" : obj.ToString();
+    }
+
+    //#endregion
 
     #region 在页面中显示要显示的字段
     /// <summary>
@@ -2336,7 +2941,6 @@ public partial class Pur_Po : System.Web.UI.Page
         return ls;
     }
     #endregion
-
 
 }
 

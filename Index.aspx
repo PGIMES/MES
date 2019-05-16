@@ -665,12 +665,31 @@
                                         <li><a href="javascript:void(0)"  target="_blank">工单(TBD)</a></li>
                                         <li><a href="javascript:void(0)"  target="_blank">库存(TBD)</a></li>                                  
                                         <li><a href="/wuliu/SemiFinishedKanban.aspx" target="_blank">半成品数据看板(OnGoing)</a></li>
-                                         <li><a href="/wuliu/FH_OverMnth.aspx"  target="_blank">超一个月无交货报表</a></li>
-                                         <li><a href="/wuliu/UnFH_Remind.aspx"  target="_blank">漏发货提醒</a></li> 
-                                         <li><a href="/Product/ForcastByMnth_Forwuliu.aspx"  target="_blank">三个月滚动预测</a></li>   
-                                         <li><a href="/kanban/Qad_WorkOrder_List.aspx"  target="_blank">工单流转状态及父工单看板</a></li>  
-                                         <li><a href="/wuliu/Qad_Report_tr_hist_Sum.aspx"  target="_blank">库龄汇总报表</a></li>
-                                         <li><a href="/wuliu/Qad_Report_tr_hist.aspx"  target="_blank">库龄明细报表</a></li>
+                                        <li><a href="/wuliu/FH_OverMnth.aspx"  target="_blank">超一个月无交货报表</a></li>
+                                        <li><a href="/wuliu/UnFH_Remind.aspx"  target="_blank">漏发货提醒</a></li> 
+                                        <li><a href="/Product/ForcastByMnth_Forwuliu.aspx"  target="_blank">三个月滚动预测</a></li>   
+                                        <li><a href="/kanban/Qad_WorkOrder_List.aspx"  target="_blank">工单流转状态及父工单看板</a></li>  
+
+                                        <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">生产性物料库龄</a>
+                                            <ul class="dropdown-menu">  
+                                                <%--<li><a href="/wuliu/Qad_Report_tr_hist_Sum.aspx"  target="_blank">库龄汇总报表</a></li>
+                                                <li><a href="/wuliu/Qad_Report_tr_hist.aspx"  target="_blank">库龄明细报表</a></li> --%>                                            
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_new_Sum.aspx"  target="_blank">库龄汇总报表</a></li>
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_new.aspx"  target="_blank">库龄明细报表</a></li>
+                                                <li class="divider"></li> 
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_new_query.aspx"  target="_blank">库龄分析</a></li>                                       
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">辅料库龄</a>
+                                            <ul class="dropdown-menu"> 
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_fuliao.aspx"  target="_blank">库龄明细报表</a></li>
+                                                <li class="divider"></li>                
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_fuliao_query.aspx"  target="_blank">库龄分析</a></li>                           
+                                            </ul>
+                                        </li>
+                                         
                                          <li><a href="/Wuliu/Edi_BMW_Query.aspx"  target="_blank">BMW Edi对比</a></li>  
                                          <li><a href="/Wuliu/Report_Planning.aspx"  target="_blank">Planning</a></li>    
                                         <li><a href="javascript:void(0)"  target="_blank"></a></li>                                       
@@ -792,6 +811,7 @@
                                         <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
                                         <li><a href="/Forms/PurChase/PO_KPI_Report.aspx" target="_blank">采购工程师KPI查询</a></li>
                                         <li><a href="/MaterialBase/ForProductDay.aspx" target="_blank">采购日程(刀具)查询</a></li>
+                                        <li><a href="/Forms/PurChase/PO_Report_Receive.aspx" target="_blank">合同类未收货查询</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
