@@ -103,12 +103,17 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
         {
             if (e.KeyValue.ToString().Contains("完成率"))
             {
-                for (int i = 1; i < gv.Columns.Count - 4; i++)
+                for (int i = 0; i < gv.Columns.Count; i++)
                 {
-                    if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                    string fieldname = ((DevExpress.Web.GridViewDataColumn)gv.Columns[i]).FieldName;
+                    if (fieldname.StartsWith("W"))
                     {
-                        e.Row.Cells[i + 2].Text = Convert.ToString(e.GetValue("W" + i.ToString())) + "%";
+                        if (e.GetValue(fieldname) != DBNull.Value)
+                        {
+                            e.Row.Cells[i - 1].Text = Convert.ToString(e.GetValue(fieldname)) + "%";
+                        }
                     }
+                    
                 }
 
             }
@@ -118,24 +123,28 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
                 if (e.KeyValue.ToString().Contains("计划生产订单数量") || e.KeyValue.ToString().Contains("废品数量")
                      || e.KeyValue.ToString().Contains("未完成订单数量") || e.KeyValue.ToString().Contains("实际发货数量"))
                 {
-                    for (int i = 1; i < gv.Columns.Count - 4; i++)
+                    for (int i = 0; i < gv.Columns.Count; i++)
                     {
-                        if (e.GetValue("W" + i.ToString()) != DBNull.Value)
+                        string fieldname = ((DevExpress.Web.GridViewDataColumn)gv.Columns[i]).FieldName;
+                        if (fieldname.StartsWith("W"))
                         {
-                            if (Convert.ToDouble(e.GetValue("W" + i.ToString())) != 0)
+                            if (e.GetValue(fieldname) != DBNull.Value)
                             {
-                                e.Row.Cells[i + 2].Style.Add("color", "blue");
-                                e.Row.Cells[i + 2].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','"+ e.GetValue("typedesc").ToString() + "','" + i.ToString() + "')");
-                            }
+                                if (Convert.ToDouble(e.GetValue(fieldname)) != 0)
+                                {
+                                    string week = fieldname.Substring(1, fieldname.IndexOf('(') - 1);
+                                    e.Row.Cells[i - 1].Style.Add("color", "blue");
+                                    e.Row.Cells[i - 1].Attributes.Add("onclick", "show_detail('" + e.GetValue("dept").ToString() + "','" + e.GetValue("typedesc").ToString() + "','" + week + "')");
+                                }
 
+                            }
                         }
+                        
                     }
 
                 }
 
             }
-
-
         }
     }
 
