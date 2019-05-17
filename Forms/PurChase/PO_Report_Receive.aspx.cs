@@ -39,4 +39,32 @@ public partial class Forms_PurChase_PO_Report_Receive : System.Web.UI.Page
         QueryASPxGridView();
         ScriptManager.RegisterStartupScript(this, e.GetType(), "", "setHeight() ;", true);
     }
+
+    protected void GV_PART_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data)
+        {
+            return;
+        }
+
+        string SysContractNo = Convert.ToString(e.GetValue("SysContractNo"));
+        if (SysContractNo.Contains("_QAD"))
+        {
+            return;
+        }
+
+        int pono_index = 0;
+        for (int i = 0; i < this.GV_PART.DataColumns.Count; i++)
+        {
+            if (this.GV_PART.DataColumns[i].FieldName == "PoNo")
+            {
+                pono_index = i;
+            }
+        }
+
+        string PoNo = Convert.ToString(e.GetValue("PoNo"));
+        string groupid = Convert.ToString(e.GetValue("GroupID"));
+        e.Row.Cells[pono_index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="
+                    + e.GetValue("PoNo") + "&groupid=" + groupid + "&display=1' target='_blank'>" + PoNo.ToString() + "</a>";
+    }
 }

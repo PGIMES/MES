@@ -92,7 +92,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="SysContractNo;PoNo;po_rowid" AutoGenerateColumns="False"  
-                             OnPageIndexChanged="GV_PART_PageIndexChanged">
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnHtmlRowCreated="GV_PART_HtmlRowCreated" Width="1810px">
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -104,12 +104,12 @@
                             <dx:GridViewDataTextColumn Caption="系统合同号" FieldName="SysContractNo" Width="100px" VisibleIndex="1" />
                             <dx:GridViewDataTextColumn Caption="合同名称" FieldName="ContractName" Width="300px" VisibleIndex="2" />
                             <dx:GridViewDataTextColumn Caption="采购单号" FieldName="PoNo" Width="70px" VisibleIndex="3" >
-                                <DataItemTemplate>
+                                <%--<DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("PoNo")%>' Cursor="pointer" ClientInstanceName='<%# "PoNo_"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e&instanceid="+ Eval("PoNo")+"&groupid="+ Eval("GroupID")+"&display=1" %>'  
                                             Target="_blank">                                        
                                     </dx:ASPxHyperLink>
-                                </DataItemTemplate> 
+                                </DataItemTemplate> --%>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="采购行号" FieldName="po_rowid" Width="60px" VisibleIndex="4" />
                             <dx:GridViewDataTextColumn Caption="名称" FieldName="wlmc" Width="300px" VisibleIndex="5" />
@@ -122,6 +122,9 @@
                             <dx:GridViewDataTextColumn Caption="要求到货日期" FieldName="deliveryDate" Width="80px" VisibleIndex="12" />
                             <dx:GridViewDataTextColumn Caption="计划到货日期" FieldName="PlanReceiveDate" Width="80px" VisibleIndex="13" />
                             <dx:GridViewDataTextColumn Caption="采购类别" FieldName="PoType" Width="60px" VisibleIndex="14" />
+                            <dx:GridViewDataTextColumn Caption="GroupID" FieldName="GroupID" VisibleIndex="99"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden" FilterCellStyle-CssClass="hidden">
+                            </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
