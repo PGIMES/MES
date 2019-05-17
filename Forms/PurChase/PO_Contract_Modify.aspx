@@ -310,7 +310,9 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="PayClause" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "PayClause"+Container.VisibleIndex.ToString() %>'>
+                                                    Width="80px" ClientInstanceName='<%# "PayClause"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -318,7 +320,9 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="PayFunc" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "PayFunc"+Container.VisibleIndex.ToString() %>'>
+                                                    Width="80px" ClientInstanceName='<%# "PayFunc"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>
                                             </DataItemTemplate> 
                                         </dx:GridViewDataTextColumn> 
@@ -326,7 +330,9 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="PayFile" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "PayFile"+Container.VisibleIndex.ToString() %>'>
+                                                    Width="80px" ClientInstanceName='<%# "PayFile"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>
                                             </DataItemTemplate> 
                                         </dx:GridViewDataTextColumn> 
