@@ -106,9 +106,9 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         int jh = 0, sj = 0, top1 = 0;
         if (drop_type.SelectedValue == "PO")
         {
-            jh = 20;//计划到货期
-            sj = 23;//实际到货日期
-            top1 = 22;//TOP1时间
+            jh = 22;//计划到货期
+            sj = 25;//实际到货日期
+            top1 = 24;//TOP1时间
         }
         else
         {
@@ -123,41 +123,45 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         }
         if (tr_effdate != "")
         {
-            //DateTime tr_eff = Convert.ToDateTime(e.GetValue("tr_effdate").ToString());
-            //TimeSpan tsday = tr_eff - plan_date;
-            //if (tsday.Days > 3)
-            //{
-            //    e.Row.Cells[sj].Style.Add("background-color", "red");//实际到货日期
-            //}
-
-            string s1 = "";
-
-            tr_effdate = tr_effdate.Replace("<br>", ",");
-            string[] ss = tr_effdate.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < ss.Length; i++)
+            if (drop_type.SelectedValue == "PO")
             {
-                if (ss[i].Replace("数量1 ", "")!="")
+                DateTime tr_eff = Convert.ToDateTime(tr_effdate);
+                TimeSpan tsday = tr_eff - plan_date;
+                if (tsday.Days > 3)
                 {
-                    DateTime tr_eff = Convert.ToDateTime(ss[i].Replace("数量1 ", ""));
-                    TimeSpan tsday = tr_eff - plan_date;
+                    e.Row.Cells[sj].Style.Add("background-color", "red");//实际到货日期
+                }
+            }
+            else
+            {
+                string s1 = "";
 
-                    if (tsday.Days > 3)
+                tr_effdate = tr_effdate.Replace("<br>", ",");
+                string[] ss = tr_effdate.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < ss.Length; i++)
+                {
+                    if (ss[i].Replace("数量1 ", "") != "")
                     {
-                        s1 += "数量1 <font color=red>" + ss[i].Replace("数量1 ", "") + "</font><br>";
+                        DateTime tr_eff = Convert.ToDateTime(ss[i].Replace("数量1 ", ""));
+                        TimeSpan tsday = tr_eff - plan_date;
+
+                        if (tsday.Days > 3)
+                        {
+                            s1 += "数量1 <font color=red>" + ss[i].Replace("数量1 ", "") + "</font><br>";
+                        }
+                        else
+                        {
+                            s1 += ss[i] + "<br>";
+                        }
                     }
                     else
                     {
                         s1 += ss[i] + "<br>";
                     }
-                }
-                else
-                {
-                    s1 += ss[i] + "<br>";
-                }
-               
-            }
-            e.Row.Cells[sj].Text = s1;
 
+                }
+                e.Row.Cells[sj].Text = s1;
+            }
         }
         if (minutes > 24 * 60)
         {
