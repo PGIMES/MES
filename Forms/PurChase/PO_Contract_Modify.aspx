@@ -42,6 +42,10 @@
                     (eval('PlanPayDate' + index)).SetEnabled(false);
                     (eval('FPDate' + index)).SetEnabled(false);
 
+                    (eval('PayClause' + index)).SetEnabled(false);
+                    (eval('PayFunc' + index)).SetEnabled(false);
+                    (eval('PayFile' + index)).SetEnabled(false);
+
                 } else {
                     bf = false;
                 }
