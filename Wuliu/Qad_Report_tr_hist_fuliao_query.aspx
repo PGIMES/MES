@@ -183,7 +183,7 @@
             <div class="panel panel-heading">
                 <asp:Label ID="Label1" runat="server" Text="库龄30-180天趋势图"></asp:Label>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_2" runat="server" OnHtmlRowCreated="gv_tr_list_2_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -207,7 +207,7 @@
                     <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
                 </button>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll; height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_3" runat="server" OnHtmlRowCreated="gv_tr_list_3_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -229,7 +229,7 @@
             <div class="panel panel-heading">
                 <asp:Label ID="Label5" runat="server" Text="库龄180天-360天趋势图"></asp:Label>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_4" runat="server" OnHtmlRowCreated="gv_tr_list_4_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -253,7 +253,7 @@
                     <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
                 </button>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_5" runat="server" OnHtmlRowCreated="gv_tr_list_5_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -275,7 +275,7 @@
             <div class="panel panel-heading">
                 <asp:Label ID="Label3" runat="server" Text="超360天趋势图"></asp:Label>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_6" runat="server">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -299,7 +299,7 @@
                     <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
                 </button>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_7" runat="server" OnHtmlRowCreated="gv_tr_list_7_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
