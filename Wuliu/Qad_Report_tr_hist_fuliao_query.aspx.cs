@@ -63,7 +63,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ds.Tables[0].Columns["amount1"].ColumnName = "0-30金额"; ds.Tables[0].Columns["amount2"].ColumnName = "30-60金额";
         ds.Tables[0].Columns["amount3"].ColumnName = "60-90金额"; ds.Tables[0].Columns["amount4"].ColumnName = "90-180金额";
         ds.Tables[0].Columns["amount5"].ColumnName = "180-360金额"; ds.Tables[0].Columns["amount6"].ColumnName = "360-720金额";
-        ds.Tables[0].Columns["amount7"].ColumnName = "720以上金额"; ds.Tables[0].Columns["ld_qty_oh_amount"].ColumnName = "库存金额";
+        ds.Tables[0].Columns["amount7"].ColumnName = "720以上金额"; 
 
         DataTable dt_chartA_1 = ds.Tables[0];
         if (ChartA_1.Diagram != null)
@@ -75,7 +75,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         List<Series> listA_1 = new List<Series>();
         Series seriesA_1_1 = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
         Series seriesA_1_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line);
-        for (int i = 1; i <= 8; i++)
+        for (int i = 1; i <= 7; i++)
         {
             string argument = dt_chartA_1.Columns[i].ColumnName;//参数名称 
 
