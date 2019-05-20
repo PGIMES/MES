@@ -120,10 +120,10 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         {
             string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
 
-            decimal value = Convert.ToDecimal(dt_chartB.Rows[0][i].ToString());//参数值
+            decimal value = Convert.ToDecimal(dt_chartB.Rows[0][i].ToString() == "" ? "0" : dt_chartB.Rows[0][i].ToString());//参数值
             seriesB.Points.Add(new SeriesPoint(argument, value));
 
-            decimal value_2 = Convert.ToDecimal(dt_chartB.Rows[1][i].ToString());//参数值
+            decimal value_2 = Convert.ToDecimal(dt_chartB.Rows[1][i].ToString() == "" ? "0" : dt_chartB.Rows[1][i].ToString());//参数值
             seriesB_2.Points.Add(new SeriesPoint(argument, value_2));
 
         }
@@ -160,10 +160,10 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         {
             string argument = dt_chartD.Columns[i].ColumnName;//参数名称 
 
-            decimal value = Convert.ToDecimal(dt_chartD.Rows[0][i].ToString());//参数值
+            decimal value = Convert.ToDecimal(dt_chartD.Rows[0][i].ToString() == "" ? "0" : dt_chartD.Rows[0][i].ToString());//参数值
             seriesD.Points.Add(new SeriesPoint(argument, value));
 
-            decimal value_2 = Convert.ToDecimal(dt_chartD.Rows[1][i].ToString());//参数值
+            decimal value_2 = Convert.ToDecimal(dt_chartD.Rows[1][i].ToString() == "" ? "0" : dt_chartD.Rows[1][i].ToString());//参数值
             seriesD_2.Points.Add(new SeriesPoint(argument, value_2));
 
         }
@@ -195,7 +195,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         for (int i = 1; i < dt_chartF.Columns.Count; i++)
         {
             string argument = dt_chartF.Columns[i].ColumnName;//参数名称 
-            decimal value = Convert.ToDecimal(dt_chartF.Rows[0][i].ToString());//参数值
+            decimal value = Convert.ToDecimal(dt_chartF.Rows[0][i].ToString() == "" ? "0" : dt_chartF.Rows[0][i].ToString());//参数值
             seriesF.Points.Add(new SeriesPoint(argument, value));
         }
         seriesF.ArgumentScaleType = ScaleType.Qualitative;
