@@ -686,7 +686,7 @@
                                             <ul class="dropdown-menu"> 
                                                 <li><a href="/wuliu/Qad_Report_tr_hist_fuliao.aspx"  target="_blank">库龄明细报表</a></li>
                                                 <li class="divider"></li>                
-                                                <li><a href="/wuliu/Qad_Report_tr_hist_fuliao_query.aspx"  target="_blank">库龄分析</a></li>                           
+                                                <li><a href="/wuliu/Qad_Report_tr_hist_fuliao_query.aspx"  target="_blank">辅料库龄分析</a></li>                           
                                             </ul>
                                         </li>
                                          
