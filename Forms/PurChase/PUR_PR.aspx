@@ -41,6 +41,7 @@
             $("select[id*='domain']").change(function(){
                 bindSelect("applydept");
                 $("#deptm").val("");
+                $("#deptmfg").val("");
             });
 
             //申请部门
@@ -299,7 +300,7 @@
                 layer.alert("请选择申请公司及部门.");
                 return false;
             }
-            if($("#deptm").val()==""){
+            if($("#deptm").val()=="" || $("#deptmfg").val()==""){
                 layer.alert("部门经理(或分管副总)未设定，请联系IT设定.");
                 return false;
             }
@@ -580,13 +581,16 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {//返回的数据用data.d获取内容//                        
-                     //alert(data.d)
-                    //$.each(eval(data.d), function (i, item) {  })                              
-                    if (data.d == "") {
-                        layer.alert("未获取到部门主管,请联系IT确认.");                            
+                    var obj = eval(data.d); 
+
+                    if (obj[0].re_flag=="Y") {
+                        layer.alert("未获取到部门主管,请联系IT确认.");     
+                        $("#deptm").val("");
+                        $("#deptmfg").val("");
                     }
                     else {                        
-                        $("#deptm").val(data.d );
+                        $("#deptm").val(obj[0].manager_id);
+                        $("#deptmfg").val(obj[0].fz_id);
                     }                   
                 },
                 error: function (err) {

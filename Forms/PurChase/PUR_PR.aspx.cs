@@ -749,11 +749,27 @@ protected void Page_Load(object sender, EventArgs e)
     [WebMethod]
     public static string getDeptLeaderByDept(string domain, string dept)
     {
-        StringBuilder sb = new StringBuilder();
-        sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
-        object obj = DbHelperSQL.GetSingle(sb.ToString());
-        return obj == null ? "" : obj.ToString();
+        //StringBuilder sb = new StringBuilder();
+        //sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
+        //sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
+        //object obj = DbHelperSQL.GetSingle(sb.ToString());
+        //return obj == null ? "" : obj.ToString();
+
+        string re_flag = ""; string manager_id = ""; string fz_id = "";
+
+        DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + dept + "','" + domain + "')").Tables[0];
+        if (dt_manager.Rows.Count <= 0)
+        {
+            re_flag = "Y";
+        }
+        else
+        {
+            manager_id = "u_" + dt_manager.Rows[0]["manager_id"].ToString();
+            fz_id = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
+        }
+
+        string result = "[{\"re_flag\":\"" + re_flag + "\",\"manager_id\":\"" + manager_id + "\",\"fz_id\":\"" + fz_id + "\"}]";
+        return result;
     }
 
     #endregion
