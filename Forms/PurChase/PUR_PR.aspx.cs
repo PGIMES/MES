@@ -776,7 +776,7 @@ protected void Page_Load(object sender, EventArgs e)
         {
             DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + dept + "','" + domain + "')").Tables[0];
             DataTable dt_manager_create = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users 
-                                                    where Account=(select distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES] where dept_name='" + createdept + "','')").Tables[0];
+                                                    where Account=(select distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES] where dept_name='" + createdept + "')").Tables[0];
 
             if (dt_manager.Rows.Count <= 0 || dt_manager_create.Rows.Count <= 0)
             {
