@@ -297,7 +297,7 @@
         //验证
         function validate(id){
             if($("#applydept").val()==""){
-                layer.alert("请选择申请公司及部门.");
+                layer.alert("请选择归属公司及部门.");
                 return false;
             }
             if($("#deptm").val()=="" || $("#deptmfg").val()==""){
