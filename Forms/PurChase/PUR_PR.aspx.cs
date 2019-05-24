@@ -747,7 +747,7 @@ protected void Page_Load(object sender, EventArgs e)
 
     //部门取部门主管
     [WebMethod]
-    public static string getDeptLeaderByDept(string domain, string dept)
+    public static string getDeptLeaderByDept(string domain, string dept, string createdept)
     {
         //StringBuilder sb = new StringBuilder();
         //sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
@@ -757,15 +757,41 @@ protected void Page_Load(object sender, EventArgs e)
 
         string re_flag = ""; string manager_id = ""; string fz_id = "";
 
-        DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + dept + "','" + domain + "')").Tables[0];
-        if (dt_manager.Rows.Count <= 0)
+        if (dept == "全厂共用")
         {
-            re_flag = "Y";
+            DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + createdept + "','')").Tables[0];
+
+            if (dt_manager.Rows.Count <= 0)
+            {
+                re_flag = "Y";
+            }
+            else
+            {
+                manager_id = "u_" + dt_manager.Rows[0]["manager_id"].ToString();//归属部门经理
+                fz_id = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
+            }
+
         }
         else
         {
-            manager_id = "u_" + dt_manager.Rows[0]["manager_id"].ToString();
-            fz_id = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
+            DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + dept + "','" + domain + "')").Tables[0];
+            DataTable dt_manager_create = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users 
+                                                    where Account=(select distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES] where dept_name='" + createdept + "','')").Tables[0];
+
+            if (dt_manager.Rows.Count <= 0 || dt_manager_create.Rows.Count <= 0)
+            {
+                re_flag = "Y";
+            }
+            else
+            {
+                manager_id = "u_" + dt_manager.Rows[0]["manager_id"].ToString();//归属部门经理
+                if (dt_manager.Rows[0]["manager_id"].ToString() != dt_manager_create.Rows[0]["id"].ToString())//若申请人所在部门经理<>归属部门经理
+                {
+                    manager_id = manager_id + ",u_" + dt_manager_create.Rows[0]["id"].ToString();
+                }
+                fz_id = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
+            }
+
         }
 
         string result = "[{\"re_flag\":\"" + re_flag + "\",\"manager_id\":\"" + manager_id + "\",\"fz_id\":\"" + fz_id + "\"}]";

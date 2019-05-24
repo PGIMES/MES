@@ -571,13 +571,14 @@
             });
         }
 
-        function getDeptLeader(domain,dept){             
+        function getDeptLeader(domain,dept){     
+            var createdept=$("#DeptName").val();        
             $.ajax({
                 type: "Post",async: false,
                 url: "PUR_PR.aspx/getDeptLeaderByDept" , 
                 //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
                 //P1:wlh P2： 
-                data: "{'domain':'"+domain+"','dept':'"+dept+"'}",
+                data: "{'domain':'"+domain+"','dept':'"+dept+"','createdept':'"+createdept+"'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {//返回的数据用data.d获取内容//                        
@@ -1013,7 +1014,7 @@
                                 <div><%--<asp:UpdatePanel ID="UpdatePanel3" runat="server" UpdateMode="Conditional"><ContentTemplate>--%>
                                     <table style="" border="0" runat="server" id="tblWLLeibie">
                                         <tr>
-                                            <td style="width:5%;">申请公司：</td>
+                                            <td style="width:5%;">归属公司/部门：</td>
                                             <td style="width:65%;">
                                                  <div style="float:left;Width:15%;"><%--CssClass="form-control input-s-sm"--%>
                                                     <asp:DropDownList ID="domain" CssClass="linewrite" runat="server" Width="100%" Height="27px" ToolTip="0|1"  >
