@@ -7,7 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="Server">
     <script src="/Content/js/jquery.min.js"  type="text/javascript"></script>
     <script src="/Content/js/bootstrap.min.js"></script>
-    <script src="/Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
+    <script src="/Content/js/layer/layer.js"></script>
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -20,6 +20,21 @@
         });
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 300) + "px");
+        }
+
+        function show_his(PoNo) {
+           
+            var url = "/Forms/PurChase/PO_Print_his.aspx?PoNo=" + PoNo;
+
+            layer.open({
+                title: '打印记录',
+                closeBtn: 2,
+                type: 2,
+                area: ['500px', '500px'],
+                fixed: false, //不固定
+                maxmin: true, //开启最大化最小化按钮
+                content: url
+            });
         }
         	
     </script>

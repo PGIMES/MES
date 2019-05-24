@@ -77,12 +77,16 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
             return;
         }
 
-        int pono_index = 0;
+        int pono_index = 0; int isprint_index = 0;
         for (int i = 0; i < this.GV_PART.DataColumns.Count; i++)
         {
             if (this.GV_PART.DataColumns[i].FieldName == "PoNo")
             {
                 pono_index = i;
+            }
+            if (this.GV_PART.DataColumns[i].FieldName == "IsPrint")
+            {
+                isprint_index = i;
             }
         }
 
@@ -91,6 +95,9 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         string stepid = Convert.ToString(e.GetValue("StepID"));
         e.Row.Cells[pono_index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e&instanceid="
                     + e.GetValue("PoNo") + "&stepid=" + stepid + "&groupid=" + groupid + "&display=1' target='_blank'>" + PoNo.ToString() + "</a>";
+
+        e.Row.Cells[isprint_index].Style.Add("color", "blue");
+        e.Row.Cells[isprint_index].Attributes.Add("onclick", "show_his('" + PoNo + "')");
 
     }
     protected void GV_PART_HtmlRowPrepared(object sender, ASPxGridViewTableRowEventArgs e)
