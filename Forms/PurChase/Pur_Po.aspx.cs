@@ -145,7 +145,8 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 PoVendorId.Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString() + "|" + lsrate;
                 BuyerName.Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
-                if (ldt.Rows[0]["PoVendorId"].ToString()=="31567" && ldt.Rows[0]["PoVendorName"].ToString() == "网购")
+                //if (ldt.Rows[0]["PoVendorId"].ToString() == "31567" && ldt.Rows[0]["PoVendorName"].ToString() == "网购")
+                if (ldt.Rows[0]["PoVendorId"].ToString()=="31567")
                 {
                     WgPayCon.Value = ldt.Rows[0]["WgPayCon"].ToString() + "|" + ldt.Rows[0]["WgPayConDesc"].ToString();
                 }
@@ -732,7 +733,8 @@ public partial class Pur_Po : System.Web.UI.Page
 
             if (ls[i].Code.ToLower() == "wgpaycon")
             {
-                if (cggysId != "31567" || cggysName != "网购")
+                //if (cggysId != "31567" || cggysName != "网购")
+                if (cggysId != "31567")
                 {
                     wgfkfsId = "";
                     wgfkfsDesc = "";

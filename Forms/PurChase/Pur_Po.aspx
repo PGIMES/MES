@@ -119,7 +119,8 @@
 
         function init_wg(changefs){
             var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
-            if (ss[0]=="31567" && ss[1]=="网购") {
+            //if (ss[0]=="31567" && ss[1]=="网购") {
+            if (ss[0]=="31567") {
                 $("#span_WgVendor").show();
                 $("#tblWLLeibie input[id*='wgvendor']").show();
 
@@ -382,7 +383,8 @@
                     msg+="【采购供应商】不可为空.<br />";
                 }else {
                     var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
-                    if (ss[0]=="31567" && ss[1]=="网购") {
+                    //if (ss[0]=="31567" && ss[1]=="网购") {
+                    if (ss[0]=="31567") {
                         if($("#tblWLLeibie input[id*='wgvendor']").val()==""){
                             msg+="【网购供应商】不可为空.<br />";
                         }
