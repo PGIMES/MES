@@ -583,8 +583,18 @@ public partial class Pur_Po : System.Web.UI.Page
     public void SetWgPayCon()
     {
         WgPayCon.Columns.Clear();
-        string lssql = @"select [PaymentConditionCode],[PaymentConditionDescript],PaymentConditionCode+'|'+PaymentConditionDescript as v from [qad].[dbo].[qad_paymentcondition]  
-                        where [PaymentConditionIsActive]=1";
+        //string lssql = @"select [PaymentConditionCode],[PaymentConditionDescript],PaymentConditionCode+'|'+PaymentConditionDescript as v from [qad].[dbo].[qad_paymentcondition]  
+        //                where [PaymentConditionIsActive]=1";
+        string lssql = @"select [PaymentConditionCode],[PaymentConditionDescript],v
+                        from (
+	                        select '预付' [PaymentConditionCode],'预付' [PaymentConditionDescript],'预付|预付' v,0 rownum
+	                        union 
+	                        select [PaymentConditionCode],[PaymentConditionDescript],PaymentConditionCode+'|'+PaymentConditionDescript as v 
+		                        ,ROW_NUMBER() over(order by [PaymentConditionDaysMonths]) as rownum
+	                        from [qad].[dbo].[qad_paymentcondition]  
+	                        where [PaymentConditionIsActive]=1 
+	                        ) a
+                        order by rownum";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
 
         WgPayCon.ValueField = "v";
