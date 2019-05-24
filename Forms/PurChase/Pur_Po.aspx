@@ -878,7 +878,7 @@
                                                         </dx:ASPxComboBox>
                                                     </td>
                                                     <td style="width: 5%;">合同名称</td>
-                                                    <td style="width: 35%;">
+                                                    <td style="width: 30%;">
                                                         <asp:TextBox ID="contractname" runat="server" CssClass="linewrite" Width="90%" Height="27px"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 5%;">系统合同号</td>
@@ -886,8 +886,8 @@
                                                         <asp:TextBox ID="SysContractNo" runat="server" ReadOnly="true" CssClass="lineread" Width="90%" Height="27px"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 5%;">实际合同号</td>
-                                                    <td style="width: 10%;">
-                                                        <asp:TextBox ID="ActualContractNo" runat="server" ReadOnly="true" CssClass="lineread" Width="90%" Height="27px"></asp:TextBox>
+                                                    <td style="width: 15%;">
+                                                        <asp:TextBox ID="actualcontractno" runat="server" CssClass="linewrite" Width="90%" Height="27px"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                             </table>

@@ -314,6 +314,7 @@ public partial class Pur_Po : System.Web.UI.Page
                     PayType.CssClass = "lineread";
 
                     contractname.BackColor = System.Drawing.Color.Transparent;
+                    actualcontractno.BackColor = System.Drawing.Color.Transparent;
 
                     ContractType.Enabled = false;
                 }
@@ -351,6 +352,7 @@ public partial class Pur_Po : System.Web.UI.Page
                     PayType.CssClass = "lineread";
 
                     contractname.BackColor = System.Drawing.Color.Transparent;
+                    actualcontractno.BackColor = System.Drawing.Color.Transparent;
 
                     ContractType.Enabled = false;
                     
@@ -886,7 +888,8 @@ public partial class Pur_Po : System.Web.UI.Page
                 }
                 if (ls_head_pay[i].Code.ToLower() == "actualcontractno")//实际合同号
                 {
-                    actualcontractno = this.m_sid;
+                    //actualcontractno = this.m_sid;
+                    actualcontractno = ls_head_pay[i].Value.ToString() == "" ? this.m_sid : ls_head_pay[i].Value.ToString();
                 }
             }
         }
