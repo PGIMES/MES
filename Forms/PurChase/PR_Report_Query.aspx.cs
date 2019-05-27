@@ -21,7 +21,8 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
         LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         if (!IsPostBack)
         {   //初始化日期
-            ViewState["empname"] = LogUserModel.UserName;
+            ViewState["empid"] = LogUserModel.UserId;
+            ViewState["dept_ame"] = LogUserModel.DepartName;
             txtDateFrom.Text = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
 
             txtDateTo.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -44,12 +45,13 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         //
-        DataTable dt = DbHelperSQL.Query("exec Pur_PR_Query '" + drop_type.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "','" + (string)ViewState["empname"] + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Pur_PR_Query_New] '" + drop_type.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text 
+            + "','" + (string)ViewState["empid"] + "','" + (string)ViewState["dept_ame"] + "'").Tables[0];
        this.GV_PART.Columns.Clear();
-        Pgi.Auto.Control.SetGrid("PRQuery", "", this.GV_PART, dt);
+        Pgi.Auto.Control.SetGrid("Pur_PR_Query", "Query", this.GV_PART, dt);
         this.GV_PART.Columns["del"].Caption = "申请人操作 ";
 
-        for (int i = 18; i < this.GV_PART.DataColumns.Count-5; i++)
+        for (int i = 19; i < this.GV_PART.DataColumns.Count-5; i++)
         {
 
             this.GV_PART.Columns[i].HeaderStyle.BackColor = Color.Khaki;
@@ -79,7 +81,7 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     {
 
         if (e.RowType != GridViewRowType.Data) return;
-        DevExpress.Web.GridViewDataColumn t = this.GV_PART.Columns[28] as DevExpress.Web.GridViewDataColumn;
+        DevExpress.Web.GridViewDataColumn t = this.GV_PART.Columns[29] as DevExpress.Web.GridViewDataColumn;
 
         DevExpress.Web.ASPxButton tb1 = (DevExpress.Web.ASPxButton)this.GV_PART.FindRowCellTemplateControl(e.VisibleIndex, t, "del");
         string status = e.GetValue("Status").ToString();
