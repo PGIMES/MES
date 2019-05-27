@@ -257,7 +257,14 @@
             //if (type=="buyer") {
             //    grid.PerformCallback($("input[type!=hidden][id*='BuyerName']").val());
             //}
-            if (type=="potype") {
+            if (type=="potype") {//采购类别改变
+                if($("input[type!=hidden][id*='PoType']").val()=="PO"){
+                    layer.tips('未税单价超过5000,请选择合同', '#MainContent_PoType', {
+                        tips: [3, '#3595CC'],
+                        time: 4000
+                    });
+                }
+
                 grid.PerformCallback($("input[type!=hidden][id*='BuyerName']").val());   
                 potype();
             }
