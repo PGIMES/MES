@@ -22,26 +22,27 @@
 
 
     <script type="text/javascript" language="javascript">
-    function updateStock(id) {
-        //iframe层
-        parent.layer.open({
-            type: 2,
-            title: '修改',
-            shadeClose: false, //点击遮罩关闭
-            shade: 0.8,
-            area: ['30%', '45%'],
-            maxmin: true,
-            closeBtn: 1,
-            content: ['Moju_RK.aspx?id=' + id, 'yes'], //iframe的url，yes是否有滚动条
-            //yes: function (index, layero) {
-            //    alert(index);
-            //    alert(layero);
-            //},
-            end: function () {
-                location.reload();
-            }
+        function updateStock(id) {
+            //iframe层
+            parent.layer.open({
+                type: 2,
+                title: '修改',
+                shadeClose: false, //点击遮罩关闭
+                shade: 0.8,
+                area: ['30%', '45%'],
+                maxmin: true,
+                closeBtn: 1,
+                content: ['Moju_RK.aspx?id=' + id, 'yes'], //iframe的url，yes是否有滚动条
+                //yes: function (index, layero) {
+                //    alert(index);
+                //    alert(layero);
+                //},
+                end: function () {
+                    location.reload();
+                }
 
-        });
+            });
+        }
     </script>
 
     <style>

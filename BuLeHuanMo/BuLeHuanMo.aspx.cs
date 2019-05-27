@@ -481,7 +481,8 @@ public partial class BuLeHuanMo : System.Web.UI.Page
                 txtMoHao.Text = dt.Rows[0]["mo_no"].ToString();
                 txtLingJianMing.Text = dt.Rows[0]["part"].ToString();
                 txtmojutype_down.Text = dt.Rows[0]["moju_type"].ToString();
-                txtKuWei.Text = dt_kw.Rows[0]["kw"].ToString();
+                if (dt_kw.Rows.Count > 0)
+                    txtKuWei.Text = dt_kw.Rows[0]["kw"].ToString();
                 // txtMoJuHao.Text = dt.Rows[0]["moju_no"].ToString();
             }
 
@@ -505,7 +506,8 @@ public partial class BuLeHuanMo : System.Web.UI.Page
                 txtMoHao.Text = dt.Rows[0]["mo_no"].ToString();
                 txtLingJianMing.Text = dt.Rows[0]["part"].ToString();
                 txtmojutype_down.Text = dt.Rows[0]["moju_type"].ToString();
-                txtKuWei.Text = dt_kw.Rows[0]["kw"].ToString();
+                if(dt_kw.Rows.Count>0)
+                    txtKuWei.Text = dt_kw.Rows[0]["kw"].ToString();
                 //  txtMoJuHao.Text = dt.Rows[0]["moju_no"].ToString();
             }
 
