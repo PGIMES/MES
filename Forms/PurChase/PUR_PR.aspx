@@ -685,7 +685,8 @@
         function Getwltype(e){
             var ss = e.id.split("_");// 在每个逗号(,)处进行分解。
             var prtype=$("#prtype").val();
-            var url = "/select/select_pur_type.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val()+ "&prtype=" + encodeURIComponent(prtype);
+            var createdept=$("#DeptName").val();
+            var url = "/select/select_pur_type.aspx?id=" + ss[4] + "&domain=" + $("select[id*='domain']").val()+ "&prtype=" + encodeURIComponent(prtype)+"&createdept=" + encodeURIComponent(createdept);
 
             var width='300px';
             if(prtype=="费用服务类" || prtype=="合同类"){  width='500px'  }
@@ -786,42 +787,55 @@
         function getMatInfo(){            
             var p3=$("#prtype").val();
 
-            $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
-                $(this).bind("change", function () { 
-                    //物料信息   
-                    var wlh=this.id;
-                    var ss=wlh.split("_");
+            //没有物料号字段
+            if(p3=="费用服务类" || p3=="合同类"){    
+                $("#gvdtl").find("tr td input[id*=wltype]").each(function () {
+                    var wltype= $(this).parent().parent().find("input[id*=wltype]");
+                    var note= $(this).parent().parent().find("input[id*=note]"); 
 
-                    var wlType= $(this).parent().parent().find("input[id*=wltype]");
-                    var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
-                    var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
-                    var wlms= $(this).parent().parent().find("input[id*=wlms]");
-                    var attachments= $(this).parent().parent().find("input[id*=attachments]");
-                    var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");                    
-                    var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
+                    wltype.attr("onclick","Getwltype(this);");wltype.css("border",""); wltype.css("background-color","white");wltype.attr("readonly","readonly");
+                    note.attr("onclick","Getwltype(this);");note.css("border",""); note.css("background-color","white");note.attr("readonly","readonly");
+                });
+            }else {
+                //有料号字段
+                $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
+                    $(this).bind("change", function () { 
+                        //物料信息   
+                        var wlh=this.id;
+                        var ss=wlh.split("_");
+
+                        var wlType= $(this).parent().parent().find("input[id*=wltype]");
+                        var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
+                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                        var wlms= $(this).parent().parent().find("input[id*=wlms]");
+                        var attachments= $(this).parent().parent().find("input[id*=attachments]");
+                        var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");                    
+                        var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
                     
-                    if ($(this).val()!="无") {      
-                        //赋历史采购价
-                        getHisToryPrice($(this).val(),notax_historyprice[0].id); 
-                        getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),notax_historyprice);
-                    }else {
-                        wlmc.val("");
-                        wlms.val("");
-                        notax_historyprice.val("");
+                        if ($(this).val()!="无") {      
+                            //赋历史采购价
+                            getHisToryPrice($(this).val(),notax_historyprice[0].id); 
+                            getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),notax_historyprice);
+                        }else {
+                            wlmc.val("");
+                            wlms.val("");
+                            notax_historyprice.val("");
 
-                        wlmc.removeAttr("readonly");       
-                        wlmc.css("border-style","inset");   
-                        wlmc.css("background-color","white");
+                            wlmc.removeAttr("readonly");       
+                            wlmc.css("border-style","inset");   
+                            wlmc.css("background-color","white");
 
-                        wlms.removeAttr("readonly");              
-                        wlms.css("border-style","inset");   
-                        wlms.css("background-color","white");
+                            wlms.removeAttr("readonly");              
+                            wlms.css("border-style","inset");   
+                            wlms.css("background-color","white");
 
-                        if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
-                        if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
-                    }
-                }); 
-            });
+                            if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
+                            if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+                        }
+                    }); 
+                });
+            }
+
             $("#gvdtl").find("tr td input[id*=wlmc]").each(function () {
                 $(this).bind("change", function () { 
                     var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
@@ -1082,6 +1096,7 @@
                                     <%--Border-BorderColor="#DCDCDC"--%>
                                         <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue" 
                                                 Border-BorderColor="#F0F0F0" OnCustomCallback="gvdtl_CustomCallback">
+                                            <ClientSideEvents EndCallback="function(s, e) { appendSearch();getMatInfo();}" />
                                             <SettingsBehavior AllowDragDrop="false" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowSort="false"  />
                                             <SettingsPager PageSize="1000">
                                             </SettingsPager>

@@ -12,11 +12,13 @@ public partial class Select_select_pur_type : System.Web.UI.Page
     protected int nid = 0;
     public string sdomain = "";
     public string prtype = "";
+    public string createdept = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
         nid = Convert.ToInt32(Request.QueryString["id"].ToString());
         prtype = Server.UrlDecode(Request.QueryString["prtype"].ToString());
+        createdept = Server.UrlDecode(Request.QueryString["createdept"].ToString());
 
         if (!IsPostBack)
         {
@@ -33,7 +35,8 @@ public partial class Select_select_pur_type : System.Web.UI.Page
         string sql = "";
         if (prtype == "费用服务类" || prtype == "合同类")
         {
-            sql = @"select id,type typedesc,type2 typedesc2 from [dbo].[PUR_PR_Category_dtl] where class='" + prtype + "'";
+            //sql = @"select id,type typedesc,type2 typedesc2 from [dbo].[PUR_PR_Category_dtl] where class='" + prtype + "'";
+            sql = "exec Pur_GetClassByPerson '"+createdept+ "','" + prtype + "' ";
 
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
             GV_PART2.Visible = true;
