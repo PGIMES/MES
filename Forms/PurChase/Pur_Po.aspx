@@ -259,8 +259,8 @@
             //}
             if (type=="potype") {//采购类别改变
                 if($("input[type!=hidden][id*='PoType']").val()=="PO"){
-                    layer.tips('未税单价超过5000,请选择合同', '#MainContent_PoType', {
-                        tips: [3, '#3595CC'],
+                    layer.tips('<font color=black>未税单价超过5000,请选择合同</font>', '#MainContent_PoType', {
+                        tips: [3, 'yellow'],
                         time: 4000
                     });
                 }
