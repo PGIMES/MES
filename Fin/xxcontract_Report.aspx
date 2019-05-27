@@ -219,7 +219,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="syscontractno;contractline" 
-                        AutoGenerateColumns="False" Width="3615px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                        AutoGenerateColumns="False" Width="3685px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnExportRenderBrick="gv_ExportRenderBrick" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
@@ -231,65 +231,73 @@
                             </dx:GridViewCommandColumn>    
                             <dx:GridViewDataTextColumn Caption="合同状态" FieldName="contractstatus" Width="55px" VisibleIndex="0" ></dx:GridViewDataTextColumn>                
                             <dx:GridViewDataTextColumn Caption="合同类型" FieldName="contracttype" Width="55px" VisibleIndex="1" ></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="系统合同号" FieldName="syscontractno" Width="80px" VisibleIndex="2"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="行号" FieldName="contractline" Width="40px" VisibleIndex="3"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="实际合同号" FieldName="actualcontractno" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn>     
-                            <dx:GridViewDataTextColumn Caption="供应商编码" FieldName="gys_code" Width="65px" VisibleIndex="5"></dx:GridViewDataTextColumn>     
-                            <dx:GridViewDataTextColumn Caption="合同对方单位" FieldName="gys_name" Width="210px" VisibleIndex="6"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="合同名称" FieldName="contractname" Width="210px" VisibleIndex="7"></dx:GridViewDataTextColumn>     
-                            <dx:GridViewDataTextColumn Caption="产品信息" FieldName="productinfor" Width="220px" VisibleIndex="8"></dx:GridViewDataTextColumn>  
-                            <dx:GridViewDataTextColumn Caption="模具属性" FieldName="assetattribute" Width="150px" VisibleIndex="9"></dx:GridViewDataTextColumn>     
-                            <dx:GridViewDataTextColumn Caption="条款摘要" FieldName="payclause_rate" Width="100px" VisibleIndex="10"></dx:GridViewDataTextColumn>    
-                            <dx:GridViewDataTextColumn Caption="用途类别" FieldName="wltype" Width="100px" VisibleIndex="11"></dx:GridViewDataTextColumn>    
-                            <dx:GridViewDataTextColumn Caption="用途类别说明" FieldName="note" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="签订日期" FieldName="signdate" Width="130px" VisibleIndex="13">
+                            <dx:GridViewDataTextColumn Caption="采购单号" FieldName="pono" Width="70px" VisibleIndex="2">
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pono")%>' Cursor="pointer" ClientInstanceName='<%# "pono_"+Container.VisibleIndex.ToString() %>'
+                                        NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="+ Eval("pono")+"&display=1" %>'  
+                                        Target="_blank">                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="系统合同号" FieldName="syscontractno" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="行号" FieldName="contractline" Width="40px" VisibleIndex="4"></dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="实际合同号" FieldName="actualcontractno" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>     
+                            <dx:GridViewDataTextColumn Caption="供应商编码" FieldName="gys_code" Width="65px" VisibleIndex="6"></dx:GridViewDataTextColumn>     
+                            <dx:GridViewDataTextColumn Caption="合同对方单位" FieldName="gys_name" Width="210px" VisibleIndex="7"></dx:GridViewDataTextColumn>   
+                            <dx:GridViewDataTextColumn Caption="合同名称" FieldName="contractname" Width="210px" VisibleIndex="8"></dx:GridViewDataTextColumn>     
+                            <dx:GridViewDataTextColumn Caption="产品信息" FieldName="productinfor" Width="220px" VisibleIndex="9"></dx:GridViewDataTextColumn>  
+                            <dx:GridViewDataTextColumn Caption="模具属性" FieldName="assetattribute" Width="150px" VisibleIndex="10"></dx:GridViewDataTextColumn>     
+                            <dx:GridViewDataTextColumn Caption="条款摘要" FieldName="payclause_rate" Width="100px" VisibleIndex="11"></dx:GridViewDataTextColumn>    
+                            <dx:GridViewDataTextColumn Caption="用途类别" FieldName="wltype" Width="100px" VisibleIndex="12"></dx:GridViewDataTextColumn>    
+                            <dx:GridViewDataTextColumn Caption="用途类别说明" FieldName="note" Width="100px" VisibleIndex="13"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataDateColumn Caption="签订日期" FieldName="signdate" Width="130px" VisibleIndex="14">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>                          
-                            <dx:GridViewDataTextColumn Caption="计划到货日期" FieldName="planreceivedate" Width="130px" VisibleIndex="14" PropertiesTextEdit-EncodeHtml="false">
+                            <dx:GridViewDataTextColumn Caption="计划到货日期" FieldName="planreceivedate" Width="130px" VisibleIndex="15" PropertiesTextEdit-EncodeHtml="false">
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="实际到货日期" FieldName="actaulreceivedate" Width="130px" VisibleIndex="15" PropertiesTextEdit-EncodeHtml="false">
+                            <dx:GridViewDataTextColumn Caption="实际到货日期" FieldName="actaulreceivedate" Width="130px" VisibleIndex="16" PropertiesTextEdit-EncodeHtml="false">
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="合同币种" FieldName="currency" Width="55px" VisibleIndex="16"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="汇率" FieldName="taxrate" Width="70px" VisibleIndex="17">
+                            <dx:GridViewDataTextColumn Caption="合同币种" FieldName="currency" Width="55px" VisibleIndex="17"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="汇率" FieldName="taxrate" Width="70px" VisibleIndex="18">
                                 <PropertiesTextEdit DisplayFormatString="{0:N5}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="合同原币总金额" FieldName="ori_total_amount" Width="90px" VisibleIndex="18">
+                            <dx:GridViewDataTextColumn Caption="合同原币总金额" FieldName="ori_total_amount" Width="90px" VisibleIndex="19">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="合同计划原币总金额" FieldName="ori_plan_amount" Width="130px" VisibleIndex="19">
+                            <dx:GridViewDataTextColumn Caption="合同计划原币总金额" FieldName="ori_plan_amount" Width="130px" VisibleIndex="20">
                                 <PropertiesTextEdit DisplayFormatString="{0:N3}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="计划付款日期" FieldName="plan_pay_date" Width="130px" VisibleIndex="20">
+                            <dx:GridViewDataDateColumn Caption="计划付款日期" FieldName="plan_pay_date" Width="130px" VisibleIndex="21">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataTextColumn Caption="计划付款金额(本币)" FieldName="fkamt_plan_cur" Width="130px" VisibleIndex="21">
+                            <dx:GridViewDataTextColumn Caption="计划付款金额(本币)" FieldName="fkamt_plan_cur" Width="130px" VisibleIndex="22">
                                 <PropertiesTextEdit DisplayFormatString="{0:N6}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>  
-                            <dx:GridViewDataTextColumn Caption="计划付款比例" FieldName="plan_pay_rate" Width="90px" VisibleIndex="22"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="实际付款日期" FieldName="fkdate" Width="130px" VisibleIndex="23">
+                            <dx:GridViewDataTextColumn Caption="计划付款比例" FieldName="plan_pay_rate" Width="90px" VisibleIndex="23"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataDateColumn Caption="实际付款日期" FieldName="fkdate" Width="130px" VisibleIndex="24">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataTextColumn Caption="付款金额(原币)" FieldName="fkamt" Width="100px" VisibleIndex="24">
+                            <dx:GridViewDataTextColumn Caption="付款金额(原币)" FieldName="fkamt" Width="100px" VisibleIndex="25">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="付款金额(本币)" FieldName="fkamt_cur" Width="100px" VisibleIndex="25">
+                            <dx:GridViewDataTextColumn Caption="付款金额(本币)" FieldName="fkamt_cur" Width="100px" VisibleIndex="26">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="付款比例" FieldName="fkamt_rate" Width="70px" VisibleIndex="26"></dx:GridViewDataTextColumn>  
-                            <dx:GridViewDataTextColumn Caption="累计付款比例" FieldName="fkrate" Width="70px" VisibleIndex="27"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="余额(原币)" FieldName="ye_oricur" Width="100px" VisibleIndex="28">
+                            <dx:GridViewDataTextColumn Caption="付款比例" FieldName="fkamt_rate" Width="70px" VisibleIndex="27"></dx:GridViewDataTextColumn>  
+                            <dx:GridViewDataTextColumn Caption="累计付款比例" FieldName="fkrate" Width="70px" VisibleIndex="28"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="余额(原币)" FieldName="ye_oricur" Width="100px" VisibleIndex="29">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="余额(本币)" FieldName="ye_cur" Width="100px" VisibleIndex="29">
+                            <dx:GridViewDataTextColumn Caption="余额(本币)" FieldName="ye_cur" Width="100px" VisibleIndex="30">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="余额比例" FieldName="yerate" Width="70px" VisibleIndex="30"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="验收日期" FieldName="checkdate" Width="130px" VisibleIndex="31" PropertiesTextEdit-EncodeHtml="false">
+                            <dx:GridViewDataTextColumn Caption="余额比例" FieldName="yerate" Width="70px" VisibleIndex="31"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="验收日期" FieldName="checkdate" Width="130px" VisibleIndex="32" PropertiesTextEdit-EncodeHtml="false">
                             </dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataDateColumn Caption="收到发票日期" FieldName="fpdate" Width="130px" VisibleIndex="32">
+                            <dx:GridViewDataDateColumn Caption="收到发票日期" FieldName="fpdate" Width="130px" VisibleIndex="33">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataTextColumn Caption="发票金额(原币)" FieldName="fpamount" Width="100px" VisibleIndex="33">
+                            <dx:GridViewDataTextColumn Caption="发票金额(原币)" FieldName="fpamount" Width="100px" VisibleIndex="34">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                         </Columns>
