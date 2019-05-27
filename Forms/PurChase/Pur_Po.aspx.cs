@@ -675,6 +675,8 @@ public partial class Pur_Po : System.Web.UI.Page
             Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
             return false;
         }
+
+        string sql_pr_exist = "";//验证 一起选择数据的 问题，重复采购
         for (int i = 0; i < ldt.Rows.Count; i++)
         {
             if (ldt.Rows[i]["PlanReceiveDate"].ToString() == "")
@@ -682,7 +684,35 @@ public partial class Pur_Po : System.Web.UI.Page
                 Pgi.Auto.Public.MsgBox(this, "alert", "第" + (i + 1).ToString() + "行计划到货日期不能为空!");
                 return false;
             }
+            if (sql_pr_exist != "")
+            {
+                sql_pr_exist += " union";
+            }
+            sql_pr_exist += @" select PONo, rowid, PRNo, PRRowId," + (i + 1).ToString()+" as line" 
+                            + @" from PUR_PO_Dtl_Form where PRNo = '" + ldt.Rows[i]["prno"].ToString() + "' and PRRowId = '" + ldt.Rows[i]["prrowid"].ToString() + "'";
         }
+        if (sql_pr_exist != "")
+        {
+            sql_pr_exist = "select PONo, rowid, PRNo, PRRowId, line from (" + sql_pr_exist + ") a";
+            if (this.m_sid != "")
+            {
+                sql_pr_exist = sql_pr_exist + " where pono<>'" + this.m_sid + "'";
+            }
+            DataTable ldt_pr_exist = DbHelperSQL.Query(sql_pr_exist).Tables[0];
+            string msg_pr_exist = "";
+            for (int i = 0; i < ldt_pr_exist.Rows.Count; i++)
+            {
+                msg_pr_exist = "第" + ldt_pr_exist.Rows[i]["line"].ToString()
+                    + "行，请购单号【" + ldt_pr_exist.Rows[i]["PRNo"].ToString() + "】请购行号【" + ldt_pr_exist.Rows[i]["PRRowId"].ToString()
+                    + "】已经采购，不能重复采购！<br />采购单号【" + ldt_pr_exist.Rows[i]["PONo"].ToString() + "】采购行号【" + ldt_pr_exist.Rows[i]["rowid"].ToString() + "】";
+            }
+            if (msg_pr_exist != "")
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", msg_pr_exist);
+                return false;
+            }
+        }
+      
 
         if (potype=="合同")//(potype_con == "合同模块")
         {
