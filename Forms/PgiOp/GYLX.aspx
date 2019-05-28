@@ -154,6 +154,7 @@
             }); 
            
             set_modifygp_read();
+            set_modify_read();
 
             //$("select[id*='applytype']").change(function(){
             //    var applytype=$("select[id*='applytype']").val();
@@ -176,6 +177,25 @@
 
             //});
         });
+
+        function set_modify_read(){      
+            if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
+                $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {
+                    if($(item).find("input[id*=op]").attr("readOnly")){                    
+                        $("#gzzx_i_"+index).removeClass("i_show");$("#gzzx_i_"+index).addClass("i_hidden");  
+                        $("#IsBg_i_"+index).removeClass("i_show");$("#IsBg_i_"+index).addClass("i_hidden");
+                    }
+                });
+            }
+            if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
+                $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {
+                    if($(item).find("input[id*=op]").attr("readOnly")){                    
+                        $("#gzzx_i_yz_"+index).removeClass("i_show"); $("#gzzx_i_yz_"+index).addClass("i_hidden");   
+                        $("#IsBg_i_yz_"+index).removeClass("i_show"); $("#IsBg_i_yz_"+index).addClass("i_hidden");
+                    }
+                });
+            }
+        }
 
         function set_modifygp_read(){      
             if($("#CPXX input[id*='modifygp']:checked").val()=="Y"){
@@ -1045,12 +1065,14 @@
             }
 
             if(flag){
+                var createid=$("#SQXX input[id*='txt_CreateById']").val();
 
                 var formno=$("#CPXX input[id*='formno']").val();
                 var typeno=$("#CPXX input[id*='typeno']:checked").val();
                 var product_user=$("#CPXX input[id*='product_user']").val();
                 var yz_user=$("#CPXX input[id*='yz_user']").val();
                 var bz_user=$("#CPXX input[id*='bz_user']").val();
+                var zl_user=$("#CPXX input[id*='zl_user']").val();
 
                 var pgi_no=$("#CPXX input[id*='projectno']").val();
                 var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
@@ -1061,7 +1083,8 @@
                     type: "post",
                     url: "GYLX.aspx/CheckData",
                     data: "{'typeno':'" + typeno + "','product_user':'" + product_user + "','yz_user':'" + yz_user + "','bz_user':'" + bz_user + "','pgi_no':'" + pgi_no 
-                        + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "','domain':'" + domain + "'}",
+                        + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver + "','formno':'" + formno + "','domain':'" + domain 
+                        + "','createid':'" + createid + "','zl_user':'" + zl_user + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -1368,7 +1391,7 @@
 
                                  <dx:aspxgridview ID="gv_d" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_CustomCallback" 
                                       OnRowCommand="gv_d_RowCommand" ClientInstanceName="gv_d"  EnableTheming="True"  OnDataBound="gv_d_DataBound" OnHtmlRowCreated="gv_d_HtmlRowCreated"> 
-                                     <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();grid_read_700();}"  />  
+                                     <ClientSideEvents EndCallback="function(s, e) {  gird_keycode();grid_read_700();set_modify_read();}"  />  
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="False" AllowDragDrop="False" AllowSort="False" />
@@ -1698,7 +1721,7 @@
 
                                 <dx:aspxgridview ID="gv_d_yz" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" OnCustomCallback="gv_d_yz_CustomCallback" 
                                       OnRowCommand="gv_d_yz_RowCommand" ClientInstanceName="gv_d_yz"  EnableTheming="True"  OnDataBound="gv_d_yz_DataBound" OnHtmlRowCreated="gv_d_yz_HtmlRowCreated">    
-                                    <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();grid_yz_read_700();}"  />                                                                 
+                                    <ClientSideEvents EndCallback="function(s, e) {  gird_yz_keycode();grid_yz_read_700();set_modify_read();}"  />                                                                 
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="False" AllowDragDrop="False" AllowSort="False" />

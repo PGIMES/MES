@@ -19,6 +19,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     public string IsRead = "N"; public string IsRead_yz = "N"; public string IsGrid_pro = "N"; public string IsGrid_yz = "N";
     public string SQ_StepID ="B29B6624-485B-40EB-9481-87375BEE0C1F";
     public Guid groupid = new Guid("1A5277E2-41AF-4AA5-AA7F-C5FAA4E9BB23");//工程数据管理员
+    public Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//工艺检验申请人
 
     string FlowID = "A";
     string StepID = "A";
@@ -242,14 +243,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             if (lstypeno == "机加")
             {
                 IsGrid_pro = "Y";
-                this.gv_d.DataSource = ldt_detail;
-                this.gv_d.DataBind();
+                //this.gv_d.DataSource = ldt_detail;
+                //this.gv_d.DataBind();
+                bind_grid(ldt_detail);
             }
             if (lstypeno == "压铸")
             {
                 IsGrid_yz = "Y";
-                this.gv_d_yz.DataSource = ldt_detail;
-                this.gv_d_yz.DataBind();
+                //this.gv_d_yz.DataSource = ldt_detail;
+                //this.gv_d_yz.DataBind();
+                bind_yz_grid(ldt_detail);
             }
 
             setGridIsRead(ldt_detail);
@@ -592,11 +595,102 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         }
         #endregion
 
+        #region 根据工作中心决定  行  修改的 权限
+
+        setread_By_wkzx();
+
+        #endregion
+
         /*JgNum_ValueChanged(sender, e);*/
 
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+    }
+
+
+
+    //根据工作中心决定  行  修改的 权限
+    private void setread_By_wkzx()
+    {
+        bool bf_modify_read = false;
+
+        if (Request.QueryString["display"] == null && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "A" && ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text != "")//修改申请  且 在申请步骤
+        {
+            if (this.m_sid != "")
+            {
+                string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                      + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+                if (stepname_gp == "申请人")//申请步骤
+                {
+                    bf_modify_read = true;
+                }
+            }
+            else
+            {
+                bf_modify_read = true;
+            }
+        }
+
+        DataTable dt = Get_wkzx(txt_domain.Text, txt_CreateById.Value);
+
+        if (bf_modify_read == true)//修改申请 且 在申请步骤
+        {
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
+            {
+                DataTable dt_jj = (DataTable)gv_d.DataSource;
+                if (dt_jj != null)
+                {
+                    for (int i = 0; i < dt_jj.Rows.Count; i++)
+                    {
+                        if (dt_jj.Rows[i]["gzzx"].ToString()!="" && dt.Select("wc_wkctr='" + dt_jj.Rows[i]["gzzx"].ToString() + "'").Length <= 0)
+                        {
+                            setread_grid(i);
+                        }
+                    }
+                }
+
+            }
+            if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "压铸")
+            {
+                DataTable dt_yz = (DataTable)gv_d_yz.DataSource;
+                if (dt_yz != null)
+                {
+                    for (int i = 0; i < dt_yz.Rows.Count; i++)
+                    {
+                        if (dt_yz.Rows[i]["gzzx"].ToString() != "" && dt.Select("wc_wkctr='" + dt_yz.Rows[i]["gzzx"].ToString() + "'").Length <= 0)
+                        {
+                            setread_grid_yz(i);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private DataTable Get_wkzx(string domain, string userid)
+    {
+        string sql = @"
+                    select * 
+                    from (
+                        select a.* 
+                        from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] a
+	                        inner join (select * from [dbo].[PGI_GYLX_wc_relation] 
+				                        where deptcode=(select deptcode from [172.16.5.6].[eHR_DB].[dbo].[View_CostCenter] where employeeid='{1}')
+			                        )b on a.wc_dept=b.wc_dept
+                        where wc_domain='{0}'
+                        union
+                        select a.* 
+                        from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] a
+	                        left join [dbo].[PGI_GYLX_wc_relation] b on a.wc_dept=b.wc_dept
+                        where wc_domain='{0}' and b.wc_dept  is null
+                        ) aa 
+                    order by wc_wkctr";
+
+        sql = string.Format(sql, domain, userid);
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        return dt;
     }
 
     public void setGridIsRead(DataTable ldt_detail)
@@ -678,6 +772,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
 
     #region 机加
+    public void bind_grid(DataTable dt)
+    {
+        this.gv_d.DataSource = dt;
+        this.gv_d.DataBind();
+
+        setread_By_wkzx();
+    }
 
     public void setread(int i)
     {
@@ -847,8 +948,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         }
         ldt.AcceptChanges();
-        this.gv_d.DataSource = ldt;
-        this.gv_d.DataBind();
+        //this.gv_d.DataSource = ldt;
+        //this.gv_d.DataBind();
+        bind_grid(ldt);
 
         if (isop700)
         {
@@ -896,8 +998,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
             ldt.AcceptChanges();
-            gv_d.DataSource = ldt;
-            gv_d.DataBind();
+            //gv_d.DataSource = ldt;
+            //gv_d.DataBind();
+            bind_grid(ldt);
         }
     }
 
@@ -921,8 +1024,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             if (ldt_db.Rows.Count > 0)
             {
-                gv_d.DataSource = ldt_db;
-                gv_d.DataBind();
+                //gv_d.DataSource = ldt_db;
+                //gv_d.DataBind();
+                bind_grid(ldt_db);
                 return;
             }
         }
@@ -952,14 +1056,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ldr_z1["numid"] = 8;
         ldt.Rows.Add(ldr_z1);
 
-        gv_d.DataSource = ldt;
-        gv_d.DataBind();
-
+        //gv_d.DataSource = ldt;
+        //gv_d.DataBind();
+        bind_grid(ldt);
     }
 
     protected void gv_d_DataBound(object sender, EventArgs e)
     {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();grid_read_700();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_keycode();grid_read_700();set_modify_read();", true);
     }
 
     protected void gv_d_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
@@ -1106,7 +1210,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
 
     #region 压铸
+    public void bind_yz_grid(DataTable dt)
+    {
+        this.gv_d_yz.DataSource = dt;
+        this.gv_d_yz.DataBind();
 
+        setread_By_wkzx();
+    }
     public void setread_yz(int i)
     {
         ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
@@ -1212,9 +1322,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //    }
         //    Session["del"] = ldt_del;
         //}
-        gv_d_yz.DataSource = ldt;
-        gv_d_yz.DataBind();
-
+        //gv_d_yz.DataSource = ldt;
+        //gv_d_yz.DataBind();
+        bind_yz_grid(ldt);
     }
 
     private void GvAddRows_yz(int lnadd_rows, int lnindex, bool isop700)
@@ -1291,8 +1401,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         }
         ldt.AcceptChanges();
-        this.gv_d_yz.DataSource = ldt;
-        this.gv_d_yz.DataBind();
+        //this.gv_d_yz.DataSource = ldt;
+        //this.gv_d_yz.DataBind();
+        bind_yz_grid(ldt);
 
         if (isop700)
         {
@@ -1339,8 +1450,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }
             }
             ldt.AcceptChanges();
-            gv_d_yz.DataSource = ldt;
-            gv_d_yz.DataBind();
+            //gv_d_yz.DataSource = ldt;
+            //gv_d_yz.DataBind();
+            bind_yz_grid(ldt);
         }
     }
 
@@ -1375,8 +1487,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             if (ldt_db.Rows.Count > 0)
             {
-                gv_d.DataSource = ldt_db;
-                gv_d.DataBind();
+                //gv_d_yz.DataSource = ldt_db;
+                //gv_d_yz.DataBind();
+                bind_yz_grid(ldt_db);
                 return;
             }
         }
@@ -1404,14 +1517,15 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             ldt.Rows.Add(ldr);
         }
 
-        gv_d_yz.DataSource = ldt;
-        gv_d_yz.DataBind();
+        //gv_d_yz.DataSource = ldt;
+        //gv_d_yz.DataBind();
+        bind_yz_grid(ldt);
 
     }
 
     protected void gv_d_yz_DataBound(object sender, EventArgs e)
     {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();grid_yz_read_700();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridkey", "gird_yz_keycode();grid_yz_read_700();set_modify_read();", true);
     }
     
     protected void gv_d_yz_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
@@ -1600,11 +1714,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
 
     [WebMethod]
-    public static string CheckData(string typeno, string product_user, string yz_user, string bz_user, string pgi_no, string pgi_no_t, string ver,string formno,string domain)
+    public static string CheckData(string typeno, string product_user, string yz_user, string bz_user, string pgi_no, string pgi_no_t, string ver,string formno,string domain,string createid, string zl_user)
     {
-        DataTable dt_manager = null; DataTable dt_vg_manager = null; DataTable dt_bz_id = null; string manager_flag = "";
-        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, out dt_manager,out dt_vg_manager, out dt_bz_id, out manager_flag);
-        
+        DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = "";// DataTable dt_vg_manager = null;
+        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, out dt_manager, out dt_bz_id, out manager_flag);//,out dt_vg_manager
+
         string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
 
         string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"pgino_flag\":\"" + pgino_flag + "\"}]";
@@ -1612,7 +1726,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     }
     
-    public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, out DataTable dt_manager, out DataTable dt_vg_manager, out DataTable dt_bz_id, out string manager_flag)
+    public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user
+        , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag)//, out DataTable dt_vg_manager
     {
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
         manager_flag = "";
@@ -1627,6 +1742,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
         }
 
+        Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//工艺检验申请人
+        RoadFlow.Platform.WorkGroup workgroup = new RoadFlow.Platform.WorkGroup();
+        RoadFlow.Data.Model.WorkGroup wg = workgroup.Get(groupid_jy);
+        List<RoadFlow.Data.Model.Users> ls_users = new RoadFlow.Platform.Organize().GetAllUsers(wg.Members);
+
+        
+        foreach (RoadFlow.Data.Model.Users item in ls_users)
+        {
+            if (item.Account == createid)
+            {
+                appuserid = zl_user.Length >= 5 ? zl_user.Substring(0, 5) : zl_user;//填单人是 工艺检验申请人
+            }
+        }
+
+        /*
         //dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select Manager_workcode from HR_EMP_MES where workcode='" + appuserid + "')").Tables[0];
         dt_manager = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account=(select zg_workcode from V_HRM_EMP_MES where workcode='" + appuserid + "')").Tables[0];
 
@@ -1658,6 +1788,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 manager_flag += "副总经理不存在，不能提交!<br />";
             }
         }
+        */
+
+        dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + appuserid + "')").Tables[0];
+        if (dt_manager.Rows[0]["zg_id"].ToString() == "")
+        {
+            manager_flag += "工程师(" + appuserid + ")的直属主管不存在，不能提交!<br />";
+        }
+        if (dt_manager.Rows[0]["manager_id"].ToString() == "")
+        {
+            manager_flag += "工程师(" + appuserid + ")的部门经理不存在，不能提交!<br />";
+        }
+        if (dt_manager.Rows[0]["fz_id"].ToString() == "")
+        {
+            manager_flag += "工程师(" + appuserid + ")的副总经理不存在，不能提交!<br />";
+        }
 
         //-------------------------------------------包装工程师
         dt_bz_id = null;
@@ -1666,7 +1811,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             bz_user = bz_user.Length >= 5 ? bz_user.Substring(0, 5) : bz_user;
             dt_bz_id = DbHelperSQL.Query(@"select id from RoadFlowWebForm.dbo.Users a where account='" + bz_user + "'").Tables[0];
         }
-
+        
     }
 
 
@@ -1706,8 +1851,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string product_user = ((TextBox)this.FindControl("ctl00$MainContent$product_user")).Text.Trim();
         string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
         string bz_user = ((TextBox)this.FindControl("ctl00$MainContent$bz_user")).Text.Trim();
-        DataTable dt_manager = null;DataTable dt_vg_manager = null; DataTable dt_bz_id = null; string manager_flag = "";
-        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, out dt_manager, out dt_vg_manager, out dt_bz_id, out manager_flag);
+        string zl_user = ((TextBox)this.FindControl("ctl00$MainContent$zl_user")).Text.Trim();
+        DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = "";//DataTable dt_vg_manager = null; 
+        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, out dt_manager, out dt_bz_id, out manager_flag);//, out dt_vg_manager
 
         string modifygp = ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue;
 
@@ -1774,7 +1920,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         Pgi.Auto.Common lcmanager_id = new Pgi.Auto.Common();
         lcmanager_id.Code = "manager_id";
         lcmanager_id.Key = "";
-        lcmanager_id.Value = "u_" + dt_manager.Rows[0][0].ToString();
+        lcmanager_id.Value = "u_" + dt_manager.Rows[0]["zg_id"].ToString();
         ls.Add(lcmanager_id);
 
         Pgi.Auto.Common lcModifyRemark = new Pgi.Auto.Common();
@@ -1789,11 +1935,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcApplyType.Value = applytype.SelectedValue;
         ls.Add(lcApplyType);
 
+        Pgi.Auto.Common lcdept_manager_id = new Pgi.Auto.Common();
+        lcdept_manager_id.Code = "dept_manager_id";
+        lcdept_manager_id.Key = "";
+        lcdept_manager_id.Value = "u_" + dt_manager.Rows[0]["manager_id"].ToString();
+        ls.Add(lcdept_manager_id);
 
         Pgi.Auto.Common lcvg_manager_id = new Pgi.Auto.Common();
         lcvg_manager_id.Code = "vg_manager_id";
         lcvg_manager_id.Key = "";
-        lcvg_manager_id.Value = "u_" + dt_vg_manager.Rows[0][0].ToString();
+        lcvg_manager_id.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
         ls.Add(lcvg_manager_id);
 
         //包装工程师
