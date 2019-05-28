@@ -243,10 +243,15 @@
         
         function openSelect()
         {
-            //if ( $("input[id*='povendorid']").val()=="") {
+            //if ( $("input[type!=hidden][id*='PoVendorId']").val()=="") {
             //    layer.alert("请先选择供应商！");               
             //    return;
             //}
+
+            if($("input[type!=hidden][id*='PoType']").val()==""){
+                layer.alert("请先选择【采购类别】");  
+                return;
+            }
             
             var url = "../../select/select_pr.aspx?domain="+$("[id*='PoDomain']").val()+"&buyername="+$("input[type!=hidden][id*='BuyerName']").val()+"&potype="+$("input[type!=hidden][id*='PoType']").val();
 
@@ -398,6 +403,10 @@
             //if(action=='submit'){
                 if($("input[type!=hidden][id*='BuyerName']").val()==""){
                     msg+="【采购负责人】不可为空.<br />";
+                }
+
+                if($("input[type!=hidden][id*='PoType']").val()==""){
+                    msg+="【采购类别】不可为空.<br />";
                 }
 
                 if($("input[type!=hidden][id*='PoVendorId']").val()==""){
