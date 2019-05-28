@@ -706,12 +706,12 @@
         function setvalue_wltype(id,typedesc){
             var p3=$("#prtype").val();
             //用途类别在描述后面
-            //var wlType= $("input[id*='gvdtl_cell" + id + "_7_wltype_" + id + "']");
-            //var wlSubType= $("input[id*='gvdtl_cell" + id + "_8_wlsubtype_" + id + "']");
+            var wlType= $("input[id*='gvdtl_cell" + id + "_7_wltype_" + id + "']");
+            var wlSubType= $("input[id*='gvdtl_cell" + id + "_8_wlsubtype_" + id + "']");
 
             //用途类别在说明前面
-            var wlType= $("input[id*='gvdtl_cell" + id + "_19_wltype_" + id + "']");
-            var wlSubType= $("input[id*='gvdtl_cell" + id + "_19_wlsubtype_" + id + "']");
+            //var wlType= $("input[id*='gvdtl_cell" + id + "_19_wltype_" + id + "']");
+            //var wlSubType= $("input[id*='gvdtl_cell" + id + "_19_wlsubtype_" + id + "']");
 
             if(p3=="刀具类"){wlSubType.val(typedesc);}
             if(p3!="刀具类"){wlType.val(typedesc);}
@@ -719,12 +719,12 @@
 
         function setvalue_wltype2(id,typedesc,typedesc2){
             //用途类别在描述后面
-            //var wlType= $("input[id*='gvdtl_cell" + id + "_7_wltype_" + id + "']");
-            //var note= $("input[id*='gvdtl_cell" + id + "_20_note_" + id + "']");
+            var wlType= $("input[id*='gvdtl_cell" + id + "_7_wltype_" + id + "']");
+            var note= $("input[id*='gvdtl_cell" + id + "_8_note_" + id + "']");
 
             //用途类别在说明前面
-            var wlType= $("input[id*='gvdtl_cell" + id + "_19_wltype_" + id + "']");
-            var note= $("input[id*='gvdtl_cell" + id + "_20_note_" + id + "']");
+            //var wlType= $("input[id*='gvdtl_cell" + id + "_19_wltype_" + id + "']");
+            //var note= $("input[id*='gvdtl_cell" + id + "_20_note_" + id + "']");
 
             wlType.val(typedesc);note.val(typedesc2);
         }
