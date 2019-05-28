@@ -30,7 +30,8 @@
     <script type="text/javascript">
         var paramMap;
         $(document).ready(function () {
-            $("#mestitle").html("【请购申请单(PR)】<a href='/userguide/PRGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>"); 
+            $("#mestitle").html("【请购申请单(PR)】<a href='/userguide/PRGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>"
+                +"&nbsp;&nbsp;<a href='PUR_PRCategoryDtlMaintain.aspx' target='_blank' class='h5' style='color:red'>用途类别</a>"); 
              
             SetButtons();
 

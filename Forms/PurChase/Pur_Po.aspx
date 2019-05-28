@@ -15,7 +15,8 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            $("#mestitle").html("【PO采购审批单】<a href='/userguide/POGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>");
+            $("#mestitle").html("【PO采购审批单】<a href='/userguide/POGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>"
+                +"&nbsp;&nbsp;<a onclick='Show_cate()' target='_blank' class='h5' style='color:red'>采购类别</a>");
             //提出自定流程 JS 
             if ($('#3B271F67-0433-4082-AD1A-8DF1B967B879', parent.document).length == 0) {
                 //alert("保存")
@@ -56,8 +57,21 @@
             change_paytype();
 
             get_print();
+
         });
 
+        function Show_cate(){
+            layer.open({
+                title: '<font color="red">采购类别</font>',
+                closeBtn: 2,
+                type: 2,
+                area: ['600px', '500px'],
+                fixed: false, //不固定
+                maxmin: true, //开启最大化最小化按钮
+                content: "PUR_PO_Dtl_Category.aspx"
+            });
+        }
+        
         //添加选取、查看历史单价功能
         function appendSearch(){
             $.each($("[id$=gv] tr[class*=DataRow]"), function (i, obj) {  
