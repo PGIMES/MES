@@ -47,12 +47,12 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     {
         //
         DataTable dt = DbHelperSQL.Query("exec [Pur_PR_Query_New] '" + drop_type.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text 
-            + "','" + (string)ViewState["empid"] + "','" + (string)ViewState["dept_ame"] + "'").Tables[0];
+            + "','" + (string)ViewState["empid"] + "','" + (string)ViewState["dept_ame"] + "','" + txtUserFor.Text + "'").Tables[0];
        this.GV_PART.Columns.Clear();
         Pgi.Auto.Control.SetGrid("Pur_PR_Query", "Query", this.GV_PART, dt);
         this.GV_PART.Columns["del"].Caption = "申请人操作 ";
 
-        for (int i = 19; i < this.GV_PART.DataColumns.Count-5; i++)
+        for (int i = 20; i < this.GV_PART.DataColumns.Count-5; i++)
         {
 
             this.GV_PART.Columns[i].HeaderStyle.BackColor = Color.Khaki;
@@ -82,7 +82,7 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     {
 
         if (e.RowType != GridViewRowType.Data) return;
-        DevExpress.Web.GridViewDataColumn t = this.GV_PART.Columns[29] as DevExpress.Web.GridViewDataColumn;
+        DevExpress.Web.GridViewDataColumn t = this.GV_PART.Columns[30] as DevExpress.Web.GridViewDataColumn;
 
         DevExpress.Web.ASPxButton tb1 = (DevExpress.Web.ASPxButton)this.GV_PART.FindRowCellTemplateControl(e.VisibleIndex, t, "del");
         string status = e.GetValue("Status").ToString();
