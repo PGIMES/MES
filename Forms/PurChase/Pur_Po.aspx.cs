@@ -1053,7 +1053,7 @@ public partial class Pur_Po : System.Web.UI.Page
             Pgi.Auto.Common ls_sysconctractno = new Pgi.Auto.Common();
             ls_sysconctractno.Sql = @"update PUR_PO_Main_Form set SysContractNo=a.SysContractNo
                                     from (select case when MAX(SysContractNo) is null then 
-				                                        (select  '{0}'+ right('000000' + cast(isnull(MAX(a.xxcontract_nbr),0)+1 as varchar),6)  
+				                                        (select  '{0}'+ right('000000' + cast(isnull(MAX(a.xxcontract_nbr),0)+10 as varchar),6)  
 				                                        from qad.[dbo].[qad_xxcontract_mstr] a
 				                                        where cast(a.[xxcontract_charfld[2]]] as nvarchar)='{0}' and a.xxcontract_domain='{1}')
 			                                        else '{0}'+ right('000000' + cast(isnull(MAX(SysContractNo),0)+1 as varchar),6) 
