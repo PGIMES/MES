@@ -1860,8 +1860,11 @@ public partial class Pur_Po : System.Web.UI.Page
         }
 
         string PRNo = Convert.ToString(e.GetValue("PRNo"));
+        string PR_groupid = DbHelperSQL.Query("select top 1 groupid from RoadFlowWebForm.dbo.WorkFlowTask where flowid='ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92' and InstanceID='"
+            + PRNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+
         e.Row.Cells[prnoindex_cell].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-            + PRNo + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
+            + PRNo + "&groupid="+ PR_groupid + "&display=1' target='_blank'>" + PRNo.ToString() + "</a>";
 
         //add by heguiqin20180515 采购供应商跟推荐供应商不一致，背景色黄色
         string PoVendor = "";
@@ -1917,7 +1920,7 @@ public partial class Pur_Po : System.Web.UI.Page
                             e.Row.Style.Add("color", "#969696");
 
                             e.Row.Cells[prnoindex_cell].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ea7e5f10-96e5-432c-9dd5-5ecc16d5eb92&appid=62676129-f059-4c92-bd5c-86897f5b0d5&instanceid="
-                + PRNo + "&display=1' target='_blank' style='color:#969696'>" + PRNo.ToString() + "</a>";
+                + PRNo + "&groupid=" + PR_groupid + "&display=1' target='_blank' style='color:#969696'>" + PRNo.ToString() + "</a>";
 
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["wlType"], "wlType")).Style.Add("color", "#CDC5BF");
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["RecmdVendorName"], "RecmdVendorName")).Style.Add("color", "#CDC5BF");

@@ -785,74 +785,78 @@
             return t.split("").reverse().join("") + "." + r;   
         }
         //绑定物料信息
-        function getMatInfo(){            
-            var p3=$("#prtype").val();
+        function getMatInfo(){       
+            
+            if (IsRead=="N") {
+                var p3=$("#prtype").val();
 
-            //没有物料号字段
-            if(p3=="费用服务类" || p3=="合同类"){    
-                $("#gvdtl").find("tr td input[id*=wltype]").each(function () {
-                    var wltype= $(this).parent().parent().find("input[id*=wltype]");
-                    var note= $(this).parent().parent().find("input[id*=note]"); 
+                //没有物料号字段
+                if(p3=="费用服务类" || p3=="合同类"){    
+                    $("#gvdtl").find("tr td input[id*=wltype]").each(function () {
+                        var wltype= $(this).parent().parent().find("input[id*=wltype]");
+                        var note= $(this).parent().parent().find("input[id*=note]"); 
 
-                    wltype.attr("onclick","Getwltype(this);");wltype.css("border",""); wltype.css("background-color","white");wltype.attr("readonly","readonly");
-                    note.attr("onclick","Getwltype(this);");note.css("border",""); note.css("background-color","white");note.attr("readonly","readonly");
-                });
-            }else {
-                //有料号字段
-                $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
-                    $(this).bind("change", function () { 
-                        //物料信息   
-                        var wlh=this.id;
-                        var ss=wlh.split("_");
+                        wltype.attr("onclick","Getwltype(this);");wltype.css("border",""); wltype.css("background-color","white");wltype.attr("readonly","readonly");
+                        note.attr("onclick","Getwltype(this);");note.css("border",""); note.css("background-color","white");note.attr("readonly","readonly");
+                    });
+                }else {
+                    //有料号字段
+                    $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
+                        $(this).bind("change", function () { 
+                            //物料信息   
+                            var wlh=this.id;
+                            var ss=wlh.split("_");
 
-                        var wlType= $(this).parent().parent().find("input[id*=wltype]");
-                        var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
-                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
-                        var wlms= $(this).parent().parent().find("input[id*=wlms]");
-                        var attachments= $(this).parent().parent().find("input[id*=attachments]");
-                        var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");                    
-                        var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
+                            var wlType= $(this).parent().parent().find("input[id*=wltype]");
+                            var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
+                            var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                            var wlms= $(this).parent().parent().find("input[id*=wlms]");
+                            var attachments= $(this).parent().parent().find("input[id*=attachments]");
+                            var attachments_name= $(this).parent().parent().find("a[id*=attachments_name]");                    
+                            var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
                     
-                        if ($(this).val()!="无") {      
-                            //赋历史采购价
-                            getHisToryPrice($(this).val(),notax_historyprice[0].id); 
-                            getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),notax_historyprice);
-                        }else {
-                            wlmc.val("");
-                            wlms.val("");
-                            notax_historyprice.val("");
+                            if ($(this).val()!="无") {      
+                                //赋历史采购价
+                                getHisToryPrice($(this).val(),notax_historyprice[0].id); 
+                                getDaoJuMatInfo($(this).val(),wlType,wlSubType,wlmc,wlms,attachments,attachments_name,$(this),notax_historyprice);
+                            }else {
+                                wlmc.val("");
+                                wlms.val("");
+                                notax_historyprice.val("");
 
-                            wlmc.removeAttr("readonly");       
-                            wlmc.css("border-style","inset");   
-                            wlmc.css("background-color","white");
+                                wlmc.removeAttr("readonly");       
+                                wlmc.css("border-style","inset");   
+                                wlmc.css("background-color","white");
 
-                            wlms.removeAttr("readonly");              
-                            wlms.css("border-style","inset");   
-                            wlms.css("background-color","white");
+                                wlms.removeAttr("readonly");              
+                                wlms.css("border-style","inset");   
+                                wlms.css("background-color","white");
 
-                            if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
-                            if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
-                        }
+                                if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
+                                if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+                            }
+                        }); 
+                    });
+                }
+
+                $("#gvdtl").find("tr td input[id*=wlmc]").each(function () {
+                    $(this).bind("change", function () { 
+                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                        var wlms= $(this).parent().parent().find("input[id*=wlms]");                 
+                        var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
+                        getHisToryPrice_By_mc_ms(notax_historyprice[0].id,wlmc,wlms);
                     }); 
                 });
-            }
+                $("#gvdtl").find("tr td input[id*=wlms]").each(function () {
+                    $(this).bind("change", function () { 
+                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                        var wlms= $(this).parent().parent().find("input[id*=wlms]");                 
+                        var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
+                        getHisToryPrice_By_mc_ms(notax_historyprice[0].id,wlmc,wlms);
+                    }); 
+                });
 
-            $("#gvdtl").find("tr td input[id*=wlmc]").each(function () {
-                $(this).bind("change", function () { 
-                    var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
-                    var wlms= $(this).parent().parent().find("input[id*=wlms]");                 
-                    var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
-                    getHisToryPrice_By_mc_ms(notax_historyprice[0].id,wlmc,wlms);
-                }); 
-            });
-            $("#gvdtl").find("tr td input[id*=wlms]").each(function () {
-                $(this).bind("change", function () { 
-                    var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
-                    var wlms= $(this).parent().parent().find("input[id*=wlms]");                 
-                    var notax_historyprice=$(this).parent().parent().find("input[id*=notax_historyprice]");  
-                    getHisToryPrice_By_mc_ms(notax_historyprice[0].id,wlmc,wlms);
-                }); 
-            });
+            }
         }
 
 
