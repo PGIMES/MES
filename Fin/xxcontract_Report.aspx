@@ -292,7 +292,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="余额比例" FieldName="yerate" Width="70px" VisibleIndex="31"></dx:GridViewDataTextColumn> 
-                            <dx:GridViewDataTextColumn Caption="验收日期" FieldName="checkdate" Width="130px" VisibleIndex="32" PropertiesTextEdit-EncodeHtml="false">
+                            <dx:GridViewDataTextColumn Caption="终验收日期" FieldName="checkdate" Width="130px" VisibleIndex="32" PropertiesTextEdit-EncodeHtml="false">
                             </dx:GridViewDataTextColumn> 
                             <dx:GridViewDataDateColumn Caption="收到发票日期" FieldName="fpdate" Width="130px" VisibleIndex="33">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
