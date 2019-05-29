@@ -757,7 +757,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         string re_flag = ""; string manager_id = ""; string fz_id = "";
 
-        if (dept == "全厂共用")
+        if (dept == "全厂共用" || dept== "采购一部")
         {
             DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers_By_Dept]('" + createdept + "','')").Tables[0];
 
