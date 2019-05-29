@@ -64,7 +64,7 @@ public partial class Forms_PurChase_PO_Report_Receive : System.Web.UI.Page
 
         string PoNo = Convert.ToString(e.GetValue("PoNo"));
         string groupid = Convert.ToString(e.GetValue("GroupID"));
-        e.Row.Cells[pono_index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="
+        e.Row.Cells[pono_index + 1].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="
                     + e.GetValue("PoNo") + "&groupid=" + groupid + "&display=1' target='_blank'>" + PoNo.ToString() + "</a>";
     }
 }
