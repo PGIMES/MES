@@ -21,6 +21,7 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
         LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         if (!IsPostBack)
         {   //初始化日期
+            ViewState["empname"] = LogUserModel.UserName;
             ViewState["empid"] = LogUserModel.UserId;
             ViewState["dept_ame"] = LogUserModel.DepartName;
             txtDateFrom.Text = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
