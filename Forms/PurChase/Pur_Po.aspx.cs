@@ -154,7 +154,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 loadControl(ldt_detail);
 
-                ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where pono='" + this.m_sid + "'").Tables[0];
+                ldt_pay = DbHelperSQL.Query("select * from PUR_PO_ContractPay_Form where pono='" + this.m_sid + "' order by rowid").Tables[0];
                 loadControl_Pay(ldt_pay);
             }
 
