@@ -39,7 +39,8 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec Pur_PO_Query_New '" + drop_type.SelectedValue + "', '" + txtDateFrom.Text + "','" + txtDateTo.Text + "','" + (string)ViewState["empname"] + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec Pur_PO_Query_New '" + drop_type.SelectedValue + "', '" + txtDateFrom.Text + "','" + txtDateTo.Text 
+            + "','" + (string)ViewState["empname"] + "','" + txtUserFor.Text + "'").Tables[0];
         this.GV_PART.Columns.Clear();
 
         string form_div = "";
@@ -113,15 +114,15 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         int jh = 0, sj = 0, top1 = 0;
         if (drop_type.SelectedValue == "PO")
         {
-            jh = 22;//计划到货期
-            sj = 25;//实际到货日期
-            top1 = 24;//TOP1时间
+            jh = 23;//计划到货期
+            sj = 26;//实际到货日期
+            top1 = 25;//TOP1时间
         }
         else
         {
-            jh = 17;//计划到货期
-            sj = 20;//实际到货日期
-            top1 = 19;//TOP1时间
+            jh = 18;//计划到货期
+            sj = 21;//实际到货日期
+            top1 = 20;//TOP1时间
         }
 
         if (tr_effdate == "" && ts.Days > 3)

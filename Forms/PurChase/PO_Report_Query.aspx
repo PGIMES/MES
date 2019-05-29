@@ -59,7 +59,11 @@
                     <td>~</td>
                     <td >
                         <asp:TextBox ID="txtDateTo" class="form-control" onclick="laydate()" runat="server" Width="100px"></asp:TextBox>
-                    </td>            
+                    </td>       
+                    <td>用于产品/项目:</td>
+                    <td>
+                        <asp:TextBox ID="txtUserFor" class="form-control" runat="server" Width="150px"></asp:TextBox>
+                    </td>       
                     <td> 
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" /> 
