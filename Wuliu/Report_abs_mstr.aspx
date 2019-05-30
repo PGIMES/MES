@@ -46,7 +46,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1580px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1660px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -61,25 +61,28 @@
                             <dx:GridViewDataDateColumn Caption="发货日期" FieldName="abs_shp_date" Width="80px" VisibleIndex="4">
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn> 
-                            <dx:GridViewDataTextColumn Caption="毛重" FieldName="abs_gwt" Width="70px" VisibleIndex="5">
+                            <dx:GridViewDataDateColumn Caption="要货日期" FieldName="needdate" Width="80px" VisibleIndex="5">
+                                <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
+                            </dx:GridViewDataDateColumn> 
+                            <dx:GridViewDataTextColumn Caption="毛重" FieldName="abs_gwt" Width="70px" VisibleIndex="6">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="净重" FieldName="abs_nwt" Width="70px" VisibleIndex="6">
+                            <dx:GridViewDataTextColumn Caption="净重" FieldName="abs_nwt" Width="70px" VisibleIndex="7">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="订单号" FieldName="abs_order" Width="70px" VisibleIndex="7"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="发票号" FieldName="abs_inv_nbr_new" Width="180px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="abs_item" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="客户物料号" FieldName="pt_desc1" Width="150px" VisibleIndex="9"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="发货数量" FieldName="abs_qty" Width="80px" VisibleIndex="10">
+                            <dx:GridViewDataTextColumn Caption="订单号" FieldName="abs_order" Width="70px" VisibleIndex="8"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="发票号" FieldName="abs_inv_nbr_new" Width="180px" VisibleIndex="9"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="abs_item" Width="80px" VisibleIndex="10"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="客户物料号" FieldName="pt_desc1" Width="150px" VisibleIndex="11"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="发货数量" FieldName="abs_qty" Width="80px" VisibleIndex="12">
                                 <PropertiesTextEdit DisplayFormatString="{0:N1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="地点" FieldName="abs_site" Width="60px" VisibleIndex="11"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="库位" FieldName="abs_loc" Width="60px" VisibleIndex="12"></dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="域" FieldName="abs_domain" Width="50px" VisibleIndex="13"></dx:GridViewDataTextColumn>--%>
-                            <dx:GridViewDataTextColumn Caption="shipfrom" FieldName="abs_shipfrom" Width="80px" VisibleIndex="14"></dx:GridViewDataTextColumn>
-                            <%--<dx:GridViewDataTextColumn Caption="shipto" FieldName="abs_shipto" Width="110px" VisibleIndex="15"></dx:GridViewDataTextColumn>--%>
-                            <dx:GridViewDataTextColumn Caption="客户名称" FieldName="DebtorShipToName" Width="250px" VisibleIndex="15"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="地点" FieldName="abs_site" Width="60px" VisibleIndex="13"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="库位" FieldName="abs_loc" Width="60px" VisibleIndex="14"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="域" FieldName="abs_domain" Width="50px" VisibleIndex="15"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="shipfrom" FieldName="abs_shipfrom" Width="80px" VisibleIndex="16"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="shipto" FieldName="abs_shipto" Width="110px" VisibleIndex="17"></dx:GridViewDataTextColumn>--%>
+                            <dx:GridViewDataTextColumn Caption="客户名称" FieldName="DebtorShipToName" Width="250px" VisibleIndex="18"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
