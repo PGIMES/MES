@@ -26,6 +26,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     string state = "";
     string m_sid = "";
 
+    LoginUser LogUserModel = null;
+
     //获取角色组下面的所有成员集合
     public List<RoadFlow.Data.Model.Users> GetWorkGroupByGroupID(Guid groupid)
     {
@@ -73,7 +75,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             state = Request.QueryString["state"];
         }
 
-        LoginUser LogUserModel = null;
+        //LoginUser LogUserModel = null;
         if (Request.ServerVariables["LOGON_USER"].ToString() == "")
         {
             LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
@@ -621,7 +623,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             {
                 string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
                       + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
-                if (stepname_gp == "申请人" || stepname_gp == "检验工时申请")//申请步骤、检验工时申请
+                if (stepname_gp == "申请人")//申请步骤
                 {
                     bf_modify_read = true;
                 }
@@ -632,10 +634,28 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             }
         }
 
-        DataTable dt = Get_wkzx(txt_domain.Text, txt_CreateById.Value);
+        if (this.m_sid != "")
+        {
+            string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
+                    + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+            if (stepname_gp == "检验工时申请")//步骤：检验工时申请
+            {
+                bf_modify_read = true;
+            }
+        }
+        else
+        {
+            bf_modify_read = true;
+        }
+        
+
+        DataTable dt = Get_wkzx(txt_domain.Text, LogUserModel.UserId);
 
         if (bf_modify_read == true)//修改申请 且 在申请步骤、检验工时申请
         {
+
+            ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
+
             if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
             {
                 DataTable dt_jj = (DataTable)gv_d.DataSource;
@@ -700,8 +720,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         //特殊处理，签核界面，明细的框框拿掉
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
                         where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
-                            and instanceid='{2}' and stepname='{3}'";
-        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请人");
+                            and instanceid='{2}' and (stepname='{3}' or stepname='{4}')";
+                            //and instanceid = '{2}' and stepname = '{3}'";
+        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请人", "检验工时申请");
         DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
 
 
