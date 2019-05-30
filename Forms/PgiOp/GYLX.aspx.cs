@@ -870,37 +870,65 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
     }
 
+    //protected void btndel_Click(object sender, EventArgs e)
+    //{
+    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
+    //    //DataTable ldt_del = ldt.Clone();
+    //    for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+    //    {
+    //        if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+    //        {
+    //            ldt.Rows[i].Delete();
+    //        }
+    //        else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
+    //        {
+    //            //ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
+    //            ldt.Rows[i].Delete();
+    //        }
+    //    }
+    //    ldt.AcceptChanges();
+    //    //if (ldt_del.Rows.Count > 0)
+    //    //{
+    //    //    if (Session["del"] != null)
+    //    //    {
+    //    //        for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
+    //    //        {
+    //    //            ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
+    //    //        }
+
+    //    //    }
+    //    //    Session["del"] = ldt_del;
+    //    //}
+    //    gv_d.DataSource = ldt;
+    //    gv_d.DataBind();
+    //}
+
     protected void btndel_Click(object sender, EventArgs e)
     {
+        DataTable dt_wkzx = Get_wkzx(txt_domain.Text, LogUserModel.UserId);
+        string msg = "";
+
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
-        //DataTable ldt_del = ldt.Clone();
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
-            if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+            if (ldt.Rows[i]["flag"].ToString() == "1")
             {
-                ldt.Rows[i].Delete();
-            }
-            else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
-            {
-                //ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
-                ldt.Rows[i].Delete();
+                if (ldt.Rows[i]["gzzx"].ToString() == "" || (ldt.Rows[i]["gzzx"].ToString() != "" && dt_wkzx.Select("wc_wkctr='" + ldt.Rows[i]["gzzx"].ToString() + "'").Length > 0))
+                {
+                    ldt.Rows[i].Delete();
+                }
+                else
+                {
+                    msg = "您没有权限删除此工序！";
+                }
             }
         }
         ldt.AcceptChanges();
-        //if (ldt_del.Rows.Count > 0)
-        //{
-        //    if (Session["del"] != null)
-        //    {
-        //        for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
-        //        {
-        //            ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
-        //        }
+        //gv_d.DataSource = ldt;
+        //gv_d.DataBind();
+        if (msg != "") { Pgi.Auto.Public.MsgBox(this, "alert", msg); }
+        bind_grid(ldt);
 
-        //    }
-        //    Session["del"] = ldt_del;
-        //}
-        gv_d.DataSource = ldt;
-        gv_d.DataBind();
     }
 
     private void GvAddRows(int lnadd_rows, int lnindex,bool isop700)
@@ -1314,37 +1342,65 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col6"], "col6")).ReadOnly = true;
         ((ASPxTextBox)this.gv_d_yz.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv_d_yz.Columns["col6"], "col6")).BorderStyle = BorderStyle.None;
     }
+
+    //protected void btn_del_yz_Click(object sender, EventArgs e)
+    //{
+    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
+    //    //DataTable ldt_del = ldt.Clone();
+    //    for (int i = ldt.Rows.Count - 1; i >= 0; i--)
+    //    {
+    //        if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+    //        {
+    //            ldt.Rows[i].Delete();
+    //        }
+    //        else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
+    //        {
+    //            //ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
+    //            ldt.Rows[i].Delete();
+    //        }
+    //    }
+    //    ldt.AcceptChanges();
+    //    //if (ldt_del.Rows.Count > 0)
+    //    //{
+    //    //    if (Session["del"] != null)
+    //    //    {
+    //    //        for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
+    //    //        {
+    //    //            ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
+    //    //        }
+
+    //    //    }
+    //    //    Session["del"] = ldt_del;
+    //    //}
+    //    //gv_d_yz.DataSource = ldt;
+    //    //gv_d_yz.DataBind();
+    //    bind_yz_grid(ldt);
+    //}
+
     protected void btn_del_yz_Click(object sender, EventArgs e)
     {
+        DataTable dt_wkzx = Get_wkzx(txt_domain.Text, LogUserModel.UserId);
+        string msg = "";
+
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv_d_yz);
-        //DataTable ldt_del = ldt.Clone();
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
-            if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+            if (ldt.Rows[i]["flag"].ToString() == "1")
             {
-                ldt.Rows[i].Delete();
-            }
-            else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
-            {
-                //ldt_del.Rows.Add(ldt.Rows[i].ItemArray);
-                ldt.Rows[i].Delete();
+                if (ldt.Rows[i]["gzzx"].ToString() == "" || (ldt.Rows[i]["gzzx"].ToString() != "" && dt_wkzx.Select("wc_wkctr='" + ldt.Rows[i]["gzzx"].ToString() + "'").Length > 0))
+                {
+                    ldt.Rows[i].Delete();
+                }
+                else
+                {
+                    msg = "您没有权限删除此工序！";
+                }
             }
         }
         ldt.AcceptChanges();
-        //if (ldt_del.Rows.Count > 0)
-        //{
-        //    if (Session["del"] != null)
-        //    {
-        //        for (int i = 0; i < ((DataTable)Session["del"]).Rows.Count; i++)
-        //        {
-        //            ldt_del.Rows.Add(((DataTable)Session["del"]).Rows[i].ItemArray);
-        //        }
-
-        //    }
-        //    Session["del"] = ldt_del;
-        //}
         //gv_d_yz.DataSource = ldt;
         //gv_d_yz.DataBind();
+        if (msg != "") { Pgi.Auto.Public.MsgBox(this, "alert", msg); }
         bind_yz_grid(ldt);
     }
 
@@ -1676,7 +1732,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
 
     #endregion
-
+    
 
     [WebMethod]
     public static string CheckVer(string pgi_no, string pgi_no_t, string ver, string formno)
