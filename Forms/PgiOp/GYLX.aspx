@@ -181,7 +181,7 @@
         function set_modify_read(){      
             if($("#CPXX input[id*='typeno']:checked").val()=="机加"){
                 $("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) {
-                    if($(item).find("input[id*=op]").attr("readOnly")){                    
+                    if($(item).find("input[id*=JgSec]").attr("readOnly")){                    
                         $("#gzzx_i_"+index).removeClass("i_show");$("#gzzx_i_"+index).addClass("i_hidden");  
                         $("#IsBg_i_"+index).removeClass("i_show");$("#IsBg_i_"+index).addClass("i_hidden");
                     }
@@ -189,7 +189,7 @@
             }
             if($("#CPXX input[id*='typeno']:checked").val()=="压铸"){
                 $("[id$=gv_d_yz] tr[class*=DataRow]").each(function (index, item) {
-                    if($(item).find("input[id*=op]").attr("readOnly")){                    
+                    if($(item).find("input[id*=JgSec]").attr("readOnly")){                    
                         $("#gzzx_i_yz_"+index).removeClass("i_show"); $("#gzzx_i_yz_"+index).addClass("i_hidden");   
                         $("#IsBg_i_yz_"+index).removeClass("i_show"); $("#IsBg_i_yz_"+index).addClass("i_hidden");
                     }
