@@ -1925,17 +1925,32 @@ public partial class Pur_Po : System.Web.UI.Page
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["wlType"], "wlType")).Style.Add("color", "#CDC5BF");
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["RecmdVendorName"], "RecmdVendorName")).Style.Add("color", "#CDC5BF");
                             //((Label)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["notax_historyPrice"], "notax_historyPrice")).Style.Add("color", "#CDC5BF");
-                            ((HyperLink)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["attachments_name"], "attachments_name")).Style.Add("color", "#969696");
 
-                            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
-                            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Font.Italic = true;
-
-                            ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("color", "#969696");
-                            ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("font-style", "italic");
-
-                            ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
-                            ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Font.Italic = true;
-
+                            //((HyperLink)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["attachments_name"], "attachments_name")).Style.Add("color", "#969696");
+                            if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["attachments_name"], "attachments_name") is HyperLink)
+                            {
+                                ((HyperLink)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["attachments_name"], "attachments_name")).Style.Add("color", "#969696");
+                            }
+                            if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype") is ASPxComboBox)
+                            {
+                                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
+                                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["po_wltype"], "po_wltype")).DisabledStyle.Font.Italic = true;
+                            }
+                            if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency") is ASPxComboBox)
+                            {
+                                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
+                                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["currency"], "currency")).DisabledStyle.Font.Italic = true;
+                            }
+                            if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice") is TextBox)
+                            {
+                                ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("color", "#969696");
+                                ((TextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["NoTaxPrice"], "NoTaxPrice")).Style.Add("font-style", "italic");
+                            }
+                            if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate") is ASPxDateEdit)
+                            {
+                                ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.ForeColor = System.Drawing.Color.FromName("#969696");
+                                ((DevExpress.Web.ASPxDateEdit)this.gv.FindRowCellTemplateControl(e.VisibleIndex, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["PlanReceiveDate"], "PlanReceiveDate")).DisabledStyle.Font.Italic = true;
+                            }
                             e.Row.Cells[RecmdVendorNameindex_cell].Style.Remove("background-color");
                             e.Row.Cells[lncindex_cell].Style.Add("color", "#969696");
                             e.Row.Cells[lncindex_cell].Style.Remove("background-color");
