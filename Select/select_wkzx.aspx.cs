@@ -9,8 +9,17 @@ using System.Web.UI.WebControls;
 
 public partial class Select_select_wkzx : System.Web.UI.Page
 {
+    LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Request.ServerVariables["LOGON_USER"].ToString() == "")
+        {
+            LogUserModel = InitUser.GetLoginUserInfo("02274", Request.ServerVariables["LOGON_USER"]);
+        }
+        else
+        {
+            LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
+        }
         this.GridView1.PageSize = 20;
         if (!IsPostBack)
         {
@@ -48,7 +57,7 @@ public partial class Select_select_wkzx : System.Web.UI.Page
                         ) aa 
                     where wc_wkctr like '%{2}%' and wc_desc like '%{3}%' order by wc_wkctr";
 
-        sql = string.Format(sql, Request.QueryString["domain"], Request.QueryString["userid"], txt_code.Text.Trim(), txt_desc.Text.Trim());
+        sql = string.Format(sql, Request.QueryString["domain"], LogUserModel.UserId, txt_code.Text.Trim(), txt_desc.Text.Trim());//, Request.QueryString["userid"]
 
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
