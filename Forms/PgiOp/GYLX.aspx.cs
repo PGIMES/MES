@@ -19,7 +19,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     public string IsRead = "N"; public string IsRead_yz = "N"; public string IsGrid_pro = "N"; public string IsGrid_yz = "N";
     public string SQ_StepID ="B29B6624-485B-40EB-9481-87375BEE0C1F";
     public Guid groupid = new Guid("1A5277E2-41AF-4AA5-AA7F-C5FAA4E9BB23");//工程数据管理员
-    public Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//工艺检验申请人
+    public Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//检验工时申请
 
     string FlowID = "A";
     string StepID = "A";
@@ -621,7 +621,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             {
                 string stepname_gp = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='EE59E0B3-D6A1-4A30-A3B4-65D188323134' and InstanceID='"
                       + this.m_sid + "' order by sort desc").Tables[0].Rows[0][0].ToString();
-                if (stepname_gp == "申请人")//申请步骤
+                if (stepname_gp == "申请人" || stepname_gp == "检验工时申请")//申请步骤、检验工时申请
                 {
                     bf_modify_read = true;
                 }
@@ -634,7 +634,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         DataTable dt = Get_wkzx(txt_domain.Text, txt_CreateById.Value);
 
-        if (bf_modify_read == true)//修改申请 且 在申请步骤
+        if (bf_modify_read == true)//修改申请 且 在申请步骤、检验工时申请
         {
             if (((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).SelectedValue == "机加")
             {
@@ -1742,7 +1742,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             appuserid = yz_user.Length >= 5 ? yz_user.Substring(0, 5) : yz_user;
         }
 
-        Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//工艺检验申请人
+        Guid groupid_jy = new Guid("E8AD94EF-C1FF-43BA-92CA-32846BA405F1");//检验工时申请
         RoadFlow.Platform.WorkGroup workgroup = new RoadFlow.Platform.WorkGroup();
         RoadFlow.Data.Model.WorkGroup wg = workgroup.Get(groupid_jy);
         List<RoadFlow.Data.Model.Users> ls_users = new RoadFlow.Platform.Organize().GetAllUsers(wg.Members);
@@ -1752,7 +1752,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         {
             if (item.Account == createid)
             {
-                appuserid = zl_user.Length >= 5 ? zl_user.Substring(0, 5) : zl_user;//填单人是 工艺检验申请人
+                appuserid = zl_user.Length >= 5 ? zl_user.Substring(0, 5) : zl_user;//填单人是 检验工时申请
             }
         }
 
@@ -1961,6 +1961,23 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcbz_id.Key = "";
         lcbz_id.Value = bz_id;
         ls.Add(lcbz_id);
+
+        //是否是检验申请发起的
+        string jy_yn = "N";
+        List<RoadFlow.Data.Model.Users> ls_users = GetWorkGroupByGroupID(groupid_jy);
+        foreach (RoadFlow.Data.Model.Users item in ls_users)
+        {
+            if (item.Account == txt_CreateById.Value)
+            {
+                jy_yn = "Y";
+            }
+        }
+
+        Pgi.Auto.Common lcjy_yn = new Pgi.Auto.Common();
+        lcjy_yn.Code = "jy_yn";
+        lcjy_yn.Key = "";
+        lcjy_yn.Value = jy_yn;
+        ls.Add(lcjy_yn);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable();
