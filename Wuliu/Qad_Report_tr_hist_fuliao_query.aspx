@@ -218,7 +218,7 @@
                         <dx:GridViewDataTextColumn Caption="180-360金额" FieldName="amount5" Width="90px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="360-720以上金额" FieldName="amount7"  Width="90px">
+                        <dx:GridViewDataTextColumn Caption="360-720以上金额" FieldName="amount6"  Width="90px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
                         <dx:GridViewDataTextColumn Caption="720以上金额" FieldName="amount7"  Width="90px">
