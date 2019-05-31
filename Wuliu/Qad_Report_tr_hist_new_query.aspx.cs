@@ -17,6 +17,8 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        Setddl_p_status();
+
         if (!IsPostBack)
         {
             ddl_year.SelectedValue = DateTime.Now.AddMonths(-1).ToString("yyyy"); //获取上月年份
@@ -24,17 +26,34 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
             QueryASPxGridView();
         }
     }
+    public void Setddl_p_status()
+    {
+        string strSQL = @" select distinct case when isnull(pt_status,'')='' then '当前无状态' else pt_status end pt_status 
+                        from qad.dbo.qad_pt_mstr where pt_domain='" + ddl_comp.SelectedValue + "'  order by pt_status";
+        DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
+
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).TextField = dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).ValueField = dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).DataSource = dt;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).DataBind();
+    }
 
     protected void Bt_select_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
     }
 
+    protected void ddl_comp_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ASPxDropDownEdit2.Text = "";
+        Setddl_p_status();
+    }
+
     public void QueryASPxGridView()
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_new] '5','" + ddl_comp.SelectedValue + "','" 
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'");
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit2.Value + "'");
 
         //grid A
         gv_tr_list.DataSource = ds.Tables[0];
@@ -430,7 +449,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataTable dtList = DbHelperSQL.Query("exec [Report_tr_hist_new] '6','" + ddl_comp.SelectedValue + "','" 
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'").Tables[0];
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit2.Value + "'").Tables[0];
 
         ExportToExcel(dtList, "30-180天库存清单_"+ curmonth);
     }
@@ -439,7 +458,7 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_new] '7','" + ddl_comp.SelectedValue + "','" 
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "'").Tables[0];
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit2.Value + "'").Tables[0];
 
         ExportToExcel(dt, "超180天库存清单_" + curmonth);
     }

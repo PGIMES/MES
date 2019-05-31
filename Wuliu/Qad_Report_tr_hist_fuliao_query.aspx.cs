@@ -55,6 +55,8 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     {
         ASPxDropDownEdit1.Text = "";
         Setddl_p_leibie();
+
+        ASPxDropDownEdit2.Text = "";
         Setddl_p_status();
     }
 

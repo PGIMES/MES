@@ -24,6 +24,37 @@
 
     </script>
 
+    <script type="text/javascript">
+        var textSeparator2 = ";";
+        function updateText2() {
+            var selectedItems = checkListBox2.GetSelectedItems();
+            checkComboBox2.SetText(getSelectedItemsText2(selectedItems));
+        }
+        function synchronizeListBoxValues2(dropDown, args) {
+            checkListBox2.UnselectAll();
+            var texts = dropDown.GetText().split(textSeparator2);
+            var values = getValuesByTexts2(texts);
+            checkListBox2.SelectValues(values);
+            updateText2(); // for remove non-existing texts
+        }
+        function getSelectedItemsText2(items) {
+            var texts = [];
+            for (var i = 0; i < items.length; i++) 
+                    texts.push(items[i].text);
+            return texts.join(textSeparator2);
+        }
+        function getValuesByTexts2(texts) {
+            var actualValues = [];
+            var item;
+            for(var i = 0; i < texts.length; i++) {
+                item = checkListBox2.FindItemByText(texts[i]);
+                if(item != null)
+                    actualValues.push(item.value);
+            }
+            return actualValues;
+        }
+    </script>
+
     <div class="col-sm-12" id="div_p" style="margin-bottom:5px"> 
         <table style="line-height:40px;">
             <tr>
@@ -46,7 +77,7 @@
                 </td>
                 <td>&nbsp;&nbsp;域：</td>
                 <td>
-                    <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm ">
+                    <asp:DropDownList ID="ddl_comp" runat="server" class="form-control input-s-sm " OnSelectedIndexChanged="ddl_comp_SelectedIndexChanged" AutoPostBack="true">
                         <asp:ListItem Value="100">100</asp:ListItem>
                         <asp:ListItem Value="200">200</asp:ListItem>
                     </asp:DropDownList>
@@ -54,6 +85,38 @@
                 <td>&nbsp;&nbsp;地点：</td>
                 <td>
                     <asp:TextBox ID="txt_site" class="form-control" runat="server" Width="100px" Text="100"></asp:TextBox>
+                </td> 
+                <td>&nbsp;&nbsp;物料状态：</td>
+                <td> 
+                    <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox2" ID="ASPxDropDownEdit2" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
+                        <DropDownWindowStyle BackColor="#EDEDED" />
+                        <DropDownWindowTemplate>
+                            <dx:ASPxListBox Width="100%" ID="listBox2" ClientInstanceName="checkListBox2" SelectionMode="CheckColumn"
+                                runat="server" Height="200" EnableSelectAll="true">
+                                <FilteringSettings ShowSearchUI="true"/>
+                                <Border BorderStyle="None" />
+                                <BorderBottom BorderStyle="Solid" BorderWidth="1px" BorderColor="#DCDCDC" />
+                                <Items> 
+                                    <%--<dx:ListEditItem Text="Chrome" Value="0" />
+                                    <dx:ListEditItem Text="Firefox" Value="1" />
+                                    <dx:ListEditItem Text="IE" Value="2" />
+                                    <dx:ListEditItem Text="Opera" Value="3" />
+                                    <dx:ListEditItem Text="Safari" Value="4" />--%>
+                                </Items>
+                                <ClientSideEvents SelectedIndexChanged="updateText2" />
+                            </dx:ASPxListBox>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="padding: 4px">
+                                        <dx:ASPxButton ID="ASPxButton2" AutoPostBack="False" runat="server" Text="Close" style="float: right">
+                                            <ClientSideEvents Click="function(s, e){ checkComboBox2.HideDropDown(); }" />
+                                        </dx:ASPxButton>
+                                    </td>
+                                </tr>
+                            </table>
+                        </DropDownWindowTemplate>
+                        <ClientSideEvents TextChanged="synchronizeListBoxValues2" DropDown="synchronizeListBoxValues2" />
+                    </dx:ASPxDropDownEdit>
                 </td>                
                 <td>&nbsp;&nbsp;物料编码：</td>
                 <td>
@@ -126,7 +189,7 @@
             <div class="panel panel-heading">
                 <asp:Label ID="Label1" runat="server" Text="库龄30-180天趋势图"></asp:Label>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_2" runat="server" OnHtmlRowCreated="gv_tr_list_2_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -150,7 +213,7 @@
                     <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
                 </button>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_3" runat="server" OnHtmlRowCreated="gv_tr_list_3_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -172,7 +235,7 @@
             <div class="panel panel-heading">
                 <asp:Label ID="Label3" runat="server" Text="超180天趋势图"></asp:Label>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_4" runat="server">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
@@ -196,7 +259,7 @@
                     <i class="fa fa-download fa-fw"></i>&nbsp;导出清单
                 </button>
             </div>
-            <div class="panel panel-body" style="  overflow:scroll">
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
                 <div style="float: left">
                     <dx:ASPxGridView ID="gv_tr_list_5" runat="server" OnHtmlRowCreated="gv_tr_list_5_HtmlRowCreated">
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
