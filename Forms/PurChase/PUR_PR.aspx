@@ -17,8 +17,8 @@
     <link href="/Content/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <style>
         body {
-            overflow-x: auto;
-            overflow-y: hidden;
+            /*overflow-x: auto;
+            overflow-y: hidden;*/
         }
         hidden {
             display: none;
