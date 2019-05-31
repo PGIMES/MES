@@ -140,17 +140,20 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listB = new List<Series>();
         Series seriesB = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
-        Series seriesB_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line); 
-        for (int i = 1; i < dt_chartB.Columns.Count; i++)
+        Series seriesB_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line);
+        if (dt_chartB.Rows.Count >= 2)
         {
-            string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
+            for (int i = 1; i < dt_chartB.Columns.Count; i++)
+            {
+                string argument = dt_chartB.Columns[i].ColumnName;//参数名称 
 
-            decimal value = Convert.ToDecimal(dt_chartB.Rows[0][i].ToString());//参数值
-            seriesB.Points.Add(new SeriesPoint(argument, value));
+                decimal value = Convert.ToDecimal(dt_chartB.Rows[0][i].ToString() == "" ? "0" : dt_chartB.Rows[0][i].ToString());//参数值
+                seriesB.Points.Add(new SeriesPoint(argument, value));
 
-            decimal value_2 = Convert.ToDecimal(dt_chartB.Rows[1][i].ToString());//参数值
-            seriesB_2.Points.Add(new SeriesPoint(argument, value_2));
+                decimal value_2 = Convert.ToDecimal(dt_chartB.Rows[1][i].ToString() == "" ? "0" : dt_chartB.Rows[1][i].ToString());//参数值
+                seriesB_2.Points.Add(new SeriesPoint(argument, value_2));
 
+            }
         }
         seriesB.ArgumentScaleType = ScaleType.Qualitative;
         seriesB_2.ArgumentScaleType = ScaleType.Qualitative;
@@ -176,11 +179,14 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listD = new List<Series>();
         Series seriesD = new Series("金额", DevExpress.XtraCharts.ViewType.Line);
-        for (int i = 1; i < dt_chartD.Columns.Count; i++)
+        if (dt_chartD.Rows.Count >= 1)
         {
-            string argument = dt_chartD.Columns[i].ColumnName;//参数名称 
-            decimal value = Convert.ToDecimal(dt_chartD.Rows[0][i].ToString());//参数值
-            seriesD.Points.Add(new SeriesPoint(argument, value));
+            for (int i = 1; i < dt_chartD.Columns.Count; i++)
+            {
+                string argument = dt_chartD.Columns[i].ColumnName;//参数名称 
+                decimal value = Convert.ToDecimal(dt_chartD.Rows[0][i].ToString() == "" ? "0" : dt_chartD.Rows[0][i].ToString());//参数值
+                seriesD.Points.Add(new SeriesPoint(argument, value));
+            }
         }
         seriesD.ArgumentScaleType = ScaleType.Qualitative;
         listD.Add(seriesD);
@@ -198,12 +204,15 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listC = new List<Series>();
         Series seriesC = new Series("昆山库存30-180金额", DevExpress.XtraCharts.ViewType.Pie);
-        for (int i = 2; i < dt_chartC.Columns.Count - 1; i++)
+        if (dt_chartC.Rows.Count >= 1)
         {
-            string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
-            decimal value = Convert.ToDecimal(dt_chartC.Rows[0][i].ToString());//参数值
-            seriesC.Points.Add(new SeriesPoint(argument, value));
+            for (int i = 2; i < dt_chartC.Columns.Count - 1; i++)
+            {
+                string argument = dt_chartC.Columns[i].ColumnName;//参数名称 
+                decimal value = Convert.ToDecimal(dt_chartC.Rows[0][i].ToString() == "" ? "0" : dt_chartC.Rows[0][i].ToString());//参数值
+                seriesC.Points.Add(new SeriesPoint(argument, value));
 
+            }
         }
         seriesC.ArgumentScaleType = ScaleType.Qualitative;
         seriesC.Label.TextPattern = "{A}:{VP:P2}";
@@ -222,12 +231,15 @@ public partial class Wuliu_Qad_Report_tr_hist_new_query : System.Web.UI.Page
 
         List<Series> listE = new List<Series>();
         Series seriesE = new Series("昆山库存超180金额", DevExpress.XtraCharts.ViewType.Pie);
-        for (int i = 1; i < dt_chartE.Columns.Count - 1; i++)
+        if (dt_chartE.Rows.Count >= 1)
         {
-            string argument = dt_chartE.Columns[i].ColumnName;//参数名称 
-            decimal value = Convert.ToDecimal(dt_chartE.Rows[0][i].ToString());//参数值
-            seriesE.Points.Add(new SeriesPoint(argument, value));
+            for (int i = 1; i < dt_chartE.Columns.Count - 1; i++)
+            {
+                string argument = dt_chartE.Columns[i].ColumnName;//参数名称 
+                decimal value = Convert.ToDecimal(dt_chartE.Rows[0][i].ToString() == "" ? "0" : dt_chartE.Rows[0][i].ToString());//参数值
+                seriesE.Points.Add(new SeriesPoint(argument, value));
 
+            }
         }
         seriesE.ArgumentScaleType = ScaleType.Qualitative;
         seriesE.Label.TextPattern = "{A}:{VP:P2}";
