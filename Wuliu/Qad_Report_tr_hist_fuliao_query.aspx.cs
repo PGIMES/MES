@@ -18,6 +18,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         Setddl_p_leibie();
+        Setddl_p_status();
 
         if (!IsPostBack)
         {
@@ -38,10 +39,23 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).DataBind();
     }
 
+    public void Setddl_p_status()
+    {
+        string strSQL = @" select distinct case when isnull(pt_status,'')='' then '当前无状态' else pt_status end pt_status 
+                        from qad.dbo.qad_pt_mstr where pt_domain='" + ddl_comp.SelectedValue + "'  order by pt_status";
+        DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
+
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).TextField = dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).ValueField = dt.Columns[0].ColumnName;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).DataSource = dt;
+        ((ASPxListBox)ASPxDropDownEdit2.FindControl("listBox2")).DataBind();
+    }
+
     protected void ddl_comp_SelectedIndexChanged(object sender, EventArgs e)
     {
         ASPxDropDownEdit1.Text = "";
         Setddl_p_leibie();
+        Setddl_p_status();
     }
 
     protected void Bt_select_Click(object sender, EventArgs e)
@@ -53,7 +67,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataSet ds = DbHelperSQL.Query("exec [Report_tr_hist_fuliao] '5','" + ddl_comp.SelectedValue + "','"
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "'");
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "','" + ASPxDropDownEdit2.Value + "'");
 
         //grid A
         gv_tr_list.DataSource = ds.Tables[0];
@@ -553,7 +567,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataTable dtList = DbHelperSQL.Query("exec [Report_tr_hist_fuliao] '6','" + ddl_comp.SelectedValue + "','"
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "'").Tables[0];
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "','" + ASPxDropDownEdit2.Value + "'").Tables[0];
 
         ExportToExcel(dtList, "30-180天库存清单_" + curmonth);
     }
@@ -562,7 +576,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_fuliao] '7','" + ddl_comp.SelectedValue + "','"
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "'").Tables[0];
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "','" + ASPxDropDownEdit2.Value + "'").Tables[0];
 
         ExportToExcel(dt, "180-360天库存清单_" + curmonth);
     }
@@ -571,7 +585,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
     {
         string curmonth = ddl_year.SelectedValue + ddl_month.SelectedValue;
         DataTable dt = DbHelperSQL.Query("exec [Report_tr_hist_fuliao] '8','" + ddl_comp.SelectedValue + "','"
-            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "'").Tables[0];
+            + txt_site.Text.Trim() + "','" + txt_tr_part_start.Text.Trim() + "','" + curmonth + "','" + ASPxDropDownEdit1.Value + "','" + ASPxDropDownEdit2.Value + "'").Tables[0];
 
         ExportToExcel(dt, "超360天库存清单_" + curmonth);
     }

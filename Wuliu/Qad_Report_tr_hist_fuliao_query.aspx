@@ -55,6 +55,37 @@
         }
     </script>
 
+    <script type="text/javascript">
+        var textSeparator2 = ";";
+        function updateText2() {
+            var selectedItems = checkListBox2.GetSelectedItems();
+            checkComboBox2.SetText(getSelectedItemsText2(selectedItems));
+        }
+        function synchronizeListBoxValues2(dropDown, args) {
+            checkListBox2.UnselectAll();
+            var texts = dropDown.GetText().split(textSeparator2);
+            var values = getValuesByTexts2(texts);
+            checkListBox2.SelectValues(values);
+            updateText2(); // for remove non-existing texts
+        }
+        function getSelectedItemsText2(items) {
+            var texts = [];
+            for (var i = 0; i < items.length; i++) 
+                    texts.push(items[i].text);
+            return texts.join(textSeparator2);
+        }
+        function getValuesByTexts2(texts) {
+            var actualValues = [];
+            var item;
+            for(var i = 0; i < texts.length; i++) {
+                item = checkListBox2.FindItemByText(texts[i]);
+                if(item != null)
+                    actualValues.push(item.value);
+            }
+            return actualValues;
+        }
+    </script>
+
     <div class="col-sm-12" id="div_p" style="margin-bottom:5px"> 
         <table style="line-height:40px;">
             <tr>
@@ -116,6 +147,38 @@
                             </table>
                         </DropDownWindowTemplate>
                         <ClientSideEvents TextChanged="synchronizeListBoxValues" DropDown="synchronizeListBoxValues" />
+                    </dx:ASPxDropDownEdit>
+                </td>
+                <td>&nbsp;&nbsp;物料状态：</td>
+                <td> 
+                    <dx:ASPxDropDownEdit ClientInstanceName="checkComboBox2" ID="ASPxDropDownEdit2" Width="150px" runat="server" AnimationType="None" CssClass="form-control input-s-md ">
+                        <DropDownWindowStyle BackColor="#EDEDED" />
+                        <DropDownWindowTemplate>
+                            <dx:ASPxListBox Width="100%" ID="listBox2" ClientInstanceName="checkListBox2" SelectionMode="CheckColumn"
+                                runat="server" Height="200" EnableSelectAll="true">
+                                <FilteringSettings ShowSearchUI="true"/>
+                                <Border BorderStyle="None" />
+                                <BorderBottom BorderStyle="Solid" BorderWidth="1px" BorderColor="#DCDCDC" />
+                                <Items> 
+                                    <%--<dx:ListEditItem Text="Chrome" Value="0" />
+                                    <dx:ListEditItem Text="Firefox" Value="1" />
+                                    <dx:ListEditItem Text="IE" Value="2" />
+                                    <dx:ListEditItem Text="Opera" Value="3" />
+                                    <dx:ListEditItem Text="Safari" Value="4" />--%>
+                                </Items>
+                                <ClientSideEvents SelectedIndexChanged="updateText2" />
+                            </dx:ASPxListBox>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="padding: 4px">
+                                        <dx:ASPxButton ID="ASPxButton2" AutoPostBack="False" runat="server" Text="Close" style="float: right">
+                                            <ClientSideEvents Click="function(s, e){ checkComboBox2.HideDropDown(); }" />
+                                        </dx:ASPxButton>
+                                    </td>
+                                </tr>
+                            </table>
+                        </DropDownWindowTemplate>
+                        <ClientSideEvents TextChanged="synchronizeListBoxValues2" DropDown="synchronizeListBoxValues2" />
                     </dx:ASPxDropDownEdit>
                 </td>             
                 <td>&nbsp;&nbsp;物料编码：</td>
