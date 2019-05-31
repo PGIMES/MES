@@ -1794,7 +1794,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     public static string CheckData(string typeno, string product_user, string yz_user, string bz_user, string pgi_no, string pgi_no_t, string ver,string formno,string domain,string createid, string zl_user)
     {
         DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = "";// DataTable dt_vg_manager = null;
-        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, out dt_manager, out dt_bz_id, out manager_flag);//,out dt_vg_manager
+        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag);//,out dt_vg_manager
 
         string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
 
@@ -1803,7 +1803,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     }
     
-    public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user
+    public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user, string ver
         , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag)//, out DataTable dt_vg_manager
     {
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
@@ -1881,6 +1881,24 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             manager_flag += "工程师(" + appuserid + ")的副总经理不存在，不能提交!<br />";
         }
 
+        if (manager_flag != "")
+        {
+            if (ver == "A")//新增申请时，增加质量主管，经理 签核
+            {
+                string zl_workcode = zl_user.Length >= 5 ? zl_user.Substring(0, 5) : zl_user;
+                DataTable dt_zl = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + zl_workcode + "')").Tables[0];
+
+                if (dt_zl.Rows[0]["zg_id"].ToString() != "")
+                {
+                    dt_manager.Rows[0]["zg_id"] = dt_manager.Rows[0]["zg_id"].ToString() + ",u_" + dt_zl.Rows[0]["zg_id"].ToString();
+                }
+                if (dt_zl.Rows[0]["manager_id"].ToString() != "")
+                {
+                    dt_manager.Rows[0]["manager_id"] = dt_manager.Rows[0]["manager_id"].ToString() + ",u_" + dt_zl.Rows[0]["manager_id"].ToString();
+                }
+            }
+        }
+
         //-------------------------------------------包装工程师
         dt_bz_id = null;
         if (bz_user != "")
@@ -1929,8 +1947,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string yz_user = ((TextBox)this.FindControl("ctl00$MainContent$yz_user")).Text.Trim();
         string bz_user = ((TextBox)this.FindControl("ctl00$MainContent$bz_user")).Text.Trim();
         string zl_user = ((TextBox)this.FindControl("ctl00$MainContent$zl_user")).Text.Trim();
+        string ver = ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text.Trim();
         DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = "";//DataTable dt_vg_manager = null; 
-        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, out dt_manager, out dt_bz_id, out manager_flag);//, out dt_vg_manager
+        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag);//, out dt_vg_manager
 
         string modifygp = ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue;
 
