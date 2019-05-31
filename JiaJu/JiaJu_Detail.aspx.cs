@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text;
+using System.Web.Services;
 
 public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
 {
@@ -56,7 +57,7 @@ public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
         //DataTable dt_type = DbHelperSQL.Query("select codevalue from Jiaju_Base where type='夹具类型'").Tables[0];
         //((GridViewDataComboBoxColumn)this.ASPxGridView3.Columns["type"]).PropertiesComboBox.DataSource = dt_type;
 
-        DataTable dt_bel = DbHelperSQL.Query("select distinct zc_bel as codevalue from jiaju_list").Tables[0];
+        DataTable dt_bel = DbHelperSQL.Query("select distinct isnull(zc_bel,'') as codevalue from jiaju_list order by isnull(zc_bel,'')").Tables[0];//select distinct zc_bel as codevalue from jiaju_list
         ((GridViewDataComboBoxColumn)this.ASPxGridView3.Columns["zc_bel"]).PropertiesComboBox.DataSource = dt_bel;
 
         DataTable dt_comp = DbHelperSQL.Query("select '100' codevalue union select '200'").Tables[0];
@@ -104,7 +105,22 @@ public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
         gv_export.WriteXlsxToResponse("夹具清单_"  + System.DateTime.Now.ToShortDateString());//导出到Excel
     }
 
-    
+    [WebMethod]
+    public static string Get_Jiaju_no(string comp)
+    {
+        string sql = @"select '" + comp.Left(1) + "-TF'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        return dt.Rows[0][0].ToString();
+    }
+
+
+    private string Jiaju_no(string comp)
+    {
+        string sql = @"select '" + comp.Left(1) + "-TF'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        return dt.Rows[0][0].ToString();
+    }
 
 
 
@@ -133,28 +149,15 @@ public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
         if (e.Column.FieldName == "jiajuno")//夹具号
         {
             ASPxTextBox TXT = e.Editor as ASPxTextBox;
-
-            if (e.KeyValue != DBNull.Value && e.KeyValue != null)
-            {
-                //combo.Enabled = false;//编辑时，只读
-                TXT.ClientEnabled = false;
-            }
-            else
-            {
-                string sql = @"select '2-TF'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar) from (select max(jiajuno)jiajuno from JiaJu_List)A";
-                DataTable dt = DbHelperSQL.Query(sql).Tables[0];
-                if (e.Column.FieldName == "jiajuno")
-                {
-                    TXT.Text = dt.Rows[0][0].ToString();
-                    TXT.ClientEnabled = false;
-                }
-            }
+            TXT.ClientEnabled = false;
         }
         if (e.Column.FieldName == "comp")
         {
             ASPxComboBox dropcomp = e.Editor as ASPxComboBox;
-            dropcomp.Text = "200";
-         
+            if (e.KeyValue != DBNull.Value && e.KeyValue != null)
+            {
+                dropcomp.ClientEnabled = false;//编辑时，只读
+            }
         }
 
     }

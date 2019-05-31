@@ -36,6 +36,28 @@
         function IsCustomExportToolbarCommand(command) {
             return command == "CustomExportToXLS" || command == "CustomExportToXLSX";
         }
+
+        function OnCompChanged(Comp) {
+            //alert(Comp.GetValue().toString());
+            //alert(Grid3.GetEditor("jiajuno").GetValue().toString());
+            var str = "";
+            $.ajax({
+                type: "Post", async: false,
+                url: "JiaJu_Detail.aspx/Get_Jiaju_no",
+                data: "{'comp':'" + Comp.GetValue().toString() + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    str = data.d;
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+            //alert(str);
+            Grid3.GetEditor("jiajuno").SetValue(str);
+
+        }
     </script>
    
 </asp:Content>
@@ -138,14 +160,8 @@
                                                         <dx:GridViewToolbarItem Command="Delete" Text="删除" />
                                                         <dx:GridViewToolbarItem Text="导出" Image-IconID="actions_download_16x16office2013" BeginGroup="true">
                                                             <Items>
-                                                                <dx:GridViewToolbarItem Name="CustomExportToXLSX" 
-                                                                    Text="Export to XLSX(夹具清单)" 
-                                                                    Image-IconID="export_exporttoxlsx_16x16office2013" >
-<Image IconID="export_exporttoxlsx_16x16office2013"></Image>
-                                                                </dx:GridViewToolbarItem>
+                                                                <dx:GridViewToolbarItem Name="CustomExportToXLSX" Text="Export to XLSX(夹具清单)" Image-IconID="export_exporttoxlsx_16x16office2013" />
                                                             </Items>
-
-<Image IconID="actions_download_16x16office2013"></Image>
                                                         </dx:GridViewToolbarItem>
                                                         <dx:GridViewToolbarItem BeginGroup="true">
                                                             <Template>
@@ -167,8 +183,9 @@
                                             <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                                             <SettingsExport EnableClientSideExportAPI="true" ExcelExportMode="DataAware" />
                                             <Columns> 
-                                            <dx:GridViewDataComboBoxColumn Caption="域" FieldName="comp" Width="60px" VisibleIndex="1">
+                                                <dx:GridViewDataComboBoxColumn Caption="域" FieldName="comp" Width="60px" VisibleIndex="1">
                                                     <PropertiesComboBox TextField="codevalue" ValueField="codevalue" EnableSynchronization="false" IncrementalFilteringMode="StartsWith">
+                                                        <ClientSideEvents SelectedIndexChanged="function(s, e) { OnCompChanged(s); }" />
                                                     </PropertiesComboBox>
                                                 </dx:GridViewDataComboBoxColumn>
                                                     <%--<dx:GridViewDataComboBoxColumn Caption="夹具类型" FieldName="type" Width="80px" VisibleIndex="1">
@@ -183,8 +200,8 @@
                                                 <dx:GridViewDataTextColumn Caption="工序号" FieldName="gxh" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn>
                                                 <dx:GridViewDataTextColumn Caption="产线" FieldName="line" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                                                 <dx:GridViewDataTextColumn Caption="工位" FieldName="gongwei" Width="80px" VisibleIndex="8"></dx:GridViewDataTextColumn>
-                                                <dx:GridViewDataComboBoxColumn Caption="归属部门" FieldName="zc_bel" Width="80px" VisibleIndex="9">
-                                                    <PropertiesComboBox TextField="codevalue" ValueField="codevalue" EnableSynchronization="false" IncrementalFilteringMode="StartsWith"  DropDownStyle="DropDown">
+                                                <dx:GridViewDataComboBoxColumn Caption="归属部门" FieldName="zc_bel" Width="80px" VisibleIndex="9"><%--DropDownStyle="DropDown"--%>
+                                                    <PropertiesComboBox TextField="codevalue" ValueField="codevalue" EnableSynchronization="false" IncrementalFilteringMode="StartsWith">  
                                                     </PropertiesComboBox>
                                                 </dx:GridViewDataComboBoxColumn>
                                              <dx:GridViewDataTextColumn Caption="库位" FieldName="loc" Width="100px" VisibleIndex="10"></dx:GridViewDataTextColumn>
