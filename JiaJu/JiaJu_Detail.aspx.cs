@@ -108,7 +108,7 @@ public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
     [WebMethod]
     public static string Get_Jiaju_no(string comp)
     {
-        string sql = @"select '" + comp.Left(1) + "-TF'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
+        string sql = @"select '" + comp.Left(1) + "-TF'+right('0000'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar(max)),4) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         return dt.Rows[0][0].ToString();
     }
@@ -116,7 +116,7 @@ public partial class JiaJu_JiaJu_Detail : System.Web.UI.Page
 
     private string Jiaju_no(string comp)
     {
-        string sql = @"select '" + comp.Left(1) + "-TF'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
+        string sql = @"select '" + comp.Left(1) + "-TF'+right('0000'+CAST(CAST(SUBSTRING(jiajuno,5,LEN(jiajuno)-4) AS INT)+1 as varchar(max)),4) from (select max(jiajuno)jiajuno from JiaJu_List where comp='" + comp + "')A";
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
         return dt.Rows[0][0].ToString();
