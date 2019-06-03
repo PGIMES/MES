@@ -202,7 +202,7 @@ public partial class Pur_Po : System.Web.UI.Page
                     this.btndel.Visible = false;
                     this.btnadd.Visible = false;
 
-                    PoVendorId.Enabled = false;
+                    PoVendorId.Enabled = false; txt_PoVendorId_Read.ClientVisible = true; PoVendorId.ClientVisible = false;
                     BuyerName.Enabled = false;
                     PoType.Enabled = false;
                     PoDomain.Enabled = false;
@@ -223,6 +223,15 @@ public partial class Pur_Po : System.Web.UI.Page
                     {
                         PoVendorId.Value = PoVendorId.Value + "%";
                     }
+
+                    if (getVendor_ht(PoVendorId.Value.ToString().Substring(0, PoVendorId.Value.ToString().IndexOf('|'))) != "") {
+                        txt_PoVendorId_Read.Text = PoVendorId.Value.ToString().Substring(0, PoVendorId.Value.ToString().IndexOf('|'));
+                    }
+                    else
+                    {
+                        txt_PoVendorId_Read.Text = PoVendorId.Value.ToString();
+                    }
+                        
                 }
                 if (Request.QueryString["display"] != null)
                 {
@@ -253,7 +262,7 @@ public partial class Pur_Po : System.Web.UI.Page
                     this.btndel.Visible = false;
                     this.btnadd.Visible = false;
 
-                    PoVendorId.Enabled = false;
+                    PoVendorId.Enabled = false; txt_PoVendorId_Read.ClientVisible = true; PoVendorId.ClientVisible = false;
                     BuyerName.Enabled = false;
                     PoType.Enabled = false;
                     PoDomain.Enabled = false;
@@ -272,6 +281,14 @@ public partial class Pur_Po : System.Web.UI.Page
                     if (PoVendorId.Value.ToString().Right(1) != "%")
                     {
                         PoVendorId.Value = PoVendorId.Value + "%";
+                    }
+                    if (getVendor_ht(PoVendorId.Value.ToString().Substring(0, PoVendorId.Value.ToString().IndexOf('|'))) != "")
+                    {
+                        txt_PoVendorId_Read.Text = PoVendorId.Value.ToString().Substring(0, PoVendorId.Value.ToString().IndexOf('|'));
+                    }
+                    else
+                    {
+                        txt_PoVendorId_Read.Text = PoVendorId.Value.ToString();
                     }
                 }
             }

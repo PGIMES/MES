@@ -811,6 +811,9 @@
                                                 <ClientSideEvents ValueChanged="function(s, e) {vendorid(s);}" />
                                                 <DisabledStyle CssClass="lineread" ForeColor="#333333" BackColor="#FFFFFF" Font-Bold="true"></DisabledStyle>
                                             </dx:ASPxComboBox>
+                                            <dx:ASPxTextBox ID="txt_PoVendorId_Read" runat="server" ReadOnly="true" CssClass="lineread" Width="410px" Height="27px" ClientVisible="false" 
+                                                Font-Bold="true" ForeColor="#333333" BackColor="#FFFFFF">
+                                            </dx:ASPxTextBox>
                                         </td>
                                         <td><span id="span_WgVendor" hidden="hidden">π©”¶…Ã</span></td>
                                         <td>
