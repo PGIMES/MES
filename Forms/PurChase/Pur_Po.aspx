@@ -132,9 +132,10 @@
         }
 
         function init_wg(changefs){
-            var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
+            //var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
             //if (ss[0]=="31567" && ss[1]=="网购") {
-            if (ss[0]=="31567") {
+            //if (ss[0]=="31567") {
+            if (get_vendor()!="") {
                 $("#span_WgVendor").show();
                 $("#tblWLLeibie input[id*='wgvendor']").show();
 
@@ -366,6 +367,27 @@
 
         };
 
+        function get_vendor(){   
+            //debugger;
+            var str="";
+            var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
+            $.ajax({
+                type: "Post",async: false,
+                url: "Pur_Po.aspx/getVendor" , 
+                data: "{'VendorId':'"+ss[0]+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {                   
+                    str=data.d;            
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+            return str;
+
+        };
+
     </script>
     <script type="text/javascript">
         var uploadedFiles = [];
@@ -412,11 +434,12 @@
                 if($("input[type!=hidden][id*='PoVendorId']").val()==""){
                     msg+="【采购供应商】不可为空.<br />";
                 }else {
-                    var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
+                    //var ss=$("input[type!=hidden][id*='PoVendorId']").val().split("|");
                     //if (ss[0]=="31567" && ss[1]=="网购") {
-                    if (ss[0]=="31567") {
+                    //if (ss[0]=="31567") {
+                    if (get_vendor()!="") {
                         if($("#tblWLLeibie input[id*='wgvendor']").val()==""){
-                            msg+="【网购供应商】不可为空.<br />";
+                            msg+="【供应商】不可为空.<br />";
                         }
                         if (WgPayCon_c.GetValue()=="" || WgPayCon_c.GetValue()==null) {
                             msg+="【支付方式】不可为空.<br />";
@@ -789,7 +812,7 @@
                                                 <DisabledStyle CssClass="lineread" ForeColor="#333333" BackColor="#FFFFFF" Font-Bold="true"></DisabledStyle>
                                             </dx:ASPxComboBox>
                                         </td>
-                                        <td><span id="span_WgVendor" hidden="hidden">网购供应商</span></td>
+                                        <td><span id="span_WgVendor" hidden="hidden">供应商</span></td>
                                         <td>
                                             <asp:TextBox ID="wgvendor" runat="server" CssClass="linewrite" Width="150px" Height="27px" Style="display: none;"></asp:TextBox>
                                         </td>

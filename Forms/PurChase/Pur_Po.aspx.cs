@@ -146,7 +146,8 @@ public partial class Pur_Po : System.Web.UI.Page
                 PoVendorId.Value = ldt.Rows[0]["PoVendorId"].ToString() + "|" + ldt.Rows[0]["PoVendorName"].ToString() + "|" + lsrate;
                 BuyerName.Value = ldt.Rows[0]["buyerid"].ToString() + "|" + ldt.Rows[0]["buyername"].ToString();
                 //if (ldt.Rows[0]["PoVendorId"].ToString() == "31567" && ldt.Rows[0]["PoVendorName"].ToString() == "网购")
-                if (ldt.Rows[0]["PoVendorId"].ToString()=="31567")
+                //if (ldt.Rows[0]["PoVendorId"].ToString()=="31567")
+                if (getVendor_ht(ldt.Rows[0]["PoVendorId"].ToString()) != "")
                 {
                     WgPayCon.Value = ldt.Rows[0]["WgPayCon"].ToString() + "|" + ldt.Rows[0]["WgPayConDesc"].ToString();
                 }
@@ -775,13 +776,9 @@ public partial class Pur_Po : System.Web.UI.Page
 
             if (ls[i].Code.ToLower() == "wgpaycon")
             {
-                //if (cggysId != "31567" || cggysName != "网购")
-                if (cggysId != "31567")
-                {
-                    wgfkfsId = "";
-                    wgfkfsDesc = "";
-                }
-                else
+                //if (cggysId == "31567" && cggysName == "网购")
+                //if (cggysId == "31567")
+                if (getVendor_ht(cggysId) != "")
                 {
                     string[] lsstr = WgPayCon.Enabled == true ? ls[i].Value.ToString().Split('|') : WgPayCon.Value.ToString().Split('|');
 
@@ -790,6 +787,11 @@ public partial class Pur_Po : System.Web.UI.Page
                         wgfkfsId = lsstr[0];
                         wgfkfsDesc = lsstr[1];
                     }
+                }
+                else
+                {
+                    wgfkfsId = "";
+                    wgfkfsDesc = "";
                 }
 
                 ls[i].Value = wgfkfsId;
@@ -2235,7 +2237,7 @@ public partial class Pur_Po : System.Web.UI.Page
 
     }
 
-    //#region "WebMethod"
+    #region "WebMethod"
 
     ////获取 是否是 合同模块
     //[WebMethod]
@@ -2255,7 +2257,21 @@ public partial class Pur_Po : System.Web.UI.Page
         return obj == null ? "" : obj.ToString();
     }
 
-    //#endregion
+    [WebMethod]
+    public static string getVendor(string VendorId)
+    {
+        var sql = string.Format("select top 1 PoVendorId from [dbo].[PUR_PO_Vendor] where PoVendorId='{0}'", VendorId);
+        var obj = DbHelperSQL.GetSingle(sql);
+        return obj == null ? "" : obj.ToString();
+    }
+
+    public string getVendor_ht(string VendorId)
+    {
+        var sql = string.Format("select top 1 PoVendorId from [dbo].[PUR_PO_Vendor] where PoVendorId='{0}'", VendorId);
+        var obj = DbHelperSQL.GetSingle(sql);
+        return obj == null ? "" : obj.ToString();
+    }
+    #endregion
 
     #region 在页面中显示要显示的字段
     /// <summary>
