@@ -224,7 +224,7 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
                 msg += "行号" + ldt.Rows[i]["ContractLine"].ToString() + "，计划付款比例不可为空!<br />";
             }
 
-            if (ldt.Rows[i]["FPDate"].ToString() == "" && ldt.Rows[i]["FPAmount"].ToString() != "")
+            if (ldt.Rows[i]["FPDate"].ToString() == "" && ldt.Rows[i]["FPAmount"].ToString() != "" && ldt.Rows[i]["FPAmount"].ToString() != "0")
             {
                 msg += "行号" + ldt.Rows[i]["ContractLine"].ToString() + "，发票日期为空，发票金额必须也为空!<br />";
             }
