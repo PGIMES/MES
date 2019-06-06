@@ -1793,8 +1793,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     [WebMethod]
     public static string CheckData(string typeno, string product_user, string yz_user, string bz_user, string pgi_no, string pgi_no_t, string ver,string formno,string domain,string createid, string zl_user)
     {
-        DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = "";// DataTable dt_vg_manager = null;
-        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag);//,out dt_vg_manager
+        DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = "";// DataTable dt_vg_manager = null;
+        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag,out zl_id);//,out dt_vg_manager
 
         string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
 
@@ -1804,10 +1804,10 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     }
     
     public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user, string ver
-        , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag)//, out DataTable dt_vg_manager
+        , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag, out string zl_id)//, out DataTable dt_vg_manager
     {
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
-        manager_flag = "";
+        manager_flag = ""; zl_id = "";
 
         string appuserid = "";
         if (typeno == "机加")
@@ -1886,8 +1886,14 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             if (ver == "A")//新增申请时，增加质量主管，经理 签核
             {
                 string zl_workcode = zl_user.Length >= 5 ? zl_user.Substring(0, 5) : zl_user;
-                DataTable dt_zl = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + zl_workcode + "')").Tables[0];
+                var value= DbHelperSQL.GetSingle(@"select id from RoadFlowWebForm.dbo.Users a where account='" + zl_workcode + "'");
+                zl_id = value == null ? "" : value.ToString();
+                if (zl_id == "")
+                {
+                    manager_flag += "质量工程师(" + zl_workcode + ")的不存在，不能提交!<br />";
+                }
 
+                DataTable dt_zl = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + zl_workcode + "')").Tables[0];
                 if (dt_zl.Rows[0]["zg_id"].ToString() != "")
                 {
                     dt_manager.Rows[0]["zg_id"] = dt_manager.Rows[0]["zg_id"].ToString() + ",u_" + dt_zl.Rows[0]["zg_id"].ToString();
@@ -1948,8 +1954,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string bz_user = ((TextBox)this.FindControl("ctl00$MainContent$bz_user")).Text.Trim();
         string zl_user = ((TextBox)this.FindControl("ctl00$MainContent$zl_user")).Text.Trim();
         string ver = ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text.Trim();
-        DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = "";//DataTable dt_vg_manager = null; 
-        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag);//, out dt_vg_manager
+        DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = "";//DataTable dt_vg_manager = null; 
+        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag, out zl_id);//, out dt_vg_manager
 
         string modifygp = ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue;
 
@@ -2042,6 +2048,13 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcvg_manager_id.Key = "";
         lcvg_manager_id.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
         ls.Add(lcvg_manager_id);
+
+        //质量工程师
+        Pgi.Auto.Common lczl_id = new Pgi.Auto.Common();
+        lczl_id.Code = "zl_id";
+        lczl_id.Key = "";
+        lczl_id.Value = "u_" + zl_id;
+        ls.Add(lczl_id);
 
         //包装工程师
         string bz_id = "";
