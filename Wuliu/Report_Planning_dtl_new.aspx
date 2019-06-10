@@ -20,7 +20,8 @@
         <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text="周："></dx:ASPxLabel><dx:ASPxLabel ID="lbl_week" runat="server" Text="" ForeColor="Blue"></dx:ASPxLabel>
          &nbsp;&nbsp;
         <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="部门："></dx:ASPxLabel><dx:ASPxLabel ID="lbl_dept" runat="server" Text="" ForeColor="Blue"></dx:ASPxLabel>
-
+         &nbsp;&nbsp;
+        <asp:Button ID="btnimport" runat="server" Text="导出Excel"  style="font-size:12px;" OnClick="btnimport_Click" />
         <dx:aspxgridview ID="gv_tr_hist" runat="server" AutoGenerateColumns="False" KeyFieldName="" Theme="MetropolisBlue"  ClientInstanceName="grid_tr_hist"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_tr_hist_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
