@@ -1124,7 +1124,14 @@ protected void Page_Load(object sender, EventArgs e)
     {
         //保存数据
         bool flag = false;
-        SaveData(prtype.SelectedValue,out flag);
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
+        {
+            flag = true;
+        }
+        else
+        {
+            SaveData(prtype.SelectedValue, out flag);
+        }
 
         //保存当前流程
         if(flag==true)
@@ -1139,7 +1146,14 @@ protected void Page_Load(object sender, EventArgs e)
     {
         //保存数据
         bool flag = false;
-        SaveData(prtype.SelectedValue,out flag);
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
+        {
+            flag = true;
+        }
+        else
+        {
+            SaveData(prtype.SelectedValue, out flag);
+        }
         //发送
         if (flag == true)
         {
