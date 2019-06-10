@@ -98,40 +98,40 @@ public partial class MaterialBase_DJ_LY_Query : System.Web.UI.Page
 
         if (qty_week > 1 && qty_week > avg_week)
         {
-            e.Row.Cells[14].Style.Add("background-color", "yellow");
+            e.Row.Cells[15].Style.Add("background-color", "yellow");
         }
         if (qty_week > 1 && qty_week > avg_week * 2)
         {
-            e.Row.Cells[14].Style.Add("background-color", "red");
+            e.Row.Cells[15].Style.Add("background-color", "red");
         }
         //5周
         if (qty_week > 1 && qty_fweek > avg_week)
         {
-            e.Row.Cells[15].Style.Add("background-color", "yellow");
+            e.Row.Cells[16].Style.Add("background-color", "yellow");
         }
         if (qty_week > 1 && qty_fweek > avg_week * 2)
         {
-            e.Row.Cells[15].Style.Add("background-color", "red");
+            e.Row.Cells[16].Style.Add("background-color", "red");
         }
 
         //12周
         if (qty_week > 1 && qty_tweek > avg_week)
         {
-            e.Row.Cells[16].Style.Add("background-color", "yellow");
+            e.Row.Cells[17].Style.Add("background-color", "yellow");
         }
         if (qty_week > 1 && qty_tweek > avg_week * 2)
         {
-            e.Row.Cells[16].Style.Add("background-color", "red");
+            e.Row.Cells[17].Style.Add("background-color", "red");
         }
 
         //库存数比较
         if (kcs < qty_week)
         {
-            e.Row.Cells[20].Style.Add("background-color", "red");
+            e.Row.Cells[21].Style.Add("background-color", "red");
         }
         if (kcs > qty_fweek * 5)
         {
-            e.Row.Cells[20].Style.Add("background-color", "yellow");
+            e.Row.Cells[21].Style.Add("background-color", "yellow");
         }
       
     }
