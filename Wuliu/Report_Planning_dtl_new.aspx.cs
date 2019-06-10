@@ -154,15 +154,15 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         QueryASPxGridView();
         if (Request.QueryString["typedesc"].ToString().Contains("实际发货数量"))
         {
-            gv_tr_hist.ExportXlsxToResponse("库龄明细" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            gv_tr_hist.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
         }
         if (Request.QueryString["typedesc"].ToString().Contains("计划生产订单数量"))
         {
-            gv_xx_wo_mstr.ExportXlsxToResponse("库龄明细" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            gv_xx_wo_mstr.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
         }
         if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量") || Request.QueryString["typedesc"].ToString().Contains("废品数量"))
         {
-            gv_workorder.ExportXlsxToResponse("库龄明细" + System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            gv_workorder.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
         }
     }
 }
