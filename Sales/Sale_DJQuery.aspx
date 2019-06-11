@@ -1,4 +1,4 @@
-﻿<%@ Page Title="【刀具领用金额】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Sale_DJQuery.aspx.cs" Inherits="Sales_Sale_DJQuery" %>
+﻿<%@ Page Title="【刀具领用趋势】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Sale_DJQuery.aspx.cs" Inherits="Sales_Sale_DJQuery" %>
 
 <%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.Web" TagPrefix="dx" %>
@@ -9,6 +9,8 @@
 
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
     Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
+
+<%@ Register assembly="DevExpress.XtraCharts.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.XtraCharts" tagprefix="dx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
 </asp:Content>
@@ -31,7 +33,7 @@
     <script src="../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script type="text/javascript" language="javascript">
 
-        $("#mestitle").text("【刀具月领用金额】");
+        $("#mestitle").text("【刀具领用趋势】");
     </script>
     <div class="row row-container">
         <div class="col-sm-12 ">
@@ -78,6 +80,7 @@
 
                                            <td>供应商: </td>
                                         <td> <asp:TextBox ID="txt_gys"  runat="server"  class="form-control input-s-sm "/>
+                                        
                                         <td>
                                     使用部门:
                                 </td>
@@ -88,6 +91,9 @@
                                           <asp:ListItem>工程</asp:ListItem>
                                            <asp:ListItem>生产</asp:ListItem>
                                            </asp:DropDownList></td>
+
+                                  <td>物料号: </td>
+                                        <td> <asp:TextBox ID="txt_wlh"  runat="server"  class="form-control input-s-sm " />
                                          <td>
                                     <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   </td>
                                     </tr>
@@ -126,6 +132,7 @@
                     <dx:ASPxGridView ID="gv_month" runat="server"   
                         onhtmlrowprepared="gv_month_HtmlRowPrepared" 
                         onhtmlrowcreated="gv_month_HtmlRowCreated">
+                        <SettingsBehavior AllowSort="False" />
                     </dx:ASPxGridView>
 
                    <%-- <asp:GridView ID="gv_month" BorderColor="lightgray" BorderWidth="2px" CssClass="gvHeader th" 

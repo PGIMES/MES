@@ -63,7 +63,7 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
     {
         ChartA.Series.Clear();
 
-        DataSet ds = DbHelperSQL.Query("exec MES_DJ_amt_ByPeriod  '" + txt_year.SelectedValue + "','" + ddl_comp.SelectedValue + "','" + DDL_type.SelectedValue + "','" + txt_gys.Text + "','" + dropdl.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+        DataSet ds = DbHelperSQL.Query("exec MES_DJ_slamt_ByPeriod  '" + txt_year.SelectedValue + "','" + ddl_comp.SelectedValue + "','" + DDL_type.SelectedValue + "','" + txt_gys.Text + "','" + dropdl.SelectedValue + "','" + drop_dept.SelectedValue + "','"+txt_wlh.Text+"'");
         
         if (ds.Tables[0].Rows.Count > 0)
         {
@@ -74,10 +74,14 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
            // Pgi.Auto.Control.SetGrid("DJMnth_QS", "", this.gv_month, ds.Tables[0]);
             this.gv_month.Columns[1].Caption=" ";
             this.gv_month.Columns[0].Visible = false;
+           
             for (int i = 2; i < this.gv_month.DataColumns.Count ; i++)
             {
 
-                this.gv_month.DataColumns[i].ToolTip = "判断规则:刀具占销售额比例为1.2-1.5%,单元格黄色;刀具占销售额比例大于1.5% 单元格红色";
+                this.gv_month.DataColumns[i].ToolTip = "判断规则:刀具占销售额比率大于合计比例,单元格黄色;刀具占销售额比例大于1.2倍合计比例 单元格红色";
+               
+               // { this.gv_month.DataColumns[i].PropertiesEdit.DisplayFormatString = "{0:N0}"; }
+                   
               
 
             }
@@ -91,8 +95,9 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
         #region Series
         //动态创建多个Series 图形的对象
         List<Series> list = new List<Series>();
-        int j = 0;
-        for (int i = 0; i <dt.Rows.Count-2; i++)
+        int j = 1;
+       
+        for (int i = 1; i <2; i++)
         {
             list.Add(CreateSeries(dt.Rows[i][1].ToString(), ViewType.Line, dt, j));
             j++;
@@ -106,6 +111,7 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
     private Series CreateSeries(string caption, ViewType viewType, DataTable dt, int rowIndex)
     {
         Series series = new Series(caption, viewType);
+       
         for (int i = 2; i < dt.Columns.Count - 2; i++)
         {
             int length = dt.Columns[i].ColumnName.IndexOf("<");
@@ -129,38 +135,51 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
    
     protected void gv_month_HtmlRowPrepared(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
     {
-        
 
-        
 
-        if (e.VisibleIndex == 2)
+
+
+        if (e.VisibleIndex == 3)
         {
 
             for (int i = 2; i < this.gv_month.DataColumns.Count; i++)
             {
                 if (e.GetValue(this.gv_month.DataColumns[i].FieldName) != System.DBNull.Value)
                 {
-                    if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > 1.2 && Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) <= 1.5)
+                    double hj = Convert.ToDouble(e.GetValue("合计"));
+                    if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > hj && Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) <= 1.2*hj)
                     {
                         //  e.Row.Cells[i].BackColor = System.Drawing.Color.Yellow;
-                        e.Row.Cells[i-1].Style.Add("background-color", "yellow");
+                        e.Row.Cells[i - 1].Style.Add("background-color", "yellow");
 
                     }
-                    else if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > 1.5)
+                    else if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > 1.2*hj)
                     {
                         // e.Row.Cells[i].BackColor = System.Drawing.Color.Red;
-                        e.Row.Cells[i-1].Style.Add("background-color", "red");
+                        e.Row.Cells[i - 1].Style.Add("background-color", "red");
                     }
                 }
+
             }
-           
+
         }
+        else
+        {
+            for (int i = 2; i < this.gv_month.DataColumns.Count; i++)
+            {
+                if (e.GetValue(this.gv_month.DataColumns[i].FieldName)!=System.DBNull.Value)
+                {
+                e.Row.Cells[i - 1].Text = Convert.ToDecimal(e.GetValue(this.gv_month.DataColumns[i].FieldName)).ToString("N0"); 
+                }
+            }
+        }
+       
+        
     }
     protected void gv_month_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
     {
-        for (int i = 2; i < this.gv_month.DataColumns.Count; i++)
-        {
-            e.Row.Cells[i-1].Attributes.Add("style", "word-break :break-all ; word-wrap:break-word");
-        }
+        
+           
+        
     }
 }
