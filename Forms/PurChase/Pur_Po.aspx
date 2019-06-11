@@ -250,7 +250,7 @@
             //}
 
             if($("input[type!=hidden][id*='PoType']").val()==""){
-                layer.alert("请先选择【采购类别】");  
+                layer.alert("请先选择【采购类型】");  
                 return;
             }
             
@@ -280,7 +280,7 @@
             //if (type=="buyer") {
             //    grid.PerformCallback($("input[type!=hidden][id*='BuyerName']").val());
             //}
-            if (type=="potype") {//采购类别改变
+            if (type=="potype") {//采购类型改变
                 if($("input[type!=hidden][id*='PoType']").val()=="PO"){
                     layer.tips('<font color=black>未税单价超过5000,请选择合同</font>', '#MainContent_PoType', {
                         tips: [3, 'yellow'],
@@ -431,7 +431,7 @@
                 }
 
                 if($("input[type!=hidden][id*='PoType']").val()==""){
-                    msg+="【采购类别】不可为空.<br />";
+                    msg+="【采购类型】不可为空.<br />";
                 }
 
                 if($("input[type!=hidden][id*='PoVendorId']").val()==""){
@@ -784,7 +784,7 @@
                                                 <asp:ListItem Text="上海工厂" Value="100"></asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
-                                        <td>采购类别</td>
+                                        <td>采购类型</td>
                                         <td>
                                             <dx:ASPxComboBox ID="PoType" runat="server" ValueType="System.String" CssClass="linewrite" Width="150px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
                                                 <ClientSideEvents ValueChanged="function(s, e) { buyername_potype_change('potype',s);}" />
