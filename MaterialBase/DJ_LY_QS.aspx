@@ -1,4 +1,4 @@
-﻿<%@ Page Title="【刀具领用趋势】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="DJ_LY_QS.aspx.cs" Inherits="MaterialBase_DJ_LY_QS" %>
+﻿<%@ Page Title="【刀具领用统计】" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="DJ_LY_QS.aspx.cs" Inherits="MaterialBase_DJ_LY_QS" %>
   <%@ Register Assembly="DevExpress.XtraCharts.v17.2.Web, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
     Namespace="DevExpress.XtraCharts.Web" TagPrefix="dx" %>
 <%@ Register assembly="DevExpress.XtraCharts.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.XtraCharts" tagprefix="dx" %>
@@ -68,7 +68,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
  <script type="text/javascript">
-        $("#mestitle").text("【刀具领用趋势】");
+        $("#mestitle").text("【刀具领用统计】");
         </script>
     <div class="panel panel-info ">
                 <%--      <dx:GridViewDataHyperLinkColumn Caption="物料号" FieldName="物料号"  VisibleIndex="8"  PropertiesHyperLinkEdit-NavigateUrlFormatString="Forproducts.aspx?wlh={0}"  PropertiesHyperLinkEdit-Target="_blank"> 
