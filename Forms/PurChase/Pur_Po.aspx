@@ -265,12 +265,15 @@
             });
           
         }
-
+        function TaxRate_change(s){
+            //alert(s.GetValue());         
+            grid.PerformCallback("taxrate");
+        }
         function vendorid(s){
             //alert(s.GetValue());
 
             init_wg('change');                
-           grid.PerformCallback(s.GetValue());
+           //grid.PerformCallback(s.GetValue());
         }
 
         function buyername_potype_change(type,s){ 
