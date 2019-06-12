@@ -1881,7 +1881,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             manager_flag += "工程师(" + appuserid + ")的副总经理不存在，不能提交!<br />";
         }
 
-        if (manager_flag != "")
+        if (manager_flag == "")
         {
             if (ver == "A")//新增申请时，增加质量主管，经理 签核
             {
@@ -1892,16 +1892,18 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 {
                     manager_flag += "质量工程师(" + zl_workcode + ")的不存在，不能提交!<br />";
                 }
-
-                DataTable dt_zl = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + zl_workcode + "')").Tables[0];
-                if (dt_zl.Rows[0]["zg_id"].ToString() != "")
+                else
                 {
-                    dt_manager.Rows[0]["zg_id"] = dt_manager.Rows[0]["zg_id"].ToString() + ",u_" + dt_zl.Rows[0]["zg_id"].ToString();
-                }
-                if (dt_zl.Rows[0]["manager_id"].ToString() != "")
-                {
-                    dt_manager.Rows[0]["manager_id"] = dt_manager.Rows[0]["manager_id"].ToString() + ",u_" + dt_zl.Rows[0]["manager_id"].ToString();
-                }
+                    DataTable dt_zl = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + zl_workcode + "')").Tables[0];
+                    if (dt_zl.Rows[0]["zg_id"].ToString() != "")
+                    {
+                        dt_manager.Rows[0]["zg_id"] = dt_manager.Rows[0]["zg_id"].ToString() + ",u_" + dt_zl.Rows[0]["zg_id"].ToString();
+                    }
+                    if (dt_zl.Rows[0]["manager_id"].ToString() != "")
+                    {
+                        dt_manager.Rows[0]["manager_id"] = dt_manager.Rows[0]["manager_id"].ToString() + ",u_" + dt_zl.Rows[0]["manager_id"].ToString();
+                    }
+                }                
             }
         }
 
