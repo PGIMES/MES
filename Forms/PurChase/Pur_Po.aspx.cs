@@ -794,7 +794,7 @@ public partial class Pur_Po : System.Web.UI.Page
             {
                 string[] lsstr = PoVendorId.Enabled == true ? ls[i].Value.ToString().Split('|') : PoVendorId.Value.ToString().Split('|');
 
-                if (lsstr.Length == 3)
+                if (lsstr.Length == 2) //if (lsstr.Length == 3)
                 {
                     ls[i].Value = lsstr[0]; cggysId = lsstr[0];
 
