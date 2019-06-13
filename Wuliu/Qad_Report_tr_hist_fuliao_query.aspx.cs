@@ -232,7 +232,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartF.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 3
-        SetGrid(gv_tr_list_3, ds.Tables[6], 80, "typedesc;days");
+        SetGrid(gv_tr_list_3, ds.Tables[6], 90, "typedesc;days");
         gv_tr_list_3.Columns["typedesc"].Caption = "分类";
         gv_tr_list_3.Columns["days"].Caption = "在库天数";
 
@@ -261,7 +261,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartC.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 5
-        SetGrid(gv_tr_list_5, ds.Tables[8], 80, "typedesc");
+        SetGrid(gv_tr_list_5, ds.Tables[8], 90, "typedesc");
         gv_tr_list_5.Columns["typedesc"].Caption = "分类";
 
         //图E
@@ -289,7 +289,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartE.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 7
-        SetGrid(gv_tr_list_7, ds.Tables[10], 80, "typedesc");
+        SetGrid(gv_tr_list_7, ds.Tables[10], 90, "typedesc");
         gv_tr_list_7.Columns["typedesc"].Caption = "分类";
 
         //图G
