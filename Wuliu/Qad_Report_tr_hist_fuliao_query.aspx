@@ -192,30 +192,52 @@
         </table>
     </div>
    <div>
-       <div class=" panel panel-info col-md-12 ">
+       
+       <div class=" panel panel-info col-md-5 ">
+            <div class="panel panel-heading">
+                <asp:Label ID="Label7" runat="server" Text="库存金额趋势图"></asp:Label>
+            </div>
+            <div class="panel panel-body" style="  overflow:scroll;height:500px;">
+                <div style="float: left">
+                    <dx:ASPxGridView ID="gv_tr_list_his" runat="server">
+                        <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Columns></Columns>
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                        </Styles>
+                    </dx:ASPxGridView>
+                    <dx:WebChartControl ID="Chart_his" runat="server" CrosshairEnabled="True" Height="300px" Width="500px">
+                    </dx:WebChartControl>
+                </div>
+            </div>
+       </div>
+       <div class=" panel panel-info col-md-7">
             <div class="panel panel-heading">
                 <asp:Label ID="lblMstMonth" runat="server" Text="库存库龄分析"></asp:Label>
             </div>
-            <div class="panel panel-body" style="overflow:scroll">
-                <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tyepedesc" AutoGenerateColumns="False" Width="810px"
+            <div class="panel panel-body" style="overflow:scroll;height:500px;">
+                <dx:ASPxGridView ID="gv_tr_list" runat="server" KeyFieldName="tyepedesc" AutoGenerateColumns="False" Width="710px"
                      OnHtmlRowCreated="gv_tr_list_HtmlRowCreated">
                     <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value" />
                     <SettingsPager PageSize="1000"></SettingsPager>
                     <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
                     <Columns>                        
-                        <dx:GridViewDataTextColumn Caption="0-30金额" FieldName="amount1" Width="90px">
+                        <dx:GridViewDataTextColumn Caption="0-30金额" FieldName="amount1" Width="70px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="30-60金额" FieldName="amount2" Width="90px">
+                        <dx:GridViewDataTextColumn Caption="30-60金额" FieldName="amount2" Width="70px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="60-90金额" FieldName="amount3" Width="90px">
+                        <dx:GridViewDataTextColumn Caption="60-90金额" FieldName="amount3" Width="70px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="90-180金额" FieldName="amount4" Width="90px">
+                        <dx:GridViewDataTextColumn Caption="90-180金额" FieldName="amount4" Width="70px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="180-360金额" FieldName="amount5" Width="90px">
+                        <dx:GridViewDataTextColumn Caption="180-360金额" FieldName="amount5" Width="70px">
                             <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                         </dx:GridViewDataTextColumn>
                         <dx:GridViewDataTextColumn Caption="360-720以上金额" FieldName="amount6"  Width="90px">
@@ -237,7 +259,7 @@
                     </Styles>
                 </dx:ASPxGridView>
 
-                <dx:WebChartControl ID="ChartA_1" runat="server" CrosshairEnabled="True" Height="300px" Width="810px">
+                <dx:WebChartControl ID="ChartA_1" runat="server" CrosshairEnabled="True" Height="300px" Width="710px">
                 </dx:WebChartControl>
             </div>
         </div>

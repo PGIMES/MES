@@ -231,13 +231,38 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartF.Series.AddRange(listF.ToArray());
         ChartF.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
+        //gv_tr_list_his
+        SetGrid(gv_tr_list_his, ds.Tables[6], 80, "typedesc");
+        gv_tr_list_his.Columns["typedesc"].Caption = "月份/金额";
+
+        //图Chart_his
+        DataTable dt_Chart_his = ds.Tables[6];
+        Chart_his.Series.Clear();
+
+        List<Series> list_hist = new List<Series>();
+        Series series_hist = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
+        if (dt_Chart_his.Rows.Count >= 1)
+        {
+            for (int i = 1; i < dt_Chart_his.Columns.Count; i++)
+            {
+                string argument = dt_Chart_his.Columns[i].ColumnName;//参数名称 
+                decimal value = Convert.ToDecimal(dt_Chart_his.Rows[0][i].ToString() == "" ? "0" : dt_Chart_his.Rows[0][i].ToString());//参数值
+                series_hist.Points.Add(new SeriesPoint(argument, value));
+            }
+        }
+
+        series_hist.ArgumentScaleType = ScaleType.Qualitative;
+        list_hist.Add(series_hist);
+        Chart_his.Series.AddRange(list_hist.ToArray());
+        Chart_his.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
         //grid 3
-        SetGrid(gv_tr_list_3, ds.Tables[6], 90, "typedesc;days");
+        SetGrid(gv_tr_list_3, ds.Tables[7], 90, "typedesc;days");
         gv_tr_list_3.Columns["typedesc"].Caption = "分类";
         gv_tr_list_3.Columns["days"].Caption = "在库天数";
 
         //图C
-        DataTable dt_chartC = ds.Tables[7];
+        DataTable dt_chartC = ds.Tables[8];
         ChartC.Series.Clear();
 
         List<Series> listC = new List<Series>();
@@ -261,11 +286,11 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartC.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 5
-        SetGrid(gv_tr_list_5, ds.Tables[8], 90, "typedesc");
+        SetGrid(gv_tr_list_5, ds.Tables[9], 90, "typedesc");
         gv_tr_list_5.Columns["typedesc"].Caption = "分类";
 
         //图E
-        DataTable dt_chartE = ds.Tables[9];
+        DataTable dt_chartE = ds.Tables[10];
         ChartE.Series.Clear();
 
         List<Series> listE = new List<Series>();
@@ -289,11 +314,11 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartE.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //grid 7
-        SetGrid(gv_tr_list_7, ds.Tables[10], 90, "typedesc");
+        SetGrid(gv_tr_list_7, ds.Tables[11], 90, "typedesc");
         gv_tr_list_7.Columns["typedesc"].Caption = "分类";
 
         //图G
-        DataTable dt_chartG = ds.Tables[11];
+        DataTable dt_chartG = ds.Tables[12];
         ChartG.Series.Clear();
 
         List<Series> listG = new List<Series>();
