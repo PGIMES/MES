@@ -79,7 +79,12 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ds.Tables[0].Columns["amount1"].ColumnName = "0-30金额"; ds.Tables[0].Columns["amount2"].ColumnName = "30-60金额";
         ds.Tables[0].Columns["amount3"].ColumnName = "60-90金额"; ds.Tables[0].Columns["amount4"].ColumnName = "90-180金额";
         ds.Tables[0].Columns["amount5"].ColumnName = "180-360金额"; ds.Tables[0].Columns["amount6"].ColumnName = "360-720金额";
-        ds.Tables[0].Columns["amount7"].ColumnName = "720以上金额"; 
+        ds.Tables[0].Columns["amount7"].ColumnName = "720以上金额";
+
+        ds.Tables[1].Columns["amount1"].ColumnName = "0-30金额"; ds.Tables[1].Columns["amount2"].ColumnName = "30-60金额";
+        ds.Tables[1].Columns["amount3"].ColumnName = "60-90金额"; ds.Tables[1].Columns["amount4"].ColumnName = "90-180金额";
+        ds.Tables[1].Columns["amount5"].ColumnName = "180-360金额"; ds.Tables[1].Columns["amount6"].ColumnName = "360-720金额";
+        ds.Tables[1].Columns["amount7"].ColumnName = "720以上金额";
 
         DataTable dt_chartA_1 = ds.Tables[0];
         if (ChartA_1.Diagram != null)
@@ -89,23 +94,52 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartA_1.Series.Clear();
 
         List<Series> listA_1 = new List<Series>();
-        Series seriesA_1_1 = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
+
+        DataTable dt_chart_A_1_amount = ds.Tables[1];
+        if (dt_chart_A_1_amount.Rows.Count >= 1)
+        {
+            for (int row = 0; row < dt_chart_A_1_amount.Rows.Count; row++)
+            {
+                Series seriesA_1_1 = new Series(dt_chart_A_1_amount.Rows[row]["pt_status"].ToString(), DevExpress.XtraCharts.ViewType.StackedBar);
+                for (int i = 1; i < dt_chart_A_1_amount.Columns.Count; i++)
+                {
+                    string argument = dt_chart_A_1_amount.Columns[i].ColumnName;//参数名称 
+                    decimal value = Convert.ToDecimal(dt_chart_A_1_amount.Rows[row][i].ToString() == "" ? "0" : dt_chart_A_1_amount.Rows[row][i].ToString());//参数值
+                    seriesA_1_1.Points.Add(new SeriesPoint(argument, value));
+                }
+                seriesA_1_1.ArgumentScaleType = ScaleType.Qualitative;
+                //seriesA_1_1.Label.TextPattern = "{V:F0}";
+                //seriesA_1_1.LabelsVisibility = DefaultBoolean.True;
+                //switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
+                //{
+                //    case "AC":
+                //        seriesA_1_1.View.Color = System.Drawing.Color.DarkBlue;//.FromName("#426FA5"); 
+                //        break;
+                //    case "OBS":
+                //        seriesA_1_1.View.Color = System.Drawing.Color.Gray;
+                //        break;
+                //    case "DEAD":
+                //        seriesA_1_1.View.Color = System.Drawing.Color.LightGray;
+                //        break;
+                //    default:
+                //        break;
+                //}
+
+                listA_1.Add(seriesA_1_1);
+            }
+        }
+
         Series seriesA_1_2 = new Series("金额占比", DevExpress.XtraCharts.ViewType.Line);
         for (int i = 1; i <= 7; i++)
         {
             string argument = dt_chartA_1.Columns[i].ColumnName;//参数名称 
 
-            decimal value = Convert.ToDecimal(dt_chartA_1.Rows[0][i].ToString() == "" ? "0" : dt_chartA_1.Rows[0][i].ToString());//参数值
-            seriesA_1_1.Points.Add(new SeriesPoint(argument, value));
-
             decimal value_2 = Convert.ToDecimal(dt_chartA_1.Rows[1][i].ToString() == "" ? "0" : dt_chartA_1.Rows[1][i].ToString());//参数值
             seriesA_1_2.Points.Add(new SeriesPoint(argument, value_2));
 
         }
-        seriesA_1_1.ArgumentScaleType = ScaleType.Qualitative;
         seriesA_1_2.ArgumentScaleType = ScaleType.Qualitative;
-
-        listA_1.Add(seriesA_1_1); listA_1.Add(seriesA_1_2);
+        listA_1.Add(seriesA_1_2);
 
         ChartA_1.Series.AddRange(listA_1.ToArray());
         ChartA_1.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
@@ -232,27 +266,58 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         ChartF.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
         //gv_tr_list_his
-        SetGrid(gv_tr_list_his, ds.Tables[6], 80, "typedesc");
+        DataTable dt_his = ds.Tables[6].Copy();
+        DataTable dt_Chart_his = ds.Tables[6].Copy();
+        for (int i = dt_his.Rows.Count - 1; i >= 0; i--)
+        {
+            if (dt_his.Rows[i]["pt_status"].ToString() != "合计") { dt_his.Rows.Remove(dt_his.Rows[i]); }
+        }
+        for (int i = dt_Chart_his.Rows.Count - 1; i >= 0; i--)
+        {
+            if (dt_Chart_his.Rows[i]["pt_status"].ToString() == "合计") { dt_Chart_his.Rows.Remove(dt_Chart_his.Rows[i]); }
+        }
+
+        dt_his.Columns.Remove("pt_status");
+        SetGrid(gv_tr_list_his, dt_his, 80, "typedesc");
         gv_tr_list_his.Columns["typedesc"].Caption = "月份/金额";
 
         //图Chart_his
-        DataTable dt_Chart_his = ds.Tables[6];
         Chart_his.Series.Clear();
 
         List<Series> list_hist = new List<Series>();
-        Series series_hist = new Series("金额", DevExpress.XtraCharts.ViewType.Bar);
         if (dt_Chart_his.Rows.Count >= 1)
         {
-            for (int i = 1; i < dt_Chart_his.Columns.Count; i++)
+            for (int row = 0; row < dt_Chart_his.Rows.Count; row++)
             {
-                string argument = dt_Chart_his.Columns[i].ColumnName;//参数名称 
-                decimal value = Convert.ToDecimal(dt_Chart_his.Rows[0][i].ToString() == "" ? "0" : dt_Chart_his.Rows[0][i].ToString());//参数值
-                series_hist.Points.Add(new SeriesPoint(argument, value));
+                Series series_hist = new Series(dt_Chart_his.Rows[row]["pt_status"].ToString(), DevExpress.XtraCharts.ViewType.StackedBar);
+                for (int i = 2; i < dt_Chart_his.Columns.Count; i++)
+                {
+                    string argument = dt_Chart_his.Columns[i].ColumnName;//参数名称 
+                    decimal value = Convert.ToDecimal(dt_Chart_his.Rows[row][i].ToString() == "" ? "0" : dt_Chart_his.Rows[row][i].ToString());//参数值
+                    series_hist.Points.Add(new SeriesPoint(argument, value));
+                }
+                series_hist.ArgumentScaleType = ScaleType.Qualitative;
+                //series_hist.Label.TextPattern = "{V:F0}";
+                //series_hist.LabelsVisibility = DefaultBoolean.True;
+                //switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
+                //{
+                //    case "AC":
+                //        series_hist.View.Color = System.Drawing.Color.DarkBlue;//.FromName("#426FA5"); 
+                //        break;
+                //    case "OBS":
+                //        series_hist.View.Color = System.Drawing.Color.Gray;
+                //        break;
+                //    case "DEAD":
+                //        series_hist.View.Color = System.Drawing.Color.LightGray;
+                //        break;
+                //    default:
+                //        break;
+                //}
+
+                list_hist.Add(series_hist);
             }
         }
-
-        series_hist.ArgumentScaleType = ScaleType.Qualitative;
-        list_hist.Add(series_hist);
+        
         Chart_his.Series.AddRange(list_hist.ToArray());
         Chart_his.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
 
