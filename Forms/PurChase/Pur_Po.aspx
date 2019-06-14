@@ -463,6 +463,9 @@
                 if($(item).find("input[id*=PlanReceiveDate]").val()==""){
                     msg+="第"+(index+1)+"行【计划到货日期】不可为空.<br />";
                 }
+                if($(item).find("input[type!=hidden][id*=TaxRate]").val()==""){
+                    msg+="第"+(index+1)+"行【税率】不可为空.<br />";
+                }
             });
 
             if ($("input[type!=hidden][id*='PoType']").val()=="合同"){
