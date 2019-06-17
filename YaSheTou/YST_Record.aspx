@@ -294,7 +294,7 @@
                                 height: 70px;">
                                 <asp:Button ID="btn_Save" runat="server" Font-Size="X-Large"
                                     class="btn btn-primary" Style="position: absolute; left: -1;
-                                    right: 1px; width: 200px; top: -1px; height: 70px;" Text="确认" onclick="btn_Save_Click"
+                                    right: 1px; width: 200px; top: -1px; height: 70px;" Text="确认" onclick="btn_Save_Click" 
                                         />
                             </div>
                             <div id="Div7" runat="server" class="col-sm-6  col-md-offset-2" style="padding: 0;

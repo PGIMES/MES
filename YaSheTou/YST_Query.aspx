@@ -57,7 +57,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" 
-                        AutoGenerateColumns="False" Width="1100px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid">
+                        AutoGenerateColumns="False" Width="1100px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
@@ -72,7 +72,8 @@
                             <%--<dx:GridViewDataTextColumn Caption="类别" FieldName="change_type" Width="70px" VisibleIndex="3"></dx:GridViewDataTextColumn>--%> 
                             <dx:GridViewDataTextColumn Caption="开始使用模次" FieldName="start_mc" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="本次使用模次" FieldName="deal_mc" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="结束使用模次" FieldName="end_mc" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="结束使用模次" FieldName="end_mc" Width="80px" VisibleIndex="6"
+                                 ToolTip="未满足18000报废，标注红色；满足25000尚未报废，表示黄色"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="压射头状态" FieldName="yzt_status" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="备注" FieldName="remark" Width="130px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="操作人" FieldName="emp_name" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>

@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using DevExpress.Web;
+using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -61,5 +62,26 @@ public partial class YaSheTou_YST_Query : System.Web.UI.Page
         QueryASPxGridView();
         ScriptManager.RegisterStartupScript(this, e.GetType(), "merge", "setHeight();", true);
     }
+    protected void gv_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data) return;
 
+        int end_mc = Convert.ToInt32(e.GetValue("end_mc").ToString() == "" ? "0" : e.GetValue("end_mc").ToString());
+        if (e.GetValue("yzt_status").ToString() == "报废")
+        {
+            if (end_mc < 18000)
+            {
+                e.Row.Cells[5].Style.Add("background-color", "#FF0000");
+                e.Row.Cells[5].Style.Add("color", "#FFFFFF");
+            }
+        }
+        else
+        {
+            if (end_mc > 25000)
+            {
+                e.Row.Cells[5].Style.Add("background-color", "#EEEE00");
+            }
+        }
+
+    }
 }

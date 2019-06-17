@@ -83,14 +83,32 @@ public partial class YaSheTou_YST_Maintain : System.Web.UI.Page
     {
         if (e.RowType != GridViewRowType.Data) return;
 
-        if (Convert.ToInt32(e.GetValue("mc").ToString()) < Convert.ToInt32(e.GetValue("lj_mc").ToString()))
+        //if (Convert.ToInt32(e.GetValue("mc").ToString()) < Convert.ToInt32(e.GetValue("lj_mc").ToString()))
+        //{
+        //    e.Row.Cells[6].Style.Add("background-color", "#EEEE00");
+        //}
+        //if (e.GetValue("yzt_status").ToString()=="报废")
+        //{
+        //    e.Row.Cells[8].Style.Add("background-color", "#FF0000");
+        //    e.Row.Cells[8].Style.Add("color", "#FFFFFF");
+        //}
+
+        int lj_mc = Convert.ToInt32(e.GetValue("lj_mc").ToString() == "" ? "0" : e.GetValue("lj_mc").ToString());
+        if (e.GetValue("yzt_status").ToString() == "报废")
         {
-            e.Row.Cells[6].Style.Add("background-color", "#EEEE00");
+            if (lj_mc < 18000)
+            {
+                e.Row.Cells[6].Style.Add("background-color", "#FF0000");
+                e.Row.Cells[6].Style.Add("color", "#FFFFFF");
+            }
         }
-        if (e.GetValue("yzt_status").ToString()=="报废")
+        else
         {
-            e.Row.Cells[8].Style.Add("background-color", "#FF0000");
-            e.Row.Cells[8].Style.Add("color", "#FFFFFF");
+            if (lj_mc > 25000)
+            {
+                e.Row.Cells[6].Style.Add("background-color", "#EEEE00");
+            }
         }
+
     }
 }

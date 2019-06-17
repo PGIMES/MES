@@ -105,7 +105,8 @@
                             <dx:GridViewDataTextColumn Caption="额定模次" FieldName="mc" Width="80px" VisibleIndex="3"></dx:GridViewDataTextColumn>    
                             <dx:GridViewDataTextColumn Caption="供应商" FieldName="gys_name" Width="120px" VisibleIndex="4"></dx:GridViewDataTextColumn>  
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="part" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="累计模次" FieldName="lj_mc" Width="80px" VisibleIndex="6"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="累计模次" FieldName="lj_mc" Width="80px" VisibleIndex="6"
+                                ToolTip="未满足18000报废，标注红色；满足25000尚未报废，表示黄色"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="位置" FieldName="wz" Width="130px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="状态" FieldName="yzt_status" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="创建时间" FieldName="CreateTime" Width="140px" VisibleIndex="7">

@@ -324,9 +324,14 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
                 txt_end_mc.Text = "";
                 return;
             }
-            if (ddl_status.SelectedValue == "正常" && ddl_xwz.SelectedValue == "")
+            //if (ddl_status.SelectedValue == "正常" && ddl_xwz.SelectedValue == "")
+            //{
+            //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【状态】为 正常,【下位置】不可为空！')", true);
+            //    return;
+            //}
+            if (ddl_xwz.SelectedValue == "")
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【状态】为 正常,【下位置】不可为空！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【下位置】不可为空！')", true);
                 return;
             }
             ls_sum = sql(changetype);
@@ -354,6 +359,8 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
             ls_sum = sql(changetype);
         }
 
+        btn_Save.Enabled = false; 
+
         int ln = 0;
         try
         {
@@ -374,12 +381,24 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
         else
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('确认失败！')", true);
+            btn_Save.Enabled = true; 
         }
     }
 
     public List<Pgi.Auto.Common> sql_S(string changetype)
     {
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
+
+        string sql = @"select * from (
+	                        select code from [dbo].[MES_YaSheTou_Status] where enddate is null
+	                        union
+	                        select code from MES_YaSheTou_Record where yzt_status='报废'
+	                        ) a where code='" + ddl_code_S.SelectedValue + "'";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count > 0)//已经存在上的记录 or 报废的，不可重复插入
+        {
+            return ls_sum;
+        }
 
         Pgi.Auto.Common ls_status_insert = new Pgi.Auto.Common();
         string sql_status_insert = @"insert into MES_YaSheTou_Status(equip_no, equip_name, code, mc, gys, zj, startdate)
@@ -407,7 +426,14 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
     public List<Pgi.Auto.Common> sql(string changetype)
     {
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
-       
+
+        string sql = @"select code from [dbo].[MES_YaSheTou_Status] where equip_no='"+ txtSheBeiHao.Value + "' and code='" + ddl_code.SelectedValue + "' and enddate is null";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count <= 0)//不存在上的记录，不可插入
+        {
+            return ls_sum;
+        }
+
         if (changetype == "仅下" || changetype == "先下再上")
         {
             Pgi.Auto.Common ls_status_update = new Pgi.Auto.Common();
