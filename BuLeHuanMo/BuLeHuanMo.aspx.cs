@@ -79,7 +79,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
     //确认投料
     protected void btnTouLiao_confirm_1_Click(object sender, EventArgs e)
     {
-         Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('投料成功！')", true);
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('投料成功！')", true);
     
     }
 
@@ -159,33 +159,35 @@ public partial class BuLeHuanMo : System.Web.UI.Page
         MES_HuanMo_DAL HuanMo_DAL = new MES_HuanMo_DAL();
         if (dropGongHao.SelectedValue == "")
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请选择操作人员工号！')", true);
+            //Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请选择操作人员工号！')", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('请选择操作人员工号！')", true);
             return;
         }
         if (selLeiBie.SelectedValue == "上模" || selLeiBie.SelectedValue == "先卸模再上模")
         {
             if (HuanMo_DAL.GetMoju_statsu(txtMoJuHaoS.Text).Tables[0].Rows.Count == 0)
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('此模具未领用，请先领用！')", true);
+                //Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('此模具未领用，请先领用！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('此模具未领用，请先领用！')", true);
                 return;
             }
         }
-        
+
         if (selYuanYin.Text == "")
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('换模原因不能为空！')", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('换模原因不能为空！')", true);
             return;
         }
         if (selLeiBie.SelectedValue == "")
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('换模类别不能为空！')", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('换模类别不能为空！')", true);
             return;
         }
         if (selYuanYin.SelectedIndex != 3 && selYuanYin.SelectedIndex != 4 && selYuanYin.SelectedIndex != 5)
         {
             if (txtLingJianMingS.Text == "" || txtMoHaoS.Text == "")
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('模具号不存在！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('模具号不存在！')", true);
                 return;
             }
         }
@@ -194,8 +196,8 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             DataTable dt = moju.MoJu_Down_query(Request["deviceid"], txtmojutype_up.Text);
             if (dt.Rows.Count > 0)
             {
-               
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('已经有模具在设备上！')", true);
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('已经有模具在设备上！')", true);
                 return;
 
             }
@@ -206,7 +208,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             {
                 if (txtShuoMing.Text == "")
                 {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
                     return;
                 }
             }
@@ -216,7 +218,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             DataTable dt = moju.MoJu_Down_query(Request["deviceid"], txtmojutype_down.Text);
             if (dt.Rows.Count == 0)
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('该设备上无模具可下模！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('该设备上无模具可下模！')", true);
                 return;
             }
          
@@ -229,7 +231,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             {
                 if (txtShuoMing.Text == "")
                 {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
                     return;
                 }
             }
@@ -238,7 +240,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             DataTable dt = moju.MoJu_Down_query(Request["deviceid"], txtmojutype_down.Text);
             if (dt.Rows.Count == 0)
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('该设备上无模具可下模！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('该设备上无模具可下模！')", true);
                 return;
             }
 
@@ -248,7 +250,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
             if ((txtmojutype_up.Text.Contains(str1) && !txtmojutype_down.Text.Contains(str1)) || (txtmojutype_up.Text.Contains(str2) && !txtmojutype_down.Text.Contains(str2)))
             {
 
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('模具类型必须一致！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('模具类型必须一致！')", true);
                 return;
             }
 
@@ -283,38 +285,53 @@ public partial class BuLeHuanMo : System.Web.UI.Page
     }
     protected void btn_End_Click(object sender, EventArgs e)
     {
-            if (dropZhuangTai.SelectedValue == "异常")
+        if (dropZhuangTai.SelectedValue == "异常")
+        {
+            if (txtShuoMing.Text == "")
             {
-                if (txtShuoMing.Text == "")
-                {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
-                    return;
-                }
-            }
-
-            if ((divShangMo.Visible == true && txtMoJuHaoS.Text.Trim() == "") || (divXiaMo.Visible == true && ddlmoju_down.Text.Trim() == ""))
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('模具号不存在！')", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('异常必须填写！')", true);
                 return;
             }
+        }
 
-            labendtime.Text = DateTime.Now.ToString("yyyy/MM/dd") + " " + DateTime.Now.ToString("HH:mm:ss");
-            moju.MoJu_Change_Update(dropGongHao.SelectedValue, txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value, selLeiBie.SelectedValue, selYuanYin.SelectedValue, selYuanYinLeiBie.Text, txtMoJuHaoS.Text, txtMoHaoS.Text, txtLingJianMingS.Text, ddlmoju_down.SelectedValue, txtMoHao.Text, txtLingJianMing.Text, dropZhuangTai.SelectedValue, txtShuoMing.Text, dropShengChang.SelectedValue, lblStart_time.Text, labendtime.Text, txtmojutype_up.Text, txtmojutype_down.Text);
+        if ((divShangMo.Visible == true && txtMoJuHaoS.Text.Trim() == "") || (divXiaMo.Visible == true && ddlmoju_down.Text.Trim() == ""))
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('模具号不存在！')", true);
+            return;
+        }
 
-
-
-            if (selLeiBie.SelectedValue == "先卸模再上模" || selLeiBie.SelectedValue == "下模")
+        //add by 压射头记录
+        if (selLeiBie.SelectedValue == "先卸模再上模" || selLeiBie.SelectedValue == "下模")
+        {
+            string sql = @"select top 1 isnull(deal_mc,0) from MES_YaSheTou_Record 
+                        where equip_no='{0}' and CreateTime< GETDATE() and CreateTime> DATEADD(MI, -30, GETDATE())
+                        order by CreateTime desc";
+            sql = string.Format(sql, txtSheBeiHao.Value);
+            DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+            if (dt.Rows.Count <= 0)
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('换模成功！'); layer.open({    type: 2,    title: '模具入库',    shadeClose: true,    shade: 0.8,    area: ['600px', '450px']," +
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('结束换模前，请先维护【压射头记录】！')", true);
+                return;
+            }
+        }
+
+        labendtime.Text = DateTime.Now.ToString("yyyy/MM/dd") + " " + DateTime.Now.ToString("HH:mm:ss");
+        moju.MoJu_Change_Update(dropGongHao.SelectedValue, txtXingMing.Value, txtBanBie.Value, txtBanZu.Value, txtSheBeiHao.Value, txtSheBeiJianCheng.Value, selLeiBie.SelectedValue, selYuanYin.SelectedValue, selYuanYinLeiBie.Text, txtMoJuHaoS.Text, txtMoHaoS.Text, txtLingJianMingS.Text, ddlmoju_down.SelectedValue, txtMoHao.Text, txtLingJianMing.Text, dropZhuangTai.SelectedValue, txtShuoMing.Text, dropShengChang.SelectedValue, lblStart_time.Text, labendtime.Text, txtmojutype_up.Text, txtmojutype_down.Text);
+
+
+
+        if (selLeiBie.SelectedValue == "先卸模再上模" || selLeiBie.SelectedValue == "下模")
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('换模成功！'); layer.open({    type: 2,    title: '模具入库',    shadeClose: true,    shade: 0.8,    area: ['600px', '450px']," +
                                                                                                                   "  content: 'Moju_RK.aspx?mojuno=" + ddlmoju_down.SelectedValue + "&sbno=" + txtSheBeiHao.Value + "'" +
                                                                                                                 "})", true);
-            }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('换模成功！')", true);
-            }
-               
-         
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('换模成功！')", true);
+        }
+
+
 
         labendtime.Text = "";
         lblStart_time.Text = "";
@@ -324,7 +341,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
         btn_Start.CssClass = "btn btn-large btn-primary ";
         SetEmpty();//清空栏位
 
-       
+
     }
     public void SetEmpty()
     {
@@ -418,7 +435,7 @@ public partial class BuLeHuanMo : System.Web.UI.Page
         else
         {
             txtLingJianMingS.Text = "";
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('模具号不存在，请联系模具管理员及时维护该模具号！')", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('模具号不存在，请联系模具管理员及时维护该模具号！')", true);
             return;
         }
     }
