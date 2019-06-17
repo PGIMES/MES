@@ -73,7 +73,7 @@
                             <dx:GridViewDataTextColumn Caption="开始使用模次" FieldName="start_mc" Width="80px" VisibleIndex="4"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="本次使用模次" FieldName="deal_mc" Width="80px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="结束使用模次" FieldName="end_mc" Width="80px" VisibleIndex="6"
-                                 ToolTip="未满足18000报废，标注红色；满足25000尚未报废，表示黄色"></dx:GridViewDataTextColumn> 
+                                 ToolTip="未满足18000报废，标注红色；满足25000尚未报废，标注黄色"></dx:GridViewDataTextColumn> 
                             <dx:GridViewDataTextColumn Caption="压射头状态" FieldName="yzt_status" Width="80px" VisibleIndex="7"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="备注" FieldName="remark" Width="130px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="操作人" FieldName="emp_name" Width="80px" VisibleIndex="9"></dx:GridViewDataTextColumn>
