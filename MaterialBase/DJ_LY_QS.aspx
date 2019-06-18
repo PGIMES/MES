@@ -106,6 +106,7 @@
                                           <asp:ListItem Value="">全部</asp:ListItem>
                                           <asp:ListItem>工程</asp:ListItem>
                                            <asp:ListItem>生产</asp:ListItem>
+                                           <asp:ListItem>物流</asp:ListItem>
                                            </asp:DropDownList></td>
                                 <td>
                                     <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Button1_Click" Width="100px" />   </td>
@@ -172,6 +173,32 @@
                     Height="300px" Width="1000px" 
                        >
                 </dx:WebChartControl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div  class="col-lg-12 ">
+        <div class=" panel panel-info col-lg-6 ">
+            <div class="panel panel-heading">
+                <asp:Label ID="Label4" runat="server" Text="金额"></asp:Label>
+            </div>
+            <div class="panel panel-body">
+                <div style="float: left">
+                   <dx:WebChartControl ID="ChartE" runat="server" CrosshairEnabled="True" Height="300px" Width="900px">
+                    </dx:WebChartControl>                  
+                </div>
+            </div>
+        </div>
+    
+        <div class=" panel panel-info col-lg-6 ">
+            <div class="panel panel-heading">
+                <asp:Label ID="Label5" runat="server" Text="一年内不同刀具类型刀具报废金额"></asp:Label>
+            </div>
+            <div class="panel panel-body">
+                <div style="float: left">
+                    <dx:WebChartControl ID="ChartF" runat="server" CrosshairEnabled="True" Height="300px" Width="1000px">
+                    </dx:WebChartControl>
                 </div>
             </div>
         </div>

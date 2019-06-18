@@ -16,37 +16,83 @@ public partial class MaterialBase_DJ_LY_QS : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         lblMstS.Text = "按周统计刀具领用金额";
+        Label4.Text = "按周统计刀具报废金额";
         QueryYear();
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
         QueryYear();
         lblMstS.Text = "按" + drop_period.SelectedItem.Text + "统计刀具领用金额";
+        Label4.Text = "按" + drop_period.SelectedItem.Text + "统计刀具报废金额";
     }
+
+    //public void QueryYear()
+    //{
+
+    //    DataSet ds = DbHelperSQL.Query("exec  usp_DJLY_QS '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+    //    //bindChartByYear(ds.Tables[0]);
+    //    ChartA.Series.Clear(); 
+    //    CreateChartA(ds.Tables[0]);
+
+    //    DataSet ds_djlx = DbHelperSQL.Query("exec  usp_DJLY_QS_ByDjlx_xg '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+    //    // bindChartByDJLX(ds_djlx.Tables[0]);
+    //    ChartB.Series.Clear();
+    //    CreateChartB(ds_djlx.Tables[0]);
+
+    //    DataSet ds_cpdl = DbHelperSQL.Query("exec  usp_DJLY_QS_ByCPDL_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+    //    ChartC.Series.Clear();
+    //    CreateChartC(ds_cpdl.Tables[0]);
+
+
+    //    DataSet ds_gys = DbHelperSQL.Query("exec  usp_DJLY_QS_ByGYS_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+    //    ChartD.Series.Clear(); 
+    //    CreateChartD(ds_gys.Tables[0]);
+
+    //}
 
     public void QueryYear()
     {
-        
-        DataSet ds = DbHelperSQL.Query("exec  usp_DJLY_QS '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
-        //bindChartByYear(ds.Tables[0]);
-        ChartA.Series.Clear();
-        CreateChartA(ds.Tables[0]);
+        ChartA.Series.Clear(); ChartA.Visible = false;
+        ChartB.Series.Clear(); ChartB.Visible = false;
+        ChartC.Series.Clear(); ChartC.Visible = false;
+        ChartD.Series.Clear(); ChartD.Visible = false;
+        ChartE.Series.Clear(); ChartE.Visible = false;
+        ChartF.Series.Clear(); ChartF.Visible = false;
 
-        DataSet ds_djlx = DbHelperSQL.Query("exec  usp_DJLY_QS_ByDjlx_xg '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
-       // bindChartByDJLX(ds_djlx.Tables[0]);
-        ChartB.Series.Clear();
-        CreateChartB(ds_djlx.Tables[0]);
+        if (drop_dept.SelectedValue != "物流")
+        {
+            DataSet ds = DbHelperSQL.Query("exec  usp_DJLY_QS '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            //bindChartByYear(ds.Tables[0]);
+            ChartA.Series.Clear(); ChartA.Visible = true;
+            CreateChartA(ds.Tables[0]);
 
-        DataSet ds_cpdl = DbHelperSQL.Query("exec  usp_DJLY_QS_ByCPDL_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
-        ChartC.Series.Clear();
-        CreateChartC(ds_cpdl.Tables[0]);
+            DataSet ds_djlx = DbHelperSQL.Query("exec  usp_DJLY_QS_ByDjlx_xg '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            // bindChartByDJLX(ds_djlx.Tables[0]);
+            ChartB.Series.Clear(); ChartB.Visible = true;
+            CreateChartB(ds_djlx.Tables[0]);
+
+            DataSet ds_cpdl = DbHelperSQL.Query("exec  usp_DJLY_QS_ByCPDL_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            ChartC.Series.Clear(); ChartC.Visible = true;
+            CreateChartC(ds_cpdl.Tables[0]);
 
 
-        DataSet ds_gys = DbHelperSQL.Query("exec  usp_DJLY_QS_ByGYS_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
-        ChartD.Series.Clear();
-        CreateChartD(ds_gys.Tables[0]);
+            DataSet ds_gys = DbHelperSQL.Query("exec  usp_DJLY_QS_ByGYS_XG '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            ChartD.Series.Clear(); ChartD.Visible = true;
+            CreateChartD(ds_gys.Tables[0]);
+        }
 
+        if (drop_dept.SelectedValue == "" || drop_dept.SelectedValue == "物流")
+        {
+            DataSet ds_djbf = DbHelperSQL.Query("exec  usp_DJBF_QS '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            ChartE.Series.Clear(); ChartE.Visible = true;
+            CreateChartE(ds_djbf.Tables[0]);
+
+            DataSet ds_djbf_djlx = DbHelperSQL.Query("exec  usp_DJBF_QS_ByDjlx '" + ddl_comp.SelectedValue + "','" + drop_period.SelectedValue + "','" + drop_dept.SelectedValue + "'");
+            ChartF.Series.Clear(); ChartF.Visible = true;
+            CreateChartF(ds_djbf_djlx.Tables[0]);
+        }
     }
+
     //public void bindChartByDJLX(DataTable tbl)
     //{
 
@@ -161,6 +207,39 @@ public partial class MaterialBase_DJ_LY_QS : System.Web.UI.Page
         ((XYDiagram)ChartD.Diagram).AxisX.Label.Angle =350;
         
         this.ChartD.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+    }
+
+    private void CreateChartE(DataTable dt)
+    {
+        #region Series
+        //动态创建多个Series 图形的对象
+        List<Series> list = new List<Series>();
+        int j = 2;
+        for (int i = 2; i < dt.Columns.Count; i++)
+        {
+            list.Add(CreateSeries(dt.Columns[i].ToString(), ViewType.Line, dt, j));
+            j++;
+        }
+        #endregion
+        this.ChartE.Series.AddRange(list.ToArray());
+        this.ChartE.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
+
+    }
+
+    private void CreateChartF(DataTable dt)
+    {
+        #region Series
+        //动态创建多个Series 图形的对象
+        List<Series> list = new List<Series>();
+        int j = 2;
+        for (int i = 0; i < dt.Columns.Count - 4; i++)
+        {
+            list.Add(CreateSeries(dt.Columns[j].ToString(), ViewType.Bar, dt, j));
+            j++;
+        }
+        #endregion
+        this.ChartF.Series.AddRange(list.ToArray());
+        this.ChartF.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
     }
     /// <summary>
     /// 根据数据创建一个图形展现
