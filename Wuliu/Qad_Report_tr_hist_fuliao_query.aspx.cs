@@ -116,7 +116,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
                 switch (dt_chart_A_1_amount.Rows[row]["pt_status"].ToString().ToUpper())
                 {
                     case "AC":
-                        sv1.Color = System.Drawing.Color.DodgerBlue;
+                        sv1.Color = System.Drawing.Color.SteelBlue;
                         break;
                     case "OBS":
                         sv1.Color = System.Drawing.Color.Brown;
@@ -319,7 +319,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
                 switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
                 {
                     case "AC":
-                        sv1.Color = System.Drawing.Color.DodgerBlue;
+                        sv1.Color = System.Drawing.Color.SteelBlue;
                         break;
                     case "OBS":
                         sv1.Color = System.Drawing.Color.Brown;
