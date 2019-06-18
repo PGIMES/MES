@@ -90,6 +90,7 @@
                                           <asp:ListItem Value="">全部</asp:ListItem>
                                           <asp:ListItem>工程</asp:ListItem>
                                            <asp:ListItem>生产</asp:ListItem>
+                                           <asp:ListItem>物流</asp:ListItem>
                                            </asp:DropDownList></td>
 
                                   <td>物料号: </td>
@@ -129,7 +130,7 @@
                         Width="1300px" PaletteName="Civic">
                     </dx:WebChartControl>
 
-                    <dx:ASPxGridView ID="gv_month" runat="server"   
+                    <dx:ASPxGridView ID="gv_month" runat="server" KeyFieldName="type"  
                         onhtmlrowprepared="gv_month_HtmlRowPrepared" 
                         onhtmlrowcreated="gv_month_HtmlRowCreated">
                         <SettingsBehavior AllowSort="False" />

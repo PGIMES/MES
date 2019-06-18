@@ -62,15 +62,16 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
     protected void GetDetail()
     {
         ChartA.Series.Clear();
+        gv_month.Columns.Clear();
 
-        DataSet ds = DbHelperSQL.Query("exec MES_DJ_slamt_ByPeriod  '" + txt_year.SelectedValue + "','" + ddl_comp.SelectedValue + "','" + DDL_type.SelectedValue + "','" + txt_gys.Text + "','" + dropdl.SelectedValue + "','" + drop_dept.SelectedValue + "','"+txt_wlh.Text+"'");
+        DataSet ds = DbHelperSQL.Query("exec MES_DJ_slamt_ByPeriod_New  '" + txt_year.SelectedValue + "','" + ddl_comp.SelectedValue + "','" + DDL_type.SelectedValue + "','" + txt_gys.Text + "','" + dropdl.SelectedValue + "','" + drop_dept.SelectedValue + "','"+txt_wlh.Text+"'");
         
         if (ds.Tables[0].Rows.Count > 0)
         {
             //ViewState["Detail"] = ds.Tables[0];
             //gv_month.DataSource = ds.Tables[0];
             //gv_month.DataBind();
-            Pgi.Auto.Control.SetGrid(this.gv_month, ds.Tables[0],100);
+            Pgi.Auto.Control.SetGrid(this.gv_month, ds.Tables[0],110);
            // Pgi.Auto.Control.SetGrid("DJMnth_QS", "", this.gv_month, ds.Tables[0]);
             this.gv_month.Columns[1].Caption=" ";
             this.gv_month.Columns[0].Visible = false;
@@ -78,14 +79,22 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
             for (int i = 2; i < this.gv_month.DataColumns.Count ; i++)
             {
 
-                this.gv_month.DataColumns[i].ToolTip = "判断规则:刀具占销售额比率大于合计比例,单元格黄色;刀具占销售额比例大于1.2倍合计比例 单元格红色";
+                this.gv_month.DataColumns[i].ToolTip = "判断规则:刀具领用占销售额比率大于合计比例,单元格黄色;刀具占销售额比例大于1.2倍合计比例 单元格红色";
                
                // { this.gv_month.DataColumns[i].PropertiesEdit.DisplayFormatString = "{0:N0}"; }
                    
               
 
             }
-            CreateChart_month(ds.Tables[0]);
+            if (ds.Tables[1].Rows.Count>0)
+            {
+                ChartA.Visible = true;
+                CreateChart_month(ds.Tables[1]);
+            }
+            else
+            {
+                ChartA.Visible = false;
+            }        
         }
       
     }
@@ -95,9 +104,9 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
         #region Series
         //动态创建多个Series 图形的对象
         List<Series> list = new List<Series>();
-        int j = 1;
+        int j = 0;
        
-        for (int i = 1; i <2; i++)
+        for (int i = 0; i <1; i++)
         {
             list.Add(CreateSeries(dt.Rows[i][1].ToString(), ViewType.Line, dt, j));
             j++;
@@ -137,9 +146,9 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
     {
 
 
+        
 
-
-        if (e.VisibleIndex == 3)
+        if (e.KeyValue.ToString().Contains("刀具领用占销售额%"))//e.VisibleIndex == 3
         {
 
             for (int i = 2; i < this.gv_month.DataColumns.Count; i++)
@@ -147,13 +156,13 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
                 if (e.GetValue(this.gv_month.DataColumns[i].FieldName) != System.DBNull.Value)
                 {
                     double hj = Convert.ToDouble(e.GetValue("合计"));
-                    if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > hj && Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) <= 1.2*hj)
+                    if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > hj && Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) <= 1.2 * hj)
                     {
                         //  e.Row.Cells[i].BackColor = System.Drawing.Color.Yellow;
                         e.Row.Cells[i - 1].Style.Add("background-color", "yellow");
 
                     }
-                    else if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > 1.2*hj)
+                    else if (Convert.ToDouble(e.GetValue(this.gv_month.DataColumns[i].FieldName)) > 1.2 * hj)
                     {
                         // e.Row.Cells[i].BackColor = System.Drawing.Color.Red;
                         e.Row.Cells[i - 1].Style.Add("background-color", "red");
@@ -167,9 +176,9 @@ public partial class Sales_Sale_DJQuery : System.Web.UI.Page
         {
             for (int i = 2; i < this.gv_month.DataColumns.Count; i++)
             {
-                if (e.GetValue(this.gv_month.DataColumns[i].FieldName)!=System.DBNull.Value)
+                if (e.GetValue(this.gv_month.DataColumns[i].FieldName) != System.DBNull.Value)
                 {
-                e.Row.Cells[i - 1].Text = Convert.ToDecimal(e.GetValue(this.gv_month.DataColumns[i].FieldName)).ToString("N0"); 
+                    e.Row.Cells[i - 1].Text = Convert.ToDecimal(e.GetValue(this.gv_month.DataColumns[i].FieldName)).ToString("N0");
                 }
             }
         }
