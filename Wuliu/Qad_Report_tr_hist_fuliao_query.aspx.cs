@@ -110,21 +110,30 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
                 seriesA_1_1.ArgumentScaleType = ScaleType.Qualitative;
                 //seriesA_1_1.Label.TextPattern = "{V:F0}";
                 //seriesA_1_1.LabelsVisibility = DefaultBoolean.True;
-                //switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
-                //{
-                //    case "AC":
-                //        seriesA_1_1.View.Color = System.Drawing.Color.DarkBlue;//.FromName("#426FA5"); 
-                //        break;
-                //    case "OBS":
-                //        seriesA_1_1.View.Color = System.Drawing.Color.Gray;
-                //        break;
-                //    case "DEAD":
-                //        seriesA_1_1.View.Color = System.Drawing.Color.LightGray;
-                //        break;
-                //    default:
-                //        break;
-                //}
 
+                BarSeriesView sv1 = (BarSeriesView)seriesA_1_1.View;
+                sv1.FillStyle.FillMode = FillMode.Solid;//    solid 实线，gradient 渐变，hatch 斜形
+                switch (dt_chart_A_1_amount.Rows[row]["pt_status"].ToString().ToUpper())
+                {
+                    case "AC":
+                        sv1.Color = System.Drawing.Color.DodgerBlue;
+                        break;
+                    case "OBS":
+                        sv1.Color = System.Drawing.Color.Brown;
+                        break;
+                    case "DEAD":
+                        sv1.Color = System.Drawing.Color.Gray;
+                        break;
+                    case "SAMPLE":
+                        sv1.Color = System.Drawing.Color.Yellow;
+                        break;
+                    case "":
+                        sv1.Color = System.Drawing.Color.White;
+                        break;
+                    default:
+                        break;
+                }
+                
                 listA_1.Add(seriesA_1_1);
             }
         }
@@ -138,6 +147,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
             seriesA_1_2.Points.Add(new SeriesPoint(argument, value_2));
 
         }
+        seriesA_1_2.View.Color = System.Drawing.Color.Green;
         seriesA_1_2.ArgumentScaleType = ScaleType.Qualitative;
         listA_1.Add(seriesA_1_2);
 
@@ -183,6 +193,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         
         seriesB.ArgumentScaleType = ScaleType.Qualitative;
         seriesB_2.ArgumentScaleType = ScaleType.Qualitative;
+        seriesB_2.View.Color = System.Drawing.Color.Green;
 
         listB.Add(seriesB); listB.Add(seriesB_2);
 
@@ -227,6 +238,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         
         seriesD.ArgumentScaleType = ScaleType.Qualitative;
         seriesD_2.ArgumentScaleType = ScaleType.Qualitative;
+        seriesD_2.View.Color = System.Drawing.Color.Green;
 
         listD.Add(seriesD); listD.Add(seriesD_2);
 
@@ -261,6 +273,8 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         }
         
         seriesF.ArgumentScaleType = ScaleType.Qualitative;
+        seriesF.View.Color = System.Drawing.Color.Green;
+
         listF.Add(seriesF);
         ChartF.Series.AddRange(listF.ToArray());
         ChartF.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
@@ -289,7 +303,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         {
             for (int row = 0; row < dt_Chart_his.Rows.Count; row++)
             {
-                Series series_hist = new Series(dt_Chart_his.Rows[row]["pt_status"].ToString(), DevExpress.XtraCharts.ViewType.StackedBar);
+                Series series_hist = new Series(dt_Chart_his.Rows[row]["pt_status"].ToString(), DevExpress.XtraCharts.ViewType.StackedBar);               
                 for (int i = 2; i < dt_Chart_his.Columns.Count; i++)
                 {
                     string argument = dt_Chart_his.Columns[i].ColumnName;//参数名称 
@@ -299,20 +313,29 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
                 series_hist.ArgumentScaleType = ScaleType.Qualitative;
                 //series_hist.Label.TextPattern = "{V:F0}";
                 //series_hist.LabelsVisibility = DefaultBoolean.True;
-                //switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
-                //{
-                //    case "AC":
-                //        series_hist.View.Color = System.Drawing.Color.DarkBlue;//.FromName("#426FA5"); 
-                //        break;
-                //    case "OBS":
-                //        series_hist.View.Color = System.Drawing.Color.Gray;
-                //        break;
-                //    case "DEAD":
-                //        series_hist.View.Color = System.Drawing.Color.LightGray;
-                //        break;
-                //    default:
-                //        break;
-                //}
+
+                BarSeriesView sv1 = (BarSeriesView)series_hist.View;
+                sv1.FillStyle.FillMode = FillMode.Solid;
+                switch (dt_Chart_his.Rows[row]["pt_status"].ToString().ToUpper())
+                {
+                    case "AC":
+                        sv1.Color = System.Drawing.Color.DodgerBlue;
+                        break;
+                    case "OBS":
+                        sv1.Color = System.Drawing.Color.Brown;
+                        break;
+                    case "DEAD":
+                        sv1.Color = System.Drawing.Color.Gray;
+                        break;
+                    case "SAMPLE":
+                        sv1.Color = System.Drawing.Color.Yellow;
+                        break;
+                    case "":
+                        sv1.Color = System.Drawing.Color.White;
+                        break;
+                    default:
+                        break;
+                }
 
                 list_hist.Add(series_hist);
             }
