@@ -134,7 +134,7 @@
                             AutoGenerateColumns="False"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
                             OnRowDataBound="GridView1_RowDataBound"
-                            OnSorting="GridView1_Sorting" PageSize="100" Width="1500px">
+                            OnSorting="GridView1_Sorting" PageSize="100" Width="1600px">
                             <Columns>
                                 <asp:BoundField DataField="Hd_zybno" HeaderText="转运包序列号">
                                     <HeaderStyle BackColor="#C1E2EB" />
@@ -155,6 +155,11 @@
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Hd_time" HeaderText="精炼完成时间">
                                     <HeaderStyle BackColor="#C1E2EB" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="zyjg"
+                                    HeaderText="转运包&lt;br&gt;循环时间&lt;br&gt;(Min)" HtmlEncode="False">
+                                    <HeaderStyle BackColor="#C1E2EB" />
+                                    <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="jljg"
                                     HeaderText="精炼间隔&lt;br&gt;(Min)" HtmlEncode="False">
