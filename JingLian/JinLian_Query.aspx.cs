@@ -41,8 +41,11 @@ public partial class JingLian_JinLian_Query : System.Web.UI.Page
             else
             {
                 DIV1.Style.Add("display", "block");
-
             }
+            //--added by fish 19.06.11
+            var gongwei = Request["gongwei"];
+            BaseFun.setDropSelectValue(ddlsbno, gongwei, "");
+
         }
     }
     protected void txt_gh_SelectedIndexChanged(object sender, EventArgs e)
@@ -52,7 +55,7 @@ public partial class JingLian_JinLian_Query : System.Web.UI.Page
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         this.GridView1.PageIndex = e.NewPageIndex;
-        DataTable dt = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, Request["gongwei"]);
+        DataTable dt = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, ddlsbno.SelectedValue);
         GridView1.DataSource = dt;
         GridView1.DataBind();
     }
@@ -88,7 +91,7 @@ public partial class JingLian_JinLian_Query : System.Web.UI.Page
                 ViewState["sortdirection"] = "asc";
             }
         }
-        DataTable ldt2 = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, Request["gongwei"]);
+        DataTable ldt2 = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, ddlsbno.SelectedValue);
         DataView dv = ldt2.DefaultView;
         if (ViewState["sortexpression"] != null)
         {
@@ -100,7 +103,7 @@ public partial class JingLian_JinLian_Query : System.Web.UI.Page
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
-        DataTable dt = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, Request["gongwei"]);
+        DataTable dt = Function_Jinglian.Hydrogen_Query_ByGW(1, txt_zybno.Text, txt_hejin.Text, txt_startdate.Text, txt_enddate.Text, txt_banzu.Text, txt_luhao.Text, txt_czg.Text, ddlsbno.SelectedValue);
         GridView1.DataSource = dt;
         GridView1.DataBind();
         if (dt == null || dt.Rows.Count <= 0)
