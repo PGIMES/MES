@@ -30,7 +30,13 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
 
     public void Setddl_p_leibie()
     {
-        string strSQL = @"	select pl_prod_line+'|'+pl_desc from [qad].[dbo].qad_pl_mstr where pl_prod_line like '4%' and pl_domain='" + ddl_comp.SelectedValue+"'";
+        //string strSQL = @"	select pl_prod_line+'|'+pl_desc from [qad].[dbo].qad_pl_mstr where pl_prod_line like '4%' and pl_domain='" + ddl_comp.SelectedValue+"'";
+        string strSQL = @"select pl_prod_line+'|'+pl_desc+'-消耗品'  from [qad].[dbo].qad_pl_mstr where pl_prod_line like '4%' and pl_domain='{0}'and pl_prod_line='4010'
+                        union
+                        select pl_prod_line+'|'+pl_desc+'-非消耗品'  from [qad].[dbo].qad_pl_mstr where pl_prod_line like '4%' and pl_domain='{0}'and pl_prod_line='4010'
+                        union
+                        select pl_prod_line+'|'+pl_desc from [qad].[dbo].qad_pl_mstr where pl_prod_line like '4%' and pl_domain='{0}' and pl_prod_line<>'4010'";
+        strSQL = string.Format(strSQL, ddl_comp.SelectedValue);
         DataTable dt = DbHelperSQL.Query(strSQL).Tables[0];
 
         ((ASPxListBox)ASPxDropDownEdit1.FindControl("listBox")).TextField = dt.Columns[0].ColumnName;
@@ -641,7 +647,7 @@ public partial class Wuliu_Qad_Report_tr_hist_fuliao_query : System.Web.UI.Page
         {
             cell[0, col].PutValue(dtList.Columns[col].ColumnName);
             cell[0, col].SetStyle(style_head);
-            cell.SetColumnWidth(col, 15);
+            cell.SetColumnWidth(col, 22);
 
             if (dtList.Columns[col].ColumnName.Contains("原因"))
             {
