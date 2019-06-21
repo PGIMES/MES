@@ -309,6 +309,7 @@
                                         <li><a href="/Fin/WorkOrder_Report.aspx" target="_blank">工单 会计事务/发料会计事务/历史记录 查询</a></li>
                                         <li><a href="/Fin/InventoryAccount_Report.aspx" target="_blank">库存会计事务浏览</a></li>
                                         <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
+                                        <li><a href="/Forms/PurChase/PUR_RCT_PO_FW_Query.aspx" target="_blank">未匹配收货报表-费用服务</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_Fin" name="div_Fin">
@@ -812,6 +813,7 @@
                                         <li><a href="/Forms/PurChase/PO_KPI_Report.aspx" target="_blank">采购工程师KPI查询</a></li>
                                         <li><a href="/MaterialBase/ForProductDay.aspx" target="_blank">采购日程(刀具)查询</a></li>
                                         <li><a href="/Forms/PurChase/PO_Report_Receive.aspx" target="_blank">合同类未收货查询</a></li>
+                                        <li><a href="/Forms/PurChase/PUR_RCT_PO_FW_Query.aspx" target="_blank">未匹配收货报表-费用服务</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_bule2-1">
