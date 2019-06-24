@@ -187,7 +187,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="rctno" AutoGenerateColumns="False"  
-                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnHtmlRowCreated="GV_PART_HtmlRowCreated" Width="1000px"><%--2620--%>
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnHtmlRowCreated="GV_PART_HtmlRowCreated" Width="1000px"><%--2950--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -204,8 +204,8 @@
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
                             <dx:GridViewDataTextColumn Caption="QAD发票号" FieldName="qad_fp_no" Width="80px" VisibleIndex="4" />
-                             <%--<dx:GridViewDataTextColumn Caption="总账账户" FieldName="" Width="100px" VisibleIndex="5" />
-                            <dx:GridViewDataTextColumn Caption="总账描述" FieldName="" Width="200px" VisibleIndex="6" />--%>
+                             <dx:GridViewDataTextColumn Caption="总账账户" FieldName="kjkm_code" Width="80px" VisibleIndex="5" />
+                            <dx:GridViewDataTextColumn Caption="总账描述" FieldName="kjkm_name" Width="250px" VisibleIndex="6" />
                             <dx:GridViewDataTextColumn Caption="验收单号" FieldName="rctno" Width="100px" VisibleIndex="7" >                                
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_rctno" runat="server" Text='<%# Eval("rctno")%>' Cursor="pointer" ClientInstanceName='<%# "rctno_"+Container.VisibleIndex.ToString() %>'
