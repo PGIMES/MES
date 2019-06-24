@@ -209,7 +209,7 @@
                             <dx:GridViewDataTextColumn Caption="验收单号" FieldName="rctno" Width="100px" VisibleIndex="7" >                                
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_rctno" runat="server" Text='<%# Eval("rctno")%>' Cursor="pointer" ClientInstanceName='<%# "rctno_"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="+ Eval("rctno")+"&groupid="+ Eval("rct_GroupID")+"&display=1" %>'  
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=97b862f1-0fd8-4626-80dc-5a8afc57f61a&instanceid="+ Eval("rctno")+"&groupid="+ Eval("rct_GroupID")+"&display=1" %>'  
                                             Target="_blank">                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
