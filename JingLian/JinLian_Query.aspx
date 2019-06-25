@@ -195,17 +195,17 @@
                                     <HeaderStyle BackColor="#C1E2EB" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="hd_bf_wd"
-                                    HeaderText="出料时炉膛&lt;br&gt;铝液铝液&lt;br&gt;温度(℃)" HtmlEncode="False">
+                                    HeaderText="出料时炉膛&lt;br&gt;铝液温度(℃)" HtmlEncode="False">
                                     <HeaderStyle BackColor="#C1E2EB" />
                                     <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="hd_bf_wd_2"
-                                    HeaderText="精炼前温度&lt;br&gt;(℃)" HtmlEncode="False">
+                                    HeaderText="二次精炼&lt;br&gt;前温度(℃)" HtmlEncode="False">
                                     <HeaderStyle BackColor="#C1E2EB" />
                                     <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="HD_af_wd"
-                                    HeaderText="精炼后温度&lt;br&gt;(℃)" HtmlEncode="False">
+                                    HeaderText="二次精炼&lt;br&gt;后温度(℃)" HtmlEncode="False">
                                     <HeaderStyle BackColor="#C1E2EB" />
                                     <ItemStyle HorizontalAlign="Right" />
                                 </asp:BoundField>

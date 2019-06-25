@@ -399,24 +399,24 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-sm-5">
-                                        精炼前温度(℃)：</div>
+                                        二次精炼前温度(℃)：</div>
                                     <div class="col-sm-6">
                                         <asp:TextBox ID="txt_before_wd_2" class="form-control input-small"
                                             runat="server" ReadOnly="True"></asp:TextBox></div>
-                                    <div class="col-sm-12" style="color: #FF0000">*精炼前温度大于700</div>
+                                    <div class="col-sm-12" style="color: #FF0000">*二次精炼前温度大于700</div>
                                     <div class="col-sm-5">
-                                        精炼后温度(℃)：</div>
+                                        二次精炼后温度(℃)：</div>
                                     <div class="col-sm-6">
                                         <asp:TextBox ID="txt_after_wd" class="form-control input-small"
                                             runat="server" ReadOnly="True"></asp:TextBox></div>
                                     <div class="col-sm-12" style="color: #FF0000">
-                                        *精炼后温度要求680至730<br />*精炼后必须除渣，方可做测氢样件<br />*石墨转轴残铝必须清理干净</div>
+                                        *二次精炼后温度要求680至730<br />*精炼后必须除渣，方可做测氢样件<br />*石墨转轴残铝必须清理干净</div>
                                     <div class="col-sm-12 col-md-offset-5">
                                         <div id="Div10" runat="server" style="padding: 0; position: relative;
                                             float: left; top: 0px; left: 0px; width: 200px; height: 70px;">
                                             <asp:Button ID="btn_af_time" runat="server" Font-Size="Large"
                                                 class="btn btn-primary" Style="position: absolute; left: -4;
-                                                right: -15px; width: 200px; top: -1px; height: 70px;" Text="精炼后温度确认"
+                                                right: -15px; width: 200px; top: -1px; height: 70px;" Text="二次精炼后温度确认"
                                                 OnClick="btn_af_time_Click" />
                                             <div id="div11" runat="server">
                                                 <asp:Label ID="lb_af_time" runat="server" Style="position: absolute;

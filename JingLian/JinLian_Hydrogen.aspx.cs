@@ -288,7 +288,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         //add by 20190624
         if (txt_before_wd_2.Text == "")
         {
-            strAlert = strAlert + "layer.alert('请输入精炼前温度！');";
+            strAlert = strAlert + "layer.alert('请输入二次精炼前温度！');";
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
@@ -296,7 +296,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
 
         if (decimal.TryParse(txt_before_wd_2.Text, out f) == false)
         {
-            strAlert = strAlert + "layer.alert('精炼前温度必须为数值型！');";
+            strAlert = strAlert + "layer.alert('二次精炼前温度必须为数值型！');";
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
         }
@@ -304,7 +304,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         {
             if (Convert.ToDecimal(txt_before_wd_2.Text) <= 700)
             {
-                strAlert = strAlert + "layer.alert('精炼前温度要求大于700！！');";
+                strAlert = strAlert + "layer.alert('二次精炼前温度要求大于700！！');";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
 
                 return;
@@ -320,7 +320,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
 
         if (txt_after_wd.Text == "")
         {
-            strAlert = strAlert + "layer.alert('请输入精炼后温度！');";
+            strAlert = strAlert + "layer.alert('请输入二次精炼后温度！');";
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
@@ -328,7 +328,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
 
         if (decimal.TryParse(txt_after_wd.Text, out f) == false)
         {
-            strAlert = strAlert + "layer.alert('精炼后温度必须为数值型！');";
+            strAlert = strAlert + "layer.alert('二次精炼后温度必须为数值型！');";
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
         }
@@ -336,7 +336,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         {
             if (Convert.ToDecimal(txt_after_wd.Text) < 670 || Convert.ToDecimal(txt_after_wd.Text) >730)
             {
-                strAlert = strAlert + "layer.alert('精炼后温度要求大于670小于730！！');";
+                strAlert = strAlert + "layer.alert('二次精炼后温度要求大于670小于730！！');";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
 
                 return;
