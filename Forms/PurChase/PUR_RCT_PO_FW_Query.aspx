@@ -144,7 +144,7 @@
                     <td>
                         <asp:DropDownList ID="ddlType" runat="server" Width="140px"  Height="32px"  class="form-control input-s-md ">
                             <asp:ListItem Text="All" Value="All"></asp:ListItem>
-                            <asp:ListItem Text="" Value="未开票"></asp:ListItem>
+                            <asp:ListItem Text="未开票" Value=""></asp:ListItem>
                             <asp:ListItem Text="已开票" Value="已开票"></asp:ListItem>
                             <asp:ListItem Text="已匹配" Value="已匹配"></asp:ListItem>
                         </asp:DropDownList>
