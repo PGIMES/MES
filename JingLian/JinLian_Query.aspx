@@ -134,7 +134,7 @@
                             AutoGenerateColumns="False"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
                             OnRowDataBound="GridView1_RowDataBound"
-                            OnSorting="GridView1_Sorting" PageSize="100" Width="1600px">
+                            OnSorting="GridView1_Sorting" PageSize="100" Width="1800px">
                             <Columns>
                                 <asp:BoundField DataField="Hd_zybno" HeaderText="转运包序列号">
                                     <HeaderStyle BackColor="#C1E2EB" />
@@ -195,6 +195,11 @@
                                     <HeaderStyle BackColor="#C1E2EB" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="hd_bf_wd"
+                                    HeaderText="出料时炉膛&lt;br&gt;铝液铝液&lt;br&gt;温度(℃)" HtmlEncode="False">
+                                    <HeaderStyle BackColor="#C1E2EB" />
+                                    <ItemStyle HorizontalAlign="Right" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="hd_bf_wd_2"
                                     HeaderText="精炼前温度&lt;br&gt;(℃)" HtmlEncode="False">
                                     <HeaderStyle BackColor="#C1E2EB" />
                                     <ItemStyle HorizontalAlign="Right" />
@@ -228,6 +233,9 @@
                                     <HeaderStyle BackColor="#C1E2EB" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="Hd_sbno" HeaderText="设备">
+                                    <HeaderStyle BackColor="#C1E2EB" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="Hd_cy_yn" HeaderText="油料镶件&lt;br&gt;料重熔" HtmlEncode="False">
                                     <HeaderStyle BackColor="#C1E2EB" />
                                 </asp:BoundField>
                             </Columns>

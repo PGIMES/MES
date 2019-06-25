@@ -2,11 +2,21 @@
     AutoEventWireup="true" CodeFile="JinLian_Hydrogen.aspx.cs"
     Inherits="JingLian_JinLian_Hydrogen" %>
 
+<%@ Register Assembly="DevExpress.Web.v17.2, Version=17.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent"
     runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent"
     runat="Server">
+    <style>
+            /*-webkit-appearance:checkbox;background-color: #f4a100;*/
+        input[id*="chk_cy_yn"][type="checkbox"]{ 
+            width: 20px; 
+            height: 20px; 
+        }
+        
+    </style>
     <script src="../Content/js/jquery.min.js" type="text/javascript"></script>
     <script src="../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script type="text/javascript" language="javascript">
@@ -275,51 +285,59 @@
                         <strong>精炼</strong>
                     </div>
                     <div class="panel-body">
-                        <div class="col-sm-3">
-                            转运包序列号：</div>
-                        <div class="col-sm-3">
-                            <asp:DropDownList ID="txt_zybno" runat="server" 
-                                class="form-control input-small" AutoPostBack="True" onselectedindexchanged="txt_zybno_SelectedIndexChanged"
-                               >
-                            </asp:DropDownList>
+                        <div class="row">
+                            <div class="col-sm-3">转运包序列号：</div>
+                            <div class="col-sm-3">
+                                <asp:DropDownList ID="txt_zybno" runat="server" 
+                                    class="form-control input-small" AutoPostBack="True" onselectedindexchanged="txt_zybno_SelectedIndexChanged"
+                                   >
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-sm-3">转运包号：</div>
+                            <div class="col-sm-3">
+                                <asp:DropDownList ID="txt_zyno" runat="server"  BackColor="Yellow"
+                                    class="form-control input-small" AutoPostBack="True" 
+                                    onselectedindexchanged="txt_zyno_SelectedIndexChanged">
+                                </asp:DropDownList>
+                            </div>
                         </div>
-                          <div class="col-sm-3">
-                                        转运包号：</div>
-                                    <div class="col-sm-3">
-                                     <asp:DropDownList ID="txt_zyno" runat="server"  BackColor="Yellow"
-                                            class="form-control input-small" AutoPostBack="True" 
-                                            onselectedindexchanged="txt_zyno_SelectedIndexChanged">
-                                    </asp:DropDownList></div>
-                        <div class="col-sm-3">
-                            熔炼<br />
-                            炉号：</div>
-                        <div class="col-sm-3">
-                            <asp:DropDownList ID="txt_luhao" runat="server" 
-                                class="form-control input-small" 
+                        <div class="row">
+                            <div class="col-sm-3">熔炼<br />炉号：</div>
+                            <div class="col-sm-3">
+                                <asp:DropDownList ID="txt_luhao" runat="server" 
+                                    class="form-control input-small" 
                                 
-                                onselectedindexchanged="txt_luhao_SelectedIndexChanged" 
-                                AutoPostBack="True">
-                                <asp:ListItem></asp:ListItem>
-                                <asp:ListItem>A</asp:ListItem>
-                                <asp:ListItem>B</asp:ListItem>
-                                <asp:ListItem>C</asp:ListItem>
-                                <asp:ListItem>D</asp:ListItem>
-                                <asp:ListItem>E</asp:ListItem>
-                                <asp:ListItem>F</asp:ListItem>
-                                <asp:ListItem>X</asp:ListItem>
-                            </asp:DropDownList>
+                                    onselectedindexchanged="txt_luhao_SelectedIndexChanged" 
+                                    AutoPostBack="True">
+                                    <asp:ListItem></asp:ListItem>
+                                    <asp:ListItem>A</asp:ListItem>
+                                    <asp:ListItem>B</asp:ListItem>
+                                    <asp:ListItem>C</asp:ListItem>
+                                    <asp:ListItem>D</asp:ListItem>
+                                    <asp:ListItem>E</asp:ListItem>
+                                    <asp:ListItem>F</asp:ListItem>
+                                    <asp:ListItem>X</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-sm-3">合金：</div>
+                            <div class="col-sm-3">
+                                <asp:DropDownList ID="txt_hejin" runat="server" class="form-control input-small">
+                                    <asp:ListItem></asp:ListItem>
+                                    <asp:ListItem>A380</asp:ListItem>
+                                    <asp:ListItem>EN46000</asp:ListItem>
+                                    <asp:ListItem>ADC12</asp:ListItem>
+                                    <asp:ListItem>EN47100</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
                         </div>
-                        <div class="col-sm-3">
-                            合金：</div>
-                        <div class="col-sm-3">
-                            <asp:DropDownList ID="txt_hejin" runat="server" class="form-control input-small">
-                                <asp:ListItem></asp:ListItem>
-                                <asp:ListItem>A380</asp:ListItem>
-                                <asp:ListItem>EN46000</asp:ListItem>
-                                <asp:ListItem>ADC12</asp:ListItem>
-                                <asp:ListItem>EN47100</asp:ListItem>
-                                
-                            </asp:DropDownList>
+                        <div class="row">
+                            <div class="col-sm-3">油料镶件料重熔：<br /> <span style="color: #FF0000">若勾选，则需要做光谱样件</span></div>
+                            <div class="col-sm-3">
+                                <asp:CheckBox ID="chk_cy_yn" runat="server"/>
+                                <span></span>
+                            </div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3"></div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -337,19 +355,19 @@
                                         <asp:UpdatePanel runat="server" ID="UpdatePanelJL">
                                             <ContentTemplate>
                                                 <div class="col-sm-5">
-                                                    出料时炉内铝液温度(℃)：</div>
+                                                    出料时炉膛铝液温度(℃)：</div>
                                                 <div class="col-sm-6">
                                                     <asp:TextBox ID="txt_before_wd" class="form-control input-small"
                                                         runat="server" ReadOnly="True"></asp:TextBox></div>
                                                 <div class="col-sm-12" style="color: #FF0000">
-                                                    *出料时炉内铝液温度要求730至780</div>
+                                                    *出料时炉膛铝液温度要求720至770</div>
                                                    
                                                 <div class="col-sm-12  col-md-offset-5">
                                                     <div id="Div8" runat="server" style="padding: 0; position: relative;
                                                         float: left; top: 0px; left: 0px; width: 200px; height: 70px;">
                                                         <asp:Button ID="btn_bf_time" runat="server" Font-Size="Medium"
                                                             class="btn btn-primary" Style="position: absolute; left: -4;
-                                                            right: -15px; width: 200px; top: 0px; height: 70px;" Text="出料时炉内铝液温度确认"
+                                                            right: -15px; width: 200px; top: 0px; height: 70px;" Text="出料时炉膛铝液温度确认"
                                                             OnClick="btn_bf_time_Click" /> 
                                                         <div id="div9" runat="server">
                                                             <asp:Label ID="lb_bf_time" runat="server" Style="position: absolute; 
@@ -380,6 +398,12 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
+                                    <div class="col-sm-5">
+                                        精炼前温度(℃)：</div>
+                                    <div class="col-sm-6">
+                                        <asp:TextBox ID="txt_before_wd_2" class="form-control input-small"
+                                            runat="server" ReadOnly="True"></asp:TextBox></div>
+                                    <div class="col-sm-12" style="color: #FF0000">*精炼前温度大于700</div>
                                     <div class="col-sm-5">
                                         精炼后温度(℃)：</div>
                                     <div class="col-sm-6">

@@ -520,7 +520,7 @@ public class Function_Jinglian
         return SQLHelper.GetDataSet("MES_JingLian_TJ", param);
     }
 
- public int jinglian_insert_2(int flag, string jl_date, string start, string jl_time, string banbie, string gh, string name, string banzhu, string sbno, string zybno, string luhao, string hejin, string bf_wd, string bf_time, string af_wd, string af_time, string baohao, string pz, string mz, string jz, string zl_time, string gp)
+ public int jinglian_insert_2(int flag, string jl_date, string start, string jl_time, string banbie, string gh, string name, string banzhu, string sbno, string zybno, string luhao, string hejin, string bf_wd, string bf_time, string af_wd, string af_time, string baohao, string pz, string mz, string jz, string zl_time, string gp, string bf_wd_2, string cy_yn)
     {
 
         SqlParameter[] param = new SqlParameter[]
@@ -546,7 +546,9 @@ public class Function_Jinglian
            new SqlParameter("@mz",mz),
            new SqlParameter("@jz",jz),
            new SqlParameter("@zl_time",zl_time),
-           new SqlParameter("@gp_flag",gp)
+           new SqlParameter("@gp_flag",gp),
+           new SqlParameter("@bf_wd_2",bf_wd_2),
+           new SqlParameter("@cy_yn",cy_yn)
 
        };
         return SQLHelper.ExecuteNonQuery("usp_jinglian_end_insert_2", param);

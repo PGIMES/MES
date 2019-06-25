@@ -96,7 +96,8 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         lb_bf_time.Text = "";
         btn_af_time.Enabled = false;
         txt_before_wd.Text = "";
-        txt_after_wd.Text = "";
+        txt_before_wd_2.Text = "";
+        txt_after_wd.Text = "";        
         btn_begin.Enabled = false;
         if (txt_luhao.Text == "" || txt_hejin.Text == "" || txt_gh.Text == "")
         {
@@ -132,7 +133,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         string luhao = txt_luhao.SelectedValue;
         int count=int.Parse(jl_dal.Get_BS(no, hejin).Tables[0].Rows[0][0].ToString());
         //if ((count + 1) % 4 == 0 || hejin == "EN47100")
-        if ((count + 1) % 4 == 0 || luhao == "E" || luhao == "A" || luhao == "F")
+        if ((count + 1) % 4 == 0 || luhao == "E" || luhao == "A" || luhao == "F" || chk_cy_yn.Checked == true)
         {
             gp_flag.Value = "Y";
             btn_gpcs.BackColor = System.Drawing.Color.Yellow;
@@ -175,6 +176,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         lb_af_time.Text = "";
         lb_bf_time.Text = "";
         txt_before_wd.Text = "";
+        txt_before_wd_2.Text = "";
         txt_after_wd.Text = "";
         txt_zybno.BackColor = txt_date.BackColor;
         lb_again.Text = "";
@@ -218,7 +220,7 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         string strAlert = "dtime='" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "';setInterval('show_cur_times()', 1000);";
         if (txt_before_wd.Text == "")
         {
-            strAlert = strAlert + "layer.alert('请输入出炉时炉内铝液温度！');";
+            strAlert = strAlert + "layer.alert('请输入出料时炉膛铝液温度！');";
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
@@ -226,15 +228,15 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
        // decimal xx = decimal.Parse(txt_before_wd.Text);
         if (decimal.TryParse(txt_before_wd.Text, out f) == false)
         {
-            strAlert = strAlert + "layer.alert('出炉时炉内铝液温度必须为数值型！');";
+            strAlert = strAlert + "layer.alert('出料时炉膛铝液温度必须为数值型！');";
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
             return;
         }
         else
         {
-            if (Convert.ToDecimal(txt_before_wd.Text) < 730 || Convert.ToDecimal(txt_before_wd.Text) >780)
+            if (Convert.ToDecimal(txt_before_wd.Text) < 720 || Convert.ToDecimal(txt_before_wd.Text) >770)
             {
-                strAlert = strAlert + "layer.alert('出炉时炉内铝液温度要求大于730小于780！！');";
+                strAlert = strAlert + "layer.alert('出料时炉膛铝液温度要求大于720小于770！！');";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
 
                 return;
@@ -254,11 +256,14 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
             btn_gpcs.BackColor = txt_hejin.BackColor;
            // btn_gpcs.CssClass = "btn btn-primary";
             btn_af_time.Enabled = false;
+            txt_before_wd_2.ReadOnly = true;
             txt_after_wd.ReadOnly = true;
         }
         else
         {
             btn_af_time.Enabled = true;
+            txt_before_wd_2.ReadOnly = false;
+            txt_before_wd_2.BackColor = System.Drawing.Color.Yellow;
             txt_after_wd.ReadOnly = false;
             txt_after_wd.BackColor = System.Drawing.Color.Yellow;
             btn_af_time.Enabled = true;
@@ -279,6 +284,40 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         btn_af_time.Enabled = true;
 
         string strAlert = "dtime='" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "';setInterval('show_cur_times()', 1000);";
+
+        //add by 20190624
+        if (txt_before_wd_2.Text == "")
+        {
+            strAlert = strAlert + "layer.alert('请输入精炼前温度！');";
+
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
+            return;
+        }
+
+        if (decimal.TryParse(txt_before_wd_2.Text, out f) == false)
+        {
+            strAlert = strAlert + "layer.alert('精炼前温度必须为数值型！');";
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
+            return;
+        }
+        else
+        {
+            if (Convert.ToDecimal(txt_before_wd_2.Text) <= 700)
+            {
+                strAlert = strAlert + "layer.alert('精炼前温度要求大于700！！');";
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
+
+                return;
+            }
+            else
+            {
+                txt_before_wd_2.BackColor = txt_hejin.BackColor;
+                txt_before_wd_2.ReadOnly = true;
+            }
+
+        }
+        //end
+
         if (txt_after_wd.Text == "")
         {
             strAlert = strAlert + "layer.alert('请输入精炼后温度！');";
@@ -389,7 +428,9 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         {
             string zybno = txt_zybno.Text;
             int result = Function_Jinglian.jinglian_insert_2(1, txt_date.Text, lb_again.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
-           txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value);
+           txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(),
+           lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value, decimal.Parse(txt_before_wd_2.Text).ToString(),
+           chk_cy_yn.Checked == true ? "是" : "");
             ini_default();
         }
        // string zybno = Function_Jinglian.zybno_query(1, DateTime.Now.ToString("yyyy/MM/dd"), DateTime.Now.ToString("HH:mm:ss"), txt_shift.Text, txt_banzu.Text, txt_luhao.Text, txt_hejin.Text).Rows[0][0].ToString();
@@ -529,7 +570,9 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     {
         string zybno = Function_Jinglian.zybno_query(1, DateTime.Now.ToString("yyyy/MM/dd"), DateTime.Now.ToString("HH:mm:ss"), txt_shift.Text, txt_banzu.Text, txt_luhao.Text, txt_hejin.Text).Rows[0][0].ToString();
         int result = Function_Jinglian.jinglian_insert_2(1, txt_date.Text, lb_start.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
-         txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(), lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value);
+         txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, decimal.Parse(txt_before_wd.Text).ToString(), lb_bf_time.Text, decimal.Parse(txt_after_wd.Text).ToString(),
+         lb_af_time.Text, txt_zyno.Text, txt_pz.Text, lb_mz.Text, lb_jz.Text, Label3.Text, gp_flag.Value, decimal.Parse(txt_before_wd_2.Text).ToString(),
+         chk_cy_yn.Checked == true ? "是" : "");
         //int result = Function_Jinglian.jinglian_insert(1, txt_date.Text, lb_again.Text, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), txt_shift.Text, txt_gh.Text, txt_name.Text,
         // txt_banzu.Text, lb_jlno.Text, zybno, txt_luhao.Text, txt_hejin.Text, txt_before_wd.Text, lb_bf_time.Text, txt_after_wd.Text, lb_af_time.Text, txt_zyno.Text, txt_pz.Text, txt_mz.Value, txt_jz.Value);
 
@@ -607,6 +650,8 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
     protected void btn_gpcs_Click(object sender, EventArgs e)
     {
         btn_gpcs.Enabled = false;
+        txt_before_wd_2.ReadOnly = false;
+        txt_before_wd_2.BackColor = System.Drawing.Color.Yellow;
         txt_after_wd.ReadOnly = false;
         btn_af_time.Enabled = true;
         txt_after_wd.BackColor = System.Drawing.Color.Yellow;
