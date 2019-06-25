@@ -47,7 +47,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1475px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                    <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1660px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="1000" ></SettingsPager>
@@ -55,7 +55,7 @@
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
                         <Columns>                        
-                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="110px" VisibleIndex="1" >
+                            <dx:GridViewDataTextColumn Caption="报销单号" FieldName="FormNo" Width="100px" VisibleIndex="1" >
                                 <Settings AllowCellMerge="True" />
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_FormNo" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "FormNo"+Container.VisibleIndex.ToString() %>'
@@ -64,23 +64,23 @@
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请日期" FieldName="ApplyDate" Width="80px" VisibleIndex="2">
+                            <dx:GridViewDataTextColumn Caption="申请日期" FieldName="ApplyDate" Width="75px" VisibleIndex="2">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="60px" VisibleIndex="3">
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="55px" VisibleIndex="3">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                            
-                            <dx:GridViewDataTextColumn Caption="申请部门" FieldName="ApplyDept" Width="110px" VisibleIndex="4">
+                            <dx:GridViewDataTextColumn Caption="申请部门" FieldName="ApplyDept" Width="105px" VisibleIndex="4">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="70px" VisibleIndex="5">
+                            <dx:GridViewDataTextColumn Caption="申请人公司" FieldName="ApplyDomainName" Width="60px" VisibleIndex="5">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="费用类别和费用项目" FieldName="CostCodeDesc" Width="180px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="150px" VisibleIndex="7">
+                            <dx:GridViewDataTextColumn Caption="预算来源" FieldName="instanceid" Width="120px" VisibleIndex="7">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_instanceid" runat="server" Text='<%# Eval("instanceid")%>' Cursor="pointer" ClientInstanceName='<%# "instanceid"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# Eval("budgetsour") %>'  
+                                         NavigateUrl='<%# Eval("budgetsour") %>'   ToolTip='<%# Eval("instanceid")%>'
                                          Target="_blank">                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
@@ -99,8 +99,15 @@
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="90px" VisibleIndex="13">
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="90px" VisibleIndex="14">
+                            <dx:GridViewDataTextColumn Caption="批准日期" FieldName="ApproveDate" Width="80px" VisibleIndex="14">
                                 <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="科目" FieldName="KeMuId" Width="65px" VisibleIndex="15">                                
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="科目描述" FieldName="KeMuMs" Width="120px" VisibleIndex="16">                                
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="项目" FieldName="KeMu2" Width="50px" VisibleIndex="17">
+                               
                             </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
