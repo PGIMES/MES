@@ -165,7 +165,18 @@
             word-break: break-all;
             white-space: normal;
         }
-
+        .width-100{
+            width:100px;
+        }
+        .width-200{
+            width:200px;
+        }
+        .width-300{
+            width:300px;
+        }
+        .width-500{
+            width:500px;
+        }
         .width-800{
             width:800px;
         }
@@ -189,6 +200,88 @@
             color: #31708f; 
             background-color:none;
              
+            border-bottom:0px solid white;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.00);
+        }
+        .panel-headings{
+            background-color:none;
+            border-bottom:1px solid #777
+        }
+
+        hidden {
+            display: none;
+        }
+
+        .input {
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            height: 25px;
+            padding-left: 5px;
+            border-radius:0px;
+        }
+
+        .input-edit {
+            border-bottom: 1px solid gray;border-radius:0px
+        }
+
+        .input-readonly {
+            border-bottom: 1px solid lightgray;border-radius:0px
+        }
+
+        .select {
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            border-bottom: 1px solid gray;
+            height: 25px;
+        }
+
+        .name {
+            width: 80px;
+        }
+
+        .bordernone {
+            border: none;
+            font-size: 11pt;
+        }
+
+        .alpha100 {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .width100 {
+            width: 100px;
+        }
+
+        .width50 {
+            width: 50px;
+        }
+
+        table[id=grid] tbody tr td input[type=text] {
+            border: 1px solid gray;
+            height: 25px;
+            font-size: 11pt;
+            background-color: #FDF7D9;
+        }
+        table[id=tab1] tbody tr td {font-size:11pt}
+
+        table[id=grid] tbody tr {
+            height: 30px;
+        }
+
+        .th_right {
+            text-align: right;
+            margin-right: 5px;
+            padding-right: 10px;
+        }
+        .panel-info {
+            border-color: none; 
+        }
+        .panel-infos {
+            color: #31708f; 
+            background-color:none;
+            /*border-color: #bce8f1;*/ 
             border-bottom:0px solid white;
             -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.00);
         }
