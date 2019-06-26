@@ -17,7 +17,7 @@
         });
 
         function setHeight() {
-            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 130) + "px");
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 180) + "px");
         }
     </script>
 </asp:Content>
