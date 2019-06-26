@@ -50,7 +50,7 @@
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1660px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
-                        <SettingsPager PageSize="1000" ></SettingsPager>
+                        <SettingsPager PageSize="20" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
