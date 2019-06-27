@@ -269,10 +269,10 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
 
     }
 
-    protected void btnReturn_Click(object sender, EventArgs e)
-    {
-        Response.Redirect("~/Default.aspx");
-    }
+    //protected void btnReturn_Click(object sender, EventArgs e)
+    //{
+    //    Response.Redirect("~/Default.aspx");
+    //}
 
     protected void btn_Save_Click(object sender, EventArgs e)
     {
@@ -306,6 +306,16 @@ public partial class YaSheTou_YST_Record : System.Web.UI.Page
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【本次使用模次】请输入正整数')", true);
                 txt_end_mc.Text = "";
+                return;
+            }
+            //if (ddl_status.SelectedValue == "正常" && ddl_xwz.SelectedValue == "")
+            //{
+            //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【状态】为 正常,【下位置】不可为空！')", true);
+            //    return;
+            //}
+            if (ddl_xwz.SelectedValue == "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "layer.alert('【下位置】不可为空！')", true);
                 return;
             }
 

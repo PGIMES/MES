@@ -110,7 +110,7 @@
                                         OnSelectedIndexChanged="ddl_change_type_SelectedIndexChanged" AutoPostBack="true">
                                         <asp:ListItem Value ="">--请选择--</asp:ListItem>
                                         <asp:ListItem Value ="仅上">仅上</asp:ListItem>
-                                        <%--<asp:ListItem Value ="仅下">仅下</asp:ListItem>--%>
+                                        <asp:ListItem Value ="仅下">仅下</asp:ListItem>
                                         <asp:ListItem Value ="先下再上">先下再上</asp:ListItem>
                                         <asp:ListItem Value ="不更换">不更换</asp:ListItem>
                                     </asp:DropDownList>
@@ -300,10 +300,10 @@
                             <div id="Div7" runat="server" class="col-sm-6  col-md-offset-2" style="padding: 0;
                                 position: relative; float: left; top: 0px; left: 0px; width: 200px;
                                 height: 70px;">
-                                <asp:Button ID="btn_Return" runat="server" Font-Size="X-Large"
+                                <%--<asp:Button ID="btn_Return" runat="server" Font-Size="X-Large"
                                     class="btn btn-primary" Style="width: 200px; top: -1px; height: 70px;" onclick="btnReturn_Click"
                                     Text="返回" 
-                                    />
+                                    />--%>
                             </div>
                         </div>
                     </div>
