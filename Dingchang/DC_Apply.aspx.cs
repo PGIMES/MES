@@ -205,7 +205,7 @@ public partial class DC_DC_Apply : System.Web.UI.Page
         if (Session["empid"].ToString() == dt.Rows[0]["Userid"].ToString())
         {
             btn_sale.Visible = true;
-            (gv_ddmx).Columns[12].Visible = true;
+            (gv_ddmx).Columns[13].Visible = true;
             (gvFile_ddfj).Columns[2].Visible = true;
             (gvFile_ddfj).Columns[0].Visible = false;
             btn_sale.Text = "修改";
