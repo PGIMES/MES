@@ -184,16 +184,16 @@ public partial class Forms_PurChase_PUR_RCT_PO_FW_Query : System.Web.UI.Page
             rctnos = rctnos + "'" + ls_rctno[i] + "',";
         }
 
-        if (re_flag == "")
+        if (re_flag == "")//right(cast(year(GETDATE())as nvarchar(max)),2)
         {
             string code_f = domain == "200" ? "K" : "S";
             string sql = @"update PUR_RCT_PO_FW set OptionType='已匹配',fw_qr_time=getdate()
-                                                    ,qad_fp_no='{1}'+right(cast(year(GETDATE())as nvarchar(max)),2)
-                                                                +right('00000'+cast(
-																	                (select isnull(max(cast(right(qad_fp_no,5) as int)),0) from PUR_RCT_PO_FW 
-                                                                                    where qad_fp_no like '{1}'+right(cast(year(GETDATE())as nvarchar(max)),2)+'%'
+                                                    ,qad_fp_no='{1}'+CONVERT(nvarchar(4),getdate(),12)
+                                                                +right('000'+cast(
+																	                (select isnull(max(cast(right(qad_fp_no,3) as int)),0) from PUR_RCT_PO_FW 
+                                                                                    where qad_fp_no like '{1}'+CONVERT(nvarchar(4),getdate(),12)+'%'
                                                                                     )
-																                +1 as nvarchar(max)),5)
+																                +1 as nvarchar(max)),3)
                             where rctno in({0})";
             sql = string.Format(sql, rctnos.Substring(0, rctnos.Length - 1), code_f + "F");
 
