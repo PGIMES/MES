@@ -234,9 +234,9 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         }
         else
         {
-            if (Convert.ToDecimal(txt_before_wd.Text) < 720 || Convert.ToDecimal(txt_before_wd.Text) >770)
+            if (Convert.ToDecimal(txt_before_wd.Text) < 710 || Convert.ToDecimal(txt_before_wd.Text) >770)
             {
-                strAlert = strAlert + "layer.alert('出料时炉膛铝液温度要求大于720小于770！！');";
+                strAlert = strAlert + "layer.alert('出料时炉膛铝液温度要求大于710小于770！！');";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
 
                 return;
@@ -302,9 +302,9 @@ public partial class JingLian_JinLian_Hydrogen : System.Web.UI.Page
         }
         else
         {
-            if (Convert.ToDecimal(txt_before_wd_2.Text) <= 700)
+            if (Convert.ToDecimal(txt_before_wd_2.Text) < 700 || Convert.ToDecimal(txt_before_wd_2.Text) > 750)//Convert.ToDecimal(txt_before_wd_2.Text) <= 700 
             {
-                strAlert = strAlert + "layer.alert('二次精炼前温度要求大于700！！');";
+                strAlert = strAlert + "layer.alert('二次精炼前温度要求大于700小于750！');";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", strAlert, true);
 
                 return;

@@ -360,7 +360,7 @@
                                                     <asp:TextBox ID="txt_before_wd" class="form-control input-small"
                                                         runat="server" ReadOnly="True"></asp:TextBox></div>
                                                 <div class="col-sm-12" style="color: #FF0000">
-                                                    *出料时炉膛铝液温度要求720至770</div>
+                                                    *出料时炉膛铝液温度要求710至770</div>
                                                    
                                                 <div class="col-sm-12  col-md-offset-5">
                                                     <div id="Div8" runat="server" style="padding: 0; position: relative;
@@ -403,7 +403,7 @@
                                     <div class="col-sm-6">
                                         <asp:TextBox ID="txt_before_wd_2" class="form-control input-small"
                                             runat="server" ReadOnly="True"></asp:TextBox></div>
-                                    <div class="col-sm-12" style="color: #FF0000">*二次精炼前温度大于700</div>
+                                    <div class="col-sm-12" style="color: #FF0000">*二次精炼前温度要求700至750</div>
                                     <div class="col-sm-5">
                                         二次精炼后温度(℃)：</div>
                                     <div class="col-sm-6">
