@@ -60,6 +60,7 @@
                                              <asp:ListItem Value ="C">熔炼炉C</asp:ListItem>
                                              <asp:ListItem Value ="D">熔炼炉D</asp:ListItem>
                                              <asp:ListItem Value ="E">熔炼炉E</asp:ListItem>
+                                             <asp:ListItem Value ="F">熔炼炉F</asp:ListItem>
                                          </asp:DropDownList>
 
 
@@ -90,7 +91,7 @@
                                             <asp:DropDownList ID="txt_banbie" runat="server" class="form-control input-s-sm ">
                                                 <asp:ListItem Value =""></asp:ListItem>
                                                 <asp:ListItem Value ="白班">白班</asp:ListItem>
-                                                <asp:ListItem Value ="晚班">晚班</asp:ListItem>
+                                                <asp:ListItem Value ="夜班">夜班</asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                        
