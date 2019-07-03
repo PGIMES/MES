@@ -33,14 +33,14 @@
                     $(item).find("table[id*=PayRate]").addClass("dxeTextBox_read");
                     $(item).find("input[id*=PayRate]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
 
-                    $(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
-                    $(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
+                    //$(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
+                    //$(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
 
                     $(item).find("table[id*=Remark]").addClass("dxeTextBox_read");
                     $(item).find("input[id*=Remark]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
 
                     (eval('PlanPayDate' + index)).SetEnabled(false);
-                    (eval('FPDate' + index)).SetEnabled(false);
+                    //(eval('FPDate' + index)).SetEnabled(false);
 
                     (eval('PayClause' + index)).SetEnabled(false);
                     (eval('PayFunc' + index)).SetEnabled(false);
