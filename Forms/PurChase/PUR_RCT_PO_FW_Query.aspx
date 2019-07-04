@@ -188,7 +188,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="rctno" AutoGenerateColumns="False"  
-                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnHtmlRowCreated="GV_PART_HtmlRowCreated" Width="1000px"><%--2950--%>
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnHtmlRowCreated="GV_PART_HtmlRowCreated" Width="1000px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -205,20 +205,9 @@
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
                             <dx:GridViewDataTextColumn Caption="QAD发票号" FieldName="qad_fp_no" Width="80px" VisibleIndex="4" />
-                             <dx:GridViewDataTextColumn Caption="总账账户" FieldName="kjkm_code" Width="80px" VisibleIndex="5" />
-                            <dx:GridViewDataTextColumn Caption="总账描述" FieldName="kjkm_name" Width="250px" VisibleIndex="6" />
-                            <dx:GridViewDataTextColumn Caption="验收单号" FieldName="rctno" Width="100px" VisibleIndex="7" >                                
-                                <DataItemTemplate>
-                                    <dx:ASPxHyperLink ID="hpl_rctno" runat="server" Text='<%# Eval("rctno")%>' Cursor="pointer" ClientInstanceName='<%# "rctno_"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=97b862f1-0fd8-4626-80dc-5a8afc57f61a&instanceid="+ Eval("rctno")+"&groupid="+ Eval("rct_GroupID")+"&display=1" %>'  
-                                            Target="_blank">                                        
-                                    </dx:ASPxHyperLink>
-                                </DataItemTemplate> 
-                            </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="验收日期" FieldName="checkdate" Width="80px" VisibleIndex="8" />
-                            <dx:GridViewDataTextColumn Caption="请购类别" FieldName="PRType" Width="80px" VisibleIndex="9" />
-                            <dx:GridViewDataTextColumn Caption="采购订单项" FieldName="porowid" Width="70px" VisibleIndex="10" />
-                            <dx:GridViewDataTextColumn Caption="订单" FieldName="PONo" Width="70px" VisibleIndex="11" >                                
+                            <dx:GridViewDataTextColumn Caption="供应商" FieldName="PoVendorId" Width="60px" VisibleIndex="5" />
+                            <dx:GridViewDataTextColumn Caption="供应商名称" FieldName="PoVendorName" Width="180px" VisibleIndex="6" />
+                            <dx:GridViewDataTextColumn Caption="订单" FieldName="PONo" Width="70px" VisibleIndex="7" >                                
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_PONo" runat="server" Text='<%# Eval("PONo")%>' Cursor="pointer" ClientInstanceName='<%# "PONo_"+Container.VisibleIndex.ToString() %>'
                                          NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="+ Eval("PONo")+"&groupid="+ Eval("po_GroupID")+"&display=1" %>'  
@@ -226,34 +215,48 @@
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="供应商" FieldName="PoVendorId" Width="60px" VisibleIndex="12" />
-                            <dx:GridViewDataTextColumn Caption="供应商名称" FieldName="PoVendorName" Width="180px" VisibleIndex="13" />
-                            <dx:GridViewDataTextColumn Caption="物料类别" FieldName="wltype" Width="100px" VisibleIndex="14" />
-                            <dx:GridViewDataTextColumn Caption="物料用途" FieldName="note" Width="100px" VisibleIndex="15" />
-                            <dx:GridViewDataTextColumn Caption="M类物料名称" FieldName="wlmc" Width="150px" VisibleIndex="16" />
-                            <dx:GridViewDataTextColumn Caption="M类物料描述" FieldName="wlms" Width="180px" VisibleIndex="17" />
-                            <dx:GridViewDataTextColumn Caption="事务数量" FieldName="PurQty" Width="60px" VisibleIndex="18" />
-                            <dx:GridViewDataTextColumn Caption="已匹配数量" FieldName="pipei_qty" Width="60px" VisibleIndex="19" />
-                            <dx:GridViewDataTextColumn Caption="未匹配数量" FieldName="no_pipei_qty" Width="60px" VisibleIndex="20" />
-                            <dx:GridViewDataTextColumn Caption="单价" FieldName="NoTaxPrice" Width="70px" VisibleIndex="21" />
-                            <dx:GridViewDataTextColumn Caption="采购金额合计" FieldName="notax_TotalPrice" Width="80px" VisibleIndex="22" />
-                            <dx:GridViewDataTextColumn Caption="税金额N" FieldName="TaxRatePrice" Width="60px" VisibleIndex="23" />
-                            <dx:GridViewDataTextColumn Caption="税款合计N" FieldName="TotalPrice" Width="80px" VisibleIndex="24" />
-                            <dx:GridViewDataTextColumn Caption="外币金额" FieldName="ExchangeRatePrice" Width="70px" VisibleIndex="25" />
-                            <dx:GridViewDataTextColumn Caption="兑换率2" FieldName="ExchangeRate" Width="50px" VisibleIndex="26" />
-                            <dx:GridViewDataTextColumn Caption="货币" FieldName="currency" Width="40px" VisibleIndex="27" />
-                            <dx:GridViewDataTextColumn Caption="应纳税" FieldName="ishs" Width="45px" VisibleIndex="28" />
-                            <dx:GridViewDataTextColumn Caption="税率N" FieldName="TaxRate" Width="45px" VisibleIndex="29" />
-                            <dx:GridViewDataTextColumn Caption="请购申请部门" FieldName="DeptName" Width="80px" VisibleIndex="30" />
-                            <dx:GridViewDataTextColumn Caption="请购申请人" FieldName="CreateByName" Width="70px" VisibleIndex="31" />
-                            <%--<dx:GridViewDataTextColumn Caption="项目编码" FieldName="" Width="60px" VisibleIndex="32" />
-                            <dx:GridViewDataTextColumn Caption="直属组织" FieldName="" Width="60px" VisibleIndex="33" />
-                            <dx:GridViewDataTextColumn Caption="负责车间" FieldName="" Width="60px" VisibleIndex="34" />--%>
-                            <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="80px" VisibleIndex="35" />
-                            <dx:GridViewDataTextColumn Caption="用于产品/项目" FieldName="usefor" Width="150px" VisibleIndex="36" />
-                            <%--<dx:GridViewDataTextColumn Caption="XMBH" FieldName="" Width="60px" VisibleIndex="37" />
-                            <dx:GridViewDataTextColumn Caption="XMMS" FieldName="" Width="60px" VisibleIndex="38" />
-                            <dx:GridViewDataTextColumn Caption="XMBZ" FieldName="" Width="60px" VisibleIndex="39" />--%>
+                            <dx:GridViewDataTextColumn Caption="采购订单项" FieldName="porowid" Width="70px" VisibleIndex="8" />
+                            <dx:GridViewDataTextColumn Caption="验收单号" FieldName="rctno" Width="100px" VisibleIndex="9" >                                
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_rctno" runat="server" Text='<%# Eval("rctno")%>' Cursor="pointer" ClientInstanceName='<%# "rctno_"+Container.VisibleIndex.ToString() %>'
+                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=97b862f1-0fd8-4626-80dc-5a8afc57f61a&instanceid="+ Eval("rctno")+"&groupid="+ Eval("rct_GroupID")+"&display=1" %>'  
+                                            Target="_blank">                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="验收日期" FieldName="checkdate" Width="80px" VisibleIndex="10" />
+                            <dx:GridViewDataTextColumn Caption="M类物料名称" FieldName="wlmc" Width="150px" VisibleIndex="11" />
+                            <dx:GridViewDataTextColumn Caption="M类物料描述" FieldName="wlms" Width="180px" VisibleIndex="12" />
+                            <dx:GridViewDataTextColumn Caption="订单数量" FieldName="PurQty" Width="60px" VisibleIndex="13" />
+                            <%--<dx:GridViewDataTextColumn Caption="累计收货数量" FieldName="" Width="60px" VisibleIndex="14" />--%>
+                            <dx:GridViewDataTextColumn Caption="验收数量" FieldName="checkqty" Width="60px" VisibleIndex="15" />
+                            <dx:GridViewDataTextColumn Caption="已匹配数量" FieldName="pipei_qty" Width="60px" VisibleIndex="16" />
+                            <dx:GridViewDataTextColumn Caption="未匹配数量" FieldName="no_pipei_qty" Width="60px" VisibleIndex="17" />
+                            <dx:GridViewDataTextColumn Caption="单价" FieldName="NoTaxPrice" Width="70px" VisibleIndex="18" />
+                            <dx:GridViewDataTextColumn Caption="采购金额合计" FieldName="notax_TotalPrice" Width="80px" VisibleIndex="19" />
+                            <dx:GridViewDataTextColumn Caption="税金额N" FieldName="TaxRatePrice" Width="80px" VisibleIndex="20" />
+                            <dx:GridViewDataTextColumn Caption="税款合计N" FieldName="TotalPrice" Width="80px" VisibleIndex="21" />
+                            <dx:GridViewDataTextColumn Caption="总账账户" FieldName="kjkm_code" Width="80px" VisibleIndex="22" />
+                            <dx:GridViewDataTextColumn Caption="总账描述" FieldName="kjkm_name" Width="250px" VisibleIndex="23" />
+                            <dx:GridViewDataTextColumn Caption="请购类别" FieldName="PRType" Width="80px" VisibleIndex="24" /> 
+                            <dx:GridViewDataTextColumn Caption="物料类别" FieldName="wltype" Width="100px" VisibleIndex="25" />
+                            <dx:GridViewDataTextColumn Caption="物料用途" FieldName="note" Width="100px" VisibleIndex="26" />
+                            <dx:GridViewDataTextColumn Caption="外币金额" FieldName="ExchangeRatePrice" Width="70px" VisibleIndex="27" />
+                            <dx:GridViewDataTextColumn Caption="兑换率2" FieldName="ExchangeRate" Width="50px" VisibleIndex="28" />
+                            <dx:GridViewDataTextColumn Caption="货币" FieldName="currency" Width="40px" VisibleIndex="29" />
+                            <dx:GridViewDataTextColumn Caption="应纳税" FieldName="ishs" Width="45px" VisibleIndex="30" />
+                            <dx:GridViewDataTextColumn Caption="税率N" FieldName="TaxRate" Width="45px" VisibleIndex="31" />
+                            <dx:GridViewDataTextColumn Caption="请购申请部门" FieldName="DeptName" Width="80px" VisibleIndex="32" />
+                            <dx:GridViewDataTextColumn Caption="请购申请人" FieldName="CreateByName" Width="70px" VisibleIndex="33" />
+                            <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="130px" VisibleIndex="34" />
+                            <dx:GridViewDataTextColumn Caption="用于产品/项目" FieldName="usefor" Width="150px" VisibleIndex="35" />
+                            
+                            <%--<dx:GridViewDataTextColumn Caption="项目编码" FieldName="" Width="60px" VisibleIndex="36" />
+                            <dx:GridViewDataTextColumn Caption="直属组织" FieldName="" Width="60px" VisibleIndex="37" />
+                            <dx:GridViewDataTextColumn Caption="负责车间" FieldName="" Width="60px" VisibleIndex="38" />
+                            <dx:GridViewDataTextColumn Caption="XMBH" FieldName="" Width="60px" VisibleIndex="39" />
+                            <dx:GridViewDataTextColumn Caption="XMMS" FieldName="" Width="60px" VisibleIndex="40" />
+                            <dx:GridViewDataTextColumn Caption="XMBZ" FieldName="" Width="60px" VisibleIndex="41" />--%>
                             <%--<dx:GridViewDataTextColumn Caption="po_GroupID" FieldName="po_GroupID" VisibleIndex="98"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden" FilterCellStyle-CssClass="hidden">
                             </dx:GridViewDataTextColumn>
@@ -261,6 +264,11 @@
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden" FilterCellStyle-CssClass="hidden">
                             </dx:GridViewDataTextColumn>--%>
                         </Columns>
+                        <TotalSummary>
+                            <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
+                             <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="TaxRatePrice" ShowInColumn="TaxRatePrice" ShowInGroupFooterColumn="TaxRatePrice" SummaryType="Sum" />
+                             <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                        </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
