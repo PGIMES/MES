@@ -912,6 +912,7 @@
                                          <li><a href="http://172.16.5.6:8080/wuliu/MoJuBY_List.aspx" target="_blank">模具保养</a></li>
                                          <li><a href="http://172.16.5.6:8080/wuliu/MojuWX_List.aspx" target="_blank">模具外修</a></li>
                                         <li><a href="/YaSheTou/YST_Maintain.aspx" target="_blank">压射头清单</a></li>
+                                        <li><a href="/YaSheTou/YST_LY_QS.aspx" target="_blank">压射头领用统计</a></li>
                                         <li class="divider"></li>
                                          <li><a href="JingLian/YZQB_SH.aspx" target="_blank">审核</a></li>
                                          <li><a href="shenhe/YZGX_XJ.aspx?deviceid=1-1" target="_blank">压铸工序检查</a></li>
