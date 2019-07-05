@@ -81,6 +81,7 @@
                     <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>
                     <button id="btn_del" type="button" class="btn btn-primary btn-large"><i class="fa fa-remove fa-fw"></i>&nbsp;删除</button>
                     <asp:Button ID="btnimport" runat="server" Text="导出Excel"  class="btn btn-primary" Width="100px" OnClick="btnimport_Click" Visible="false" />
+                    <asp:LinkButton ID="btn_tj" runat="server" Text="查看领用统计"  style="color: white" class="btn btn-large btn-primary"  Width="110px" href="/YaSheTou/YST_LY_QS.aspx"  target="_blank" />
                 </td>
             </tr>                      
         </table>                   
