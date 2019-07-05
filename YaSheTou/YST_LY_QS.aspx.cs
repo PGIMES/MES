@@ -108,7 +108,7 @@ public partial class YaSheTou_YST_LY_QS : System.Web.UI.Page
             lcolumn.CellStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
 
             lnwidth_emp = 0;
-            if (ldt_data.Columns[i].ColumnName.ToString() == "typedesc") { lnwidth_emp = 90; lcolumn.Caption = " "; }
+            if (ldt_data.Columns[i].ColumnName.ToString() == "typedesc") { lnwidth_emp = 80; lcolumn.Caption = " "; }
 
             if (lnwidth_emp > 0)
             {
