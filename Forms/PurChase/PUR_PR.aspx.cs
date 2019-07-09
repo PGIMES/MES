@@ -13,6 +13,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using Pgi.Auto;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 
 public partial class PUR_PR : PGIBasePage
 {
@@ -1532,7 +1534,142 @@ protected void Page_Load(object sender, EventArgs e)
         loadControl(dtl);
     }
 
+    protected void btn_down_files_Click(object sender, EventArgs e)
+    {        
+        string files = "";
+        DataTable dt_files = DbHelperSQL.Query("select files from PUR_PR_Main_Form where PRNo='" + m_sid + "'").Tables[0];
+        if (dt_files.Rows.Count == 1)
+        {
+            files = dt_files.Rows[0][0].ToString();
+        }
+        files = files + "|" + ip_filelist.Value;
+        
+        try
+        {
+            Zip zip = new Zip();
+            string filepath_zip = zip.GetFile(files, Server.MapPath("~/"), m_sid);
 
+            System.IO.FileInfo fileinfo = new System.IO.FileInfo(filepath_zip); 
+            if (fileinfo.Exists == true)
+            {
+                //以字符流的形式下载文件
+                FileStream fs = new FileStream(filepath_zip, FileMode.Open);
+                byte[] bytes = new byte[(int)fs.Length];
+                fs.Read(bytes, 0, bytes.Length);
+                fs.Close();
+                Response.ContentType = "application/octet-stream";
+                //通知浏览器下载文件而不是打开
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(fileinfo.Name, System.Text.Encoding.UTF8));
+                Response.BinaryWrite(bytes);
+                Response.Flush();
+                Response.End();
+            }
+            //else
+            //{
+            //    ScriptManager.RegisterStartupScript(Page, this.GetType(), "ok", script + "layer.alert('the download files is not exists.');", true);
+            //}
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+    }
+
+    /*
+    protected void btn_down_files_Click(object sender, EventArgs e)
+    {
+        string files = "";
+        DataTable dt_files = DbHelperSQL.Query("select files from PUR_PR_Main_Form where PRNo='" + m_sid + "'").Tables[0];
+        if (dt_files.Rows.Count == 1)
+        {
+            files = dt_files.Rows[0][0].ToString();
+        }
+        files = files + "|" + ip_filelist.Value;
+
+
+        try
+        {
+            string[] ls_files = files.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            //if (ls_files.Length <= 0)
+            //{
+            //    //ScriptManager.RegisterStartupScript(Page, this.GetType(), "ok", script + "layer.alert('没有附件.');", true);
+            //    return;
+            //}
+
+            string wjj = m_sid == "" ? DateTime.Now.ToString("yyyyMMdd") : m_sid;
+            string tmp_dir = Server.MapPath("~/" + @"\UploadFile\Purchase\" + wjj + @"\zip_temp\");
+            if (!Directory.Exists(tmp_dir))
+            {
+                Directory.CreateDirectory(tmp_dir);
+            }
+            string filename = DateTime.Now.ToString("yyyyMMddhhmmssff") + ".zip";
+            string filepath_zip = tmp_dir + filename;
+
+            string newfilename = string.Empty;
+            string sourcefile = string.Empty;
+
+            ZipEntryFactory zipEntryFactory = new ZipEntryFactory();
+            using (ZipOutputStream outPutStream = new ZipOutputStream(System.IO.File.Create(filepath_zip)))
+            {
+                outPutStream.SetLevel(5);
+                ZipEntry entry = null;
+                byte[] buffer = null;
+
+                for (int i = 0; i < ls_files.Length; i++)
+                {
+                    string[] ls_files_2 = ls_files[i].Split(',');
+                    if (ls_files_2.Length == 3)
+                    {
+                        newfilename = ls_files_2[0].ToString();
+                        sourcefile = Server.MapPath("~/" + ls_files_2[1].ToString());
+                    }
+                    else//之前的文件，只有一个路径
+                    {
+
+                        string s = ls_files_2[0].ToString();
+                        string[] ss = s.Split(new string[] { @"\" }, StringSplitOptions.RemoveEmptyEntries);
+                        newfilename = ss[ss.Length - 1].ToString(); //"文件浏览";
+
+                        sourcefile = Server.MapPath("~/" + ls_files_2[0].ToString());
+                    }
+
+                    buffer = new byte[4096];
+                    entry = zipEntryFactory.MakeFileEntry(newfilename);
+                    outPutStream.PutNextEntry(entry);
+                    using (FileStream fileStream = File.OpenRead(sourcefile))
+                    {
+                        StreamUtils.Copy(fileStream, outPutStream, buffer);
+                    }
+                }
+                outPutStream.Finish();
+                outPutStream.Close();
+            }
+            System.IO.FileInfo fileinfo = new System.IO.FileInfo(filepath_zip);
+            if (fileinfo.Exists == true)
+            {
+                //以字符流的形式下载文件
+                FileStream fs = new FileStream(filepath_zip, FileMode.Open);
+                byte[] bytes = new byte[(int)fs.Length];
+                fs.Read(bytes, 0, bytes.Length);
+                fs.Close();
+                Response.ContentType = "application/octet-stream";
+                //通知浏览器下载文件而不是打开
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(filename, System.Text.Encoding.UTF8));
+                Response.BinaryWrite(bytes);
+                Response.Flush();
+                Response.End();
+            }
+            //else
+            //{
+            //    ScriptManager.RegisterStartupScript(Page, this.GetType(), "ok", script + "layer.alert('the download files is not exists.');", true);
+            //}
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+    }
+    */
 }
 
 

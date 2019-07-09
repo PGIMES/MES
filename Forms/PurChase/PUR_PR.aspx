@@ -1168,7 +1168,8 @@
                         </div>
                         <div class="panel-body collapse in" id="FJSC">
                             <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
-                                <div>
+                                <asp:Button ID="btn_down_files" runat="server" Text="全部下载" OnClick="btn_down_files_Click" />
+                                <div style="margin-top:5px;">
                                      <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="500px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
                                          ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced"   AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
                                          onfileuploadcomplete="uploadcontrol_FileUploadComplete" >
