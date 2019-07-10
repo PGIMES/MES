@@ -248,8 +248,9 @@
                             <dx:GridViewDataTextColumn Caption="税率N" FieldName="TaxRate" Width="45px" VisibleIndex="31" />
                             <dx:GridViewDataTextColumn Caption="请购申请部门" FieldName="DeptName" Width="80px" VisibleIndex="32" />
                             <dx:GridViewDataTextColumn Caption="请购申请人" FieldName="CreateByName" Width="70px" VisibleIndex="33" />
-                            <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="130px" VisibleIndex="34" />
-                            <dx:GridViewDataTextColumn Caption="用于产品/项目" FieldName="usefor" Width="150px" VisibleIndex="35" />
+                            <dx:GridViewDataTextColumn Caption="验收人" FieldName="checkbyname" Width="70px" VisibleIndex="34" />
+                            <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="130px" VisibleIndex="35" />
+                            <dx:GridViewDataTextColumn Caption="用于产品/项目" FieldName="usefor" Width="150px" VisibleIndex="36" />
                             
                             <%--<dx:GridViewDataTextColumn Caption="项目编码" FieldName="" Width="60px" VisibleIndex="36" />
                             <dx:GridViewDataTextColumn Caption="直属组织" FieldName="" Width="60px" VisibleIndex="37" />
