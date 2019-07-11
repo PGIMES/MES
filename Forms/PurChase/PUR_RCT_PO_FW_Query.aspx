@@ -5,7 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
-     <script src="/Content/js/jquery.min.js"  type="text/javascript"></script>
+    <script src="/Content/js/jquery.min.js"  type="text/javascript"></script>
     <script src="/Content/js/bootstrap.min.js"></script>
     <script src="/Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
@@ -146,6 +146,7 @@
                             <asp:ListItem Text="All" Value="All"></asp:ListItem>
                             <asp:ListItem Text="未开票" Value=""></asp:ListItem>
                             <asp:ListItem Text="已开票" Value="已开票"></asp:ListItem>
+                            <asp:ListItem Text="未匹配" Value="未匹配"></asp:ListItem>
                             <asp:ListItem Text="已匹配" Value="已匹配"></asp:ListItem>
                         </asp:DropDownList>
                     </td>  
