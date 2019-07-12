@@ -99,8 +99,8 @@
                             <dx:GridViewDataDateColumn Caption="生效日期" FieldName="tr_effdate" Width="90px" VisibleIndex="5" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_site" Width="100px" VisibleIndex="6" />
-                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="100px" VisibleIndex="7" />
+                            <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_site" Width="80px" VisibleIndex="6" />
+                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="70px" VisibleIndex="7" />
                             <dx:GridViewDataTextColumn Caption="订单" FieldName="tr_nbr" Width="100px" VisibleIndex="8" />
                             <dx:GridViewDataTextColumn Caption="库位数量更改" FieldName="tr_qty_loc" Width="80px" VisibleIndex="9" >                                
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
