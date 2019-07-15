@@ -219,7 +219,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="syscontractno;contractline" 
-                        AutoGenerateColumns="False" Width="3685px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
+                        AutoGenerateColumns="False" Width="3725px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnExportRenderBrick="gv_ExportRenderBrick" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
                         <SettingsPager PageSize="100" ></SettingsPager>
@@ -238,7 +238,7 @@
                             <dx:GridViewDataTextColumn Caption="采购单号" FieldName="pono" Width="70px" VisibleIndex="2">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_pgi_no" runat="server" Text='<%# Eval("pono")%>' Cursor="pointer" ClientInstanceName='<%# "pono_"+Container.VisibleIndex.ToString() %>'
-                                        NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="+ Eval("pono")+"&display=1" %>'  
+                                        NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&instanceid="+ Eval("pono")+"&groupid="+ Eval("po_GroupID")+"&display=1" %>'  
                                         Target="_blank">                                        
                                     </dx:ASPxHyperLink>
                                 </DataItemTemplate> 
@@ -250,7 +250,7 @@
                             <dx:GridViewDataTextColumn Caption="行号" FieldName="contractline" Width="40px" VisibleIndex="4">
                                 <Settings AllowAutoFilterTextInputTimer="False" />
                             </dx:GridViewDataTextColumn>   
-                            <dx:GridViewDataTextColumn Caption="实际合同号" FieldName="actualcontractno" Width="80px" VisibleIndex="5">
+                            <dx:GridViewDataTextColumn Caption="实际合同号" FieldName="actualcontractno" Width="120px" VisibleIndex="5">
                                 <Settings AllowAutoFilterTextInputTimer="False" />
                             </dx:GridViewDataTextColumn>     
                             <dx:GridViewDataTextColumn Caption="供应商编码" FieldName="gys_code" Width="65px" VisibleIndex="6">
