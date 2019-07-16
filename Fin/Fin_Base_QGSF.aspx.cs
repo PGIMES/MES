@@ -41,7 +41,9 @@ public partial class Fin_Fin_Base_QGSF : System.Web.UI.Page
                     from Fin_Base_QGSF QGSF
                         inner join qad.dbo.qad_comd_det comd on QGSF.domain=comd.comd_domain and QGSF.wlh=comd.comd_part 
                         inner join qad.dbo.qad_com_mstr com on com.com_domain=comd.comd_domain and com.com_comm_code=comd.comd_comm_code 
+                    where QGSF.wlh like '%{0}%'
                     order by QGSF.wlh";
+        sql = string.Format(sql, txt_wlh.Text.Trim());
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         GV_PART.DataSource = dt;
         GV_PART.DataBind();
