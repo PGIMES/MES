@@ -100,38 +100,42 @@
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
                             <dx:GridViewDataTextColumn Caption="地点" FieldName="tr_site" Width="60px" VisibleIndex="6" />
-                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="60px" VisibleIndex="7" />
+                            <dx:GridViewDataTextColumn Caption="库位" FieldName="tr_loc" Width="50px" VisibleIndex="7" />
                             <dx:GridViewDataTextColumn Caption="订单" FieldName="tr_nbr" Width="100px" VisibleIndex="8" />
-                            <dx:GridViewDataTextColumn Caption="库位数量更改" FieldName="tr_qty_loc" Width="80px" VisibleIndex="9" >                                
+                            <dx:GridViewDataTextColumn Caption="库位数量更改" FieldName="tr_qty_loc" Width="60px" VisibleIndex="9"  HeaderStyle-Wrap="True">                                
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>                            
                             <dx:GridViewDataTextColumn Caption="备注" FieldName="tr_rmks" Width="90px" VisibleIndex="10" />    
                             <dx:GridViewDataTextColumn Caption="域" FieldName="tr_domain" Width="40px" VisibleIndex="11" />
-                            <dx:GridViewDataTextColumn Caption="年月" FieldName="yymm" Width="60px" VisibleIndex="12" />                             
-                            <dx:GridViewDataTextColumn Caption="Price Curr" FieldName="pc_curr" Width="60px" VisibleIndex="13" />
-                            <dx:GridViewDataTextColumn Caption="ex.change rate" FieldName="ExchangeRate" Width="90px" VisibleIndex="14" />
-                            <dx:GridViewDataTextColumn Caption="Price in USD" FieldName="price_USD" Width="80px" VisibleIndex="15"  >
+                            <dx:GridViewDataTextColumn Caption="年月" FieldName="yymm" Width="50px" VisibleIndex="12" />                             
+                            <dx:GridViewDataTextColumn Caption="Price Curr" FieldName="pc_curr" Width="40px" VisibleIndex="13" HeaderStyle-Wrap="True" />
+                            <dx:GridViewDataTextColumn Caption="ex.change rate" FieldName="ExchangeRate" Width="65px" VisibleIndex="14"  HeaderStyle-Wrap="True"/>
+                            <dx:GridViewDataTextColumn Caption="Price in USD" FieldName="price_USD" Width="60px" VisibleIndex="15"  HeaderStyle-Wrap="True">
                                 <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="Value in O.C. in USD" FieldName="TotalPrice_USD" Width="120px" VisibleIndex="16"  >
+                            <dx:GridViewDataTextColumn Caption="Value in O.C. in USD" FieldName="TotalPrice_USD" Width="100px" VisibleIndex="16" HeaderStyle-Wrap="True" >
+                                <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="Value in O.C. in USD(扣除运费)" FieldName="TotalPrice_USD_YF" Width="110px" VisibleIndex="17"  
+                                ToolTip="每个柜子扣除USD4000海运费. 根据计算出来的分摊比例分摊USD4000.(分摊比例=每个零件货值/ 整柜零件货值)" HeaderStyle-Wrap="True" >
                                 <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="Warehouse Des" FieldName="site_desc" Width="120px" VisibleIndex="17" />
                             <dx:GridViewDataTextColumn Caption="HS Code_US" FieldName="HSCode" Width="90px" VisibleIndex="18" />
-                            <dx:GridViewDataTextColumn Caption="General Duty Rate" FieldName="BaseRate" Width="100px" VisibleIndex="19" >
+                            <dx:GridViewDataTextColumn Caption="General Duty Rate" FieldName="BaseRate" Width="80px" VisibleIndex="19"  HeaderStyle-Wrap="True">
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="General Duty Amount" FieldName="TotalPrice_Base_USD" Width="100px" VisibleIndex="20" >
+                            <dx:GridViewDataTextColumn Caption="General Duty Amount" FieldName="TotalPrice_Base_USD" Width="90px" VisibleIndex="20" HeaderStyle-Wrap="True">
                                 <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="301 Duty Code" FieldName="301code" Width="90px" VisibleIndex="21" />
-                            <dx:GridViewDataTextColumn Caption="301 Duty Rate" FieldName="301Rate" Width="90px" VisibleIndex="22" >
+                            <dx:GridViewDataTextColumn Caption="301 Duty Code" FieldName="301code" Width="80px" VisibleIndex="21" HeaderStyle-Wrap="True" />
+                            <dx:GridViewDataTextColumn Caption="301 Duty Rate" FieldName="301Rate" Width="70px" VisibleIndex="22"  HeaderStyle-Wrap="True" >
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="301 Duty Amount" FieldName="TotalPrice_QG_USD" Width="100px" VisibleIndex="23" >
+                            <dx:GridViewDataTextColumn Caption="301 Duty Amount" FieldName="TotalPrice_QG_USD" Width="90px" VisibleIndex="23"  HeaderStyle-Wrap="True">
                                 <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="Total Duty" FieldName="base_qg_usd" Width="100px" VisibleIndex="24" >
+                            <dx:GridViewDataTextColumn Caption="Total Duty" FieldName="base_qg_usd" Width="90px" VisibleIndex="24" >
                                 <PropertiesTextEdit DisplayFormatString="${0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
 
@@ -143,10 +147,11 @@
                             </dx:GridViewDataTextColumn>--%>
                         </Columns>
                         <TotalSummary>
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="TotalPrice_USD" ShowInColumn="TotalPrice_USD" ShowInGroupFooterColumn="TotalPrice_USD" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="TotalPrice_Base_USD" ShowInColumn="TotalPrice_Base_USD" ShowInGroupFooterColumn="TotalPrice_Base_USD" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="TotalPrice_QG_USD" ShowInColumn="TotalPrice_QG_USD" ShowInGroupFooterColumn="TotalPrice_QG_USD" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="base_qg_usd" ShowInColumn="base_qg_usd" ShowInGroupFooterColumn="base_qg_usd" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="${0:N2}" FieldName="TotalPrice_USD" ShowInColumn="TotalPrice_USD" ShowInGroupFooterColumn="TotalPrice_USD" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="${0:N2}" FieldName="TotalPrice_USD_YF" ShowInColumn="TotalPrice_USD_YF" ShowInGroupFooterColumn="TotalPrice_USD_YF" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="${0:N2}" FieldName="TotalPrice_Base_USD" ShowInColumn="TotalPrice_Base_USD" ShowInGroupFooterColumn="TotalPrice_Base_USD" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="${0:N2}" FieldName="TotalPrice_QG_USD" ShowInColumn="TotalPrice_QG_USD" ShowInGroupFooterColumn="TotalPrice_QG_USD" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="${0:N2}" FieldName="base_qg_usd" ShowInColumn="base_qg_usd" ShowInGroupFooterColumn="base_qg_usd" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
