@@ -38,9 +38,12 @@ public partial class Fin_Fin_Base_QGSF : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         string sql = @"select QGSF.domain,QGSF.wlh,QGSF.[301code], QGSF.BaseRate, QGSF.[301Rate],com.com_comm_code,com.com_desc 
+                        ,pt.pt_desc1,pt.pt_prod_line,pl.pl_desc
                     from Fin_Base_QGSF QGSF
                         inner join qad.dbo.qad_comd_det comd on QGSF.domain=comd.comd_domain and QGSF.wlh=comd.comd_part 
-                        inner join qad.dbo.qad_com_mstr com on com.com_domain=comd.comd_domain and com.com_comm_code=comd.comd_comm_code 
+                        inner join qad.dbo.qad_com_mstr com on com.com_domain=comd.comd_domain and com.com_comm_code=comd.comd_comm_code
+                        left join qad.dbo.qad_pt_mstr pt on  QGSF.domain=pt.pt_domain and QGSF.wlh=pt.pt_part 
+                        left join qad.dbo.qad_pl_mstr pl on  pt.pt_domain=pl.pl_domain and pt.pt_prod_line=pl.pl_prod_line
                     where QGSF.wlh like '%{0}%'
                     order by QGSF.wlh";
         sql = string.Format(sql, txt_wlh.Text.Trim());

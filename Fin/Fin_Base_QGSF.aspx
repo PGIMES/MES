@@ -109,15 +109,18 @@
                         <Columns>
                             <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  >
                             </dx:GridViewCommandColumn> 
-                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="80px" VisibleIndex="1" />
-                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" Width="120px" VisibleIndex="1" />
-                            <dx:GridViewDataTextColumn Caption="Customer Part #" FieldName="com_desc" Width="250px" VisibleIndex="3" />
-                            <dx:GridViewDataTextColumn Caption="HS Code_US" FieldName="com_comm_code" Width="130px" VisibleIndex="4" />
+                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="1" />
+                            <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" Width="120px" VisibleIndex="2" />
+                            <dx:GridViewDataTextColumn Caption="Customer Part #" FieldName="pt_desc1" Width="200px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="描述" FieldName="com_desc" Width="150px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="产品类#" FieldName="pt_prod_line" Width="60px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="产品类名称" FieldName="pl_desc" Width="150px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="HS Code_US" FieldName="com_comm_code" Width="150px" VisibleIndex="4" />
                             <dx:GridViewDataTextColumn Caption="301 Code" FieldName="301code" Width="130px" VisibleIndex="5" />
-                            <dx:GridViewDataTextColumn Caption="Base Rate" FieldName="BaseRate" Width="120px" VisibleIndex="6" >
+                            <dx:GridViewDataTextColumn Caption="Base Rate" FieldName="BaseRate" Width="90px" VisibleIndex="6" >
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="301 Rate" FieldName="301Rate" Width="120px" VisibleIndex="7" >
+                            <dx:GridViewDataTextColumn Caption="301 Rate" FieldName="301Rate" Width="90px" VisibleIndex="7" >
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
 

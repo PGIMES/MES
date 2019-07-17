@@ -213,7 +213,7 @@
                     <ClientSideEvents ValueChanged="function(s, e) {wlh_change(s);}" />
                 </dx:ASPxComboBox>
             </td>
-            <td>Customer Part #</td>
+            <td>描述</td>
             <td><dx:ASPxTextBox ID="txt_com_desc" ClientInstanceName="comdesc" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
             <td>HS Code_US</td>
             <td><dx:ASPxTextBox ID="txt_com_comm_code" ClientInstanceName="hscode" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
