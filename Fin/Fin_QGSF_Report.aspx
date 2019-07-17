@@ -92,6 +92,7 @@
                         <Columns>
                             <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  >
                             </dx:GridViewCommandColumn> 
+                            <dx:GridViewDataTextColumn Caption="客户大类" FieldName="Customer_DL" Width="80px" VisibleIndex="1" />
                             <dx:GridViewDataTextColumn Caption="物料号" FieldName="tr_part" Width="80px" VisibleIndex="1" />
                             <dx:GridViewDataTextColumn Caption="状态" FieldName="pt_status" Width="50px" VisibleIndex="2" />
                             <dx:GridViewDataTextColumn Caption="物料描述" FieldName="pt_desc" Width="250px" VisibleIndex="3" />
