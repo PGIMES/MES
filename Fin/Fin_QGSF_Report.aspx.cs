@@ -38,7 +38,7 @@ public partial class Fin_Fin_QGSF_Report : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        string sql = @"exec Report_QGSF {0},{1},'{2}'";
+        string sql = @"exec Report_QGSF 1,{0},{1},'{2}',''";
         sql = string.Format(sql, Convert.ToInt32(ddl_year.SelectedValue), Convert.ToInt32(ddl_month.SelectedValue), ddl_comp.SelectedValue);
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
