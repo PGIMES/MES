@@ -1058,7 +1058,7 @@
                                         <tr>
                                             <td style="width:5%;">申请原因描述：</td>
                                             <td style="width:95%" colspan="3"><%--CssClass="form-control input-s-sm" --%>
-                                                <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="linewrite" Width="100%" ToolTip="0|0"   />                                               
+                                                <asp:textbox ID="prreason" TextMode="MultiLine" runat="server" CssClass="linewrite" Width="100%" ToolTip="0|0" Rows="3" />                                               
                                             </td>
                                         </tr>
                                     </table>
