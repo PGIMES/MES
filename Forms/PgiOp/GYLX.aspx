@@ -584,8 +584,13 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
+
+            //20190725修改，不从源数据计算
+            /*if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
+            col5.SetText(col5_value.toFixed(0));*/
+            if(col3_value.toFixed(0)!=0){col5_value =col3_value.toFixed(0)*JtNum_value;}
             col5.SetText(col5_value.toFixed(0));
+
             
             //单人产出工时
             //var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
@@ -688,8 +693,13 @@
 
             //整线班产量
             var col5_value=0;
-            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
+
+            //20190725修改，不从源数据计算
+            /*if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
+            col5.SetText(col5_value.toFixed(0));*/
+            if(col3_value.toFixed(0)!=0){col5_value =col3_value.toFixed(0)*JtNum_value;}
             col5.SetText(col5_value.toFixed(0));
+
 
             //单人产出工时            
             //var col7_value=(TjOpSec_value*col1_value*col6_value)/3600;
