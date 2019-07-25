@@ -574,7 +574,9 @@
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
-            var col4_value=col2_value*col3_value;
+            //var col4_value=col2_value*col3_value;
+            var col4_value=col2_value*col3_value.toFixed(0);
+
             //单人报工数量
             if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
                 col6.SetText(col4_value.toFixed(0));
@@ -683,7 +685,9 @@
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
-            var col4_value=col2_value*col3_value;
+            //var col4_value=col2_value*col3_value;            
+            var col4_value=col2_value*col3_value.toFixed(0);
+
              //单人报工数量
             if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
                 col6.SetText(col4_value.toFixed(0));
