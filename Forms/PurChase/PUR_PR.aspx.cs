@@ -1492,7 +1492,7 @@ protected void Page_Load(object sender, EventArgs e)
         }
         sql_usefor += @" union all SELECT replace(pgino+[version]+'/'+productcode,' ','')   FROM [dbo].[form3_Sale_Product_DetailTable]";
 
-        if (prtype_v == "非刀具辅料类")
+        if (prtype_v == "非刀具辅料类" || prtype_v == "合同类")
         {
             sql_usefor += @" union all select replace(XMBH+'/'+XMMS,' ','') from [dbo].[formtable_main_55_ZDHXM]";
         }
