@@ -1881,6 +1881,9 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
             manager_flag += "工程师(" + appuserid + ")的副总经理不存在，不能提交!<br />";
         }
 
+        /*
+
+        /////暂时取消了，还是有产品工程师管理质量的工时，就不需要质量的人签核了.
         if (manager_flag == "")
         {
             if (ver == "A")//新增申请时，增加质量主管，经理 签核
@@ -1906,6 +1909,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
                 }                
             }
         }
+
+        */
 
         //-------------------------------------------包装工程师
         dt_bz_id = null;
@@ -2051,12 +2056,16 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcvg_manager_id.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
         ls.Add(lcvg_manager_id);
 
+        /*
+
+        /////暂时取消了，还是有产品工程师管理质量的工时，就不需要质量的人签核了.
         //质量工程师
         Pgi.Auto.Common lczl_id = new Pgi.Auto.Common();
         lczl_id.Code = "zl_id";
         lczl_id.Key = "";
         lczl_id.Value = "u_" + zl_id;
         ls.Add(lczl_id);
+        */
 
         //包装工程师
         string bz_id = "";
