@@ -574,8 +574,7 @@
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
-            //var col4_value=col2_value*col3_value;
-            var col4_value=col2_value*col3_value.toFixed(0);
+            var col4_value=col2_value*col3_value;
 
             //单人报工数量
             if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
@@ -588,9 +587,7 @@
             var col5_value=0;
 
             //20190725修改，不从源数据计算
-            /*if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
-            col5.SetText(col5_value.toFixed(0));*/
-            if(col3_value.toFixed(0)!=0){col5_value =col3_value.toFixed(0)*JtNum_value;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
 
             
@@ -685,8 +682,7 @@
             col3.SetText(col3_value.toFixed(0));
 
             //一人83%产量
-            //var col4_value=col2_value*col3_value;            
-            var col4_value=col2_value*col3_value.toFixed(0);
+            var col4_value=col2_value*col3_value;            
 
              //单人报工数量
             if(Number($.trim(col4.GetText()) == "" ? 0 : $.trim(col4.GetText()))!=col4_value.toFixed(0)){
@@ -697,11 +693,7 @@
 
             //整线班产量
             var col5_value=0;
-
-            //20190725修改，不从源数据计算
-            /*if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
-            col5.SetText(col5_value.toFixed(0));*/
-            if(col3_value.toFixed(0)!=0){col5_value =col3_value.toFixed(0)*JtNum_value;}
+            if(JSec_value!=0){col5_value =(12 * 60 * 60 / JSec_value) * 0.83 * EquipmentRate_value;}
             col5.SetText(col5_value.toFixed(0));
 
 
