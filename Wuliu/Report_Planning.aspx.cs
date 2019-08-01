@@ -30,7 +30,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
     public void QueryASPxGridView()
     {
         //DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "','" + ddl_domain.SelectedValue + "'").Tables[0];
-        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show] '" + ddl_year.SelectedValue + "','" + ddl_dept.SelectedValue + "'").Tables[0];
+        DataTable dt = DbHelperSQL.Query("exec [Report_Planning_Show_New] '" + ddl_year.SelectedValue + "','" + ddl_dept.SelectedValue + "'").Tables[0];
         SetGrid(this.gv, dt, 90);
     }
     protected void btn_export_Click(object sender, EventArgs e)
@@ -59,7 +59,7 @@ public partial class Wuliu_Report_Planning : System.Web.UI.Page
             lcolumn.CellStyle.Wrap = DevExpress.Utils.DefaultBoolean.True;
 
             lnwidth_emp = 0;
-            if (ldt_data.Columns[i].ColumnName.ToString() == "typedesc") { lnwidth_emp = 170; lcolumn.Caption = "描述"; }
+            if (ldt_data.Columns[i].ColumnName.ToString() == "typedesc") { lnwidth_emp = 200; lcolumn.Caption = "描述"; }
 
             if (lnwidth_emp > 0)
             {

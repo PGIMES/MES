@@ -44,7 +44,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             sql = string.Format(sql, Request.QueryString["dept_str"], dt_date.Rows[0]["week_startdate"], dt_date.Rows[0]["week_enddate"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
             */
-            sql = "exec [Report_Planning_dtl_show] 0,'{0}','{1}','{2}'";
+            sql = "exec [Report_Planning_dtl_show_New] 0,'{0}','{1}','{2}'";
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
@@ -53,7 +53,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             gv_tr_hist.DataSource = dt;
             gv_tr_hist.DataBind();
         }
-        if (Request.QueryString["typedesc"].ToString() == "计划生产订单数量")
+        if (Request.QueryString["typedesc"].ToString().Contains("计划生产订单数量"))//Request.QueryString["typedesc"].ToString() == "计划生产订单数量"
         {
             /*sql = @"select *
                         ,case scx_workshop when '二车间' then kaishi_qty/1.5 else kaishi_qty end as jihua_qty
@@ -65,35 +65,47 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
 
                 sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             */
-            sql = "exec [Report_Planning_dtl_show] 1,'{0}','{1}','{2}'";
+            sql = "exec [Report_Planning_dtl_show_New] 1,'{0}','{1}','{2}'";
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
-            gv_xx_wo_mstr.Visible = true;
-
-            gv_xx_wo_mstr.DataSource = dt;
-            gv_xx_wo_mstr.DataBind();
-
-            if (Request.QueryString["dept_str"].ToString() == "二车间" || Request.QueryString["dept_str"].ToString() == "四车间")
+            if (Request.QueryString["dept_str"].ToString() == "三车间" || (Request.QueryString["year"].ToString() == "2019" && Convert.ToInt32(Request.QueryString["week"]) <= 30))
             {
-                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = true;
+
+                gv_xx_wo_mstr.Visible = true;
+
+                gv_xx_wo_mstr.DataSource = dt;
+                gv_xx_wo_mstr.DataBind();
+
+                if (Request.QueryString["dept_str"].ToString() == "二车间" || Request.QueryString["dept_str"].ToString() == "四车间")
+                {
+                    gv_xx_wo_mstr.Columns["jihua_qty"].Visible = true;
+                }
+                else
+                {
+                    gv_xx_wo_mstr.Columns["jihua_qty"].Visible = false;
+                }
+                if (Request.QueryString["dept_str"].ToString() != "三车间")
+                {
+                    gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = false;
+                    gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = false;
+                    gv_xx_wo_mstr.Columns["sydept"].Visible = false;
+                }
+                else
+                {
+                    gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = true;
+                    gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = true;
+                    gv_xx_wo_mstr.Columns["sydept"].Visible = true;
+                }
             }
             else
             {
-                gv_xx_wo_mstr.Columns["jihua_qty"].Visible = false;
+                gv_main.Visible = true;
+
+                gv_main.DataSource = dt;
+                gv_main.DataBind();
             }
-            if (Request.QueryString["dept_str"].ToString() != "三车间")
-            {
-                gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = false;
-                gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = false;
-                gv_xx_wo_mstr.Columns["sydept"].Visible = false;
-            }
-            else
-            {
-                gv_xx_wo_mstr.Columns["ps_qty_per"].Visible = true;
-                gv_xx_wo_mstr.Columns["ps_qty_per_qty"].Visible = true;
-                gv_xx_wo_mstr.Columns["sydept"].Visible = true;
-            }
+
         }
         if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量") || Request.QueryString["typedesc"].ToString().Contains("废品数量"))
         {
@@ -118,11 +130,11 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
             */
             if (Request.QueryString["typedesc"].ToString().Contains("废品数量"))
             {
-                sql = "exec [Report_Planning_dtl_show] 2,'{0}','{1}','{2}'";
+                sql = "exec [Report_Planning_dtl_show_New] 2,'{0}','{1}','{2}'";
             }
             if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量"))
             {
-                sql = "exec [Report_Planning_dtl_show] 3,'{0}','{1}','{2}'";
+                sql = "exec [Report_Planning_dtl_show_New] 3,'{0}','{1}','{2}'";
             }
             sql = string.Format(sql, Request.QueryString["year"], Request.QueryString["week"], Request.QueryString["dept_str"]);
             DataTable dt = DbHelperSQL.Query(sql).Tables[0];
@@ -141,6 +153,10 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
     }
 
     protected void gv_xx_wo_mstr_PageIndexChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+    }
+    protected void gv_main_PageIndexChanged(object sender, EventArgs e)
     {
         QueryASPxGridView();
     }

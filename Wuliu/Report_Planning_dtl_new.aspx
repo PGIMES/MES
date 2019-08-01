@@ -107,6 +107,38 @@
             </Styles>                                          
         </dx:aspxgridview>
 
+        <dx:aspxgridview ID="gv_main" runat="server" AutoGenerateColumns="False" KeyFieldName="domain;part" Theme="MetropolisBlue"  ClientInstanceName="grid_gv_main"  EnableTheming="True"
+                Visible="false" OnPageIndexChanged="gv_main_PageIndexChanged">
+            <SettingsPager PageSize="1000"></SettingsPager>
+            <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="true" AllowEllipsisInText="true" SortMode="Value"  />
+            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="350" ShowFilterRow="true" ShowFilterRowMenu="true" ShowFooter="True"  />
+            <Columns>
+                <dx:GridViewDataTextColumn Caption="序号" FieldName="rownum" Width="40px" VisibleIndex="0"></dx:GridViewDataTextColumn> 
+                <dx:GridViewDataTextColumn Caption="区域" FieldName="scx_area" Width="80px" VisibleIndex="1"></dx:GridViewDataTextColumn>  
+                <dx:GridViewDataTextColumn Caption="生产线" FieldName="scx" Width="150px" VisibleIndex="2"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="物料号" FieldName="part" Width="70px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="零件号" FieldName="pt_desc1" Width="110px" VisibleIndex="5"></dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="实际产出计划" FieldName="kaishi_qty" Width="110px" VisibleIndex="7">
+                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="入库数量" FieldName="ruku_qty" Width="70px" VisibleIndex="10">
+                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="差异" FieldName="chayi_qty" Width="70px" VisibleIndex="12" SortOrder="Descending"
+                    ToolTip="差异=实际产出计划-入库数量；">
+                    <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                </dx:GridViewDataTextColumn>
+            </Columns>    
+            <TotalSummary>
+                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="kaishi_qty" ShowInColumn="kaishi_qty" ShowInGroupFooterColumn="kaishi_qty" SummaryType="Sum" />
+                <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="ruku_qty" ShowInColumn="ruku_qty" ShowInGroupFooterColumn="ruku_qty" SummaryType="Sum" />
+            </TotalSummary>                                          
+            <Styles>
+                <Header BackColor="#99CCFF"  ></Header>        
+                <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>    
+            </Styles>                                          
+        </dx:aspxgridview>
+
         <dx:aspxgridview ID="gv_workorder" runat="server" AutoGenerateColumns="False" KeyFieldName="workorder" Theme="MetropolisBlue"  ClientInstanceName="grid_xx_wo_mstr"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_workorder_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
