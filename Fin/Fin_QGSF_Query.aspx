@@ -58,7 +58,7 @@
 
         <p></p>
         
-        <dx:ASPxGridView ID="gv" runat="server">
+        <dx:ASPxGridView ID="gv" runat="server" OnHtmlRowCreated="gv_HtmlRowCreated">
             <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false" SortMode="Value"/>
             <SettingsPager PageSize="1000"></SettingsPager>
             <Columns></Columns>

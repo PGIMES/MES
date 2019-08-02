@@ -1,4 +1,5 @@
 ﻿using DevExpress.Utils;
+using DevExpress.Web;
 using DevExpress.XtraCharts;
 using Maticsoft.DBUtility;
 using System;
@@ -57,7 +58,7 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
                     seriesA.Points.Add(new SeriesPoint(argument, value));
                 }
                 seriesA.ArgumentScaleType = ScaleType.Qualitative;
-                //seriesA.Label.TextPattern = "{V:F0}";
+                //seriesA.Label.TextPattern = "{V:N0}";
                 //seriesA.LabelsVisibility = DefaultBoolean.True;
 
                 BarSeriesView sv1 = (BarSeriesView)seriesA.View;
@@ -110,7 +111,7 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
             seriesA_1.Points.Add(new SeriesPoint(argument, value_2));
 
         }
-        seriesA_1.Label.TextPattern = "{V:F0}";
+        seriesA_1.Label.TextPattern = "{V:N0}";
         seriesA_1.LabelsVisibility = DefaultBoolean.True;
         seriesA_1.View.Color = System.Drawing.Color.Green;
         seriesA_1.ArgumentScaleType = ScaleType.Qualitative;
@@ -176,5 +177,20 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
         lgrid.DataSource = ldt_data;
         lgrid.DataBind();
 
+    }
+
+    protected void gv_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data)
+        {
+            return;
+        }
+
+        string Customer_DL = Convert.ToString(e.GetValue("Customer_DL"));
+        if (Customer_DL == "合计")
+        {
+            e.Row.Style.Add("background-color", "LightGrey");
+            //e.Row.Style.Add("color", "red");
+        }
     }
 }
