@@ -174,7 +174,15 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
         }
         if (Request.QueryString["typedesc"].ToString().Contains("计划生产订单数量"))
         {
-            gv_xx_wo_mstr.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            if (Request.QueryString["dept_str"].ToString() == "三车间" || (Request.QueryString["year"].ToString() == "2019" && Convert.ToInt32(Request.QueryString["week"]) <= 30))
+            {
+                gv_xx_wo_mstr.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            }
+            else
+            {
+                gv_main.ExportXlsxToResponse(System.DateTime.Now.ToShortDateString(), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });
+            }
+            
         }
         if (Request.QueryString["typedesc"].ToString().Contains("未完成订单数量") || Request.QueryString["typedesc"].ToString().Contains("废品数量"))
         {

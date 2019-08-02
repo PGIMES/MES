@@ -107,7 +107,7 @@
             </Styles>                                          
         </dx:aspxgridview>
 
-        <dx:aspxgridview ID="gv_main" runat="server" AutoGenerateColumns="False" KeyFieldName="domain;part" Theme="MetropolisBlue"  ClientInstanceName="grid_gv_main"  EnableTheming="True"
+        <dx:aspxgridview ID="gv_main" runat="server" AutoGenerateColumns="False" KeyFieldName="rownum" Theme="MetropolisBlue"  ClientInstanceName="grid_gv_main"  EnableTheming="True"
                 Visible="false" OnPageIndexChanged="gv_main_PageIndexChanged">
             <SettingsPager PageSize="1000"></SettingsPager>
             <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="true" AllowEllipsisInText="true" SortMode="Value"  />
