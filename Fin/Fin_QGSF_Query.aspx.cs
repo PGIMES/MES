@@ -32,7 +32,7 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
         sql = string.Format(sql, Convert.ToInt32(ddl_year.SelectedValue), ddl_comp.SelectedValue, ddl_sf_type.SelectedValue);
         DataSet ds = DbHelperSQL.Query(sql);
 
-        DataTable dt = ds.Tables[0]; DataTable dt_1 = ds.Tables[1];
+        DataTable dt = ds.Tables[0]; //DataTable dt_1 = ds.Tables[1];
 
         SetGrid(gv, dt, 80, "Customer_DL;Duty"); 
 
@@ -47,7 +47,7 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
 
         if (dt.Rows.Count >= 1)
         {
-            for (int row = 0; row < dt.Rows.Count; row++)
+            for (int row = 0; row < dt.Rows.Count - 1; row++)//最后一行合计排除
             {
                 Series seriesA = new Series(dt.Rows[row]["Customer_DL"].ToString(), DevExpress.XtraCharts.ViewType.StackedBar);
                 for (int i = 2; i < dt.Columns.Count; i++)
@@ -97,15 +97,16 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
                 title = "301 extra duty_Total";
                 break;
             default:
-                title = "Total Duty";
+                title = "Total Duty_Total";
                 break;
         }
+        int rows_hj = dt.Rows.Count - 1;
         Series seriesA_1 = new Series(title, DevExpress.XtraCharts.ViewType.Line);
         for (int i = 0; i < DateTime.Now.Month; i++)
         {
-            string argument = dt_1.Columns[i].ColumnName;//参数名称 
+            string argument = dt.Columns[i + 2].ColumnName;//参数名称 
 
-            decimal value_2 = Convert.ToDecimal(dt_1.Rows[0][i].ToString() == "" ? "0" : dt_1.Rows[0][i].ToString());//参数值
+            decimal value_2 = Convert.ToDecimal(dt.Rows[rows_hj][i + 2].ToString() == "" ? "0" : dt.Rows[rows_hj][i + 2].ToString());//参数值
             seriesA_1.Points.Add(new SeriesPoint(argument, value_2));
 
         }
