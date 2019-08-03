@@ -17,7 +17,7 @@ public partial class Wuliu_Report_Planning_dtl_new : System.Web.UI.Page
 
             QueryASPxGridView();
         }
-        if (this.gv_xx_wo_mstr.IsCallback == true || this.gv_tr_hist.IsCallback == true || this.gv_workorder.IsCallback == true)//页面搜索条件使用
+        if (this.gv_xx_wo_mstr.IsCallback == true || this.gv_tr_hist.IsCallback == true || this.gv_workorder.IsCallback == true || this.gv_main.IsCallback == true)//页面搜索条件使用
         {
             QueryASPxGridView();
         }
