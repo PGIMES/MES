@@ -124,6 +124,9 @@ public partial class Fin_Fin_QGSF_Query : System.Web.UI.Page
         SecondaryAxisY secondaryYAxisA_1 = new SecondaryAxisY("Population Axis");
         diagramA_1.SecondaryAxesY.Add(secondaryYAxisA_1);
         ((LineSeriesView)seriesA_1.View).AxisY = secondaryYAxisA_1;
+        ((LineSeriesView)seriesA_1.View).AxisY.Label.TextPattern = "{V:#,0}";
+
+        ((XYDiagram)Chart.Diagram).AxisY.Label.TextPattern = "{V:#,0}";
 
 
     }
