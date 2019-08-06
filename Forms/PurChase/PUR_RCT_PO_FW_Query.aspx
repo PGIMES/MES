@@ -248,6 +248,7 @@
                             <dx:GridViewDataTextColumn Caption="应纳税" FieldName="ishs" Width="45px" VisibleIndex="30" />
                             <dx:GridViewDataTextColumn Caption="税率N" FieldName="TaxRate" Width="45px" VisibleIndex="31" />
                             <dx:GridViewDataTextColumn Caption="请购申请部门" FieldName="DeptName" Width="80px" VisibleIndex="32" />
+                            <dx:GridViewDataTextColumn Caption="请购成本部门" FieldName="costcentre_pr" Width="80px" VisibleIndex="32" />
                             <dx:GridViewDataTextColumn Caption="请购申请人" FieldName="CreateByName" Width="70px" VisibleIndex="33" />
                             <dx:GridViewDataTextColumn Caption="验收人" FieldName="checkbyname" Width="70px" VisibleIndex="34" />
                             <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="130px" VisibleIndex="35" />
