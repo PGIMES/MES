@@ -94,9 +94,11 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
         { tb1.Visible = false; }
         if (IsDel == "1")
         { e.Row.BackColor = Color.Gray; }
-        
-       
-      
+
+        //PO单号:PO单号<br>QAD单号
+        string PoNo = e.GetValue("PoNo").ToString();
+        e.Row.Cells[20].Text = PoNo;
+
     }
     protected void GV_PART_RowCommand(object sender, ASPxGridViewRowCommandEventArgs e)
     {
@@ -133,5 +135,20 @@ public partial class Forms_PurChase_PR_Report_Query : System.Web.UI.Page
     {
         QueryASPxGridView();
         ScriptManager.RegisterStartupScript(this, e.GetType(), "", "setHeight() ;", true);
+    }
+
+    protected void GV_PART_ExportRenderBrick(object sender, ASPxGridViewExportRenderingEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            if (e.Column.Caption == "PO单号")
+            {
+                if (e.Value != DBNull.Value)
+                {
+                    e.TextValue = Convert.ToString(e.Value).Replace("<br>", "\r\n");
+                }
+            }
+
+        }
     }
 }

@@ -128,7 +128,8 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="PRNo" AutoGenerateColumns="False"  
-                        OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" OnHtmlRowCreated="GV_PART_HtmlRowCreated" onrowcommand="GV_PART_RowCommand" onpageindexchanged="GV_PART_PageIndexChanged">
+                        OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" OnHtmlRowCreated="GV_PART_HtmlRowCreated" onrowcommand="GV_PART_RowCommand" onpageindexchanged="GV_PART_PageIndexChanged"
+                        OnExportRenderBrick="GV_PART_ExportRenderBrick">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="True" AllowSelectByRowClick="True" ColumnResizeMode="Control" 
                             autoexpandallgroups="True" mergegroupsmode="Always" sortmode="Value" />
