@@ -79,7 +79,7 @@
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="差异" FieldName="chayi_qty" Width="70px" VisibleIndex="12" SortOrder="Descending"
-                    ToolTip="二车间：数量=生产计划-拆分数量；其他车间：开始数量-投产数量；">
+                    ToolTip="二车间,四车间：数量=生产计划-拆分数量；一车间：开始数量-投产数量；三车间：开始数量-入库数量；">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn Caption="重量" FieldName="ps_qty_per" Width="70px" VisibleIndex="13">
