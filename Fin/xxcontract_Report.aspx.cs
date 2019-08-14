@@ -15,12 +15,14 @@ public partial class Fin_xxcontract_Report : System.Web.UI.Page
 {
     public string UserId = "";
     public string UserName = "";
+    public string DeptName = "";
     LoginUser LogUserModel = null;
     protected void Page_Load(object sender, EventArgs e)
     {
         LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         UserId = LogUserModel.UserId;
         UserName = LogUserModel.UserName;
+        DeptName = LogUserModel.DepartName;
 
         if (!IsPostBack)
         {

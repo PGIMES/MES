@@ -22,11 +22,15 @@
                 layer.alert("【签订日期】不可为空");
                 return false;
             }
+            if (Number($("#TotalPay").val()) <= 0) {
+                layer.alert("【合同总金额(原币)】不可为空");
+                return false;
+            }
             return true;
         }
 
         function grid_read() {
-            var bf = true;
+            var bf = false;
             $("[id$=gv] tr[class*=DataRow]").each(function (index, item) {
                 var fkamt = $(item).find("td").last().text();//已付款金额
                 if (Number(fkamt) > 0) {//已付款金额>0,设置只读
@@ -46,9 +50,17 @@
                     (eval('PayFunc' + index)).SetEnabled(false);
                     (eval('PayFile' + index)).SetEnabled(false);
 
-                } else {
-                    bf = false;
-                }
+                } 
+                if (Number($(item).find("input[id*=FPAmount]").val()) > 0) {//发票金额>0,设置  按钮隐藏
+                    if (parseFloat($(item).find("input[id*=FPAmount]").val()) > 0) {
+
+                        $(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
+                        (eval('FPDate' + index)).SetEnabled(false);
+
+                        bf = true;
+                    }
+                } 
             });
 
             if (bf == false) {//在判断合同状态：关闭or作废
@@ -68,11 +80,12 @@
 
                 });
             }
-
+            
             if (bf) {
-                $("#btn_save").hide(); 
+                $("#btn_save").hide();
                 $("#btnadd").hide(); $("#btndel").hide(); $("#btnsave").hide();
             }
+
         }
 
     </script>
@@ -233,9 +246,11 @@
                             <table style="width:100%; font-size:12px; line-height:35px;" border="0" id="tblWLLeibie">
                                 <tr>
                                     <td>域</td>
-                                    <td><asp:TextBox ID="txt_domain" runat="server" ReadOnly="true" CssClass="lineread" Width="40px" Height="27px"></asp:TextBox></td>
+                                    <td><asp:TextBox ID="txt_domain" runat="server"  CssClass="linewrite" Width="40px" Height="27px" 
+                                        OnTextChanged="SysContractNo_TextChanged" AutoPostBack="true"></asp:TextBox></td>
                                     <td>系统合同号</td>
-                                    <td><asp:TextBox ID="SysContractNo" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></asp:TextBox></td>
+                                    <td><asp:TextBox ID="SysContractNo" runat="server" CssClass="linewrite" Width="100px" Height="27px" 
+                                        OnTextChanged="SysContractNo_TextChanged" AutoPostBack="true"></asp:TextBox></td>
                                     <td>合同总金额(原币)</td>
                                     <td><asp:TextBox ID="TotalPay" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></asp:TextBox></td>
                                     <td>签订日期</td>

@@ -42,7 +42,7 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        DataSet ds = DbHelperSQL.Query(" exec [Report_PO_Contract_Modify] '" + nbr + "','" + domain + "'");
+        DataSet ds = DbHelperSQL.Query(" exec [Report_PO_Contract_Modify] '" + SysContractNo.Text + "','" + txt_domain.Text + "'");
         gv.DataSource = ds.Tables[0];
         gv.DataBind();
         GetGrid(ds.Tables[0]);
@@ -50,6 +50,21 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
         DataTable dt_his = ds.Tables[1];
         gv_his.DataSource = dt_his;
         gv_his.DataBind();
+
+
+        DateTime? signdate = null;string ori_total_amount = null;
+        if (ds.Tables[2].Rows.Count > 0)
+        {
+            if (ds.Tables[2].Rows[0]["signdate"].ToString() != "") { signdate = Convert.ToDateTime(ds.Tables[2].Rows[0]["signdate"]); }
+            ori_total_amount = Convert.ToDouble(ds.Tables[2].Rows[0]["ori_total_amount"].ToString()).ToString();
+        }
+        else
+        {
+            SysContractNo.Text = "";
+        }
+        SignDate.Value = signdate;
+        TotalPay.Text = ori_total_amount;
+        
     }
 
     protected void gv_his_PageIndexChanged(object sender, EventArgs e)
@@ -86,7 +101,8 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
         {
             msg = "确认失败！";
         }
-        string lsstr = "layer.alert('" + msg + "',function(index) {parent.layer.close(index);parent.location.reload();})";
+        //string lsstr = "layer.alert('" + msg + "',function(index) {parent.layer.close(index);parent.location.reload();})";
+        string lsstr = "layer.alert('" + msg + "')";
         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
     }
 
@@ -214,6 +230,17 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
     protected void btnsave_Click(object sender, EventArgs e)
     {
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+        if (ldt.Rows.Count <= 0)
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", "计划付款信息不可为空!");
+            return;
+        }
+        if (SysContractNo.Text == "")
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", "系统合同号不可为空!");
+            return;
+        }
+
         double paytotal = Convert.ToDouble(TotalPay.Text);
 
         string msg="";
@@ -239,7 +266,6 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
             Pgi.Auto.Public.MsgBox(this, "alert", msg);
             return;
         }
-
 
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
@@ -297,7 +323,8 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
         {
             remsg = "确认失败！";
         }
-        string lsstr = "layer.alert('" + remsg + "',function(index) {parent.layer.close(index);parent.location.reload();})";
+        //string lsstr = "layer.alert('" + remsg + "',function(index) {parent.layer.close(index);parent.location.reload();})";
+        string lsstr = "layer.alert('" + remsg + "')";
         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
     }
 
@@ -321,4 +348,9 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
 
     }
 
+
+    protected void SysContractNo_TextChanged(object sender, EventArgs e)
+    {
+        QueryASPxGridView();
+    }
 }

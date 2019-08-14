@@ -10,9 +10,23 @@
     <script type="text/javascript">
         var UserId = '<%=UserId%>';
         var UserName = '<%=UserName%>';
+        var DeptName = '<%=DeptName%>';
 
         $(document).ready(function () {
             $("#mestitle").html("【应付类合同执行进度查询】");
+
+            if (DeptName.indexOf("采购") != -1 || DeptName.indexOf("财务") != -1 || DeptName.indexOf("IT") != -1) {
+                $('#btn_print').show();
+                $('#btn_modify_plan').show();
+                $('#btn_zf').show();
+                $('#btn_wc').show();
+            } else {
+                $('#btn_print').hide();
+                $('#btn_modify_plan').hide();
+                $('#btn_zf').hide();
+                $('#btn_wc').hide();
+            }
+
             setHeight();
 
             $(window).resize(function () {
@@ -92,13 +106,17 @@
 
                         //alert(url);
                         layer.open({
-                            title: '修改合同计划-系统合同号【' + ls_nbr + '】-合同总金额(原币)【' + ori_total_amount + '】',
+                            title: '修改合同计划',//'修改合同计划-系统合同号【' + ls_nbr + '】-合同总金额(原币)【' + ori_total_amount + '】',
                             closeBtn: 2,
                             type: 2,
                             area: ['1200px', '580px'],
                             fixed: false, //不固定
                             maxmin: true, //开启最大化最小化按钮
-                            content: url
+                            content: url,
+                            cancel: function(){ 
+                                //右上角关闭回调
+                                parent.location.reload();
+                            }
                         });
 
                     }
@@ -178,6 +196,39 @@
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 160) + "px");
         }
     </script>
+    <%--<script type="text/javascript">
+        function OnSelectAllRowsLinkClick() {
+            grid.SelectRows();
+        }
+        function OnUnselectAllRowsLinkClick() {
+            grid.UnselectRows();
+        }
+        function OnGridViewInit() {
+            UpdateTitlePanel();
+        }
+        function OnGridViewSelectionChanged() {
+            UpdateTitlePanel();
+        }
+        function OnGridViewEndCallback() {
+            UpdateTitlePanel();
+        }
+        function UpdateTitlePanel() {
+            var selectedFilteredRowCount = GetSelectedFilteredRowCount();
+            var isAllPages = false;
+            lnkSelectAllRows.SetVisible(!isAllPages && grid.cpVisibleRowCount > selectedFilteredRowCount);
+            lnkClearSelection.SetVisible(!isAllPages && grid.GetSelectedRowCount() > 0);
+
+            var text = "Total rows selected: <b>" + grid.GetSelectedRowCount() + "</b>. ";
+            var hiddenSelectedRowCount = grid.GetSelectedRowCount() - GetSelectedFilteredRowCount();
+            if(hiddenSelectedRowCount > 0)
+                text += "Selected rows hidden by the applied filter: <b>" + hiddenSelectedRowCount + "</b>.";
+            text += "<br />";
+            info.SetText(text);
+        }
+        function GetSelectedFilteredRowCount() {
+            return grid.cpFilteredRowCountWithoutPage + grid.GetSelectedKeysOnPage().length;
+        }
+    </script>--%>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -214,6 +265,15 @@
         </table>                   
     </div>
 
+    <%--<div class="col-sm-12">
+        <dx:ASPxLabel ID="lblInfo" ClientInstanceName="info" runat="server" />
+        <dx:ASPxHyperLink ID="lnkSelectAllRows" ClientInstanceName="lnkSelectAllRows" 
+            Text="Select all rows" runat="server" Cursor="pointer" ClientSideEvents-Click="OnSelectAllRowsLinkClick" />
+        &nbsp;
+        <dx:ASPxHyperLink ID="lnkClearSelection" ClientInstanceName="lnkClearSelection" 
+            Text="Clear selection" runat="server" Cursor="pointer"  ClientSideEvents-Click="OnUnselectAllRowsLinkClick" />
+    </div>--%>
+
     <div class="col-sm-12">
         <table>
             <tr>
@@ -221,13 +281,13 @@
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="syscontractno;contractline" 
                         AutoGenerateColumns="False" Width="3725px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnExportRenderBrick="gv_ExportRenderBrick" OnHtmlRowCreated="gv_HtmlRowCreated">
-                        <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
+                        <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  /><%--EndCallback="function(s, e) {setHeight();OnGridViewEndCallback();}" Init="OnGridViewInit" SelectionChanged="OnGridViewSelectionChanged"--%>
                         <SettingsPager PageSize="100" ></SettingsPager>
                         <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                             VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="600"  />
                         <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false"  ColumnResizeMode="Control" AllowEllipsisInText="false"/>
                         <Columns>     
-                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0">
+                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"><%--SelectAllCheckboxMode="Page"--%>
                             </dx:GridViewCommandColumn>    
                             <dx:GridViewDataTextColumn Caption="合同状态" FieldName="contractstatus" Width="55px" VisibleIndex="0" >
                                 <Settings AllowAutoFilterTextInputTimer="False" />
