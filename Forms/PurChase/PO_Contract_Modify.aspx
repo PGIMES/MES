@@ -57,10 +57,12 @@
                         $(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
                         (eval('FPDate' + index)).SetEnabled(false);
-
+                    } else {
                         bf = true;
                     }
-                } 
+                } else {
+                    bf = true;
+                }
             });
 
             if (bf == false) {//在判断合同状态：关闭or作废
@@ -73,7 +75,7 @@
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
                     success: function (data) {
                         var obj = eval(data.d);
-                        if (obj[0].re_flag != "") {
+                        if (obj[0].re_flag == "") {//合同没有关闭或作废
                             bf = true;
                         }
                     }
@@ -81,7 +83,7 @@
                 });
             }
             
-            if (bf) {
+            if (bf == false) {
                 $("#btn_save").hide();
                 $("#btnadd").hide(); $("#btndel").hide(); $("#btnsave").hide();
             }
