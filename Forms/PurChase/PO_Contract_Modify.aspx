@@ -65,7 +65,7 @@
                 }
             });
 
-            if (bf == false) {//在判断合同状态：关闭or作废
+            if (bf == true) {//在判断合同状态：关闭or作废
                 $.ajax({
                     type: "post",
                     url: "PO_Contract_Modify.aspx/check_data",
