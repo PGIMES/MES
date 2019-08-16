@@ -65,7 +65,7 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
                         from qad.dbo.qad_pt_mstr a
                             where (
                                     (a.pt_pm_code = 'P' and a.pt_part like 'P%' and a.pt_prod_line like '1%' and(a.pt_status <> 'DEAD' and a.pt_status <> 'OBS') )                                      
-                                 or (a.pt_part='P0170AA')  or (a.pt_part='P0739AA-01') or (a.pt_part='P0738AA-01') or (a.pt_part='P0591AA-01')  
+                                 or (a.pt_part='P0170AA')  or (a.pt_part='P0739AA-01') or (a.pt_part='P0738AA-01') or (a.pt_part='P0591AA-01')  or (a.pt_part='P0125BA')  
                                 )                   
                                 and a.pt_domain = '{0}' 
                          ) aa where ispodsched=0
