@@ -40,6 +40,7 @@ public partial class Select_select_wkzx : System.Web.UI.Page
         //string sql = @"select * from [172.16.5.8].[ecology].[dbo].[qad_wc_mstr] 
         //            where wc_domain='" + Request.QueryString["domain"] + "' and wc_wkctr like '%" + txt_code.Text.Trim() + "%' and wc_desc like '%" + txt_desc.Text.Trim() + "%' order by wc_wkctr";
 
+        //'5170','6170','7170'是财务专用，请设置工程师申请时不可见
         string sql = @"
                     select * 
                     from (
@@ -55,7 +56,7 @@ public partial class Select_select_wkzx : System.Web.UI.Page
 	                        left join [dbo].[PGI_GYLX_wc_relation] b on a.wc_dept=b.wc_dept
                         where wc_domain='{0}' and b.wc_dept  is null
                         ) aa 
-                    where wc_wkctr like '%{2}%' and wc_desc like '%{3}%' order by wc_wkctr";
+                    where wc_wkctr not in('5170','6170','7170') and wc_wkctr like '%{2}%' and wc_desc like '%{3}%' order by wc_wkctr";
 
         sql = string.Format(sql, Request.QueryString["domain"], LogUserModel.UserId, txt_code.Text.Trim(), txt_desc.Text.Trim());//, Request.QueryString["userid"]
 
