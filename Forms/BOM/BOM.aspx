@@ -20,10 +20,20 @@
         hidden {
             display: none;
         }
-        .input {border-left:none ;border-right:none;border-top:none;   height:25px;padding-left:5px}
+        .input {padding-left:5px;
+            border-left-style: none;
+            border-left-color: inherit;
+            border-left-width: medium;
+            border-right-style: none;
+            border-right-color: inherit;
+            border-right-width: medium;
+            border-top-style: none;
+            border-top-color: inherit;
+            border-top-width: medium;
+        }
         .input-edit{ border-bottom:1px solid gray;    }
         .input-readonly { border-bottom:1px solid  lightgray }
-        select{border-left:none ;border-right:none;border-top:none;border-bottom:1px solid gray  ;height:25px}
+        .select{border-left:none ;border-right:none;border-top:none;border-bottom:1px solid gray  ;height:25px}
         .name{width:80px}
         .bordernone{border:none; }
         .alpha100{ background:rgba(0, 0, 0, 0); }
@@ -34,7 +44,7 @@
     <script type="text/javascript">
         var paramMap;
         $(document).ready(function () {
-            $("#mestitle").html("【BOM申请单】<a href='/userguide/reviewGuide.pptx' target='_blank' class='h4' style='display:none'>使用说明</a>");// 
+            $("#mestitle").html("【BOM申请单】<a href='/userguide/BOMGuide.pptx' target='_blank' class='h5' style='color:red'>使用说明</a>");// 
              
             SetButtons();
 
@@ -60,14 +70,15 @@
                 $("#btnAddDetl").css("display","none");
                 $("#btnDelete").css("display","none");                
                 DisableButtons();//禁用流程按钮
-               // SetControlStatus(fieldSet);
-                
+                               
             }       
 
             $("a span[text=更新]").click(function(){
                 validUpdate()
-            })
+            });
 
+            //$("[id*='_pt_part']").click();
+    
         })// end ready
         
         function validUpdate(value){
@@ -96,20 +107,24 @@
                     //ctype=(ctype).toLowerCase();
 
                     var statu=fieldStatus[item];
-                    if( statu.indexOf("1_")!="-1" && (ctype=="text"||ctype=="textarea") ){
+                    if(  ( paramMap.display==1||statu.indexOf("1_")!="-1") && (ctype=="text"||ctype=="textarea") ){
                         $("#"+id).attr("readonly","readonly");
                     }
-                    else if( statu.indexOf("1_")!="-1" && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file" ) ){
+                    else if( ( paramMap.display==1||statu.indexOf("1_")!="-1") && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file" ) ){
                         $("#"+id).attr("disabled","disabled");                 
                     }
 
-                    if( statu.indexOf("1_")!="-1" ){
+                    if( statu.indexOf("1_")!="-1" ||  paramMap.display==1){
+                        //如果是显示模式或只读模式
+                        $("#pgino").removeAttr("onclick");
                         //设定treelist 编辑性
                         $('table[id*=treeList] th:last').hide();
                         $('table[id*=treeList] tbody tr').each(function(index,item)
                         {
                             $(item).find("td:last").hide();
                         })
+                        //隐藏更新OP块
+                        $('#pnlPackOP').hide();
                     }
                     
                 }
@@ -139,12 +154,12 @@
                     //ctype=(ctype).toLowerCase();
 
                     var statu=fieldStatus[item];
-                    if( statu.indexOf("1_")!="-1" && (ctype=="text"||ctype=="textarea") ){
+                    if( ( paramMap.display==1||statu.indexOf("1_")!="-1") && (ctype=="text"||ctype=="textarea") ){
                         $(obj).attr("readonly","readonly");
                         $(obj).removeAttr("onclick");$(obj).removeAttr("ondblclick");
                       //  $(obj).css("border","none");
                     }
-                    else if( statu.indexOf("1_")!="-1" && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file"  ) ){
+                    else if( ( paramMap.display==1||statu.indexOf("1_")!="-1") && ( ctype=="checkbox"||ctype=="radio"||ctype=="select"||ctype=="file"  ) ){
                         $(obj).attr("disabled","disabled");
                     }
                     else if(statu.indexOf("1_")!="-1" && ( ctype=="input" ) ){
@@ -181,6 +196,10 @@
                 layer.alert("直属主管未获取到，请尝试重新打开申请单。请联系IT设定.");
                 return false;
             }
+            if($("#projector").val()==""){
+                layer.alert("项目负责人未获取到，请尝试重新打开申请单。请联系IT设定.");
+                return false;
+            }
             <%=ValidScript%>
             var flag=true;
             var msg="";
@@ -201,8 +220,7 @@
                     flag=false;
                     return false;
                 }
-            })
-          
+            })         
 
             if(flag==false){  
                 layer.alert(msg);
@@ -233,6 +251,7 @@
             var ctrl0="pt_part";
             var ctrl1="pt_desc1";
             var ctrl2="pt_desc2";
+            var _domain=$("#domain").val();
            // window.open( '/forms/open/select.aspx?windowid=bom&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2);
             layer.open({
                 shade: [0.5, '#000', false],
@@ -243,11 +262,13 @@
                 maxmin: false,
                 title: ['<i class="fa fa-dedent"></i> 请选择物料', false],
                 closeBtn: 1,
-                content: '/forms/open/select.aspx?windowid=bom&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2,
-                end: function () {
-
+                content: '/forms/open/select.aspx?windowid=bom&domain='+_domain+'&changekey='+ctrl0+'&ctrl0='+ctrl0+'&ctrl1='+ctrl1+'&ctrl2='+ctrl2,
+                end: function(e) {
+                    
                 }
             });
+
+            
         }
         //选择项目号
         function selectpgino(){  
@@ -274,6 +295,77 @@
                 }
             });
         }
+
+        function getMaterial(part,domain){
+             $.ajax({
+                type: "Post",async: false,
+                url: "bom.aspx/getMaterial" , 
+                //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字
+                //P1:wlh P2： 
+                data: "{'P1':'"+part+"','P2':'"+domain+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {//返回的数据用data.d获取内容//                      
+                        if (data.d == "") {
+                            $("[id*=material]").val("");
+                            layer.msg("未获取到该物料【材料】，请补充.");  
+                            
+                        }
+                        else {                             
+                            $("[id*=material]").val(data.d)
+                        }                   
+                },
+                error: function (err) {
+                    layer.alert(err);
+                }
+            });
+
+        }
+        //获取包装OP
+       
+        function getPackingOP(zpart,domain){
+            //是包材Z07....部分才自动取OP 
+            var part=$("#pgino").val();
+            if(zpart.indexOf("Z07")>=0){
+                $.ajax({
+                    type: "Post",async: false,
+                    url: "bom.aspx/getPackingOP" , //方法传参的写法一定要对，str为形参的名字,str2为第二个形参的名字                
+                    data: "{'P1':'"+part+"','P2':'"+domain+"'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {//返回的数据用data.d获取内容//                      
+                            if (data.d == "") {
+                                $("[id*=ps_op]").val("");
+                                $("[id*=ps_op]").prop("readonly","readonly");
+                                layer.msg("未获取到该包材[消耗工序]，请确认["+part+"]工艺路线.");  
+                            }
+                            else {                             
+                                $("[id*=ps_op]").val(data.d);
+                                $("[id*=ps_op]").prop("readonly","readonly").prop("disabled","disabled");
+                            }                   
+                    },
+                    error: function (err) {
+                        layer.alert(err);
+                    }
+                });
+
+            }else{
+                $("[id*=ps_op]").val("");
+            }
+        }
+
+        //计算用量  
+        function getYongLiang(obj){                  
+            var result=0;
+            
+            var value=$(obj).val().replace("\\","");
+            
+            result=eval(value).toFixed(8);
+            result=parseFloat(result);
+
+            $(obj).val(result);
+            
+       }
     </script>
 
     <form id="form1" runat="server" enctype="multipart/form-data">
@@ -377,10 +469,11 @@
                                                             <input id="txt_LogUserDept"  class="input input-readonly" style=" width: 100px" runat="server" readonly="True" />
                                                         </div>
                                                     </td>
-                                                    <td hidden>申请公司</td>
+                                                    <td hidden>签核相关人</td>
                                                     <td hidden>  
                                                         <asp:TextBox ID="deptm" Style="width: 20px; display: none" runat="server" />
                                                         <asp:TextBox ID="deptmfg" Style="width: 20px; display: none" runat="server" />
+                                                        <asp:TextBox ID="projector" Style="width: 80px; display: " runat="server" />
                                                     </td>
                                                 </tr>
                                             </table>
@@ -403,17 +496,16 @@
                                 <div>
                                     <table style="" border="0" runat="server" id="tblWLLeibie">
                                         <tr>
-                                            <td>项目号：</td>
+                                            <td>物料号：</td>
                                             <td>
                                                  
                                                 <input type="text" id="pgino" runat="server"   onclick="selectpgino()"  class="input input-edit width100" />
-                                                客户零件号:<input  type="text" id="txt_ptdesc1" readonly="true" runat="server" class="input input-edit "   />
-                                                零件名称:<input  type="text" id="txt_ptdesc2" readonly="true" runat="server" class="input input-edit "   />
-                                            </td>
-                                            <td hidden>工程版本：</td><td hidden>  </td>                              
+                                                客户零件号:<input  type="text" id="txt_ptdesc1" readonly="true" runat="server" class="input input-readonly "   />
+                                                零件名称:<input  type="text" id="txt_ptdesc2" readonly="true" runat="server" class="input input-readonly "   />
+                                            </td>                                                                         
                                             <td>生产工厂：</td>
                                             <td >                                                
-                                                <asp:TextBox  ID="domain"   runat="server" Width="120px" ToolTip="0|1"   class="input input-edit"  ></asp:TextBox>
+                                                <asp:TextBox  ID="domain"   runat="server" Width="120px" ToolTip="0|1"   class="input input-readonly"  ></asp:TextBox>
                                             </td>
                                             <td> BOM版本：</td>
                                             <td>
@@ -428,7 +520,7 @@
                                                         </script>
                                                     </ContentTemplate>
                                                 </asp:UpdatePanel>
-                                                <asp:TextBox ID="bomver" runat="server" readonly="true" class="input input-edit" Width="120px" ToolTip="0|0" /><asp:Button runat="server" ID="btnFuZhu" OnClick="btnFuZhu_Click" CssClass="hidden" />
+                                                <asp:TextBox ID="bomver" runat="server" readonly="true" class="input input-readonly" Width="120px" ToolTip="0|0" /><asp:Button runat="server" ID="btnFuZhu" OnClick="btnFuZhu_Click" CssClass="hidden" />
 
 
                                             </td>
@@ -469,24 +561,27 @@
                                                     <dx:ASPxCheckBox ID="chkDragging" runat="server" AutoPostBack="true" Checked="true" Text="Allow node dragging" Wrap="false" />
                                                 </div>
                                             </div>
-                                            <dx:ASPxTreeList ID="treeList" runat="server" AutoGenerateColumns="False" Width="100%" 
+                                            <dx:ASPxTreeList ID="treeList" runat="server" AutoGenerateColumns="False" Width="100%"  
                                                 KeyFieldName="id" ParentFieldName="PID" OnProcessDragNode="treeList_ProcessDragNode" OnNodeInserting="treeList_NodeInserting"
                                                 OnNodeUpdating="treeList_NodeUpdating" OnNodeDeleting="treeList_NodeDeleting" ViewStateMode="Enabled" SettingsBehavior-AllowDragDrop="true"
                                                  OnInitNewNode="treeList_InitNewNode" OnNodeValidating="treeList_NodeValidating"  OnHtmlRowPrepared="treeList_HtmlRowPrepared"
-                                                
-                                                 OnCommandColumnButtonInitialize="treeList_CommandColumnButtonInitialize"  OnHtmlDataCellPrepared="treeList_HtmlDataCellPrepared" >
-                                                  <ClientSideEvents   EndCallback="function(s, e) {
-	                                                    $('table[id*=treeList_D] th:last a').find('span').remove();                                                      
-                                                    }
-                                                    "    Init=""/>
+                                                 
+                                                 OnCommandColumnButtonInitialize="treeList_CommandColumnButtonInitialize"  OnHtmlDataCellPrepared="treeList_HtmlDataCellPrepared"  >
+                                                <ClientSideEvents
+                                                    EndCallback="function(s, e) {
+	                                                                    $('table[id*=treeList_D] th:last a').find('span').remove();
+                                                    if($('[id*=_pt_part]').val()!=undefined){
+                                                                        if($('[id*=_pt_part]').val().indexOf('Z07')>=0){ $('[id*=ps_op]').prop('readonly','readonly').prop('disabled','disabled');  }};      }"
+                                                      
+                                                     />
                                                 <Settings GridLines="Both"  />
-                                                <SettingsBehavior ExpandCollapseAction="NodeDblClick" AllowFocusedNode="True" AllowDragDrop="true"   AutoExpandAllNodes="true"/>
+                                                <SettingsBehavior ExpandCollapseAction="NodeDblClick" AllowFocusedNode="True" AllowDragDrop="true"    AutoExpandAllNodes="true"/>
                                                 <SettingsCustomizationWindow PopupHorizontalAlign="RightSides" PopupVerticalAlign="BottomSides" />
                                                 <SettingsEditing Mode="EditFormAndDisplayNode" AllowNodeDragDrop="True" />
                                                 <SettingsPopupEditForm Width="500" />
                                                 <SettingsText CommandEdit="编辑" RecursiveDeleteError="该节点有子节点，不能删除" CommandNew="添加x" ToolbarNew="PPP"
                                                     ConfirmDelete="确定要删除吗?" CommandUpdate="更新" CommandDelete="删除" CommandCancel="取消" />
-                                                
+                                                    
                                                 <SettingsPopup>
                                                     <EditForm VerticalOffset="-1" Width="500px">
                                                     </EditForm>
@@ -494,14 +589,14 @@
                                                 
                                                 <Templates>                                                    
                                                     <EditForm>
-                                                        <table class="treeListCard" >
+                                                        <table class="treeListCard" onload="alert(22)" >
                                                             <tr>                                                                
-                                                                <td class="name">物料号:</td>
+                                                                <td class="name" >物料号:</td>
                                                                 <td>
                                                                     <input type="text" id="pt_partold" runat="server" value='<%# Eval("pt_part") %>'  class="hidden"  />
                                                                      <input type="text" id="id" runat="server"  value='<%# Eval("id") %>' class="hidden"/>
                                                                      <input type="text" id="pid" runat="server" value='<%# Eval("pid") %>' class="hidden" />
-                                                                    <input type="text" id="pt_part" runat="server" value='<%# Eval("pt_part") %>' readonly='<%# Eval("pt_part")==pgino.Value?"true":"false" %>' onclick='<%# Eval("pt_part")==null ||Eval("pt_part").ToString()!=pgino.Value?"openwind()":"" %>'  class='<%# Eval("pt_part")==null || Eval("pt_part").ToString()!=pgino.Value?"width100":"bordernone alpha100" %>' />
+                                                                    <input type="text" id="pt_part" runat="server" value='<%# Eval("pt_part") %>' onchange="getMaterial($('[id*=pt_part]').val(),$('#domain').val());getPackingOP($('[id*=pt_part]').val(),$('#domain').val())" readonly='<%# Eval("pt_part")==pgino.Value?"true":"false" %>' onclick='<%# Eval("pt_part")==null ||Eval("pt_part").ToString()!=pgino.Value?"openwind()":"" %>'  class='<%# Eval("pt_part")==null || Eval("pt_part").ToString()!=pgino.Value?"width100":"bordernone alpha100" %>' />
                                                                 </td>
                                                                 <td class="name">描述(零件号):</td>
                                                                 <td>
@@ -515,9 +610,9 @@
                                                                 <td >
                                                                     <input type="text" id="drawno" runat="server" value='<%# Eval("drawno") %>' class="width100" />
                                                                 </td>                                                                
-                                                                <td class="name">单位用量(Kg):</td>
+                                                                <td class="name">单件用量:</td>
                                                                 <td >
-                                                                    <input type="text" id="ps_qty_per"  runat="server" value='<%# Eval("ps_qty_per") %>'  class="width50" />
+                                                                    <input type="text" id="ps_qty_per"  runat="server" value='<%# Eval("ps_qty_per") %>' onchange="getYongLiang(this)" class="width100" title="可输入表达式自动计算.如： 1/3" />
                                                                     <input type="text" id="pt_net_wt"  runat="server" value='<%# Eval("pt_net_wt") %>'  class="width100 hidden" />
                                                                 </td> 
                                                                 <td class="name">单位:</td>
@@ -528,15 +623,7 @@
                                                                             <dx:ListEditItem Text="EA" Value="EA"  />
                                                                             <dx:ListEditItem Text="" Value=""/>                                                                            
                                                                         </Items>
-                                                                     </dx:ASPxComboBox>
-                                                                    <%--<input type="text" id="unit" runat="server" value='<%# Eval("unit")  %>' class="width50" />--%>
-                                                                    <%--<dx:ASPxComboBox ID="unit" runat="server"  Width="50px"  class="width50" SelectedIndex='<%# Eval("unit").ToString()=="KG"?0:1  %>'>
-                                                                        <Items>
-                                                                            <dx:ListEditItem Text="KG" Value="KG" />
-                                                                            <dx:ListEditItem Text="EA" Value="EA"  />
-                                                                            <dx:ListEditItem Text="" Value=""/>                                                                            
-                                                                        </Items>
-                                                                    </dx:ASPxComboBox>--%>
+                                                                     </dx:ASPxComboBox>                                                                    
                                                                     
                                                                 </td>
                                                             </tr>
@@ -544,23 +631,21 @@
                                                                 
                                                                 <td class="name">材料:</td>
                                                                 <td >
-                                                                    <input type="text" id="material" runat="server" value='<%# Eval("material") %>'  class="width100" />
-                                                                    <dx:ASPxComboBox ID="material2" runat="server"  Visible="false" >
-                                                                        <Items>
-                                                                            <dx:ListEditItem Text="A380" Value="A380"/>
-                                                                            <dx:ListEditItem Text="A380" Value="A380"/>
-                                                                            <dx:ListEditItem Text="A380" Value="A380"/>
-                                                                            <dx:ListEditItem Text="A380" Value="A380"/>
-                                                                        </Items>
-                                                                    </dx:ASPxComboBox>
+                                                                    <input type="text" id="material" runat="server" value='<%# Eval("material") %>'  class="width100" />                                                                    
                                                                 </td>
                                                                 <%--<td class="name">供应商:</td>
                                                                 <td >
                                                                     <input type="text" id="vendor"  runat="server" value='<%# Eval("vendor") %>'  class="width100" />
                                                                 </td>--%>
                                                                 <td class="name">消耗工序:</td>
-                                                                <td >
-                                                                    <input type="text" id="ps_op"  runat="server" value='<%# Eval("ps_op") %>'  class="width100" />
+                                                                <td >                                                                     
+                                                                    <div class="btn-group">
+                                                                    <input type="text" id="ps_op"  runat="server" value='<%# Eval("ps_op") %>'  class="width100" data-toggle="dropdown" />
+                                                                    <ul class="dropdown-menu" style=" display:none "  role="menu" id="ulPS_OP" >
+                                                                        <li>废品率</li>                                                                                                                                   
+                                                                         
+                                                                    </ul></div>
+                                                                    <dx:ASPxComboBox ID="ps_op_" runat="server"  Visible="false" ></dx:ASPxComboBox>
                                                                 </td>
                                                                 <td class="name">备注:</td>
                                                                 <td >
@@ -579,7 +664,7 @@
                                                     </EditForm>
                                                 </Templates>
                                                 <Columns>
-                                                    <dx:TreeListTextColumn FieldName="pt_part" Caption="存货编号" EditCellStyle-CssClass="" VisibleIndex="0">
+                                                    <dx:TreeListTextColumn FieldName="pt_part" Caption="物料号" EditCellStyle-CssClass="" VisibleIndex="0">
                                                         <EditFormSettings VisibleIndex="0" ColumnSpan="1" />
                                                     </dx:TreeListTextColumn>
                                                     <dx:TreeListTextColumn FieldName="pt_desc1" Caption="描述(零件号)" VisibleIndex="1">
@@ -629,7 +714,11 @@
                                                     </dx:TreeListCommandColumn>
 
                                                 </Columns>
+                                                
                                             </dx:ASPxTreeList>
+                                            <asp:panel ID="pnlPackOP" runat="server" CssClass="panel-title" HorizontalAlign="Right" Style="margin-right:140px">查询到此物料包装最新消耗工序为
+                                                <asp:textbox ID="txtOP" runat="server" CssClass="input panel input-readonly disabled "   Width="92px" Font-Size="9pt"></asp:textbox>
+                                                <asp:Button id="btnUpdatePackOp" runat="server" Text="点此更新消耗工序栏位" CssClass="btn btn-info btn-sm" OnClick="btnUpdatePackOp_Click"/></asp:panel>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
                                     <div>

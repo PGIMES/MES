@@ -28,25 +28,26 @@
     </script>
     <script>
         function OnFocusedNodeChange(s, e) {
+            $("#btnEdit").attr("href", "javascript:void(0)").addClass("disabled");//提前disabled,免间隙延迟导致产生链接错误
             var nodeKey = s.GetFocusedNodeKey();
-           // var nodeState = s.GetNodeState(nodeKey);
+            // var nodeState = s.GetNodeState(nodeKey);
             ////Expanded or Collapsed
             //if (nodeState === "Collapsed")
             //    s.ExpandNode(nodeKey);
             //else if (nodeState === "Expanded")
             //    s.CollapseNode(nodeKey);
 
-           // var row = s.GetRowByNodeKey(nodeKey);
-           // var pt_part = "";
-          //  alert(row.cells[1].innerText);//表格中的数据 
+            // var row = s.GetRowByNodeKey(nodeKey);
+            // var pt_part = "";
+            //  alert(row.cells[1].innerText);//表格中的数据 
             s.GetNodeValues(nodeKey, "pid", function (a) {//返回数据源中Tel的值                
                 if (a == null) {
-                    var domain="";
+                    var domain = "";
                     s.GetNodeValues(nodeKey, "domain", function (_domain) {
-                        domain=_domain                           
+                        domain = _domain
                     })
-                    if(domain==""){
-                        s.GetNodeValues(nodeKey, "pt_part", function (b) {                       
+                    if (domain == "") {
+                        s.GetNodeValues(nodeKey, "pt_part", function (b) {
                             $("#btnEdit").removeClass("disabled").attr("href", "/Platform/WorkFlowRun/Default.aspx?flowid=4a901bc7-ea83-43b1-80b6-5b14708dede9&pgino=" + b.substring(0, 7) + "&domain=" + domain + "&appid=b09b450e-6c02-4941-ad24-08ab046d68c7&tabid=tab_b09b450e6c024941ad2408ab046d68c7");
                         })
                     }
@@ -55,9 +56,9 @@
                 } else {
                     $("#btnEdit").attr("href", "javascript:void(0)").addClass("disabled");
                 }
-                
+
             });
-            
+
         };
     </script>
     <asp:ScriptManager ID="ScriptManager1" runat="server">
@@ -73,22 +74,30 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="font-size: 13px;">
                         <table class="tblCondition" style="border-collapse: collapse;">
                             <tr>
-                                <td style="width: 130px;">物料号：</td>
+                                <td style="width: 60px;">物料号：</td>
                                 <td style="width: 120px;">
                                     <asp:TextBox ID="pgino" class="form-control input-s-sm" runat="server" Width="110px"></asp:TextBox>
                                 </td>
 
-                                <td style="width: 70px;">工厂:</td>
-                                <td style="width: 100px;">
+                                <td style="width: 40px;">工厂:</td>
+                                <td style="width: 130px;">
                                     <asp:DropDownList ID="domain" runat="server" class="form-control input-s-md " Width="120px">
                                         <asp:ListItem Value="">ALL</asp:ListItem>
                                         <asp:ListItem Value="200">昆山工厂</asp:ListItem>
                                         <asp:ListItem Value="100">上海工厂</asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
+                                <td style="width: 40px;">版本：</td>
+                                <td style="width: 240px;">
+                                    <asp:RadioButtonList ID="IsLatest" class=" input-s-sm" runat="server" Width="164px"  RepeatDirection="Horizontal" Height="20px" >
+                                        <asp:ListItem Value="" Text="最新版本" selected="True"></asp:ListItem>
+                                        <asp:ListItem Value="ALL" Text="所有版本"></asp:ListItem>
+                                    </asp:RadioButtonList>
+                                </td>
                                 <td>&nbsp;&nbsp;
-                                    <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i> 查询</button>
-                                    <a id="btnEdit"   class="btn btn-primary btn-large" href="javascript:void(0)" style="color:white"  target="_blank" ><i class="fa fa-search fa-edit"></i> 修改</a>
+                                    <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>查询</button>
+                                    <a id="btnEdit" class="btn btn-primary btn-large" href="javascript:void(0)" style="color: white" target="_blank"><i class="fa fa-search fa-edit"></i>修改</a>
+                                    <%--<button id="btnExport" type="button" class="btn btn-primary btn-large" onserverclick="btnExport_Click" runat="server"><i class="fa fa-search fa-fw"></i>导出Excel</button>--%>
                                 </td>
                             </tr>
                         </table>
@@ -101,24 +110,25 @@
     <div class="row-container">
         <div class="panel panel-info">
             <div class="panel-body ">
-                <dx:ASPxTreeList ID="bomtree" runat="server" AutoGenerateColumns="False" Width="100%" 
+                <dx:ASPxTreeList ID="bomtree" runat="server" AutoGenerateColumns="False" Width="100%"
                     KeyFieldName="id" ParentFieldName="PID" ViewStateMode="Enabled" SettingsBehavior-AllowDragDrop="true" OnHtmlRowPrepared="bomtree_HtmlRowPrepared">
                     <ClientSideEvents EndCallback="function(s, e) {
 	                                                    $('table[id*=treeList_D] th:last a').find('span').remove();                                                      
                                                     }
                                                     "
-                        Init=""  FocusedNodeChanged="OnFocusedNodeChange"/>
-                    <Settings GridLines="Both"  ShowTreeLines="false" />
-                    <SettingsBehavior ExpandCollapseAction="NodeDblClick" AllowFocusedNode="True" AllowDragDrop="true"   FocusNodeOnLoad="false" />
+                        Init="" FocusedNodeChanged="OnFocusedNodeChange" />
+                    <Settings GridLines="Both" ShowTreeLines="false" />
+                    <SettingsBehavior ExpandCollapseAction="NodeDblClick" AllowFocusedNode="True" AllowDragDrop="true" FocusNodeOnLoad="false" />
                     <SettingsCustomizationWindow PopupHorizontalAlign="RightSides" PopupVerticalAlign="BottomSides" />
                     <SettingsEditing Mode="EditFormAndDisplayNode" />
                     <SettingsPopupEditForm Width="500" />
-                    <SettingsText  />
+                    <SettingsText />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
                     <SettingsPopup>
                         <EditForm VerticalOffset="-1" Width="500px">
                         </EditForm>
                     </SettingsPopup>
+                    <SettingsExport EnableClientSideExportAPI="True"  ExpandAllNodes="true" ExportAllPages="true" />
                     <SettingsPager Mode="ShowPager" AlwaysShowPager="true" EnableAdaptivity="true" NumericButtonCount="50" PageSize="50">
                         <PageSizeItemSettings Items="100, 200, 500,1000" Visible="true" />
                     </SettingsPager>
@@ -175,7 +185,7 @@
                         </dx:TreeListTextColumn>
                         <dx:TreeListTextColumn FieldName="pt_status" Caption="状态" VisibleIndex="12">
                             <EditFormSettings VisibleIndex="12" ColumnSpan="1" />
-                        </dx:TreeListTextColumn>  
+                        </dx:TreeListTextColumn>
                         <dx:TreeListTextColumn FieldName="product_user" Caption="产品负责人" VisibleIndex="13">
                             <EditFormSettings VisibleIndex="13" ColumnSpan="1" />
                         </dx:TreeListTextColumn>
@@ -192,11 +202,22 @@
                             </PropertiesTokenBox>
                             <EditFormSettings VisibleIndex="16" Visible="False" />
                         </dx:TreeListTokenBoxColumn>
-                         
+
 
                     </Columns>
+                    <Toolbars>
+                        <dx:TreeListToolbar EnableAdaptivity="true">
+                            <Items>
+                                <%--<dx:TreeListToolbarItem Command="ExportToPdf" />--%>
+                                <dx:TreeListToolbarItem Command="ExportToXls"    Text="导出Excel" />
+                                <%--<dx:TreeListToolbarItem Command="ExportToXlsx" />
+                                <dx:TreeListToolbarItem Command="ExportToDocx" />
+                                <dx:TreeListToolbarItem Command="ExportToRtf" />--%>
+                            </Items>
+                        </dx:TreeListToolbar>
+                    </Toolbars>
                 </dx:ASPxTreeList>
-                
+
             </div>
         </div>
     </div>

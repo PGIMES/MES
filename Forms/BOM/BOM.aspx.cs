@@ -22,7 +22,7 @@ public partial class BOM : PGIBasePage
     {
         Page.EnableViewState=true;
         Page.MaintainScrollPositionOnPostBack = true;
-        //      WebForm.Common.DataTransfer.PaoZiLiao    测试账号   G1: 00020  G2:02045 00495  W1:00350   W2:00720                      
+        //      WebForm.Common.DataTransfer.PaoZiLiao    测试账号   G1: 00020  G2:02045 00495 02104 00495 W1:00350   W2:00720                      
         LoginUser LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
         Session["LogUser"] = LogUserModel;
         Session["UserAD"] = LogUserModel.ADAccount;
@@ -69,7 +69,10 @@ public partial class BOM : PGIBasePage
                     txt_LogUserName.Value = LogUserModel.UserName;
                     //获取直属主管
                     deptm.Text = BOM.getSupervisorByEmp("", LogUserModel.UserId);
+                   
                 }
+
+                
               
             }
              //----
@@ -111,23 +114,38 @@ public partial class BOM : PGIBasePage
                 bomver.Text = dtMst.Rows[0]["bomver"].ToString();
                 domain.Text= dtMst.Rows[0]["domain"].ToString();
                 deptm.Text = dtMst.Rows[0]["deptm"].ToString();
+                projector.Text= dtMst.Rows[0]["projector"].ToString();
             }         
             //show version change Record
             bindRec();
+            //如果没项目工厂师傅，重新加载
+            if (domain.Text.Trim() !=""&& pgino.Value !="" && projector.Text=="")
+            {
+                SetProjectUser();
+            }
 
         }
         // show treelist data
         bindData();
         
-        treeList.ExpandAll();//.ExpandToLevel(3);
+       //.ExpandToLevel(3);
        // treeList.StartEdit("2");
-        treeList.SettingsEditing.AllowNodeDragDrop = true;// chkDragging.Checked;
-                                                          //url传参数
+       // treeList.SettingsEditing.AllowNodeDragDrop = true;// chkDragging.Checked;
+        if (Request["display"] != null)
+        {
+            treeList.SettingsEditing.AllowNodeDragDrop = false;
+            //treeList.SettingsBehavior.AllowDragDrop = false;
+        }                                          //url传参数
         if (Request["pgino"] != null && Request["pgino"].ToString() != "")
         {
             pgino.Value = Request["pgino"].ToString();//.Substring(0,5);
            // version.Value = Request["pgino"].ToString().Substring(5, 1);
             fuzhu();
+            SetProjectUser();
+            var newestOP = BOM.getPackingOP(pgino.Value.Trim(), domain.Text.Trim());
+            txtOP.Text = newestOP == "" ? "未找到最新OP" : newestOP;
+            //
+            txtOP.ReadOnly = true;
         }
 
         #endregion
@@ -143,6 +161,9 @@ public partial class BOM : PGIBasePage
         ViewState["fieldStatus"] = fieldStatus;       
 
     }
+     
+    
+    
     protected void cmbMode_SelectedIndexChanged(object sender, EventArgs e)
     {
         treeList.SettingsEditing.Mode = (TreeListEditMode)cmbMode.SelectedItem.Value;
@@ -181,7 +202,8 @@ public partial class BOM : PGIBasePage
         if (reload == true) { Session["bomdtl"] = null; }
         if (Session["bomdtl"] == null)
         {
-            var sqlDtl = "select * from eng_bom_dtl_form where aplno = '{0}' order by ps_op";
+            var sqlDtl = "select  d.aplno, d.id, d.pt_part, d.pt_desc1, d.pt_desc2, d.drawno, pt.pt_net_wt, d.ps_qty_per, d.unit, d.material, d.vendor, d.ps_op, d.note, d.pid "
+                        + " from eng_bom_dtl_form d join eng_bom_main_form m on d.aplno=m.aplno left join [dbo].[qad_pt_mstr] pt on  d.pt_part=pt.pt_part and m.domain=pt.pt_domain where   d.aplno = '{0}' order by ps_op asc,pt_part asc";
             
             dtBom = DbHelperSQL.Query(string.Format(sqlDtl,aplno)).Tables[0];
             dtBom.PrimaryKey = new DataColumn[] { dtBom.Columns["id"] };
@@ -270,7 +292,7 @@ public partial class BOM : PGIBasePage
     public static string GetDeptByDomain(string P1)
     {
         string result = "";
-        var sql = string.Format(" select distinct dept_name as value,dept_name as text from  HR_EMP_MES   where domain='{0}' or gc='{1}' ", P1,P1);
+        var sql = string.Format(" select distinct dept_name as value,dept_name as text from  V_HRM_EMP_MES   where domain='{0}' or gc='{1}' ", P1, P1);
         var value = DbHelperSQL.Query(sql).Tables[0];
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
@@ -295,7 +317,7 @@ public partial class BOM : PGIBasePage
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[HR_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
+        sb.Append("   (SELECT  distinct Manager_workcode FROM [dbo].[V_HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (dept_name='" + dept + "' ) )");
         object obj = DbHelperSQL.GetSingle(sb.ToString());
         return obj == null ? "" : obj.ToString();
     }
@@ -308,10 +330,54 @@ public partial class BOM : PGIBasePage
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  distinct zg_workcode FROM [dbo].[HR_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (workcode='" + emp + "' ) )");
+        sb.Append("   (SELECT  distinct zg_workcode FROM [dbo].[V_HRM_EMP_MES]  where (domain='" + domain + "' or '" + domain + "'='') and  (workcode='" + emp + "' ) )");
         object obj = DbHelperSQL.GetSingle(sb.ToString());
         return obj == null ? "" : obj.ToString();
     }
+    /// <summary>
+    /// 取物料材料  P1：part  P2：domain
+    /// </summary>
+    /// <returns></returns>
+    [System.Web.Services.WebMethod()]
+    public static string getMaterial(string P1, string P2)
+    {
+        StringBuilder sb = new StringBuilder();
+
+       // declare @part varchar(20),@domain varchar(20);set @part = 'P0122BA-01';set @domain = '200'
+
+
+        sb.Append(" select * from( ");
+        sb.Append("     select top 1 cailiao from[172.16.5.6].[report].dbo.track t where  'P' + right('0' + SUBSTRING(t.pgi_no, 2, 4), 4) = left('{0}', 5) ");//0:P1
+        sb.Append("     union all ");
+        sb.Append("     select(case when pt_part like 'R%' then pt_desc1 when pt_part like 'Z07%' then pt_drwg_loc end)  material  from qad.dbo.qad_pt_mstr where pt_part = '{1}' and pt_domain = '{2}' ");//1:P1,2:domain
+        sb.Append("  ) t where cailiao is not null ");
+        object obj = DbHelperSQL.GetSingle(string.Format(sb.ToString(),P1,P1, P2));
+        return obj == null ? "" : obj.ToString();
+    }
+    /// <summary>
+    /// 取物包材消耗工序  P1：part  P2：domain
+    /// </summary>
+    /// <returns></returns>
+    [System.Web.Services.WebMethod()]
+    public static string getPackingOP(string P1, string P2 )
+    {
+        StringBuilder sb = new StringBuilder();
+        // declare @part varchar(20),@domain varchar(20);set @part = 'P0122BA-01';set @domain = '200'
+        
+        var sqlnew = " select b.*  from PGI_GYLX_Main_Form a join PGI_GYLX_dtl_Form b on a.FormNo=b.GYGSNo  where col_for_bom='1' and isnull(iscomplete,'')='' and IsXh_op='是' ";
+        sqlnew += "  and b.domain='"+P2+"'   and (  pgi_no='" + P1 + "') ";//and  (op='OP'+'" + ps_op + "' or '" + pt_part + "' like  'R%')
+        var dt = DbHelperSQL.Query(string.Format(sqlnew, "", "")).Tables[0];
+        if (dt.Rows.Count == 0)
+        {
+            var sql = "select top 1 * from [dbo].[PGI_GYLX_Dtl] where b_flag=1 and domain='"+P2+"' and  IsXh_op='是' and (/*pgi_no='{1}' or*/ pgi_no='" + P1 + "') order by id desc ";//and  (op='OP'+'" + ps_op + "' or '" + P1 + "' like  'R%')
+            dt = DbHelperSQL.Query(string.Format(sql, "", "")).Tables[0];
+        }
+
+        object obj = dt.Rows.Count > 0 ? dt.Rows[0]["op"].ToString() : "";
+        
+        return  obj.ToString() =="" ?"":obj.ToString().Substring(2);//去除OP
+    }
+    
     /// <summary>
     /// 取项目负责人
     /// </summary>
@@ -321,7 +387,7 @@ public partial class BOM : PGIBasePage
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("  select 'u_'+cast(id as varchar(100)) users from RoadFlowWebForm.dbo.users where account=");
-        sb.Append("   (SELECT  project_user FROM form3_Sale_Product_MainTable where pgino='"+pgino+"' and (replace(replace(make_factory,'上海','100'),'昆山','200) like '%" + domain + "%' or '" + domain + "'='')   )");
+        sb.Append("   (SELECT  left(project_user,5) FROM form3_Sale_Product_MainTable where pgino=left('" + pgino+"',5) and (replace(replace(make_factory,'上海','100'),'昆山','200') like '%" + domain + "%' or '" + domain + "'='')   )");
         object obj = DbHelperSQL.GetSingle(sb.ToString());
         return obj == null ? "" : obj.ToString();
     }
@@ -339,21 +405,7 @@ public partial class BOM : PGIBasePage
             }
 
         return Result;
-    }
-    //public string ChrNext(char chr)
-    //{
-    //    var Result = chr.ToString();
-    //    if (chr.ToString() == "")
-    //    { Result = 'A'.ToString(); }
-    //    else
-    //        for (char i = chr; i <= 'z'; i++)
-    //        {
-    //            Result = ((char)(i + 1)).ToString();
-    //            break;
-    //        }
-
-    //    return Result;
-    //}
+    }    
     #endregion
 
     public bool Check()
@@ -400,11 +452,11 @@ public partial class BOM : PGIBasePage
             CommandInfo cmdmain = new CommandInfo();
             if (DbHelperSQL.Exists("select count(1) from eng_bom_main_form where aplno='"+ straplno + "'")==true)
             {
-                cmdmain.CommandText = "update eng_bom_main_form set   CreateDate=@CreateDate, CreateById=@CreateById, CreateByName=@CreateByName, deptName=@deptName, job=@job, phone=@phone, domain=@domain, pgino=@pgino,version=@version, bomver=@bomver, reason=@reason,  deptm=@deptm, deptmfg=@deptmfg where  aplno=@aplno ";
+                cmdmain.CommandText = "update eng_bom_main_form set   CreateDate=@CreateDate, CreateById=@CreateById, CreateByName=@CreateByName, deptName=@deptName, job=@job, phone=@phone, domain=@domain, pgino=@pgino,version=@version, bomver=@bomver, reason=@reason,  deptm=@deptm, deptmfg=@deptmfg,projector=@projector where  aplno=@aplno ";
             }
             else
             {            
-                 cmdmain.CommandText = "insert into eng_bom_main_form(aplno, CreateDate, CreateById, CreateByName, deptName, job, phone, domain, pgino,version, bomver, reason,  deptm, deptmfg)values(@aplno, @CreateDate, @CreateById, @CreateByName, @deptName, @job, @phone, @domain, @pgino,@version, @bomver, @reason, @deptm, @deptmfg)";
+                 cmdmain.CommandText = "insert into eng_bom_main_form(aplno, CreateDate, CreateById, CreateByName, deptName, job, phone, domain, pgino,version, bomver, reason,  deptm, deptmfg,projector)values(@aplno, @CreateDate, @CreateById, @CreateByName, @deptName, @job, @phone, @domain, @pgino,@version, @bomver, @reason, @deptm, @deptmfg,@projector)";
             }
             SqlParameter[] parammain = {
                           new SqlParameter() { ParameterName="@aplno",  SqlDbType=SqlDbType.VarChar, Value= straplno },
@@ -420,7 +472,8 @@ public partial class BOM : PGIBasePage
                           new SqlParameter() { ParameterName="@bomver",  SqlDbType=SqlDbType.VarChar, Value= bomver.Text },
                           new SqlParameter() { ParameterName="@reason",  SqlDbType=SqlDbType.VarChar, Value=""  },
                           new SqlParameter() { ParameterName="@deptm",  SqlDbType=SqlDbType.VarChar, Value= deptm.Text },
-                          new SqlParameter() { ParameterName="@deptmfg",  SqlDbType=SqlDbType.VarChar, Value= deptmfg.Text },                          
+                          new SqlParameter() { ParameterName="@deptmfg",  SqlDbType=SqlDbType.VarChar, Value= deptmfg.Text },
+                          new SqlParameter() { ParameterName="@projector",  SqlDbType=SqlDbType.VarChar, Value= projector.Text },
                     };
             cmdmain.Parameters = parammain;
             cmdlist.Add(cmdmain);
@@ -545,7 +598,7 @@ public partial class BOM : PGIBasePage
         if (instanceid  != "0" && instanceid !="")//0 影响行数; "" 没有prno
         {
             var titletype = "BOM申请" ;
-            string title = titletype + "["+ straplno + "][" + CreateByName.Text+"]"; //设定表单标题
+            string title = titletype + "["+ pgino.Value + "]["+ straplno + "][" + CreateByName.Text+"]"; //设定表单标题
             
             //将实例id,表单标题给流程script
             script += "$('#instanceid',parent.document).val('" + straplno.ToString() + "');" +
@@ -736,7 +789,7 @@ public partial class BOM : PGIBasePage
         var ps_op = (treeList.FindEditFormTemplateControl("ps_op") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
         var pid = ((DataRowView)treeList.FocusedNode.DataItem).Row["PID"].ToString();
         var drawno = (treeList.FindEditFormTemplateControl("drawno") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
-        var pt_net_wt = (treeList.FindEditFormTemplateControl("pt_net_wt") as HtmlInputControl).Value.Trim();
+        var pt_net_wt = "0"; //(treeList.FindEditFormTemplateControl("pt_net_wt") as HtmlInputControl).Value.Trim();
         var unit = (treeList.FindEditFormTemplateControl("unit") as ASPxComboBox).SelectedItem.Value.ToString();
         var material = (treeList.FindEditFormTemplateControl("material") as HtmlInputControl).Value.Trim();
       //  var vendor = (treeList.FindEditFormTemplateControl("vendor") as HtmlInputControl).Value.Trim();
@@ -753,7 +806,7 @@ public partial class BOM : PGIBasePage
         dr["PID"] = Session["pid"].ToString();// ((DataRowView)treeList.FocusedNode.DataItem).Row["pt_part"].ToString();
         dr["id"] = Guid.NewGuid();//  ((int)dt.Compute("Max(id)", "true")+1);
         dr["drawno"] = drawno;
-        dr["pt_net_wt"] = pt_net_wt;
+       // dr["pt_net_wt"] = pt_net_wt;
         dr["unit"] = unit;
         dr["material"] = material;
        // dr["vendor"] = vendor;
@@ -775,7 +828,7 @@ public partial class BOM : PGIBasePage
         var pt_desc1 = (treeList.FindEditFormTemplateControl("pt_desc1") as HtmlInputControl).Value.Trim(); // e.NewValues["pt_desc1"];
         var pt_desc2 = (treeList.FindEditFormTemplateControl("pt_desc2") as HtmlInputControl).Value.Trim(); //e.NewValues["pt_desc2"];
         var ps_qty_per = (treeList.FindEditFormTemplateControl("ps_qty_per") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_qty_per"];
-        var ps_op = (treeList.FindEditFormTemplateControl("ps_op") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
+        var ps_op =(treeList.FindEditFormTemplateControl("ps_op") as HtmlInputControl).Value.Trim(); //  (treeList.FindEditFormTemplateControl("ps_op") as ASPxComboBox).SelectedItem.Value.ToString().Trim();  // e.NewValues["ps_op"];
         var drawno = (treeList.FindEditFormTemplateControl("drawno") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
         var pt_net_wt = (treeList.FindEditFormTemplateControl("pt_net_wt") as HtmlInputControl).Value.Trim();
         var unit = (treeList.FindEditFormTemplateControl("unit") as ASPxComboBox).SelectedItem.Value.ToString();
@@ -795,7 +848,7 @@ public partial class BOM : PGIBasePage
         dr["ps_qty_per"] = ps_qty_per;
         dr["ps_op"] = ps_op;
         dr["drawno"] = drawno;
-        dr["pt_net_wt"] = pt_net_wt;
+       // dr["pt_net_wt"] = pt_net_wt;
         dr["unit"] = unit;
         dr["material"] = material;
        // dr["vendor"] = vendor;
@@ -827,7 +880,7 @@ public partial class BOM : PGIBasePage
        // dr[0].Delete();
         dt.Rows.Find(id).Delete();
        // dt.Rows.Remove(dr[0]);
-
+       
         Session["bomdtl"] = dt;       
         e.Cancel = true;
         ScriptManager.RegisterStartupScript(this, this.GetType(), "addclass", "alert(6)", true);
@@ -852,13 +905,23 @@ public partial class BOM : PGIBasePage
             
         
     }
-     
+     //
     protected void btnFuZhu_Click(object sender, EventArgs e)
     {
-        fuzhu();
-        // ScriptManager.RegisterStartupScript(Page, this.GetType(), "setbomver",  " $('#bomver').val('" + bomver.Text + "');", true);
+        fuzhu();//辅助带资料
+        SetProjectUser();
+        var newestOP = BOM.getPackingOP(pgino.Value.Trim(),domain.Text.Trim());
+        txtOP.Text = newestOP==""?"未找到最新OP":newestOP;
+        //
+        txtOP.ReadOnly = true;    
+        
     }
-    
+    protected void SetProjectUser()
+    {
+        projector.Text = BOM.getProjectUserByProject(domain.Text,pgino.Value );
+        if(projector.Text=="")ScriptManager.RegisterStartupScript(Page, this.GetType(), "alertProjector",  " layer.alert('未从产品清单中获取到此产品项目负责人。 请确认.')", true);
+    }
+    ////辅助带资料
     public void fuzhu()
     {
         var _pgino = pgino.Value.Trim();
@@ -943,9 +1006,10 @@ public partial class BOM : PGIBasePage
                 }
                 Session["bomdtl"] = dt;
                 bindData(false);
-                // treeList.ExpandAll();
+                
             }
         }
+        treeList.ExpandAll();
 
         // gvVerRec.Rows[0].Cells[2].Text = bomver.Text;
         bindRec();
@@ -960,25 +1024,34 @@ public partial class BOM : PGIBasePage
     protected void treeList_NodeValidating(object sender, TreeListNodeValidationEventArgs e)
     {
         var ps_qty_per = (treeList.FindEditFormTemplateControl("ps_qty_per") as HtmlInputControl).Value.ToString(); //e.NewValues["ps_qty_per"];
-        var ps_op =      (treeList.FindEditFormTemplateControl("ps_op") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
+        var ps_op =  (treeList.FindEditFormTemplateControl("ps_op") as HtmlInputControl).Value.Trim(); //(treeList.FindEditFormTemplateControl("ps_op") as ASPxComboBox).SelectedItem.Value.ToString();//    e.NewValues["ps_op"];
         var drawno = (treeList.FindEditFormTemplateControl("drawno") as HtmlInputControl).Value.Trim(); //e.NewValues["ps_op"];
        // var qty = (treeList.FindEditFormTemplateControl("qty") as HtmlInputControl).Value.Trim();
         var unit = (treeList.FindEditFormTemplateControl("unit") as ASPxComboBox).SelectedItem.Value.ToString();
         var material = (treeList.FindEditFormTemplateControl("material") as HtmlInputControl).Value.Trim();
        // var vendor = (treeList.FindEditFormTemplateControl("vendor") as HtmlInputControl).Value.Trim();
         var note = (treeList.FindEditFormTemplateControl("note") as HtmlInputControl).Value.Trim();
+        var pt_part = (treeList.FindEditFormTemplateControl("pt_part") as HtmlInputControl).Value.Trim();
         decimal num;
         
         if (ps_qty_per == "" || Decimal.TryParse(ps_qty_per, out num) == false)
         {
-            e.NodeError = "【单位用量】不能为空,且必须为数字。";
+            e.NodeError = "【单件用量】不能为空,且必须为数字。";
             return;
         }
+
         if (unit == "")
         {
             e.NodeError = "【单位】不能为空。 ";
             return;
         };
+
+        if (material == "")
+        {
+            e.NodeError = "【材料】不能为空,且必须为整数格式。";
+            return;
+        }
+
         if (ps_op == "")
         {
             e.NodeError = "【消耗工序】不能为空,且必须为整数格式。";
@@ -989,8 +1062,29 @@ public partial class BOM : PGIBasePage
         {
             var _domain = domain.Text.Trim();
             var _pgino = pgino.Value.Trim();
-            var sql = "select * from [dbo].[PGI_GYLX_Dtl] where b_flag=1 and domain='{0}' and pgi_no='{1}' and  op='OP'+'"+ps_op+"'";
-            var dt = DbHelperSQL.Query(string.Format(sql, _domain, _pgino)).Tables[0];
+            var _pPart = "";
+            object _pid;
+            var dtT = (Session["bomdtl"] as System.Data.DataTable);
+            if (!e.IsNewNode)
+            { 
+                var datarow = dtT.Select("id='" + new Guid(treeList.EditingNodeKey) + "'")[0];
+                _pid = datarow.ItemArray[13];//太死了  pid
+            }
+            else
+            {
+                _pid = treeList.NewNodeParentKey;
+            }
+            var _pdatarow = dtT.Select("id='" + new Guid(_pid.ToString()) + "'")[0];
+            _pPart= _pdatarow.ItemArray[2].ToString();//太死了 父级物料号
+            var sqlnew = " select b.*  from PGI_GYLX_Main_Form a join PGI_GYLX_dtl_Form b on a.FormNo=b.GYGSNo  where col_for_bom='1' and isnull(iscomplete,'')='' ";
+            sqlnew+= "     and (  pgi_no='" + _pPart + "') and  (op='OP'+'" + ps_op + "' or '" + pt_part + "' like  'R%')";
+            var dt = DbHelperSQL.Query(string.Format(sqlnew, _domain, _pgino)).Tables[0];
+            if (dt.Rows.Count == 0)
+            {
+                var sql = "select * from [dbo].[PGI_GYLX_Dtl] where b_flag=1 and domain='{0}' and (pgi_no='"+pt_part+"' or  pgi_no='"+ _pPart + "') and  (op='OP'+'"+ps_op+"' or '"+ pt_part + "' like  'R%')";
+                dt = DbHelperSQL.Query(string.Format(sql, _domain, _pgino)).Tables[0];
+            }
+
             if (dt.Rows.Count == 0)
             {
                 e.NodeError = "此【消耗工序】不存在。";
@@ -1023,56 +1117,43 @@ public partial class BOM : PGIBasePage
             //    e.Visible = DevExpress.Utils.DefaultBoolean.False;
             //}     
             e.Visible = DevExpress.Utils.DefaultBoolean.False;// 先置按钮不可用
-            BomRight m = GetRight(pgino.Value.Left(5), Session["LogUser"] as LoginUser);
+            if (ViewState["bomright"]==null)
+            {
+                ViewState["bomright"] = GetRight(pgino.Value.Left(5), Session["LogUser"] as LoginUser);
+            }                                  
+            
+            BomRight m = ViewState["bomright"] as BomRight;//GetRight(pgino.Value.Left(5), Session["LogUser"] as LoginUser);
             var pt_part = node["pt_part"] == null ? "" : node["pt_part"].ToString();
-            if(pt_part!=""&&(node["pid"] == null|| node["pid"].ToString()=="")){
+
+            if(pt_part!=""&&(node["pid"] == null|| node["pid"].ToString()=="")&&m.IsEditable==true)
+            {
                 e.Visible = DevExpress.Utils.DefaultBoolean.True;
                 
             }
-            else if (m.IsEditable == true && m.IsGongCheng==true)  //   
+             if (m.IsEditable == true && m.IsGongCheng==true)  //   
             {
                 if(Object.Equals(pt_part.Left(3), "Z07")==false) //--工程Z07包材不可更改;
                 { 
                     e.Visible = DevExpress.Utils.DefaultBoolean.True;
+
                 }
                 
             }
-            else if( m.IsEditable==true &&  m.IsWuLiu == true)  
+             if( m.IsEditable==true &&  m.IsWuLiu == true)  
             {
                 if(Object.Equals(pt_part.Left(3), "Z07")){//--物流非 Z07  包材不可改
                     e.Visible = DevExpress.Utils.DefaultBoolean.True;
+                   
                 }
                 
             }         
 
+            
         }
     }
-    protected BomRight GetRight(string pgino,LoginUser loguser)
-    {
-        BomRight m = new BomRight();
-        StringBuilder str = new StringBuilder();
-        str.Append("    select workcode,dept_name from V_HRM_EMP_MES a join   (select left(product_user,5)produser,left(wl_user,5)wluser from form3_Sale_Product_MainTable where pgino='"+pgino+"')t ");
-        str.Append("    on a.workcode=t.[produser] or a.workcode=t.wluser");
-        DataTable dt = DbHelperSQL.Query(str.ToString()).Tables[0];
-        if(dt.Select("dept_name='" + loguser.DepartName + "' ").Count() > 0)// 同部门人员可以发起修改申请
-        {
-            m.IsEditable = true;
-        }
-        if (loguser.DepartName.Contains("物流") == true)
-        {
-            m.IsWuLiu = true;
-        }
-        if (loguser.DepartName.Contains("工程") == true)
-        {
-            m.IsGongCheng = true;
-        }
-        return m;
-    }
-
-
     protected void treeList_HtmlRowPrepared(object sender, TreeListHtmlRowEventArgs e)
     {
-        
+        var scriptul = new StringBuilder();
         if (e.RowKind == DevExpress.Web.ASPxTreeList.TreeListRowKind.EditForm)
         {            
             var unit = e.GetValue("unit");
@@ -1081,16 +1162,119 @@ public partial class BOM : PGIBasePage
                 var Item = (treeList.FindEditFormTemplateControl("unit") as ASPxComboBox).Items.FindByValue(unit);
                 if (Item != null) Item.Selected = true;
             }
+            var _domain = domain.Text.Trim();
+            var _pgino = pgino.Value.Trim();
+            var _ps_op= e.GetValue("ps_op");
+
+            var sql = "select ''op,''op_desc,''op_remark union select substring(op,3,7) op,substring(op,3,7)+'_'+ op_desc op_desc,op_remark  from [dbo].[PGI_GYLX_Dtl] d join (select pgi_no,max(ver)ver,domain from [dbo].[PGI_GYLX_Dtl] where pgi_no='{0}' and domain='{1}' group by pgi_no,domain  ) t on d.pgi_no=t.pgi_no and d.ver=t.ver and d.domain=t.domain";
+            sql = string.Format(sql, _pgino, _domain);
+            var dtGYSJ = DbHelperSQL.Query(sql).Tables[0];
+            var dropps_op = (treeList.FindEditFormTemplateControl("ps_op_") as ASPxComboBox);
+            dropps_op.DataSource = dtGYSJ;
+            dropps_op.TextField = "op_desc";
+            dropps_op.ValueField = "op";
+            dropps_op.DataBind();
             
+            if (_ps_op != null && _ps_op.ToString() != "")
+            {
+                var Itemps_op = dropps_op.Items.FindByValue(_ps_op.ToString());
+                if (Itemps_op != null) Itemps_op.Selected = true;
+            }
+
+           
+               
+            for (var i = 1; i <= dtGYSJ.Rows.Count; i++)
+            {
+                scriptul.Append("alert(3);$('#ulPS_OP').append(\"<li  val='"+dtGYSJ.Rows[i-1]["op"].ToString()+"' onclick='$('#ps_op').val($(this).prop(\"val\"))'>"   + dtGYSJ.Rows[i - 1]["op_desc"].ToString() + "</li>");
+            }
+           
+//ClientScript.RegisterStartupScript(this.GetType(), "registerscr", "alert(4)", true);
         }
         //设定根目录不可删除修改//父节点按钮设定
         if (e.Level == 1)
         {
-            e.Row.Cells[11].Controls[0].Visible = false;
-            e.Row.Cells[11].Controls[2].Visible = false;
+            if (e.Row.Cells[11].Controls.Count > 2)
+            {
+                e.Row.Cells[11].Controls[0].Visible = false;//修改按钮禁止
+                e.Row.Cells[11].Controls[2].Visible = false;//删除按钮禁止
+            }            
         }
+        // ScriptManager.RegisterStartupScript(treeList, this.GetType(), "registerscr", scriptul.ToString(), true);
+        
+    }
+
+    
+    protected BomRight GetRight(string pgino,LoginUser loguser)
+    {
+        BomRight m = new BomRight();
+        StringBuilder str = new StringBuilder();
+        str.Append("    select workcode,dept_name from V_HRM_EMP_MES a join   (select left(product_user,5)produser,left(bz_user,5)wluser from form3_Sale_Product_MainTable where pgino='"+pgino.Substring(0,5)+"')t ");
+        str.Append("    on a.workcode=t.[produser] or a.workcode=t.wluser");
+        DataTable dt = DbHelperSQL.Query(str.ToString()).Tables[0];
+        if(dt.Select("dept_name='" + loguser.DepartName + "' ").Count() > 0 || loguser.DepartName.Contains("IT") == true)// 同部门人员可以发起修改申请 || IT人员可任意编辑
+        {
+            m.IsEditable = true;
+        }
+        if (loguser.DepartName.Contains("物流") == true || loguser.DepartName.Contains("IT")==true)
+        {
+            m.IsWuLiu = true;
+        }
+        if (loguser.DepartName.Contains("工程") == true || loguser.DepartName.Contains("IT") == true)
+        {
+            m.IsGongCheng = true;
+        }
+
+        if (m.IsEditable == true && m.IsWuLiu == true)
+        {
+            pnlPackOP.Visible = true;
+        }
+        else
+        {
+            pnlPackOP.Visible = false;
+        }
+
+        return m;
+    }
+
+
+
+
+    protected void treeList_CustomDataCallback(object sender, TreeListCustomDataCallbackEventArgs e)
+    {
+        //string key = e.Argument.ToString();
+        //TreeListNode node = treeList.FindNodeByKeyValue(key);
+        //e.Result = GetEntryText(node);
+    }
+    //protected string GetEntryText(TreeListNode node)
+    //{
+    //    //if (node != null)
+    //    //{
+    //    //    string text = node["pt_part"].ToString();
+    //    //    return text.Trim().Replace("\r\n", "<br />");
+    //    //}
+    //    return string.Empty;
+    //}
+
+    protected void btnUpdatePackOp_Click(object sender, EventArgs e)
+    {
+        if (txtOP.Text.IndexOf("未找到")>=0)
+        {
+            return;
+        }
+        var dt = Session["bomdtl"] as DataTable;
+        foreach (DataRow dr in dt.Rows)
+        {
+            if (dr["pt_part"].ToString().Left(3) == "Z07")
+            {
+                dr["ps_op"]=txtOP.Text.Trim();
+            }            
+        }
+        
+        bindData(false);
+        treeList.ExpandAll();
     }
 }
+[Serializable]
 public class BomRight
 {
     public BomRight()
