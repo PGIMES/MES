@@ -64,22 +64,53 @@
 
     <script src="../../Content/js/jquery.min.js"  type="text/javascript"></script>
     <script src="../../Content/js/bootstrap.min.js"></script>
-    <script src="../../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>
+    <%--<script src="../../Content/js/plugins/layer/layer.min.js" type="text/javascript"></script>--%>
+    <script src="/Content/js/layer/layer.js"></script>
     <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
-       <script type="text/javascript">
-           $(document).ready(function () {
-               $("#mestitle").text("【请购单查询】");
-               setHeight();
-               $(window).resize(function () {
-                   setHeight();
-               });
+    <script type="text/javascript">
+        var UserId = '<%=UserId%>';
+        var UserName = '<%=UserName%>';
+        var DeptName = '<%=DeptName%>';
+        
+        $(document).ready(function () {
+            $("#mestitle").text("【请购单查询】");
 
-           });
+            //尹姣
+            if (DeptName.indexOf("IT") != -1 || UserId == "01190") {
+                $('#btn_syr').show();
+            } else {
+                $('#btn_syr').hide();
+            }
+
+            setHeight();
+            $(window).resize(function () {
+                setHeight();
+            });
+
+            $('#btn_syr').click(function () {
+                grid.GetRowValues(grid.GetFocusedRowIndex(), 'PRNo;rowid', function OnGetRowValues(values) {
+                    layer.open({
+                        title: '请购使用人维护',
+                        closeBtn: 2,
+                        type: 2,
+                        area: ['500px', '480px'],
+                        fixed: false, //不固定
+                        maxmin: true, //开启最大化最小化按钮
+                        content: "PR_syr_maintain.aspx?PRNo=" + values[0] + "&rowid=" + values[1],
+                        cancel: function () {
+                            //右上角关闭回调
+                            parent.location.reload();
+                        }
+                    });
+                });
+            });
+
+        });
 
 
-           function setHeight() {
-               $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height()-300 ) + "px");
-           }
+        function setHeight() {
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height()-300 ) + "px");
+        }
         	
     </script>
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -117,6 +148,8 @@
                         <asp:Button ID="Bt_Export" runat="server" Text="导出" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Width="100px" />   
                         &nbsp;&nbsp;&nbsp;&nbsp;   
                         <asp:Button ID="btnNext" runat="server" OnClick="btnNext_Click" Style="display: none" Text="Next" />
+                         &nbsp;&nbsp;&nbsp;&nbsp;   
+                        <button id="btn_syr" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;使用人维护</button> 
                     </td>
                 </tr>
             </table>
@@ -127,7 +160,7 @@
           <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="PRNo" AutoGenerateColumns="False"  
+                    <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="PRNo;rowid" AutoGenerateColumns="False"   ClientInstanceName="grid"
                         OnHtmlRowPrepared="GV_PART_HtmlRowPrepared" OnHtmlRowCreated="GV_PART_HtmlRowCreated" onrowcommand="GV_PART_RowCommand" onpageindexchanged="GV_PART_PageIndexChanged"
                         OnExportRenderBrick="GV_PART_ExportRenderBrick">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}" />
