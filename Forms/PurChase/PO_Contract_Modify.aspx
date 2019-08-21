@@ -33,6 +33,69 @@
             var bf = false;
             $("[id$=gv] tr[class*=DataRow]").each(function (index, item) {
                 var fkamt = $(item).find("td").last().text();//已付款金额
+                var fpamount = $(item).find("input[id*=FPAmount]").val();//发票金额
+               
+                if (Number(fkamt) > 0 && Number(fpamount) > 0) {//已付款金额>0,发票金额>0
+
+                    if (parseFloat(fpamount) > 0) {
+                        $(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
+                        (eval('FPDate' + index)).SetEnabled(false);
+                    }
+
+                    if (parseFloat(fkamt) > 0 && parseFloat(fpamount) > 0) {
+                        $(item).find("table[id*=PayRate]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=PayRate]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
+
+                        $(item).find("table[id*=Remark]").addClass("dxeTextBox_read");
+                        $(item).find("input[id*=Remark]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
+
+                        (eval('PlanPayDate' + index)).SetEnabled(false);
+
+                        (eval('PayClause' + index)).SetEnabled(false);
+                        (eval('PayFunc' + index)).SetEnabled(false);
+                        (eval('PayFile' + index)).SetEnabled(false);
+                    } else {
+                        bf = true;
+                    }
+
+                } else {
+                    bf = true;
+                }
+
+            });
+
+            if (bf == true) {//在判断合同状态：关闭or作废
+                $.ajax({
+                    type: "post",
+                    url: "PO_Contract_Modify.aspx/check_data",
+                    data: "{'nbr':'" + $("#SysContractNo").val() + "','domain':'" + $("#txt_domain").val() + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj = eval(data.d);
+                        if (obj[0].re_flag == "") {//合同没有关闭或作废
+                            bf = true;
+                        }
+                    }
+
+                });
+            }
+
+            if (bf == false) {
+                $("#btn_save").hide();
+                $("#btnadd").hide(); $("#btndel").hide(); $("#btnsave").hide();
+            }
+
+        }
+
+        /*
+        //只要发票没维护就留着 保存 按钮
+        function grid_read() {
+            var bf = false;
+            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) {
+                var fkamt = $(item).find("td").last().text();//已付款金额
                 if (Number(fkamt) > 0) {//已付款金额>0,设置只读
                     $(item).find("table[id*=PayRate]").addClass("dxeTextBox_read");
                     $(item).find("input[id*=PayRate]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
@@ -89,6 +152,7 @@
             }
 
         }
+        */
 
     </script>
     <style type="text/css">
