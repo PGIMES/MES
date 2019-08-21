@@ -37,13 +37,12 @@
                
                 if (Number(fkamt) > 0 && Number(fpamount) > 0) {//已付款金额>0,发票金额>0
 
-                    if (parseFloat(fpamount) > 0) {
+                    if (parseFloat(fkamt) > 0 && parseFloat(fpamount) > 0) {
+
                         $(item).find("table[id*=FPAmount]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=FPAmount]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
                         (eval('FPDate' + index)).SetEnabled(false);
-                    }
 
-                    if (parseFloat(fkamt) > 0 && parseFloat(fpamount) > 0) {
                         $(item).find("table[id*=PayRate]").addClass("dxeTextBox_read");
                         $(item).find("input[id*=PayRate]").attr("readOnly", "readOnly").addClass("dxeTextBox_read");
 
