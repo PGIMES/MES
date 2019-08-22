@@ -254,6 +254,7 @@
                             <dx:GridViewDataTextColumn Caption="验收人" FieldName="checkbyname" Width="70px" VisibleIndex="34" />
                             <dx:GridViewDataTextColumn Caption="请购归属部门" FieldName="applydept" Width="130px" VisibleIndex="35" />
                             <dx:GridViewDataTextColumn Caption="用于产品/项目" FieldName="usefor" Width="150px" VisibleIndex="36" />
+                            <dx:GridViewDataTextColumn Caption="申请原因" FieldName="PRReason" Width="250px" VisibleIndex="37" />
                             
                             <%--<dx:GridViewDataTextColumn Caption="项目编码" FieldName="" Width="60px" VisibleIndex="36" />
                             <dx:GridViewDataTextColumn Caption="直属组织" FieldName="" Width="60px" VisibleIndex="37" />
