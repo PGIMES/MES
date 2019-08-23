@@ -310,8 +310,15 @@
                                         <li><a href="/Fin/InventoryAccount_Report.aspx" target="_blank">库存会计事务浏览</a></li>
                                         <li><a href="/Fin/xxcontract_Report.aspx" target="_blank">应付类合同执行进度查询</a></li>
                                         <li><a href="/Forms/PurChase/PUR_RCT_PO_FW_Query.aspx" target="_blank">未匹配收货报表-费用服务</a></li>
-                                        <li><a href="/Fin/Fin_QGSF_Report.aspx" target="_blank">清关税费暂估报表</a></li>
-                                        <li><a href="/Fin/Fin_QGSF_Query.aspx" target="_blank">清关税费暂估分析</a></li>
+                                        <li  class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">清关税费</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Fin/Fin_QGSF_Report.aspx" target="_blank">暂估报表</a></li>
+                                                <li class="divider"></li> 
+												<li><a href="/Fin/Fin_QGSF_Query.aspx" target="_blank">暂估分析</a></li>                                   
+                                            </ul>
+                                        </li>
+                                        <li><a href="/Fin/Fin_idh_invoice_Report.aspx" target="_blank">国内客户开票通知</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_Fin" name="div_Fin">
