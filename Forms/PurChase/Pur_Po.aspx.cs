@@ -609,7 +609,7 @@ public partial class Pur_Po : System.Web.UI.Page
         string lssql = @"select distinct ad_addr,ad_name,ad_addr+'|'+ad_name as v   
                         from qad_ad_mstr 
                             inner join qad_vd_mstr on ad_addr=vd_addr and ad_domain=vd_domain 
-                        where ad_type='supplier' and vd_taxc<>'' and ad_domain='" + lsdomain + "'";
+                        where ad_type='supplier' and vd_taxc<>''and vd_active=1 and ad_domain='" + lsdomain + "'";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
 
         PoVendorId.ValueField = "v";
