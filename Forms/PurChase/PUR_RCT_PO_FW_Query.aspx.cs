@@ -128,7 +128,7 @@ public partial class Forms_PurChase_PUR_RCT_PO_FW_Query : System.Web.UI.Page
             DataTable dt = DbHelperSQL.Query(@"select * from PUR_RCT_PO_FW where rctno='" + ls_rctno[i] + "'").Tables[0];
             if (dt.Rows.Count > 0)
             {
-                re_flag += "验收单" + rctno + dt.Rows[0]["OptionType"].ToString() + "，不能重复确认！";
+                re_flag += "验收单" + ls_rctno[i] + dt.Rows[0]["OptionType"].ToString() + "，不能重复确认！";
             }
         }
 
@@ -174,12 +174,12 @@ public partial class Forms_PurChase_PUR_RCT_PO_FW_Query : System.Web.UI.Page
             {
                 if (dt.Rows[0]["OptionType"].ToString() == "已匹配")
                 {
-                    re_flag += "验收单" + rctno + dt.Rows[0]["OptionType"].ToString() + "，不能重复确认！";
+                    re_flag += "验收单" + ls_rctno[i] + dt.Rows[0]["OptionType"].ToString() + "，不能重复确认！";
                 }
             }
             else
             {
-                re_flag += "验收单" + rctno + ",采购还未确认,不能确认不能重复确认！";
+                re_flag += "验收单" + ls_rctno[i] + ",采购还未确认,不能确认不能重复确认！";
             }
             rctnos = rctnos + "'" + ls_rctno[i] + "',";
         }
