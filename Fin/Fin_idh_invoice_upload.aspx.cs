@@ -75,14 +75,18 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
             message.To.Add(to_add + ",guiqin.he@pgi.cn"); //收件人hongling.cai@pgi.cn            
-            message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
-
+            //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+            message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
             message.Subject = "【开票通知单】上传成功";//主题            
             message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString();//内容           
             message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
             message.IsBodyHtml = true;//设置为HTML格式            
             message.Priority = MailPriority.Normal;//优先级
+            message.Attachments.Clear();
+
+            Attachment attach = new Attachment(resultFilePath);
+            message.Attachments.Add(attach);
 
             mail.Send(message);
         }
@@ -225,7 +229,10 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
     
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("select distinct ori_filename,new_filename from idh_invoice_upload where status='待开票' and isdel='N'").Tables[0];
+        string sql = @"select distinct ori_filename,new_filename,createbyid 
+                    from idh_invoice_upload where status='待开票' and isdel='N'
+                        and new_filename not in(select distinct new_filename from idh_invoice_upload where status='已开票' and isdel='N')";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         gv_his.DataSource = dt;
         gv_his.DataBind();
     }
@@ -244,14 +251,46 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
         string new_filename = e.Values["new_filename"].ToString();
         string ori_filename = e.Values["ori_filename"].ToString();
+        string createbyid = e.Values["createbyid"].ToString();
 
         string sql = @"update idh_invoice_upload set isdel='Y' where new_filename='"+ new_filename + "'";
         DbHelperSQL.ExecuteSql(sql);
 
-        //string filepath = MapPath("~") + savepath + @"\" + new_filename;
-        //File.Delete(filepath);
+        string resultFilePath = MapPath("~") + savepath + @"\" + new_filename;
+        //File.Delete(resultFilePath);
 
-       
+        //发邮件给上传人、蔡红玲 <hongling.cai@pgi.cn>，Cc '徐殿青'<edward.xu@pgi.cn>徐镇jim.xu <jim.xu@pgi.cn>
+        DataTable dt = DbHelperSQL.Query("SELECT  * FROM V_HRM_EMP_MES where workcode='" + ((LoginUser)Session["LogUser"]).UserId + "' or workcode='" + createbyid + "'").Tables[0];
+        string to_add = "";
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            to_add = to_add + dt.Rows[0]["email"].ToString() + ",";
+        }
+        to_add = to_add.Substring(0, to_add.Length - 1);
+
+        SmtpClient mail = new SmtpClient();
+        mail.DeliveryMethod = SmtpDeliveryMethod.Network; //发送方式           
+        mail.Host = "mail.pgi.cn"; //smtp服务器                                
+        mail.Credentials = new System.Net.NetworkCredential("oa@pgi.cn", "pgi_1234");//用户名凭证  
+
+        MailMessage message = new MailMessage();//邮件信息            
+        message.From = new MailAddress("oa@pgi.cn");//发件人           
+        message.To.Add(to_add + ",guiqin.he@pgi.cn"); //收件人hongling.cai@pgi.cn            
+        //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+        message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
+
+        message.Subject = "【开票通知单】删除成功";//主题            
+        //message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString();//内容           
+        message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
+        message.IsBodyHtml = true;//设置为HTML格式            
+        message.Priority = MailPriority.Normal;//优先级
+        message.Attachments.Clear();
+
+        Attachment attach = new Attachment(resultFilePath);
+        message.Attachments.Add(attach);
+
+        mail.Send(message);
+
         QueryASPxGridView();
     }
 

@@ -38,7 +38,7 @@
             <table style="margin:10px 10px;">
                 <tr>
                     <td>
-                        <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="450px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
+                        <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="630px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
                             ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced"   AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
                             onfileuploadcomplete="uploadcontrol_FileUploadComplete" >
                             <AdvancedModeSettings EnableDragAndDrop="True" EnableFileList="True" EnableMultiSelect="false"></AdvancedModeSettings>
@@ -59,14 +59,14 @@
                 <div class="panel-body " id="CPXX2">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
                         <dx:ASPxGridView ID="gv_his" runat="server" KeyFieldName="new_filename"
-                            AutoGenerateColumns="False" Width="430px" OnPageIndexChanged="gv_his_PageIndexChanged"  ClientInstanceName="gv_his" OnCustomCallback="gv_his_CustomCallback"
+                            AutoGenerateColumns="False" Width="630px" OnPageIndexChanged="gv_his_PageIndexChanged"  ClientInstanceName="gv_his" OnCustomCallback="gv_his_CustomCallback"
                             OnRowDeleting="gv_his_RowDeleting">
                             <SettingsPager PageSize="100" ></SettingsPager>
                             <Settings ShowFilterRow="True" ShowGroupPanel="false" ShowFilterRowMenu="True" ShowFilterRowMenuLikeItem="True" AutoFilterCondition="Contains" 
                                 VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="250"  />
                             <SettingsBehavior AllowFocusedRow="false" AllowSelectByRowClick="false"  ColumnResizeMode="Control"/>
                             <Columns>                     
-                                <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="380px" VisibleIndex="2">
+                                <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="280px" VisibleIndex="2">
                                     <DataItemTemplate>
                                         <dx:ASPxHyperLink ID="hpl_ori_filename" runat="server" Text='<%# Eval("ori_filename")%>' Cursor="pointer"
                                             NavigateUrl='<%# "/UploadFile/Fin/invoice/"+ Eval("new_filename") %>'  
@@ -75,10 +75,11 @@
                                     </DataItemTemplate> 
                                     <Settings AllowAutoFilterTextInputTimer="False" />
                                 </dx:GridViewDataTextColumn>    
+                                <dx:GridViewDataTextColumn Caption="文件名称(新)" FieldName="new_filename" Width="300px"  VisibleIndex="3"></dx:GridViewDataTextColumn>
                                 <dx:GridViewCommandColumn ShowDeleteButton="True" Width="50px" VisibleIndex="3" ButtonRenderMode="Image">
                                 </dx:GridViewCommandColumn>
-                                <dx:GridViewDataTextColumn Caption="new_filename" FieldName="new_filename" VisibleIndex="99"
-                                    HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
+                                <dx:GridViewDataTextColumn Caption="createbyid" FieldName="createbyid" VisibleIndex="99" Width="0px"                                
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                             </Columns>
                             <SettingsCommandButton>
                                 <DeleteButton>

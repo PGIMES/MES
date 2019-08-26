@@ -33,7 +33,7 @@
                     title: '上传开票通知单&nbsp;&nbsp;<a href="/userguide/invoice_upload_format.xlsx" target="_blank" style="color:red">upload format</a>',
                     closeBtn: 2,
                     type: 2,
-                    area: ['500px', '550px'],
+                    area: ['700px', '550px'],
                     fixed: false, //不固定
                     maxmin: true, //开启最大化最小化按钮
                     content: url
