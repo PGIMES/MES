@@ -74,7 +74,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
-            message.To.Add(to_add + ",guiqin.he@pgi.cn"); //收件人hongling.cai@pgi.cn            
+            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人hongling.cai@pgi.cn            
             //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
             message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
@@ -275,7 +275,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
         MailMessage message = new MailMessage();//邮件信息            
         message.From = new MailAddress("oa@pgi.cn");//发件人           
-        message.To.Add(to_add + ",guiqin.he@pgi.cn"); //收件人hongling.cai@pgi.cn            
+        message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人hongling.cai@pgi.cn            
         //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
         message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
