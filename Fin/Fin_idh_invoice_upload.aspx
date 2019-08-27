@@ -16,8 +16,12 @@
     <script type="text/javascript">
          var uploadedFiles = [];
          function onFileUploadComplete(s, e) {
-             if (e.callbackData) {
-                 layer.alert("上传失败！");
+             var callbackData = e.callbackData.split("|");
+             var isSubmissionExpired = callbackData[0];
+             var msg = callbackData[1];
+
+             if (isSubmissionExpired == "Y") {
+                 layer.alert("上传失败：<br />" + msg);
              } else {
                  layer.alert("上传成功！", function (index) {
                      gv_his.PerformCallback();

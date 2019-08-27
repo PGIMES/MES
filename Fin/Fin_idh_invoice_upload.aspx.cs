@@ -36,6 +36,8 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
     protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
     {
+        string isSubmissionExpired = "Y";
+
         string resultExtension = Path.GetExtension(e.UploadedFile.FileName);
         //string resultFileName = Path.ChangeExtension(Path.GetRandomFileName(), resultExtension);
         string resultFileName = Path.GetFileNameWithoutExtension(e.UploadedFile.FileName) + DateTime.Now.ToString("yyyyMMddHHmmss")+ resultExtension;
@@ -54,14 +56,29 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
         if (result != "")
         {
             File.Delete(resultFilePath);
-            e.CallbackData = result;
+            e.CallbackData = isSubmissionExpired + "|" + result;
             return;
         }
 
         try
         {
-            string sql = @"insert into idh_invoice_upload select * from idh_invoice_upload_temp";
-            DbHelperSQL.ExecuteSql(sql);
+            //string sql = @"insert into idh_invoice_upload select * from idh_invoice_upload_temp";
+            //DbHelperSQL.ExecuteSql(sql);
+            string sql = @"exec [Report_idh_invoice_upload]";
+            DataTable dt_flag = DbHelperSQL.Query(sql).Tables[0];
+
+            if (dt_flag.Rows[0][0].ToString() == "Y")
+            {
+                DataTable dt_error = DbHelperSQL.Query(@"select * from idh_invoice_upload_temp where ISNULL(errorMessage,'')<>''").Tables[0];
+                for (int i = 0; i < dt_error.Rows.Count; i++)
+                {
+                    result = result + "发票号" + dt_error.Rows[i]["ih_inv_nbr"].ToString() + " 发货至" + dt_error.Rows[i]["ih_ship"].ToString()
+                        + " 物料号" + dt_error.Rows[i]["idh_part"].ToString() + " error:" + dt_error.Rows[i]["errorMessage"].ToString()
+                        + "<br />";
+                }
+                e.CallbackData = isSubmissionExpired + "|" + result;
+                return;
+            }
 
             //发邮件给上传人、蔡红玲 <hongling.cai@pgi.cn>，Cc '徐殿青'<edward.xu@pgi.cn>徐镇jim.xu <jim.xu@pgi.cn>
             DataTable dt = DbHelperSQL.Query("SELECT  * FROM V_HRM_EMP_MES where workcode='" + ((LoginUser)Session["LogUser"]).UserId + "'").Tables[0];
@@ -92,10 +109,13 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            result = "error";
+            result = ex.Message;
+            e.CallbackData = isSubmissionExpired + "|" + result;
+            return;
         }
 
-        e.CallbackData = result;
+        isSubmissionExpired = "N";
+        e.CallbackData = isSubmissionExpired + "|" + result;
         return;
 
 
