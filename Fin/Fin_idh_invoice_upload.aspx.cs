@@ -139,13 +139,14 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                 DataColumn col_2 = new DataColumn("ih_ship", typeof(string));
                 DataColumn col_3 = new DataColumn("idh_qty_inv", typeof(decimal));
                 DataColumn col_4 = new DataColumn("idh_price_inv", typeof(decimal));
+                DataColumn col_5 = new DataColumn("idh_taxc_new", typeof(decimal));
                 DataColumn col_6 = new DataColumn("ori_filename", typeof(string));
                 DataColumn col_7 = new DataColumn("new_filename", typeof(string));
                 DataColumn col_8 = new DataColumn("ih_inv_date", typeof(DateTime));
                 DataColumn col_9 = new DataColumn("isdel", typeof(string));
                 DataColumn col_10 = new DataColumn("CreateById", typeof(string));
                 DataColumn col_11 = new DataColumn("status", typeof(string));
-                dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4);
+                dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4); dt.Columns.Add(col_5);
                 dt.Columns.Add(col_6); dt.Columns.Add(col_7); dt.Columns.Add(col_8); dt.Columns.Add(col_9); dt.Columns.Add(col_10);
                 dt.Columns.Add(col_11);
 
@@ -163,6 +164,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                     dt_r["ih_ship"] = dr["发货至"].ToString();
                     dt_r["idh_qty_inv"] = dr["本次开票数量"].ToString().Trim();
                     dt_r["idh_price_inv"] = dr["开票价格"].ToString().Trim();
+                    dt_r["idh_taxc_new"] = dr["税率"].ToString().Trim();
                     dt_r["ori_filename"] = ori_filename;
                     dt_r["new_filename"] = new_filename;
                     dt_r["ih_inv_date"] = DateTime.Now;
@@ -176,13 +178,13 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                 }
 
                 bool bf = DataTableToSQLServer(dt, DesTableName);
-                result = bf == true ? "" : "error";
+                result = bf == true ? "" : "excel导入临时表失败";
 
             }
         }
         catch (Exception ex)
         {
-            result= "error";
+            result = "读取excel异常：" + ex.Message;
             sumamount = 0;
         }
 
@@ -227,6 +229,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                     bulkCopy.ColumnMappings.Add("ih_ship", "ih_ship");//映射字段名 DataTable列名 ,数据库 对应的列名  
                     bulkCopy.ColumnMappings.Add("idh_qty_inv", "idh_qty_inv");//映射字段名 DataTable列名 ,数据库 对应的列名  
                     bulkCopy.ColumnMappings.Add("idh_price_inv", "idh_price_inv");
+                    bulkCopy.ColumnMappings.Add("idh_taxc_new", "idh_taxc_new");
                     bulkCopy.ColumnMappings.Add("ori_filename", "ori_filename");
                     bulkCopy.ColumnMappings.Add("new_filename", "new_filename");
                     bulkCopy.ColumnMappings.Add("ih_inv_date", "ih_inv_date");

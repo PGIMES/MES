@@ -98,8 +98,8 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
     {
         if (e.Column.FieldName == "ih_inv_nbr" || e.Column.FieldName == "ih_ship" || e.Column.FieldName == "idh_part"
             || e.Column.FieldName == "idh_custpart" || e.Column.FieldName == "cp_comment" || e.Column.FieldName == "idh_um" || e.Column.FieldName == "idh_list_pr"
-            || e.Column.FieldName == "idh_taxc_new" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
-             || e.Column.FieldName == "ih_bol"
+            || e.Column.FieldName == "idh_taxc_pr" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
+            || e.Column.FieldName == "ih_bol"
             || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum")
         {
             var ih_inv_nbr1 = GV_PART_DK.GetRowValues(e.RowVisibleIndex1, "ih_inv_nbr");
@@ -123,8 +123,8 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
     {
         if (e.Column.FieldName == "ih_inv_nbr" || e.Column.FieldName == "ih_ship" || e.Column.FieldName == "idh_part"
             || e.Column.FieldName == "idh_custpart" || e.Column.FieldName == "cp_comment" || e.Column.FieldName == "idh_um" || e.Column.FieldName == "idh_list_pr"
-            || e.Column.FieldName == "idh_taxc_new" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
-             || e.Column.FieldName == "ih_bol"
+            || e.Column.FieldName == "idh_taxc_pr" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
+            || e.Column.FieldName == "ih_bol"
             || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum")
         {
             var ih_inv_nbr1 = GV_PART_YK.GetRowValues(e.RowVisibleIndex1, "ih_inv_nbr");

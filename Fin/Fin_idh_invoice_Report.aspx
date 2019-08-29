@@ -162,7 +162,7 @@
                             <dx:GridViewDataTextColumn Caption="价目表价格" FieldName="idh_list_pr" Width="75px" VisibleIndex="11"> 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_new" Width="40px" VisibleIndex="12">
+                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_pr" Width="40px" VisibleIndex="12">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="75px" VisibleIndex="13" > 
@@ -229,7 +229,7 @@
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_new" Width="40px" VisibleIndex="12">
+                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_pr" Width="40px" VisibleIndex="12">
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
@@ -253,11 +253,15 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="17" >
+                            <dx:GridViewDataTextColumn Caption="税率(开票)" FieldName="idh_taxc_new" Width="75px" VisibleIndex="18">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                <HeaderStyle BackColor="#F0E68C" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="19" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="300px" VisibleIndex="24">
+                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="300px" VisibleIndex="20">
                                 <HeaderStyle BackColor="#F0E68C" />
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_ori_filename" runat="server" Text='<%# Eval("ori_filename")%>' Cursor="pointer"
@@ -324,7 +328,7 @@
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_new" Width="40px" VisibleIndex="12">
+                            <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_pr" Width="40px" VisibleIndex="12">
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
@@ -353,7 +357,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="PGI发票额" FieldName="list_fpe" Width="75px" VisibleIndex="19"  
+                            <dx:GridViewDataTextColumn Caption="发票额(价目表)" FieldName="list_fpe" Width="75px" VisibleIndex="19"  
                                 ToolTip="价目表价格*数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
@@ -363,35 +367,39 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税金额(开票)" FieldName="inv_tax" Width="75px" VisibleIndex="21"  
+                            <dx:GridViewDataTextColumn Caption="税率(开票)" FieldName="idh_taxc_new" Width="75px" VisibleIndex="21">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                <HeaderStyle BackColor="#F0E68C" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="税金额(开票)" FieldName="inv_tax" Width="75px" VisibleIndex="22"  
                                 ToolTip="开票价格*已开票数量*税率">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税金额(价目表)" FieldName="list_tax" Width="95px" VisibleIndex="22"  
+                            <dx:GridViewDataTextColumn Caption="税金额(价目表)" FieldName="list_tax" Width="95px" VisibleIndex="23"  
                                 ToolTip="价目表价格*已开票数量*税率">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税款合计(开票)" FieldName="inv_tax_sum" Width="95px" VisibleIndex="23"  
+                            <dx:GridViewDataTextColumn Caption="税款合计(开票)" FieldName="inv_tax_sum" Width="95px" VisibleIndex="24"  
                                 ToolTip="开票价格*已开票数量+开票价格*已开票数量*税率">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税款合计(价目表)" FieldName="list_tax_sum" Width="100px" VisibleIndex="24"  
+                            <dx:GridViewDataTextColumn Caption="税款合计(价目表)" FieldName="list_tax_sum" Width="100px" VisibleIndex="25"  
                                 ToolTip="价目表价格*已开票数量+价目表价格*已开票数量*税率">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                             <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="25" >
+                             <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="26" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataDateColumn>
-                             <dx:GridViewDataDateColumn Caption="确认日期" FieldName="sure_date" Width="90px" VisibleIndex="26" >
+                             <dx:GridViewDataDateColumn Caption="确认日期" FieldName="sure_date" Width="90px" VisibleIndex="27" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="380px" VisibleIndex="27">
+                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="380px" VisibleIndex="28">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_ori_filename" runat="server" Text='<%# Eval("ori_filename")%>' Cursor="pointer"
                                         NavigateUrl='<%# "/UploadFile/Fin/invoice/"+ Eval("new_filename") %>'  
