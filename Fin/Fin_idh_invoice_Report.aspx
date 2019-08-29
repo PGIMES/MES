@@ -30,7 +30,7 @@
                 var url = "/Fin/Fin_idh_invoice_upload.aspx";
 
                 layer.open({
-                    title: '上传开票通知单&nbsp;&nbsp;<a href="/userguide/invoice_upload_format.xlsx" target="_blank" style="color:red">upload format</a>',
+                    title: '上传开票通知单&nbsp;&nbsp;<a href="/UserGuide/invoice_upload_format.xlsx" target="_blank" style="color:red">upload format</a>',
                     closeBtn: 2,
                     type: 2,
                     area: ['700px', '550px'],
