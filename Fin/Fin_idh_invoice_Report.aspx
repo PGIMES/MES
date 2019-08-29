@@ -13,7 +13,7 @@
         var DeptName = '<%=DeptName%>';
 
         $(document).ready(function () {
-            $("#mestitle").text("【国内客户开票通知】");
+            $("#mestitle").html("【国内客户开票通知】");//<span class='h5' style='color:red'>10122 > 60天显示黄，> 75天显示红色 其他 > 30显示黄，> 45天显示红色</span>
 
             if (DeptName.indexOf("财务") != -1 || DeptName.indexOf("IT") != -1) {
                 $('#btn_sure').show();
