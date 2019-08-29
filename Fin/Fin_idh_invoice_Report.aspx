@@ -74,7 +74,7 @@
         });
 
         function setHeight() {
-            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 250) + "px");
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 220) + "px");
 
             $("#MainContent_GV_PART").css("width", ($(window).width() - 10) + "px");
             $("div[class=dxgvCSD]").css("width", ($(window).width() - 10) + "px");
