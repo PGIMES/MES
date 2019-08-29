@@ -72,7 +72,7 @@
 
 
         });
-
+        
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 220) + "px");
 
@@ -137,7 +137,8 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="ih_inv_nbr;ih_ship;idh_part" AutoGenerateColumns="False"  
+                    <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="ih_inv_nbr;ih_ship;idh_part" AutoGenerateColumns="False" 
+                             OnHtmlRowCreated="GV_PART_HtmlRowCreated" 
                              OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1000px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
@@ -372,22 +373,22 @@
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="税金额(开票)" FieldName="inv_tax" Width="75px" VisibleIndex="22"  
-                                ToolTip="开票价格*已开票数量*税率">
+                                ToolTip="开票价格*已开票数量*税率(开票)">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="税金额(价目表)" FieldName="list_tax" Width="95px" VisibleIndex="23"  
-                                ToolTip="价目表价格*已开票数量*税率">
+                                ToolTip="价目表价格*已开票数量*税率(开票)">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="税款合计(开票)" FieldName="inv_tax_sum" Width="95px" VisibleIndex="24"  
-                                ToolTip="开票价格*已开票数量+开票价格*已开票数量*税率">
+                                ToolTip="开票价格*已开票数量+开票价格*已开票数量*税率(开票)">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="税款合计(价目表)" FieldName="list_tax_sum" Width="100px" VisibleIndex="25"  
-                                ToolTip="价目表价格*已开票数量+价目表价格*已开票数量*税率">
+                                ToolTip="价目表价格*已开票数量+价目表价格*已开票数量*税率(开票)">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>

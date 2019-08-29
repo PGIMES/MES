@@ -179,6 +179,41 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
 
 
 
+    protected void GV_PART_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data) return;
+
+        //10122 > 60天显示黄，> 75天显示红色
+        //其他 > 30显示黄，> 45天显示红色
+        DateTime ih_eff_date = Convert.ToDateTime(e.GetValue("ih_eff_date").ToString());//生效日期
+        string ih_bill = e.GetValue("ih_bill").ToString();//票据开往
+        if (ih_bill == "10122")
+        {
+            if (ih_eff_date <= DateTime.Today.AddDays(-75))
+            {
+                e.Row.Style.Add("background-color", "#FF0000");
+                e.Row.Style.Add("color", "#FFFFFF");
+            }
+            else if (ih_eff_date <= DateTime.Today.AddDays(-60))
+            {
+                e.Row.Style.Add("background-color", "#EEEE00");
+            }
+        }
+        else
+        {
+            if (ih_eff_date <= DateTime.Today.AddDays(-45))
+            {
+                e.Row.Style.Add("background-color", "#FF0000");
+                e.Row.Style.Add("color", "#FFFFFF");
+            }
+            else if (ih_eff_date <= DateTime.Today.AddDays(-30))
+            {
+                e.Row.Style.Add("background-color", "#EEEE00");
+            }
+        }
+
+    }
+
 
     protected void GV_PART_DK_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
     {
@@ -186,7 +221,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
 
         double idh_taxc_pr = Convert.ToDouble(e.GetValue("idh_taxc_pr").ToString());
         double idh_taxc_new = Convert.ToDouble(e.GetValue("idh_taxc_new").ToString());
-        if (idh_taxc_pr == idh_taxc_new)//税率(开票) 黄色背景色 
+        if (idh_taxc_pr != idh_taxc_new)//税率(开票) 黄色背景色 
         {
             e.Row.Cells[18].Style.Add("background-color", "#EEEE00");
         }
@@ -210,4 +245,5 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
             e.Row.Cells[19].Style.Add("color", "#FFFFFF");
         }
     }
+
 }
