@@ -96,7 +96,8 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
             message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
             message.Subject = "【开票通知单】上传成功";//主题            
-            message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString();//内容           
+            message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString()
+                + "<br/><br/><a href='http://172.16.5.26:8010/Fin/Fin_idh_invoice_Report.aspx'>请点击查看</a>";//内容           
             message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
             message.IsBodyHtml = true;//设置为HTML格式            
             message.Priority = MailPriority.Normal;//优先级
