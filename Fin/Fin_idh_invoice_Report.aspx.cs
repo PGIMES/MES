@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using DevExpress.Web;
+using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -73,7 +74,18 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
     protected void Bt_Export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        GV_PART.ExportXlsxToResponse("国内客户开票通知_" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
+        if (ddl_status.SelectedValue == "未开票")
+        {
+            GV_PART.ExportXlsxToResponse("国内客户开票通知_未开票_" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
+        }
+        if (ddl_status.SelectedValue == "待开票")
+        {
+            GV_PART_DK.ExportXlsxToResponse("国内客户开票通知_待开票_" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
+        }
+        if (ddl_status.SelectedValue == "已开票")
+        {
+            GV_PART_YK.ExportXlsxToResponse("国内客户开票通知_已开票_" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
+        }
     }
 
     protected void GV_PART_PageIndexChanged(object sender, EventArgs e)
@@ -167,4 +179,35 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
 
 
 
+
+    protected void GV_PART_DK_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data) return;
+
+        double idh_taxc_pr = Convert.ToDouble(e.GetValue("idh_taxc_pr").ToString());
+        double idh_taxc_new = Convert.ToDouble(e.GetValue("idh_taxc_new").ToString());
+        if (idh_taxc_pr == idh_taxc_new)//税率(开票) 黄色背景色 
+        {
+            e.Row.Cells[18].Style.Add("background-color", "#EEEE00");
+        }
+
+    }
+
+    protected void GV_PART_YK_HtmlRowCreated(object sender, DevExpress.Web.ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data) return;
+
+        double idh_taxc_pr = Convert.ToDouble(e.GetValue("idh_taxc_pr").ToString());
+        double idh_taxc_new = Convert.ToDouble(e.GetValue("idh_taxc_new").ToString());
+        double chae = Convert.ToDouble(e.GetValue("chae").ToString());
+        if (idh_taxc_pr != idh_taxc_new)//税率(开票) 黄色背景色
+        {
+            e.Row.Cells[20].Style.Add("background-color", "#EEEE00");
+        }
+        if (chae != 0)//差额(未税) 红色背景 白色字体
+        {
+            e.Row.Cells[19].Style.Add("background-color", "#FF0000");
+            e.Row.Cells[19].Style.Add("color", "#FFFFFF");
+        }
+    }
 }

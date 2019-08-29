@@ -91,7 +91,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
-            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人hongling.cai@pgi.cn            
+            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            
             //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
             message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
@@ -127,7 +127,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
         try
         {
             DataTable dtExcel = GetExcelData_Table(fileName, 0);
-            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 18)
+            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 19)
             {
                 result = "No Data";
             }
@@ -157,6 +157,24 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                     {
                         continue;
                     }
+                    if (dr["本次开票数量"].ToString().Trim() == "")
+                    {
+                        result = "发票号" + dr["发票号"].ToString().Trim() + " 发货至" + dr["发货至"].ToString().Trim()
+                            + " 物料号" + dr["物料号"].ToString().Trim() + " 【本次开票数量】不可为空！" + "<br />";
+                        break;
+                    }
+                    if (dr["开票价格"].ToString().Trim() == "")
+                    {
+                        result = "发票号" + dr["发票号"].ToString().Trim() + " 发货至" + dr["发货至"].ToString().Trim()
+                           + " 物料号" + dr["物料号"].ToString().Trim() + " 【开票价格】不可为空！" + "<br />";
+                        break;
+                    }
+                    if (dr["税率"].ToString().Trim() == "")
+                    {
+                        result = "发票号" + dr["发票号"].ToString().Trim() + " 发货至" + dr["发货至"].ToString().Trim()
+                           + " 物料号" + dr["物料号"].ToString().Trim() + " 【税率】不可为空！" + "<br />";
+                        break;
+                    }
 
                     DataRow dt_r = dt.NewRow();
                     dt_r["idh_part"] = dr["物料号"].ToString();
@@ -177,8 +195,11 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
                     sumamount = sumamount + Convert.ToDecimal(dr["税款合计new"].ToString().Replace(",", ""));
                 }
 
-                bool bf = DataTableToSQLServer(dt, DesTableName);
-                result = bf == true ? "" : "excel导入临时表失败";
+                if (result == "")
+                {
+                    bool bf = DataTableToSQLServer(dt, DesTableName);
+                    result = bf == true ? "" : "excel导入临时表失败";
+                }
 
             }
         }
@@ -298,7 +319,7 @@ public partial class Fin_Fin_idh_invoice_upload : System.Web.UI.Page
 
         MailMessage message = new MailMessage();//邮件信息            
         message.From = new MailAddress("oa@pgi.cn");//发件人           
-        message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人hongling.cai@pgi.cn            
+        message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            
         //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
         message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 

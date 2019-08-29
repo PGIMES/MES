@@ -184,7 +184,7 @@
                     </dx:ASPxGridView>
 
                     <dx:ASPxGridView ID="GV_PART_DK" ClientInstanceName="grid_DK" runat="server" KeyFieldName="id" AutoGenerateColumns="False"  
-                             OnCustomCellMerge="GV_PART_DK_CustomCellMerge"
+                             OnCustomCellMerge="GV_PART_DK_CustomCellMerge" OnHtmlRowCreated="GV_PART_DK_HtmlRowCreated"
                              OnPageIndexChanged="GV_PART_DK_PageIndexChanged" Width="1000px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
@@ -283,7 +283,7 @@
                     </dx:ASPxGridView>
 
                     <dx:ASPxGridView ID="GV_PART_YK" ClientInstanceName="grid_YK" runat="server" KeyFieldName="id" AutoGenerateColumns="False"  
-                             OnCustomCellMerge="GV_PART_YK_CustomCellMerge"
+                             OnCustomCellMerge="GV_PART_YK_CustomCellMerge" OnHtmlRowCreated="GV_PART_YK_HtmlRowCreated"
                              OnPageIndexChanged="GV_PART_YK_PageIndexChanged" Width="1000px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
@@ -410,9 +410,19 @@
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn> 
 
-                            <dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99" Width="0px"                                
-                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
+                            <%--<dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99" Width="0px"                                
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>--%>
                         </Columns>
+                        <TotalSummary>
+                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="list_fpe" ShowInColumn="list_fpe" ShowInGroupFooterColumn="list_fpe" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="chae" ShowInColumn="chae" ShowInGroupFooterColumn="chae" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_tax" ShowInColumn="inv_tax" ShowInGroupFooterColumn="inv_tax" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="list_tax" ShowInColumn="list_tax" ShowInGroupFooterColumn="list_tax" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_tax_sum" ShowInColumn="inv_tax_sum" ShowInGroupFooterColumn="inv_tax_sum" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="list_tax_sum" ShowInColumn="list_tax_sum" ShowInGroupFooterColumn="list_tax_sum" SummaryType="Sum" />
+                        </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
