@@ -280,6 +280,10 @@
                             <dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99" Width="0px"                                
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
+                        <TotalSummary>
+                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
+                        </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
