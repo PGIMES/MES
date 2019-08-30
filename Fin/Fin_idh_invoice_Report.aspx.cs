@@ -223,7 +223,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
         double idh_taxc_new = Convert.ToDouble(e.GetValue("idh_taxc_new").ToString());
         if (idh_taxc_pr != idh_taxc_new)//税率(开票) 黄色背景色 
         {
-            e.Row.Cells[18].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[19].Style.Add("background-color", "#EEEE00");
         }
 
     }

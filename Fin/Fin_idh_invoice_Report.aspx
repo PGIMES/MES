@@ -254,15 +254,20 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="税率(开票)" FieldName="idh_taxc_new" Width="75px" VisibleIndex="18">
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="inv_fpe" Width="75px" VisibleIndex="18"  
+                                ToolTip="开票价格*待开票数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="19" >
+                            <dx:GridViewDataTextColumn Caption="税率(开票)" FieldName="idh_taxc_new" Width="75px" VisibleIndex="19">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                <HeaderStyle BackColor="#F0E68C" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataDateColumn Caption="上传日期" FieldName="ih_inv_date" Width="90px" VisibleIndex="20" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="300px" VisibleIndex="20">
+                            <dx:GridViewDataTextColumn Caption="文件名称" FieldName="ori_filename" Width="300px" VisibleIndex="21">
                                 <HeaderStyle BackColor="#F0E68C" />
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_ori_filename" runat="server" Text='<%# Eval("ori_filename")%>' Cursor="pointer"
