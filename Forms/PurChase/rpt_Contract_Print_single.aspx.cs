@@ -32,7 +32,7 @@ public partial class Forms_PurChase_rpt_Contract_Print_single : System.Web.UI.Pa
         if (Request.QueryString["line"] != null) { line = Request.QueryString["line"]; }
 
         string domain = "";
-        if (Request.QueryString["domain"] != null) { line = Request.QueryString["domain"]; }
+        if (Request.QueryString["domain"] != null) { domain = Request.QueryString["domain"]; }
 
         string lssql_m = string.Format(lssql, nbr, line, domain, LogUserModel.UserName, "main");
         DataTable ldt = DbHelperSQL.Query(lssql_m).Tables[0];
