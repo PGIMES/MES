@@ -37,7 +37,7 @@
 
                 if (grid.GetSelectedRowCount() != 1) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues('syscontractno;contractline;fkrate;fkamt;checkdate;payclause_rate', function GetVal(values) {
+                grid.GetSelectedFieldValues('syscontractno;contractline;fkrate;fkamt;checkdate;payclause_rate;domain', function GetVal(values) {
                     if (values.length > 0) {
                         var ls_nbr = values[0][0];
                         var ls_line = values[0][1];
@@ -45,6 +45,7 @@
                         var fkamt = values[0][3];//付款金额(原币)
                         var checkdate = values[0][4];//验收日期
                         var payclause_rate = values[0][5];//条款摘要
+                        var domain = values[0][6];//域
 
                         //累计付款比例100%，不能付款了
                         if (Number(fkrate)>=100) {
@@ -69,7 +70,7 @@
                         $.ajax({
                             type: "post",
                             url: "xxcontract_Report.aspx/check_data",
-                            data: "{'nbr':'" + ls_nbr + "','domain':'" + $("#MainContent_ddl_domain").val() + "'}",
+                            data: "{'nbr':'" + ls_nbr + "','domain':'" + domain + "'}",//$("#MainContent_ddl_domain").val()
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -84,7 +85,7 @@
                         });
                         if (bf) {
                             //window.open('/Forms/PurChase/rpt_Contract_Print.aspx?nbr=' + ls_nbr + '&line=' + ls_line);
-                            window.open('/Forms/PurChase/rpt_Contract_Print_single.aspx?nbr=' + ls_nbr + '&line=' + ls_line);
+                            window.open('/Forms/PurChase/rpt_Contract_Print_single.aspx?nbr=' + ls_nbr + '&line=' + ls_line + '&domain=' + domain);
                         }
                     }
                 });
@@ -413,6 +414,8 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowAutoFilterTextInputTimer="False" />
                             </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="domain" FieldName="domain" VisibleIndex="99" Width="0px"                                
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>

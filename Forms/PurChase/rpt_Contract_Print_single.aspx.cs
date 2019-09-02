@@ -23,7 +23,7 @@ public partial class Forms_PurChase_rpt_Contract_Print_single : System.Web.UI.Pa
 
         FastReport.Report report = this.WebReport1.Report;
         report.Load(Server.MapPath("Contract_Print_single.frx"));//加载模板
-        string lssql = "exec rpt_Contract_Print_single '{0}', '{1}', '{2}', '{3}'";
+        string lssql = "exec rpt_Contract_Print_single '{0}', '{1}', '{2}', '{3}', '{4}'";
 
         string nbr = "";
         if (Request.QueryString["nbr"] != null) { nbr = Request.QueryString["nbr"]; }
@@ -31,10 +31,13 @@ public partial class Forms_PurChase_rpt_Contract_Print_single : System.Web.UI.Pa
         string line = "";
         if (Request.QueryString["line"] != null) { line = Request.QueryString["line"]; }
 
-        string lssql_m = string.Format(lssql, nbr, line, LogUserModel.UserName, "main");
+        string domain = "";
+        if (Request.QueryString["domain"] != null) { line = Request.QueryString["domain"]; }
+
+        string lssql_m = string.Format(lssql, nbr, line, domain, LogUserModel.UserName, "main");
         DataTable ldt = DbHelperSQL.Query(lssql_m).Tables[0];
 
-        string lssql_d = string.Format(lssql, nbr, line, LogUserModel.UserName, "dtl");
+        string lssql_d = string.Format(lssql, nbr, line, domain, LogUserModel.UserName, "dtl");
         DataTable ldt_d = DbHelperSQL.Query(lssql_d).Tables[0];
 
         report.RegisterData(ldt, "main");
