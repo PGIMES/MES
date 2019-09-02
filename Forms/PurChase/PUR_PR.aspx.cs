@@ -725,7 +725,7 @@ protected void Page_Load(object sender, EventArgs e)
                     where 
                         (
                             (pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'P%' and pt_prod_line like '1%' ) 
-                            or pt_part='P0170AA' or pt_part='P0739AA-01' or pt_part='P0738AA-01' or pt_part='P0591AA-01' or pt_part='P0125BA'
+                            or pt_part='P0170AA' or pt_part='P0739AA-01' or pt_part='P0738AA-01' or pt_part='P0591AA-01' or pt_part='P0125BA' or pt_part='P0744AA-02' or pt_part='P0744AA-04'
                         )
                         and pt_part='{0}' and pt_domain='{1}' ";
         }
