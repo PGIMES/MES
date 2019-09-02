@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/15/2019 13:22:04" ReportInfo.Modified="05/09/2019 14:35:37" ReportInfo.CreatorVersion="2016.1.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/15/2019 13:22:04" ReportInfo.Modified="09/02/2019 14:40:11" ReportInfo.CreatorVersion="2016.1.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+XoOgb0Z1ygJDmip8jTnG5dQ==">
-      <TableDataSource Name="Table" Alias="main" DataType="System.Int32" Enabled="true" SelectCommand="exec [rpt_Contract_Print] '101000755','20','何桂勤','main'">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+X7udKK8GLqhc9ucwBkjQfVA==">
+      <TableDataSource Name="Table" Alias="main" DataType="System.Int32" Enabled="true" SelectCommand="exec [rpt_Contract_Print_single] '101000755','20','200','何桂勤','main'">
         <Column Name="抬头" DataType="System.String"/>
         <Column Name="类型" DataType="System.String"/>
         <Column Name="制单日期" DataType="System.DateTime"/>
@@ -22,20 +22,19 @@
         <Column Name="编制" DataType="System.String"/>
         <CommandParameter Name="nbr" DataType="22"/>
         <CommandParameter Name="line" DataType="22"/>
+        <CommandParameter Name="domain" DataType="22"/>
         <CommandParameter Name="username" DataType="22"/>
         <CommandParameter Name="tbl" DataType="22" DefaultValue="main"/>
       </TableDataSource>
-      <TableDataSource Name="Table1" Alias="dtl" DataType="System.Int32" Enabled="true" SelectCommand="exec [rpt_Contract_Print] '101000755','20','何桂勤','dtl'">
+      <TableDataSource Name="Table1" Alias="dtl" DataType="System.Int32" Enabled="true" SelectCommand="exec [rpt_Contract_Print_single] '101000755','20','200','何桂勤','dtl'">
         <Column Name="行号" DataType="System.Int32"/>
         <Column Name="条款摘要" DataType="System.String"/>
         <Column Name="计划比例" DataType="System.String"/>
         <Column Name="计划付款金额" DataType="System.Double"/>
-        <Column Name="已付款金额" DataType="System.Decimal"/>
-        <Column Name="实际付款日期" DataType="System.DateTime"/>
         <Column Name="计划付款日期" DataType="System.DateTime"/>
-        <Column Name="付款行" DataType="System.String"/>
         <CommandParameter Name="nbr" DataType="22"/>
         <CommandParameter Name="line" DataType="22"/>
+        <CommandParameter Name="domain" DataType="22"/>
         <CommandParameter Name="username" DataType="22"/>
         <CommandParameter Name="tbl" DataType="22" DefaultValue="dtl"/>
       </TableDataSource>
