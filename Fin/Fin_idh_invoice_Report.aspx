@@ -289,6 +289,7 @@
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
                             <Footer HorizontalAlign="Right"></Footer>
                             <AlternatingRow Enabled="true" />
+                            <Footer ForeColor="Red" Font-Bold="true"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
 
@@ -438,6 +439,7 @@
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
                             <Footer HorizontalAlign="Right"></Footer>
                             <AlternatingRow Enabled="true" />
+                            <Footer ForeColor="Red" Font-Bold="true"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
 
