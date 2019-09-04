@@ -166,13 +166,13 @@
                             <dx:GridViewDataTextColumn Caption="税率" FieldName="idh_taxc_pr" Width="40px" VisibleIndex="12">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="75px" VisibleIndex="13" > 
+                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="100px" VisibleIndex="13" > 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="75px" VisibleIndex="14"> 
+                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="100px" VisibleIndex="14"> 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
+                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="100px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>  
                             <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="100px" VisibleIndex="15"  
@@ -182,6 +182,9 @@
                         </Columns>
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
@@ -243,15 +246,15 @@
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="75px" VisibleIndex="13" > 
+                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="100px" VisibleIndex="13" > 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="75px" VisibleIndex="14"> 
+                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="100px" VisibleIndex="14"> 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
+                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="100px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>            
@@ -260,7 +263,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                
-                            <dx:GridViewDataTextColumn Caption="待开票数量" FieldName="wksl_dk" Width="75px" VisibleIndex="16" >
+                            <dx:GridViewDataTextColumn Caption="待开票数量" FieldName="wksl_dk" Width="100px" VisibleIndex="16" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn> 
@@ -296,6 +299,10 @@
                         </Columns>
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_dk" ShowInColumn="wksl_dk" ShowInGroupFooterColumn="wksl_dk" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
                         </TotalSummary>
@@ -358,15 +365,15 @@
                                 <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="75px" VisibleIndex="13" > 
+                            <dx:GridViewDataTextColumn Caption="总数量" FieldName="idh_qty_inv" Width="100px" VisibleIndex="13" > 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="75px" VisibleIndex="14"> 
+                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl_sum" Width="100px" VisibleIndex="14"> 
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                             
-                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
+                            <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="100px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>           
@@ -375,7 +382,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>                 
-                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl" Width="75px" VisibleIndex="16" >
+                            <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl" Width="100px" VisibleIndex="16" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn> 
@@ -446,7 +453,11 @@
                         </Columns>
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl" ShowInColumn="yksl" ShowInGroupFooterColumn="yksl" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="list_fpe" ShowInColumn="list_fpe" ShowInGroupFooterColumn="list_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="chae" ShowInColumn="chae" ShowInGroupFooterColumn="chae" SummaryType="Sum" />
