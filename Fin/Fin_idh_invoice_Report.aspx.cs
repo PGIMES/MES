@@ -112,7 +112,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
             || e.Column.FieldName == "idh_custpart" || e.Column.FieldName == "cp_comment" || e.Column.FieldName == "idh_um" || e.Column.FieldName == "idh_list_pr"
             || e.Column.FieldName == "idh_taxc_pr" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
             || e.Column.FieldName == "ih_bol"
-            || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum")
+            || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum" || e.Column.FieldName == "wksl_sum_fpe")
         {
             var ih_inv_nbr1 = GV_PART_DK.GetRowValues(e.RowVisibleIndex1, "ih_inv_nbr");
             var ih_inv_nbr2 = GV_PART_DK.GetRowValues(e.RowVisibleIndex2, "ih_inv_nbr");
@@ -137,7 +137,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
             || e.Column.FieldName == "idh_custpart" || e.Column.FieldName == "cp_comment" || e.Column.FieldName == "idh_um" || e.Column.FieldName == "idh_list_pr"
             || e.Column.FieldName == "idh_taxc_pr" || e.Column.FieldName == "ih_eff_date" || e.Column.FieldName == "ih_bill" || e.Column.FieldName == "ih_bill_name"
             || e.Column.FieldName == "ih_bol"
-            || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum")
+            || e.Column.FieldName == "idh_qty_inv" || e.Column.FieldName == "yksl_sum" || e.Column.FieldName == "wksl_sum" || e.Column.FieldName == "wksl_sum_fpe")
         {
             var ih_inv_nbr1 = GV_PART_YK.GetRowValues(e.RowVisibleIndex1, "ih_inv_nbr");
             var ih_inv_nbr2 = GV_PART_YK.GetRowValues(e.RowVisibleIndex2, "ih_inv_nbr");
@@ -223,7 +223,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
         double idh_taxc_new = Convert.ToDouble(e.GetValue("idh_taxc_new").ToString());
         if (idh_taxc_pr != idh_taxc_new)//税率(开票) 黄色背景色 
         {
-            e.Row.Cells[19].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[20].Style.Add("background-color", "#EEEE00");
         }
 
     }
@@ -237,12 +237,12 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
         double chae = Convert.ToDouble(e.GetValue("chae").ToString());
         if (idh_taxc_pr != idh_taxc_new)//税率(开票) 黄色背景色
         {
-            e.Row.Cells[20].Style.Add("background-color", "#EEEE00");
+            e.Row.Cells[21].Style.Add("background-color", "#EEEE00");
         }
         if (chae != 0)//差额(未税) 红色背景 白色字体
         {
-            e.Row.Cells[19].Style.Add("background-color", "#FF0000");
-            e.Row.Cells[19].Style.Add("color", "#FFFFFF");
+            e.Row.Cells[20].Style.Add("background-color", "#FF0000");
+            e.Row.Cells[20].Style.Add("color", "#FFFFFF");
         }
     }
 

@@ -175,6 +175,10 @@
                             <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>  
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                                ToolTip="开票价格*未开票数量">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
@@ -245,7 +249,11 @@
                             <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>                           
+                            </dx:GridViewDataTextColumn>            
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                                ToolTip="开票价格*未开票数量">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>                
                             <dx:GridViewDataTextColumn Caption="待开票数量" FieldName="wksl_dk" Width="75px" VisibleIndex="16" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
@@ -354,7 +362,11 @@
                             <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>                           
+                            </dx:GridViewDataTextColumn>           
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                                ToolTip="开票价格*未开票数量">
+                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>                 
                             <dx:GridViewDataTextColumn Caption="已开票数量" FieldName="yksl" Width="75px" VisibleIndex="16" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
