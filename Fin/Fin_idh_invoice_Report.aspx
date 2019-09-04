@@ -175,16 +175,21 @@
                             <dx:GridViewDataTextColumn Caption="未开票数量" FieldName="wksl_sum" Width="75px" VisibleIndex="15" >
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>  
-                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="100px" VisibleIndex="15"  
                                 ToolTip="开票价格*未开票数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                         </Columns>
+                        <TotalSummary>
+                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
+                        </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
                             <Footer HorizontalAlign="Right"></Footer>
                             <AlternatingRow Enabled="true" />
+                            <Footer ForeColor="Red" Font-Bold="true"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
 
@@ -250,7 +255,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>            
-                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="85px" VisibleIndex="15"  
                                 ToolTip="开票价格*未开票数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>                
@@ -262,7 +267,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="inv_fpe" Width="75px" VisibleIndex="18"  
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="inv_fpe" Width="100px" VisibleIndex="18"  
                                 ToolTip="开票价格*待开票数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
@@ -291,6 +296,7 @@
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
@@ -363,7 +369,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <Settings AllowCellMerge="True" />
                             </dx:GridViewDataTextColumn>           
-                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="75px" VisibleIndex="15"  
+                            <dx:GridViewDataTextColumn Caption="发票额" FieldName="wksl_sum_fpe" Width="100px" VisibleIndex="15"  
                                 ToolTip="开票价格*未开票数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>                 
@@ -380,7 +386,7 @@
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="发票额(价目表)" FieldName="list_fpe" Width="75px" VisibleIndex="19"  
+                            <dx:GridViewDataTextColumn Caption="发票额(价目表)" FieldName="list_fpe" Width="100px" VisibleIndex="19"  
                                 ToolTip="价目表价格*数量">
                                 <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                 <HeaderStyle BackColor="#F0E68C" />
@@ -438,6 +444,7 @@
                         </Columns>
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="list_fpe" ShowInColumn="list_fpe" ShowInGroupFooterColumn="list_fpe" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="chae" ShowInColumn="chae" ShowInGroupFooterColumn="chae" SummaryType="Sum" />
