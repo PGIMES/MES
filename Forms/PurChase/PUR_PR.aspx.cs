@@ -747,7 +747,7 @@ protected void Page_Load(object sender, EventArgs e)
         return result;
     }
 
-    //部门取部门主管
+    //部门取部门主管：若申请人部门是工程部的，则部门经理只抓取归属部门的即可
     [WebMethod]
     public static string getDeptLeaderByDept(string domain, string dept, string createdept)
     {
@@ -787,10 +787,13 @@ protected void Page_Load(object sender, EventArgs e)
             else
             {
                 manager_id = "u_" + dt_manager.Rows[0]["manager_id"].ToString();//归属部门经理
-                if (dt_manager.Rows[0]["manager_id"].ToString() != dt_manager_create.Rows[0]["id"].ToString())//若申请人所在部门经理<>归属部门经理
+                if (createdept.Contains("工程") == false)//若申请人部门是工程部的，则部门经理只抓取归属部门的即可
                 {
-                    manager_id = manager_id + ",u_" + dt_manager_create.Rows[0]["id"].ToString();
-                }
+                    if (dt_manager.Rows[0]["manager_id"].ToString() != dt_manager_create.Rows[0]["id"].ToString())//若申请人所在部门经理<>归属部门经理
+                    {
+                        manager_id = manager_id + ",u_" + dt_manager_create.Rows[0]["id"].ToString();
+                    }
+                }                
                 fz_id = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
             }
 
