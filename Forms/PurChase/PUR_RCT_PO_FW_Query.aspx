@@ -24,9 +24,9 @@
                 $('#btn_po').hide();
             }
             if (DeptName.indexOf("财务") != -1 || DeptName.indexOf("IT") != -1) {
-                $('#btn_fw').show();
+                $('#btn_fw').show(); $('#btn_fw_2').hide();
             } else {
-                $('#btn_fw').hide();
+                $('#btn_fw').hide(); $('#btn_fw_2').hide();
             }
 
             $('#btn_po').click(function () {
@@ -107,6 +107,62 @@
                 });
             });
 
+            $('#btn_fw_2').click(function () {
+                if (grid.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
+
+                grid.GetSelectedFieldValues('rctno;PONo;OptionType', function GetVal(values) {
+                    var ls_rctnos = ""; var msg = "";
+                    for (var i = 0; i < values.length; i++) {
+                        var ls_rctno = values[i][0];//== null ? "" : values[0][0];
+                        var ls_OptionType = values[i][2] == null ? "" : values[i][2];
+
+                        if (ls_OptionType == "已匹配") {
+                            msg = msg + "验收单" + values[i][0] + ls_OptionType + ",不能重复确认！<br />";
+                        } else if (ls_OptionType == "") {
+                            msg = msg + "验收单" + values[i][0] + ",采购还未确认,不能确认！<br />";
+                        } else {
+                            ls_rctnos = ls_rctnos + ls_rctno + "|";
+                        }
+                    }
+                    if (msg != "") {
+                        layer.alert(msg);
+                        return;
+                    }
+                    ls_rctnos = ls_rctnos.substr(0, ls_rctnos.length - 1);
+
+                    $.ajax({
+                        type: "post",
+                        url: "PUR_RCT_PO_FW_Query.aspx/fw_deal_2",
+                        data: "{'rctno':'" + ls_rctnos + "',domain:'" + $("#MainContent_PoDomain").val() + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                        success: function (data) {
+                            var obj = eval(data.d);
+                            if (obj[0].re_flag != "") {
+                                layer.alert(obj[0].re_flag, function (index) { location.reload(); })
+                                return;
+                            }
+
+                            var url = '/Forms/PurChase/PUR_RCT_PO_FW_Sure_fw.aspx?rctno=' + ls_rctnos;
+                            layer.open({
+                                title: '财务确认',
+                                closeBtn: 2,
+                                type: 2,
+                                area: ['900px', '580px'],
+                                fixed: false, //不固定
+                                maxmin: true, //开启最大化最小化按钮
+                                content: url,
+                                cancel: function () {
+                                    //右上角关闭回调
+                                    parent.location.reload();
+                                }
+                            });                            
+                        }
+                    });
+                });
+            });
+
             setHeight();
             $(window).resize(function () {
                 setHeight();
@@ -178,7 +234,9 @@
                         &nbsp;
                         <button id="btn_po" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;采购确认</button>   
                         &nbsp;
-                        <button id="btn_fw" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认</button>   
+                        <button id="btn_fw" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认</button>  
+                        &nbsp;
+                        <button id="btn_fw_2" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认2</button>   
                     </td> 
                 </tr>
                 </table>
@@ -234,6 +292,7 @@
                             <dx:GridViewDataTextColumn Caption="已匹配数量" FieldName="pipei_qty" Width="60px" VisibleIndex="16" />
                             <dx:GridViewDataTextColumn Caption="未匹配数量" FieldName="no_pipei_qty" Width="60px" VisibleIndex="17" />
                             <dx:GridViewDataTextColumn Caption="单价" FieldName="NoTaxPrice" Width="70px" VisibleIndex="18" />
+                            <dx:GridViewDataTextColumn Caption="匹配金额" FieldName="FPAmount" Width="0px" VisibleIndex="19" />
                             <dx:GridViewDataTextColumn Caption="采购金额合计" FieldName="notax_TotalPrice" Width="80px" VisibleIndex="19" />
                             <dx:GridViewDataTextColumn Caption="税金额N" FieldName="TaxRatePrice" Width="80px" VisibleIndex="20" />
                             <dx:GridViewDataTextColumn Caption="税款合计N" FieldName="TotalPrice" Width="80px" VisibleIndex="21" />
@@ -270,14 +329,15 @@
                             </dx:GridViewDataTextColumn>--%>
                         </Columns>
                         <TotalSummary>
-                            <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
-                             <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="TaxRatePrice" ShowInColumn="TaxRatePrice" ShowInGroupFooterColumn="TaxRatePrice" SummaryType="Sum" />
-                             <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>{0:N2}</font>" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="FPAmount" ShowInColumn="FPAmount" ShowInGroupFooterColumn="FPAmount" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="notax_TotalPrice" ShowInColumn="notax_TotalPrice" ShowInGroupFooterColumn="notax_TotalPrice" SummaryType="Sum" />
+                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="TaxRatePrice" ShowInColumn="TaxRatePrice" ShowInGroupFooterColumn="TaxRatePrice" SummaryType="Sum" />
+                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="TotalPrice" ShowInColumn="TotalPrice" ShowInGroupFooterColumn="TotalPrice" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
-                            <Footer HorizontalAlign="Right"></Footer>
+                            <Footer HorizontalAlign="Right" ForeColor="Red" Font-Bold="true"></Footer>
                             <AlternatingRow Enabled="true" />
                         </Styles>
                     </dx:ASPxGridView>

@@ -212,4 +212,31 @@ public partial class Forms_PurChase_PUR_RCT_PO_FW_Query : System.Web.UI.Page
         return result;
 
     }
+
+    [WebMethod]
+    public static string fw_deal_2(string rctno, string domain)
+    {
+        string[] ls_rctno = rctno.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+        string re_flag = "";
+
+        for (int i = 0; i < ls_rctno.Length; i++)
+        {
+            DataTable dt = DbHelperSQL.Query(@"select * from PUR_RCT_PO_FW where rctno='" + ls_rctno[i] + "'").Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                if (dt.Rows[0]["OptionType"].ToString() == "已匹配")
+                {
+                    re_flag += "验收单" + ls_rctno[i] + dt.Rows[0]["OptionType"].ToString() + "，不能重复确认！";
+                }
+            }
+            else
+            {
+                re_flag += "验收单" + ls_rctno[i] + ",采购还未确认,不能确认不能重复确认！";
+            }
+        }
+
+        string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
+        return result;
+
+    }
 }
