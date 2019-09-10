@@ -75,8 +75,8 @@
         $(document).ready(function () {
             $("#mestitle").text("【请购单查询】");
 
-            //尹姣
-            if (DeptName.indexOf("IT") != -1 || UserId == "01190") {
+            //尹姣、余啸琳
+            if (DeptName.indexOf("IT") != -1 || UserId == "01190" || UserId == "02085") {
                 $('#btn_syr').show();
             } else {
                 $('#btn_syr').hide();
