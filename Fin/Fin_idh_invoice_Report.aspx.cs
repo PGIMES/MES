@@ -247,6 +247,46 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
         }
     }
 
+    decimal sum_dk = 0;    //和
+    List<idh_key> idh_key_list_dk = new List<idh_key>();
+
+    protected void GV_PART_DK_CustomSummaryCalculate(object sender, CustomSummaryEventArgs e)
+    {
+        ASPxGridView view_dk = sender as ASPxGridView;
+
+        if (e.Item != null)
+        {
+            if (e.IsTotalSummary)
+            {
+                switch (e.SummaryProcess)
+                {
+                    case CustomSummaryProcess.Start:
+                        sum_dk = 0; idh_key_list_dk.Clear();
+                        break;
+                    case CustomSummaryProcess.Calculate:
+                        //string[] fieldnames = new string[] { "ih_inv_nbr", "ih_ship", "idh_part" };
+                        //object oj = view.GetRowValues(e.RowHandle, fieldnames);
+
+                        idh_key idh_keys_dk = new idh_key();
+                        idh_keys_dk.ih_inv_nbr = view_dk.GetRowValues(e.RowHandle, "ih_inv_nbr").ToString();
+                        idh_keys_dk.ih_ship = view_dk.GetRowValues(e.RowHandle, "ih_ship").ToString();
+                        idh_keys_dk.idh_part = view_dk.GetRowValues(e.RowHandle, "idh_part").ToString();
+
+                        //不存在 返回null
+                        if (idh_key_list_dk.FirstOrDefault(x => x.idh_part == idh_keys_dk.idh_part && x.ih_ship == idh_keys_dk.ih_ship && x.ih_inv_nbr == idh_keys_dk.ih_inv_nbr) == null)
+                        {
+                            sum += Convert.ToDecimal(e.FieldValue);
+                            idh_key_list_dk.Add(idh_keys_dk);
+                        }
+                        break;
+                    case CustomSummaryProcess.Finalize:
+                        e.TotalValue = sum_dk;
+                        break;
+                }
+            }
+        }
+    }
+
     decimal sum = 0;    //和
     List<idh_key> idh_key_list = new List<idh_key>();
 
@@ -264,7 +304,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
                         sum = 0; idh_key_list.Clear();
                         break;
                     case CustomSummaryProcess.Calculate:
-                        string[] fieldnames = new string[] { "ih_inv_nbr", "ih_ship", "idh_part" };
+                        //string[] fieldnames = new string[] { "ih_inv_nbr", "ih_ship", "idh_part" };
                         //object oj = view.GetRowValues(e.RowHandle, fieldnames);
 
                         idh_key idh_keys = new idh_key();
@@ -286,6 +326,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
             }
         }
     }
+
 }
 
 public class idh_key

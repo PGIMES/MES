@@ -197,7 +197,7 @@
                     </dx:ASPxGridView>
 
                     <dx:ASPxGridView ID="GV_PART_DK" ClientInstanceName="grid_DK" runat="server" KeyFieldName="id" AutoGenerateColumns="False"  
-                             OnCustomCellMerge="GV_PART_DK_CustomCellMerge" OnHtmlRowCreated="GV_PART_DK_HtmlRowCreated"
+                             OnCustomCellMerge="GV_PART_DK_CustomCellMerge" OnHtmlRowCreated="GV_PART_DK_HtmlRowCreated" OnCustomSummaryCalculate="GV_PART_DK_CustomSummaryCalculate"
                              OnPageIndexChanged="GV_PART_DK_PageIndexChanged" Width="1000px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
@@ -299,12 +299,12 @@
                         </Columns>
                         <TotalSummary>
                             <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="idh_um" ShowInColumn="idh_um" ShowInGroupFooterColumn="idh_um" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_dk" ShowInColumn="wksl_dk" ShowInGroupFooterColumn="wksl_dk" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Custom" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Custom" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Custom" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_dk" ShowInColumn="wksl_dk" ShowInGroupFooterColumn="wksl_dk" SummaryType="Custom" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Custom" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
