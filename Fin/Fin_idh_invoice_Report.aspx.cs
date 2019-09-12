@@ -1,4 +1,5 @@
-﻿using DevExpress.Web;
+﻿using DevExpress.Data;
+using DevExpress.Web;
 using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
@@ -246,4 +247,66 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
         }
     }
 
+    decimal sum = 0;    //和
+    List<idh_key> idh_key_list = new List<idh_key>();
+
+    protected void GV_PART_YK_CustomSummaryCalculate(object sender, DevExpress.Data.CustomSummaryEventArgs e)
+    {
+        ASPxGridView view = sender as ASPxGridView;
+
+        if (e.Item != null)
+        {
+            if (e.IsTotalSummary)
+            {
+                switch (e.SummaryProcess)
+                {
+                    case CustomSummaryProcess.Start:
+                        sum = 0; idh_key_list.Clear();
+                        break;
+                    case CustomSummaryProcess.Calculate:
+                        string[] fieldnames = new string[] { "ih_inv_nbr", "ih_ship", "idh_part" };
+                        //object oj = view.GetRowValues(e.RowHandle, fieldnames);
+
+                        idh_key idh_keys = new idh_key();
+                        idh_keys.ih_inv_nbr = view.GetRowValues(e.RowHandle, "ih_inv_nbr").ToString();
+                        idh_keys.ih_ship = view.GetRowValues(e.RowHandle, "ih_ship").ToString();
+                        idh_keys.idh_part = view.GetRowValues(e.RowHandle, "idh_part").ToString();
+
+                        //不存在 返回null
+                        if(idh_key_list.FirstOrDefault(x => x.idh_part == idh_keys.idh_part && x.ih_ship == idh_keys.ih_ship && x.ih_inv_nbr == idh_keys.ih_inv_nbr) == null)
+                        {
+                            sum += Convert.ToDecimal(e.FieldValue);
+                            idh_key_list.Add(idh_keys);
+                        }
+                        break;
+                    case CustomSummaryProcess.Finalize:
+                        e.TotalValue = sum;
+                        break;
+                }
+            }
+        }
+    }
+}
+
+public class idh_key
+{
+    public idh_key()
+    {
+        //
+        // TODO: 在此处添加构造函数逻辑
+        //       
+
+    }
+    /// <summary>
+    /// 发票号
+    /// </summary>
+    public string ih_inv_nbr { get; set; }
+    /// <summary>
+    /// 发货至
+    /// </summary>
+    public string ih_ship { get; set; }
+    /// <summary>
+    /// 物料号
+    /// </summary>
+    public string idh_part { get; set; }
 }
