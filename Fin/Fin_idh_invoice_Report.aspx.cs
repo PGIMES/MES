@@ -275,7 +275,7 @@ public partial class Fin_Fin_idh_invoice_Report : System.Web.UI.Page
                         //不存在 返回null
                         if (idh_key_list_dk.FirstOrDefault(x => x.idh_part == idh_keys_dk.idh_part && x.ih_ship == idh_keys_dk.ih_ship && x.ih_inv_nbr == idh_keys_dk.ih_inv_nbr) == null)
                         {
-                            sum += Convert.ToDecimal(e.FieldValue);
+                            sum_dk += Convert.ToDecimal(e.FieldValue);
                             idh_key_list_dk.Add(idh_keys_dk);
                         }
                         break;

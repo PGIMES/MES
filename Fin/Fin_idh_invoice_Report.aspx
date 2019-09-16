@@ -318,8 +318,8 @@
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="idh_qty_inv" ShowInColumn="idh_qty_inv" ShowInGroupFooterColumn="idh_qty_inv" SummaryType="Custom" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="yksl_sum" ShowInColumn="yksl_sum" ShowInGroupFooterColumn="yksl_sum" SummaryType="Custom" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum" ShowInColumn="wksl_sum" ShowInGroupFooterColumn="wksl_sum" SummaryType="Custom" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_dk" ShowInColumn="wksl_dk" ShowInGroupFooterColumn="wksl_dk" SummaryType="Custom" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_sum_fpe" ShowInColumn="wksl_sum_fpe" ShowInGroupFooterColumn="wksl_sum_fpe" SummaryType="Custom" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="wksl_dk" ShowInColumn="wksl_dk" ShowInGroupFooterColumn="wksl_dk" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="inv_fpe" ShowInColumn="inv_fpe" ShowInGroupFooterColumn="inv_fpe" SummaryType="Sum" />
                         </TotalSummary>
                         <Styles>
