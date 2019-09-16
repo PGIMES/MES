@@ -40,6 +40,20 @@
                 });
             });
 
+            $('#btn_upload_multi').click(function () {
+                var url = "/Fin/Fin_idh_invoice_upload_multi.aspx";
+
+                layer.open({
+                    title: '上传开票通知单(多笔)',
+                    closeBtn: 2,
+                    type: 2,
+                    area: ['700px', '550px'],
+                    fixed: false, //不固定
+                    maxmin: true, //开启最大化最小化按钮
+                    content: url
+                });
+            });
+
             $('#btn_sure').click(function () {
                 if (grid_DK.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
 
@@ -123,8 +137,10 @@
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Bt_select_Click" Width="70px" /> 
                         &nbsp;
                         <asp:Button ID="Bt_Export" runat="server" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Text="导出" Width="70px" /> 
+                       <%-- &nbsp;
+                        <button id="btn_upload" type="button" class="btn btn-primary btn-large"><i class="fa fa-upload fa-fw"></i>&nbsp;上传开票通知单</button>--%>
                         &nbsp;
-                        <button id="btn_upload" type="button" class="btn btn-primary btn-large"><i class="fa fa-upload fa-fw"></i>&nbsp;上传开票通知单</button>
+                        <button id="btn_upload_multi" type="button" class="btn btn-primary btn-large"><i class="fa fa-upload fa-fw"></i>&nbsp;上传开票通知单(多笔)</button>
                         &nbsp;
                         <button id="btn_sure" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;确认开票</button>
                         &nbsp;&nbsp;<a href="/UserGuide/invoice_upload_format.xlsx" target="_blank" style="color:red">upload format</a>

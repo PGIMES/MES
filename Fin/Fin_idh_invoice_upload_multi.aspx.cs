@@ -49,9 +49,9 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
         }
         e.UploadedFile.SaveAs(resultFilePath);
 
-        string result = "", DesTableName = "idh_invoice_upload_temp"; decimal sumamount = 0;string ih_bill_name = "";
+        string result = "", DesTableName = "idh_invoice_upload_multi_temp"; //decimal sumamount = 0;string ih_bill_name = "";
         DbHelperSQL.ExecuteSql("truncate table " + DesTableName);
-        importdata(resultFilePath, DesTableName, resultFileName, e.UploadedFile.FileName,out result, out ih_bill_name, out sumamount);
+        importdata(resultFilePath, DesTableName, resultFileName, e.UploadedFile.FileName,out result);//, out ih_bill_name, out sumamount
 
         if (result != "")
         {
@@ -62,14 +62,15 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
         try
         {
-            //string sql = @"insert into idh_invoice_upload select * from idh_invoice_upload_temp";
+            
+            //string sql = @"insert into idh_invoice_upload select * from idh_invoice_upload_multi_temp";
             //DbHelperSQL.ExecuteSql(sql);
-            string sql = @"exec [Report_idh_invoice_upload]";
+            string sql = @"exec [Report_idh_invoice_upload_multi]";
             DataTable dt_flag = DbHelperSQL.Query(sql).Tables[0];
 
             if (dt_flag.Rows[0][0].ToString() == "Y")
             {
-                DataTable dt_error = DbHelperSQL.Query(@"select * from idh_invoice_upload_temp where ISNULL(errorMessage,'')<>''").Tables[0];
+                DataTable dt_error = DbHelperSQL.Query(@"select * from idh_invoice_upload_multi_temp where ISNULL(errorMessage,'')<>''").Tables[0];
                 for (int i = 0; i < dt_error.Rows.Count; i++)
                 {
                     result = result + "发票号" + dt_error.Rows[i]["ih_inv_nbr"].ToString() + " 发货至" + dt_error.Rows[i]["ih_ship"].ToString()
@@ -79,6 +80,15 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                 e.CallbackData = isSubmissionExpired + "|" + result;
                 return;
             }
+
+            //获取金额
+            DataTable dt_con = DbHelperSQL.Query(@"select ih_bill_name,sum(inv_tax_sum) inv_tax_sum from idh_invoice_upload_multi_temp group by ih_bill_name").Tables[0];
+            string body = "Dear all:";
+            foreach (DataRow item in dt_con.Rows)
+            {
+                body = body + "<br />票据开往名称：" + item["ih_bill_name"].ToString() + ",总金额：" + item["inv_tax_sum"].ToString();
+            }
+            body = body + "<br/><br/><a href='http://172.16.5.26:8010/Fin/Fin_idh_invoice_Report.aspx'>请点击查看</a>";//内容         
 
             //发邮件给上传人、蔡红玲 <hongling.cai@pgi.cn>，Cc '徐殿青'<edward.xu@pgi.cn>徐镇jim.xu <jim.xu@pgi.cn>
             DataTable dt = DbHelperSQL.Query("SELECT  * FROM V_HRM_EMP_MES where workcode='" + ((LoginUser)Session["LogUser"]).UserId + "'").Tables[0];
@@ -91,13 +101,12 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
-            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            
+            message.To.Add(to_add + ""); //收件人            ,hongling.cai@pgi.cn
             //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
-            message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
+            //message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
             message.Subject = "【开票通知单】上传成功";//主题            
-            message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString()
-                + "<br/><br/><a href='http://172.16.5.26:8010/Fin/Fin_idh_invoice_Report.aspx'>请点击查看</a>";//内容           
+            message.Body =  body;//内容           
             message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
             message.IsBodyHtml = true;//设置为HTML格式            
             message.Priority = MailPriority.Normal;//优先级
@@ -107,7 +116,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
             message.Attachments.Add(attach);
 
             mail.Send(message);
-
+            
         }
         catch (Exception ex)
         {
@@ -123,9 +132,9 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
     }
 
-    public void importdata(string fileName, string DesTableName, string new_filename, string ori_filename, out string result, out string ih_bill_name, out decimal sumamount)
+    public void importdata(string fileName, string DesTableName, string new_filename, string ori_filename, out string result)//, out string ih_bill_name, out decimal sumamount
     {
-        result = ""; ih_bill_name = ""; sumamount = 0;
+        result = ""; //ih_bill_name = ""; sumamount = 0;
         try
         {
             DataTable dtExcel = GetExcelData_Table(fileName, 0);
@@ -148,14 +157,23 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                 DataColumn col_9 = new DataColumn("isdel", typeof(string));
                 DataColumn col_10 = new DataColumn("CreateById", typeof(string));
                 DataColumn col_11 = new DataColumn("status", typeof(string));
+                DataColumn col_12 = new DataColumn("ih_bill_name", typeof(string));
+                DataColumn col_13 = new DataColumn("inv_tax_sum", typeof(decimal));
                 dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4); dt.Columns.Add(col_5);
                 dt.Columns.Add(col_6); dt.Columns.Add(col_7); dt.Columns.Add(col_8); dt.Columns.Add(col_9); dt.Columns.Add(col_10);
-                dt.Columns.Add(col_11);
+                dt.Columns.Add(col_11); dt.Columns.Add(col_12); dt.Columns.Add(col_13);
 
                 for (int k = 0; k < dtExcel.Rows.Count; k++)
                 {
                     DataRow dr = dtExcel.Rows[k];
+
+                    //过滤key值为空行
                     if (dr["物料号"].ToString().Trim() == "" || dr["发票号"].ToString().Trim() == "" || dr["发货至"].ToString().Trim() == "")
+                    {
+                        continue;
+                    }
+                    //过滤 列名 的 行
+                    if (dr["物料号"].ToString().Trim() == "物料号" || dr["发票号"].ToString().Trim() == "发票号" || dr["发货至"].ToString().Trim() == "发货至")
                     {
                         continue;
                     }
@@ -191,10 +209,12 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                     dt_r["isdel"] = "N";
                     dt_r["CreateById"] = ((LoginUser)Session["LogUser"]).UserId;
                     dt_r["status"] = "待开票";
+                    dt_r["ih_bill_name"] = dr["票据开往名称"].ToString().Trim();
+                    dt_r["inv_tax_sum"] = dr["税款合计new"].ToString().Trim();
                     dt.Rows.Add(dt_r);
 
-                    if (k == 0) { ih_bill_name = dr["票据开往名称"].ToString(); }
-                    sumamount = sumamount + Convert.ToDecimal(dr["税款合计new"].ToString().Replace(",", ""));
+                    //if (k == 0) { ih_bill_name = dr["票据开往名称"].ToString(); }
+                    //sumamount = sumamount + Convert.ToDecimal(dr["税款合计new"].ToString().Replace(",", ""));
                 }
 
                 if (result == "")
@@ -208,7 +228,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
         catch (Exception ex)
         {
             result = "读取excel异常：" + ex.Message;
-            sumamount = 0;
+            //sumamount = 0;
         }
 
     }
@@ -259,6 +279,8 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                     bulkCopy.ColumnMappings.Add("isdel", "isdel");
                     bulkCopy.ColumnMappings.Add("CreateById", "CreateById");
                     bulkCopy.ColumnMappings.Add("status", "status");
+                    bulkCopy.ColumnMappings.Add("ih_bill_name", "ih_bill_name");
+                    bulkCopy.ColumnMappings.Add("inv_tax_sum", "inv_tax_sum");
 
                     bulkCopy.WriteToServer(dt);
                 }
