@@ -568,6 +568,7 @@
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=d9cb9476-13f9-48ec-a87e-5b84ca0790b0&appid=" target="_blank">生产性物料申请</a></li>
 										<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=ee59e0b3-d6a1-4a30-a3b4-65d188323134&appid=BDDCD717-2DD6-4D83-828C-71C92FFF6AE4" target="_blank">工艺路线申请</a></li>
                                         <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=4A901BC7-EA83-43B1-80B6-5B14708DEDE9&appid=" target="_blank">BOM申请</a></li>
+                                        <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=6fe4a501-d522-458b-a46c-0baa6162d8d3&appid=" target="_blank">包装方案申请</a></li>
                                         <li class="divider"></li>
                                         <li><a href="/Forms/MaterialBase/WuLiao_Report_Query.aspx" target="_blank">生产性物料查询</a></li>
 										<li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询</a></li>
