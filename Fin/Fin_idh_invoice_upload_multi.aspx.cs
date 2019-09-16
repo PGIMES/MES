@@ -101,9 +101,9 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
-            message.To.Add(to_add + ""); //收件人            ,hongling.cai@pgi.cn
+            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            ,hongling.cai@pgi.cn
             //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
-            //message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
+            message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
             message.Subject = "【开票通知单】上传成功";//主题            
             message.Body =  body;//内容           
