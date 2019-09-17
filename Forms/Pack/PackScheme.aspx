@@ -585,6 +585,15 @@
             
             <%=ValidScript%>
 
+            if($("[id$=gv] input[id*=sl]").length==0){
+                msg+="【包装材料明细】不可为空.<br />";
+            }else {
+                if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                    msg+="【包装材料明细】格式必须正确.<br />";
+                } 
+            }
+            
+
             if(msg!=""){  
                 flag=false;
                 layer.alert(msg);
@@ -1135,6 +1144,9 @@
                                                 <dx:ASPxTextBox ID="sl" Width="60px" runat="server" Value='<%# Eval("sl")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "sl"+Container.VisibleIndex.ToString() %>'>
+                                                    <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                        <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
+                                                    </ValidationSettings>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                              <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
