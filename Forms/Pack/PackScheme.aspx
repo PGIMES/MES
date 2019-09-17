@@ -84,120 +84,93 @@
         function gv_color(){
             $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
 
-                //var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //    $(item).find("table[id*=TravelerName_"+index+"]").css("background-color","#FDF7D9");
-                //    $(item).find("input[id*=TravelerName_"+index+"]").css("background-color","#FDF7D9");
+                var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FDF7D9");
 
-                //    $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
-                //    $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FDF7D9");
 
-                //    $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
-                //    $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FDF7D9");
-                //}else {
-                //    $(item).find("table[id*=TravelerName_"+index+"]").css("background-color","#FFFFFF");
-                //    $(item).find("input[id*=TravelerName_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FDF7D9");
 
-                //    $(item).find("table[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
-                //    $(item).find("input[id*=TravelerId_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
 
-                //    $(item).find("table[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
-                //    $(item).find("input[id*=Vehicle_"+index+"]").css("background-color","#FFFFFF");
-                //}
+                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
 
-                //if($(item).find("input[id*=StartDateTime_"+index+"]").attr("disabled")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=StartDateTime_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=StartDateTime_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=StartDateTime_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=StartDateTime_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
+                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FDF7D9");
+                }else {
+                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FFFFFF");
+                }
+
+                if($(item).find("input[id*=sl_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
                     
-                //}
-               
-                //if($(item).find("input[id*=StartFromPlace_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=StartFromPlace_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=StartFromPlace_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=StartFromPlace_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=StartFromPlace_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-                //if($(item).find("input[id*=EndToPlace_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=EndToPlace_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=EndToPlace_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=EndToPlace_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=EndToPlace_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-                //if($(item).find("input[id*=BudgetCost_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=BudgetCost_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=BudgetCost_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=BudgetCost_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=BudgetCost_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-                //if($(item).find("input[id*=Remark_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=Remark_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=Remark_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=Remark_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=Remark_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-
-                //if($(item).find("input[id*=ScheduledFlight_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=ScheduledFlight_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=ScheduledFlight_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=ScheduledFlight_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=ScheduledFlight_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-                //if($(item).find("input[id*=ActualCost_"+index+"]").attr("readOnly")){
-                //    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                //    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                //        $(item).find("table[id*=ActualCost_"+index+"]").css("background-color","#FDF7D9");
-                //        $(item).find("input[id*=ActualCost_"+index+"]").css("background-color","#FDF7D9");
-                //    }else {
-                //        $(item).find("table[id*=ActualCost_"+index+"]").css("background-color","#FFFFFF");
-                //        $(item).find("input[id*=ActualCost_"+index+"]").css("background-color","#FFFFFF");
-                //    }
-                //}else {
-                    
-                //}
-
-                
+                }
             });
         }
 
@@ -323,6 +296,7 @@
         {            
             $("#ljXX input[id*='ver']").val('A0');
             typeno_c.SetValue("新增");typeno_c.SetEnabled(false);
+            $("#ljXX input[id*='klgx']").val('600');
 
             $("#ljXX [id*='domain']").val(domain);
             $("#ljXX input[id*='part']").val(part);
@@ -364,8 +338,36 @@
             RefreshMain();
         }
 
-        function RefreshMain(){           
-            var ljzl=Number($.trim($("#ljXX input[id*='ljzl']").val()) == "" ? 0 : $.trim($("#ljXX input[id*='ljzl']").val())); // 零件重量 
+        function Get_bm(vi){
+            var url = "/select/select_pack_part_bc.aspx?vi="+vi;
+
+            layer.open({
+                title:'包装材料明细',
+                type: 2,
+                area: ['1000px', '500px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
+        }
+
+        function setvalue_bm(vi,domain_v, bm_v, mc_v, cc_v, dz_v, cl_v, gys_v,dj_v,bclb_v) {
+            var domain= eval('domain' + vi);domain.SetText(domain_v);
+            var bm= eval('bm' + vi);bm.SetText(bm_v);
+            var mc= eval('mc' + vi);mc.SetText(mc_v);
+            var cc= eval('cc' + vi);cc.SetText(cc_v);
+            var dz= eval('dz' + vi);dz.SetText(dz_v);
+            var cl= eval('cl' + vi);cl.SetText(cl_v);
+            var gys= eval('gys' + vi);gys.SetText(gys_v);
+            var dj= eval('dj' + vi);dj.SetText(dj_v);
+            var bclb= eval('bclb' + vi);bclb.SetText(bclb_v);
+
+            RefreshRow();
+        }
+
+        function RefreshMain(){                 
+            var ljzl=Number($.trim($("#ljXX input[id*='ljzl']").val()) == "" ? 0 : $.trim($("#ljXX input[id*='ljzl']").val())); // 零件重量  
+
             var zl=Number($.trim($("#zxXX input[id*='bzx_w']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_w']").val())); // 包装箱子重量  
             
             var sl_c=Number($.trim($("#zxXX input[id*='bzx_sl_c']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_sl_c']").val())); //数量/层
@@ -373,8 +375,6 @@
 
             var xs_c=Number($.trim($("#zxXX input[id*='bzx_xs_c']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_xs_c']").val())); //箱数/层
             var c_t=Number($.trim($("#zxXX input[id*='bzx_c_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_c_t']").val())); // 层/托      
-
-            var mz_x=Number($.trim($("#zxXX input[id*='bzx_mz_x']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_mz_x']").val())); // 毛重/箱(KG)=(净重+箱子重量)           
 
             //箱数/托=(箱数/层*层/托)   
             var xs_t=xs_c*c_t;
@@ -385,26 +385,106 @@
             $("#zxXX input[id*='bzx_sl_x']").val(sl_x);
 
             //数量/托=(箱数/托*数量/箱)
-            var sl_t=xs_t*sl_c;
-            $("#zxXX input[id*='bzx_sl_t']").val(sl_x);
+            var sl_t=xs_t*sl_x;
+            $("#zxXX input[id*='bzx_sl_t']").val(sl_t);
 
             //净重/箱(KG)=(单件重量*数量/箱)	
-            var jz_x=ljzl*sl_x;
-            $("#zxXX input[id*='bzx_jz_x']").val(jz_x.toFixed(4));
+            var jz_x=(ljzl*sl_x).toFixed(2);
+            $("#zxXX input[id*='bzx_jz_x']").val(jz_x);
 
             //毛重/箱(KG)=(净重+箱子重量)
-            var mz_x=jz_x+zl;
-            $("#zxXX input[id*='bzx_mz_x']").val(mz_x.toFixed(4));
+            var mz_x=(Number(jz_x)+zl).toFixed(2);
+            $("#zxXX input[id*='bzx_mz_x']").val(mz_x);
             
             //净重/托(KG)=(单件重量*数量/托)	
-            var jz_t=ljzl*sl_t;
-            $("#zxXX input[id*='bzx_jz_t']").val(jz_t.toFixed(4));
+            var jz_t=(ljzl*sl_t).toFixed(2);
+            $("#zxXX input[id*='bzx_jz_t']").val(jz_t);
 
+            Refresh_Main_Row();
+        }
+
+        function Refresh_Main_Row(){
+            var nyl=Number($.trim($("#ljXX input[id*='nyl']").val()) == "" ? 0 : $.trim($("#ljXX input[id*='nyl']").val())); // 年用量  
+            var jz_t=Number($.trim($("#zxXX input[id*='bzx_jz_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_jz_t']").val()));//净重/托(KG)=(单件重量*数量/托)
+            var sl_t=Number($.trim($("#zxXX input[id*='bzx_sl_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_sl_t']").val())); //数量/托=(箱数/托*数量/箱)
+
+            var xs_price=Number($.trim($("#cbXX input[id*='cbfj_xs_price']").val()) == "" ? 0 : $.trim($("#cbXX input[id*='cbfj_xs_price']").val())); //销售价格 
+
+            //grid底部total
+            var zz_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(12)").text();//包装材料总重
+            var zj_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(14)").text();//包装材料总价 
+
+            //包装材料总重
+            var bc_w_total=(Number($.trim(zz_value_sum) == "" ? 0 : $.trim(zz_value_sum))).toFixed(2);
+            $("#cbXX input[id*='cbfj_bc_w_total']").val(bc_w_total);
+
+            //成本/托==包装明细总价  
+            var cb_t_total=(Number($.trim(zj_value_sum) == "" ? 0 : $.trim(zj_value_sum))).toFixed(2);
+            $("#cbXX input[id*='cbfj_cb_t_total']").val(cb_t_total);
+            
             //毛重/托(KG)=(净重/托+包材总重)	
-            //var mz_t=jz_t+?;
-            //$("#zxXX input[id*='bzx_mz_t']").val(mz_t.toFixed(4));
+            var mz_t=(jz_t+Number(bc_w_total)).toFixed(2);
+            $("#zxXX input[id*='bzx_mz_t']").val(mz_t);
 
-            // 零件发运重量=(毛重/托÷数量/托)
+            // 零件发运重量=(毛重/托÷数量/托)  
+            var ljfyzl=0;
+            if(sl_t!=0){ljfyzl=(Number(mz_t)/sl_t);}
+            ljfyzl=ljfyzl.toFixed(2);
+            $("#zxXX input[id*='bzx_ljfyzl']").val(ljfyzl);
+
+            //实际成本/件=(成本/托÷数量/托) 
+            var sj_j=0;
+            if(sl_t!=0){sj_j=(Number(cb_t_total)/sl_t);}
+            sj_j=sj_j.toFixed(2);
+            $("#cbXX input[id*='cbfj_sj_j']").val(sj_j);     
+
+            //包装成本比例=(实际成本/销售价格)
+            var cb_rate=0;
+            if(xs_price!=0){cb_rate=(Number(sj_j)/xs_price);}
+            cb_rate=(Number(cb_rate.toFixed(4))*100).toString()+'%';
+            $("#cbXX input[id*='cbfj_cb_rate']").val(cb_rate); 
+            
+            //年总价(包装)=(实际成本/件*年用量))
+            var nzj=(Number(sj_j)*nyl).toFixed(2);
+            $("#ljXX input[id*='nzj']").val(nzj); 
+        }
+
+        function RefreshRow() {
+            var zz_value_sum=0;var zj_value_sum=0;            
+            var sl_t=Number($.trim($("#zxXX input[id*='bzx_sl_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_sl_t']").val()));//数量/托=(箱数/托*数量/箱)
+
+            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                var sl = eval('sl' + index);var djyl=eval('djyl' + index);
+                var dz = eval('dz' + index);var zz = eval('zz' + index);
+                var dj = eval('dj' + index);var zj = eval('zj' + index);
+
+                var sl_value=Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()));//数量
+                var dz_value=Number($.trim(dz.GetText()) == "" ? 0 : $.trim(dz.GetText()));//单重2
+                var dj_value=Number($.trim(dj.GetText()) == "" ? 0 : $.trim(dj.GetText()));//单价
+
+                var djyl_value=0;//单件用量=(数量/每托的数量)
+                if(sl_t!=0){djyl_value=sl_value/sl_t;}
+                djyl_value=djyl_value.toFixed(10);
+                	
+                var zz_value=(dz_value*sl_value).toFixed(4);//总重2(KG)=(单重*数量)
+                var zj_value=(dj_value*sl_value).toFixed(2);//总价=(单价*数量)
+
+                djyl.SetValue(djyl_value);                
+                zz.SetValue(zz_value);               
+                zj.SetValue(zj_value);
+
+                //合计总重，总价
+                zz_value_sum=zz_value_sum+Number(zz_value);
+                zj_value_sum=zj_value_sum+Number(zj_value);     
+            });
+
+            //grid底部total值更新
+            $("[id$=gv] tr[id*=DXFooterRow]").each(function (index, item) {
+                $(item).find("td:eq(12)").text(zz_value_sum.toFixed(4)); 
+                $(item).find("td:eq(14)").text(zj_value_sum.toFixed(2)); 
+            });
+
+            Refresh_Main_Row();
         }
 
         function con_sure(){
@@ -412,181 +492,6 @@
             //询问框
             return confirm('确认要删除吗？');
         }
-
-        function RefreshRow() {
-            //var BC=0;var BC_feiji=0;var BC_huoche=0;var BC_qiche=0;
-            //$("[id$=gv_d_hr] tr[class*=DataRow]").each(function (index, item) { 
-            //    var BudgetCost = eval('BudgetCost' + index);
-            //    var Vehicle = eval('Vehicle' + index);
-
-            //    if (BudgetCost.GetText()!="") {
-            //        BC=BC+Number(BudgetCost.GetText());
-
-            //        if (Vehicle.GetText()=="飞机") {
-            //            BC_feiji=BC_feiji+Number(BudgetCost.GetText());
-            //        }
-            //        if (Vehicle.GetText()=="火车") {
-            //            BC_huoche=BC_huoche+Number(BudgetCost.GetText());
-            //        }
-            //        if (Vehicle.GetText()=="长途汽车") {
-            //            BC_qiche=BC_qiche+Number(BudgetCost.GetText());
-            //        }
-            //    }
-                
-            //});
-            ////grid底部total值更新
-            //$("[id$=gv_d_hr] tr[id*=DXFooterRow]").find('td').each(function () {
-            //    if(($.trim($(this).text())).indexOf("预算合计")>-1){
-            //        $(this).html("<b>预算合计:"+fmoney(BC,1)+"</b>");//$(this).text("<b>合计:"+fmoney(BC,1)+"</b>");
-            //    }   
-            //});
-
-            //$("[id$=gv_d] tr[class*=DataRow]").each(function (index, item) { 
-            //    if($(item).children("td:last-child").text()=="T001"){
-            //        var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
-            //        var BudgetOtherCost = eval('BudgetOtherCost' + index);
-            //        var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    
-            //        if(BC_feiji>0){
-            //            (eval('IsHrReserve' + index)).SetText("是");
-
-            //            $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
-            //            BudgetTotalCost.SetText(BC_feiji);  
-            //        }
-            //        else{
-            //            (eval('IsHrReserve' + index)).SetText("否");
-
-            //            $(item).find("table[id*=BudgetStandardCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
-            //                if ($.trim(BudgetOtherCost.GetText()) == "") {    
-            //                    BudgetTotalCost.SetText("");  
-            //                }else {    
-            //                    BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
-            //                }
-            //            }
-            //        }
-            //    }
-            //    if($(item).children("td:last-child").text()=="T002"){
-            //        var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
-            //        var BudgetOtherCost = eval('BudgetOtherCost' + index);
-            //        var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    
-            //        if(BC_huoche>0){
-            //            (eval('IsHrReserve' + index)).SetText("是");
-                    
-            //            $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
-            //            BudgetTotalCost.SetText(BC_huoche);  
-            //        }
-            //        else{
-            //            (eval('IsHrReserve' + index)).SetText("否");
-
-            //            $(item).find("table[id*=BudgetStandardCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
-            //                if ($.trim(BudgetOtherCost.GetText()) == "") {    
-            //                    BudgetTotalCost.SetText("");  
-            //                }else {    
-            //                    BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
-            //                }
-            //            }
-            //        } 
-            //    }
-            //    if($(item).children("td:last-child").text()=="T000"){
-            //        var BudgetStandardCost = eval('BudgetStandardCost' + index); var BudgetCount = eval('BudgetCount' + index); var BudgetPersonCount = eval('BudgetPersonCount' + index);
-            //        var BudgetOtherCost = eval('BudgetOtherCost' + index);
-            //        var BudgetTotalCost = eval('BudgetTotalCost' + index);
-                    
-            //        if(BC_qiche>0){
-            //            (eval('IsHrReserve' + index)).SetText("是");
-                    
-            //            $(item).find("table[id*=BudgetStandardCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").addClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-            //            BudgetStandardCost.SetText("");BudgetCount.SetText("");BudgetPersonCount.SetText("");BudgetOtherCost.SetText("");BudgetTotalCost.SetText("");
-            //            BudgetTotalCost.SetText(BC_qiche);  
-            //        }
-            //        else{
-            //            (eval('IsHrReserve' + index)).SetText("否");
-
-            //            $(item).find("table[id*=BudgetStandardCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetStandardCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetPersonCount]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetPersonCount]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            $(item).find("table[id*=BudgetOtherCost]").removeClass("dxeTextBox_read");
-            //            $(item).find("input[id*=BudgetOtherCost]").removeAttr("readOnly").removeClass("dxeTextBox_read");
-
-            //            if ($.trim(BudgetStandardCost.GetText()) == "" || $.trim(BudgetCount.GetText()) == "" || $.trim(BudgetPersonCount.GetText()) == "") {
-            //                if ($.trim(BudgetOtherCost.GetText()) == "") {    
-            //                    BudgetTotalCost.SetText("");  
-            //                }else {    
-            //                    BudgetTotalCost.SetText(BudgetOtherCost.GetText());  
-            //                }
-            //            }
-            //        } 
-            //    }
-            //});
-            //RefreshRow();
-        }
-
     </script>
 
     <script type="text/javascript">
@@ -618,7 +523,6 @@
         }
         
     </script>
-
     <script type="text/javascript">
         var uploadedFiles_2 = [];
         function onFileUploadComplete_2(s, e) {
@@ -673,6 +577,7 @@
         }
         
     </script>
+
     <script type="text/javascript">
 
         function validate(action){
@@ -862,19 +767,19 @@
                                 <td>
                                     <asp:TextBox ID="nyl" runat="server" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
                                 </td>
-                                <td><font color="red">&nbsp;</font>年总价(包装)</td>
+                                <td><font color="red">&nbsp;</font>年总价(包装)<br />(实际成本/件*年用量))</td>
                                 <td>
-                                    <asp:TextBox ID="nzj" runat="server" class="linewrite" Width="260px"/>
+                                    <asp:TextBox ID="nzj" runat="server" class="lineread" ReadOnly="True" Width="260px"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td><font color="red">&nbsp;</font>工单数量(成品)</td>
                                 <td>
-                                    <asp:TextBox ID="gdsl_cp"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                    <asp:TextBox ID="gdsl_cp"  runat="server" class="linewrite" Width="260px" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>工单数量(半成品)</td>
                                 <td>
-                                    <asp:TextBox ID="gdsl_bcp" runat="server" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
+                                    <asp:TextBox ID="gdsl_bcp" runat="server" class="linewrite" Width="260px"></asp:TextBox>
                                 </td>
                                 <td><font color="red">*</font>扣料工序</td>
                                 <td>
@@ -1202,7 +1107,7 @@
                                                         </td>
                                                         <td><i id="bm_i_<%#Container.VisibleIndex.ToString() %>" 
                                                             class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                            onclick="Get_bm(<%# Container.VisibleIndex %>,'')"></i>
+                                                            onclick="Get_bm(<%# Container.VisibleIndex %>)"></i>
                                                         </td>
                                                     </tr>
                                                 </table>       
@@ -1216,20 +1121,19 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="包材类别（E/R）" FieldName="bclb" Width="80px" VisibleIndex="3">
+                                        <dx:GridViewDataTextColumn Caption="包材类别<br />（E/R）" FieldName="bclb" Width="60px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="bclb" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "bclb"+Container.VisibleIndex.ToString() %>'
-                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9">
-                                                    <DisabledStyle CssClass="lineread" ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                                </dx:ASPxComboBox>
+                                                <dx:ASPxTextBox ID="bclb" Width="60px" runat="server" Value='<%# Eval("bclb")%>' 
+                                                    ClientInstanceName='<%# "bclb"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox> 
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="数量" FieldName="sl" Width="60px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="sl" Width="60px" runat="server" Value='<%# Eval("sl")%>' 
+                                                    ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "sl"+Container.VisibleIndex.ToString() %>'>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
@@ -1238,7 +1142,7 @@
                                         <dx:GridViewDataTextColumn Caption="单件用量<br />(数量/每托的数量)" FieldName="djyl" Width="90px" VisibleIndex="6">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="djyl" Width="90px" runat="server" Value='<%# Eval("djyl")%>' 
+                                                <dx:ASPxTextBox ID="djyl" Width="90px" runat="server" Value='<%# Eval("djyl")%>' HorizontalAlign="Right"
                                                     ClientInstanceName='<%# "djyl"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
@@ -1260,19 +1164,19 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="单重2(KG)" FieldName="dz" Width="90px" VisibleIndex="9">
+                                        <dx:GridViewDataTextColumn Caption="单重2(KG)" FieldName="dz" Width="60px" VisibleIndex="9">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="dz" Width="90px" runat="server" Value='<%# Eval("dz")%>' 
+                                                <dx:ASPxTextBox ID="dz" Width="60px" runat="server" Value='<%# Eval("dz")%>'  HorizontalAlign="Right"
                                                     ClientInstanceName='<%# "dz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                              <PropertiesTextEdit DisplayFormatString="{0:N4}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="总重2(KG)<br />(单重*数量)" FieldName="zz" Width="90px" VisibleIndex="10">
+                                        <dx:GridViewDataTextColumn Caption="总重2(KG)<br />(单重*数量)" FieldName="zz" Width="80px" VisibleIndex="10">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="zz" Width="90px" runat="server" Value='<%# Eval("zz")%>' 
+                                                <dx:ASPxTextBox ID="zz" Width="80px" runat="server" Value='<%# Eval("zz")%>' HorizontalAlign="Right"
                                                     ClientInstanceName='<%# "zz"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
@@ -1281,16 +1185,16 @@
                                         <dx:GridViewDataTextColumn Caption="单价" FieldName="dj" Width="50px" VisibleIndex="11">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="dj" Width="50px" runat="server" Value='<%# Eval("dj")%>' 
+                                                <dx:ASPxTextBox ID="dj" Width="50px" runat="server" Value='<%# Eval("dj")%>' HorizontalAlign="Right"
                                                     ClientInstanceName='<%# "dj"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
                                              <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="总价<br />(单价*数量)" FieldName="zj" Width="90px" VisibleIndex="12">
+                                        <dx:GridViewDataTextColumn Caption="总价<br />(单价*数量)" FieldName="zj" Width="80px" VisibleIndex="12">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="zj" Width="90px" runat="server" Value='<%# Eval("zj")%>' 
+                                                <dx:ASPxTextBox ID="zj" Width="80px" runat="server" Value='<%# Eval("zj")%>' HorizontalAlign="Right"
                                                     ClientInstanceName='<%# "zj"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox> 
                                             </DataItemTemplate>
@@ -1309,20 +1213,21 @@
                                             <CellStyle CssClass="hidden"></CellStyle>
                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn FieldName="FIN_T_No" Width="0px">
+                                        <dx:GridViewDataTextColumn FieldName="PackNo" Width="0px">
                                             <HeaderStyle CssClass="hidden" />
                                             <CellStyle CssClass="hidden"></CellStyle>
                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                         </dx:GridViewDataTextColumn>
                                     </Columns>       
                                     <TotalSummary>
+                                        <dx:ASPxSummaryItem DisplayFormat="合计{0:N0}" FieldName="bm" SummaryType="Sum" />
                                         <dx:ASPxSummaryItem DisplayFormat="{0:N4}" FieldName="zz" SummaryType="Sum" />
                                         <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="zj" SummaryType="Sum" />
                                     </TotalSummary>                                            
                                     <Styles> 
                                         <Header BackColor="#31708f" Font-Bold="True" ForeColor="white" Border-BorderStyle="None" HorizontalAlign="Left" VerticalAlign="Top"></Header>    
                                         <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
-                                        <Footer Font-Bold="true" ForeColor="Red"></Footer>
+                                        <Footer Font-Bold="true" ForeColor="Red" HorizontalAlign="Right"></Footer>
                                     </Styles>                                          
                                 </dx:aspxgridview>
 

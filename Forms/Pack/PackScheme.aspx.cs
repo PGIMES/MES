@@ -217,7 +217,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     {
         this.gv.DataSource = dt;
         this.gv.DataBind();
-        GetGrid(dt);
         setread_By_wkzx();
     }
 
@@ -376,28 +375,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         //}
     }
 
-    protected void GetGrid(DataTable DT)
-    {
-        DataTable ldt = DT;
-        int index = gv.VisibleRowCount;
-        for (int i = 0; i < gv.VisibleRowCount; i++)
-        {
-            DevExpress.Web.ASPxComboBox tb_bclb = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["bclb"], "bclb");
-            DataTable ldt_bclb = DbHelperSQL.Query(@"select [Code],[Name]
-                                                            from (
-	                                                            select 'E' [Code],'E' [Name],1 rownum
-	                                                            union 
-	                                                            select 'R' [Code],'R' [Name],2 rownum
-	                                                            ) a
-                                                            order by rownum").Tables[0];
-
-            tb_bclb.DataSource = ldt_bclb;
-            tb_bclb.ValueField = "Code";
-            tb_bclb.Columns.Add("Code", "类别", 60);
-            tb_bclb.DataBind();
-            tb_bclb.Value = ldt.Rows[i]["bclb"].ToString();
-        }
-    }
     protected void btnadd_Click(object sender, EventArgs e)
     {
         add_row(1);
@@ -430,8 +407,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         ldt.AcceptChanges();
         this.gv.DataSource = ldt;
         this.gv.DataBind();
-
-        GetGrid(ldt);
     }
 
     protected void btndel_Click(object sender, EventArgs e)
@@ -451,8 +426,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         ldt.AcceptChanges();
         gv.DataSource = ldt;
         gv.DataBind();
-
-        GetGrid(ldt);
     }
     protected void gv_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
     {
@@ -464,7 +437,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             ldt.AcceptChanges();
             gv.DataSource = ldt;
             gv.DataBind();
-            GetGrid(ldt);
         }
         if (param == "add")
         {
