@@ -427,27 +427,29 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         gv.DataSource = ldt;
         gv.DataBind();
     }
-    protected void gv_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
-    {
-        string param = e.Parameters.Trim();
-        if (param == "clear")
-        {
-            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
-            ldt.Rows.Clear();
-            ldt.AcceptChanges();
-            gv.DataSource = ldt;
-            gv.DataBind();
-        }
-        if (param == "add")
-        {
-            DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
-            if (ldt.Rows.Count <= 0)
-            {
-                add_row(2);
-            }
-        }
 
-    }
+    //protected void gv_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
+    //{
+    //    string param = e.Parameters.Trim();
+    //    if (param == "clear")
+    //    {
+    //        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+    //        ldt.Rows.Clear();
+    //        ldt.AcceptChanges();
+    //        gv.DataSource = ldt;
+    //        gv.DataBind();
+    //    }
+    //    if (param == "add")
+    //    {
+    //        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+    //        if (ldt.Rows.Count <= 0)
+    //        {
+    //            add_row(2);
+    //        }
+    //    }
+
+    //}
+
     protected void gv_DataBound(object sender, EventArgs e)
     {
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color(); RefreshRow();", true);

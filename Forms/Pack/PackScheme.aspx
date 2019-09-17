@@ -453,30 +453,32 @@
             var zz_value_sum=0;var zj_value_sum=0;            
             var sl_t=Number($.trim($("#zxXX input[id*='bzx_sl_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_sl_t']").val()));//数量/托=(箱数/托*数量/箱)
 
-            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                var sl = eval('sl' + index);var djyl=eval('djyl' + index);
-                var dz = eval('dz' + index);var zz = eval('zz' + index);
-                var dj = eval('dj' + index);var zj = eval('zj' + index);
+            if($("[id$=gv] input[id*=sl]").length>0){
+                $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                    var sl = eval('sl' + index);var djyl=eval('djyl' + index);
+                    var dz = eval('dz' + index);var zz = eval('zz' + index);
+                    var dj = eval('dj' + index);var zj = eval('zj' + index);
 
-                var sl_value=Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()));//数量
-                var dz_value=Number($.trim(dz.GetText()) == "" ? 0 : $.trim(dz.GetText()));//单重2
-                var dj_value=Number($.trim(dj.GetText()) == "" ? 0 : $.trim(dj.GetText()));//单价
+                    var sl_value=Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()));//数量
+                    var dz_value=Number($.trim(dz.GetText()) == "" ? 0 : $.trim(dz.GetText()));//单重2
+                    var dj_value=Number($.trim(dj.GetText()) == "" ? 0 : $.trim(dj.GetText()));//单价
 
-                var djyl_value=0;//单件用量=(数量/每托的数量)
-                if(sl_t!=0){djyl_value=sl_value/sl_t;}
-                djyl_value=djyl_value.toFixed(10);
+                    var djyl_value=0;//单件用量=(数量/每托的数量)
+                    if(sl_t!=0){djyl_value=sl_value/sl_t;}
+                    djyl_value=djyl_value.toFixed(10);
                 	
-                var zz_value=(dz_value*sl_value).toFixed(4);//总重2(KG)=(单重*数量)
-                var zj_value=(dj_value*sl_value).toFixed(2);//总价=(单价*数量)
+                    var zz_value=(dz_value*sl_value).toFixed(4);//总重2(KG)=(单重*数量)
+                    var zj_value=(dj_value*sl_value).toFixed(2);//总价=(单价*数量)
 
-                djyl.SetValue(djyl_value);                
-                zz.SetValue(zz_value);               
-                zj.SetValue(zj_value);
+                    djyl.SetValue(djyl_value);                
+                    zz.SetValue(zz_value);               
+                    zj.SetValue(zj_value);
 
-                //合计总重，总价
-                zz_value_sum=zz_value_sum+Number(zz_value);
-                zj_value_sum=zj_value_sum+Number(zj_value);     
-            });
+                    //合计总重，总价
+                    zz_value_sum=zz_value_sum+Number(zz_value);
+                    zj_value_sum=zj_value_sum+Number(zj_value);     
+                });
+            }
 
             //grid底部total值更新
             $("[id$=gv] tr[id*=DXFooterRow]").each(function (index, item) {
@@ -585,12 +587,106 @@
             
             <%=ValidScript%>
 
-            if($("[id$=gv] input[id*=sl]").length==0){
-                msg+="【包装材料明细】不可为空.<br />";
-            }else {
-                if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
-                    msg+="【包装材料明细】格式必须正确.<br />";
-                } 
+            if($("#DQXX input[id*='ApplyId']").val()=="" || $("#DQXX input[id*='ApplyName']").val()==""){
+                msg+="【申请人】不可为空.<br />";
+            }
+            if($("#DQXX input[id*='ApplyDeptId']").val()=="" || $("#DQXX input[id*='ApplyDeptName']").val()==""){
+                msg+="【申请人部门】不可为空.<br />";
+            }
+
+            if($("#ljXX input[id*='part']").val()==""){
+                msg+="【PGI_零件号】不可为空.<br />";
+            }
+            if($("#ljXX input[id*='ver']").val()==""){
+                msg+="【版本】不可为空.<br />";
+            }
+            if($("input[type!=hidden][id*='typeno']").val()==""){
+                msg+="【申请类型】不可为空.<br />";
+            }
+
+            if(action=='submit'){
+                if($("input[type!=hidden][id*='bzlb']").val()==""){
+                    msg+="【包装类别】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='ljcc_l']").val()==""){
+                    msg+="【零件尺寸(L)】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='ljcc_w']").val()==""){
+                    msg+="【零件尺寸(W)】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='ljcc_h']").val()==""){
+                    msg+="【零件尺寸(H)】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='gdsl_cp']").val()==""){
+                    msg+="【工单数量(成品)】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='gdsl_bcp']").val()==""){
+                    msg+="【工单数量(半成品)】不可为空.<br />";
+                }
+                if($("#ljXX input[id*='klgx']").val()==""){
+                    msg+="【扣料工序】不可为空.<br />";
+                }
+
+
+                if($("#zxXX input[id*='bzx_part']").val()==""){
+                    msg+="【包装箱】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_w']").val()==""){
+                    msg+="【包装箱子重量】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_cc']").val()==""){
+                    msg+="【箱尺寸(L*W*H)】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_sl_c']").val()==""){
+                    msg+="【数量/层】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_cs_x']").val()==""){
+                    msg+="【层数/箱】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_xs_c']").val()==""){
+                    msg+="【箱数/层】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_c_t']").val()==""){
+                    msg+="【层/托】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_xs_t']").val()==""){
+                    msg+="【箱数/托】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_sl_t']").val()==""){
+                    msg+="【数量/托】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_dzcs']").val()==""){
+                    msg+="【动载层数】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_jzcs']").val()==""){
+                    msg+="【静载层数】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_t_l']").val()==""){
+                    msg+="【托尺寸(L)】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_t_w']").val()==""){
+                    msg+="【托尺寸(W)】不可为空.<br />";
+                }
+                if($("#zxXX input[id*='bzx_t_h']").val()==""){
+                    msg+="【托尺寸(H)】不可为空.<br />";
+                }
+
+                
+                if($("#cbXX input[id*='cbfj_mb_j']").val()==""){
+                    msg+="【目标成本/件】不可为空.<br />";
+                }
+
+
+                if($("[id$=gv] input[id*=sl]").length==0){
+                    msg+="【包装材料明细】不可为空.<br />";
+                }else {
+                    if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
+                        msg+="【包装材料明细】格式必须正确.<br />";
+                    } 
+                }
+
+
+            
             }
             
 
@@ -755,16 +851,22 @@
                             </tr>
                             <tr>
                                 <td><font color="red">*</font>零件尺寸(L)</td>
-                                <td>
-                                    <asp:TextBox ID="ljcc_l"  runat="server" class="linewrite" Width="260px" />
+                                <td><%--限制文本框只能输入正数，小数--%>
+                                    <%--<asp:TextBox ID="ljcc_l"  runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="ljcc_l" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(W)</td>
-                                <td>
-                                    <asp:TextBox ID="ljcc_w" runat="server"  class="linewrite" Width="260px"></asp:TextBox>
+                                <td><%--限制文本框只能输入正数，小数--%>
+                                   <%-- <asp:TextBox ID="ljcc_w" runat="server"  class="linewrite" Width="260px"></asp:TextBox>--%>
+                                    <input id="ljcc_w" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(H)</td>
                                 <td>
-                                    <asp:TextBox ID="ljcc_h" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="ljcc_h" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="ljcc_h" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                             </tr>
                             <tr>
@@ -782,17 +884,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><font color="red">&nbsp;</font>工单数量(成品)</td>
+                                <td><font color="red">*</font>工单数量(成品)</td>
                                 <td>
-                                    <asp:TextBox ID="gdsl_cp"  runat="server" class="linewrite" Width="260px" />
+                                    <%--<asp:TextBox ID="gdsl_cp"  runat="server" class="linewrite" Width="260px" />--%>
+                                    <input id="gdsl_cp" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
-                                <td><font color="red">&nbsp;</font>工单数量(半成品)</td>
+                                <td><font color="red">*</font>工单数量(半成品)</td>
                                 <td>
-                                    <asp:TextBox ID="gdsl_bcp" runat="server" class="linewrite" Width="260px"></asp:TextBox>
+                                    <%--<asp:TextBox ID="gdsl_bcp" runat="server" class="linewrite" Width="260px"></asp:TextBox>--%>
+                                    <input id="gdsl_bcp" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>扣料工序</td>
                                 <td>
-                                    <asp:TextBox ID="klgx" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="klgx" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="klgx" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                             </tr>
                         </table>
@@ -834,11 +942,15 @@
                                 </td>
                                 <td><font color="red">*</font>数量/层</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_sl_c" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_sl_c" runat="server" class="linewrite" Width="260px"/>--%>                                    
+                                    <input id="bzx_sl_c" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>层数/箱</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_cs_x" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_cs_x" runat="server" class="linewrite" Width="260px"/>--%>                                    
+                                    <input id="bzx_cs_x" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                             </tr>
                             <tr>
@@ -858,11 +970,15 @@
                             <tr>
                                 <td><font color="red">*</font>箱数/层</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_xs_c" runat="server" class="linewrite" Width="260px" />
+                                    <%--<asp:TextBox ID="bzx_xs_c" runat="server" class="linewrite" Width="260px" />--%>                                    
+                                    <input id="bzx_xs_c" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>层/托</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_c_t" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_c_t" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="bzx_c_t" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>箱数/托<br />(箱数/层*层/托)</td>
                                 <td>
@@ -876,11 +992,15 @@
                                 </td>
                                 <td><font color="red">*</font>动载层数<br />(<font color="red">运输堆码层数</font>)</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_dzcs" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_dzcs" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="bzx_dzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>静载层数<br />(<font color="red">仓储堆码层数</font>)</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_jzcs" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_jzcs" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="bzx_jzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
                                 </td>
                             </tr>
                             <tr>
@@ -900,15 +1020,21 @@
                             <tr>
                                 <td><font color="red">*</font>托尺寸(L)</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_t_l"  runat="server" class="linewrite" Width="260px" />
+                                    <%--<asp:TextBox ID="bzx_t_l"  runat="server" class="linewrite" Width="260px" />--%>
+                                    <input id="bzx_t_l" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>托尺寸(W)</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_t_w" runat="server" class="linewrite" Width="260px" />
+                                    <%--<asp:TextBox ID="bzx_t_w" runat="server" class="linewrite" Width="260px" />--%>
+                                    <input id="bzx_t_w" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                                 <td><font color="red">*</font>托尺寸(H)</td>
                                 <td>
-                                    <asp:TextBox ID="bzx_t_h" runat="server" class="linewrite" Width="260px"/>
+                                    <%--<asp:TextBox ID="bzx_t_h" runat="server" class="linewrite" Width="260px"/>--%>
+                                    <input id="bzx_t_h" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                             </tr>
                         </table>
@@ -932,7 +1058,9 @@
                                 </td>
                                 <td><font color="red">*</font>目标成本/件</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_mb_j" runat="server" class="linewrite" Width="260px" />
+                                    <%--<asp:TextBox ID="cbfj_mb_j" runat="server" class="linewrite" Width="260px" />--%>
+                                    <input id="cbfj_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>销售价格</td>
                                 <td>
@@ -1088,7 +1216,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv"  EnableTheming="True" OnCustomCallback="gv_CustomCallback" OnDataBound="gv_DataBound">
+                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound"><%--OnCustomCallback="gv_CustomCallback" --%>
                                     <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
