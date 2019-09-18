@@ -385,7 +385,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
         message.CC.Add(to_cc);//抄送收件人
         message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
-        message.Subject = "【开票通知单】删除成功";//主题            
+        message.Subject = "【开票通知单】取消成功";//主题            
         message.Body = body;//内容           
         message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
         message.IsBodyHtml = true;//设置为HTML格式            
