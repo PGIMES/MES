@@ -93,6 +93,19 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
             //发邮件给上传人、蔡红玲 <hongling.cai@pgi.cn>，Cc '徐殿青'<edward.xu@pgi.cn>徐镇jim.xu <jim.xu@pgi.cn>
             DataTable dt = DbHelperSQL.Query("SELECT  * FROM V_HRM_EMP_MES where workcode='" + ((LoginUser)Session["LogUser"]).UserId + "'").Tables[0];
             string to_add = dt.Rows[0]["email"].ToString();
+            to_add = to_add + ",hongling.cai@pgi.cn"; //收件人:上传人,hongling.cai@pgi.cn
+
+            //抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+            string to_cc = "";
+            //获取销售负责人
+            DataTable dt_xs = DbHelperSQL.Query(@"select a.ih_bill,b.xs_fuzeren_email
+                                                from (select distinct ih_bill from idh_invoice_upload_multi_temp) a
+	                                                inner join idh_invoice_bill_XS_Users b on a.ih_bill=b.ih_bill").Tables[0];
+            foreach (DataRow item in dt_xs.Rows)
+            {
+                to_cc = to_cc + item["xs_fuzeren_email"].ToString() + ",";
+            }
+            to_cc = to_cc + "edward.xu@pgi.cn,jim.xu@pgi.cn";
 
             SmtpClient mail = new SmtpClient();
             mail.DeliveryMethod = SmtpDeliveryMethod.Network; //发送方式           
@@ -101,8 +114,8 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
             MailMessage message = new MailMessage();//邮件信息            
             message.From = new MailAddress("oa@pgi.cn");//发件人           
-            message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            ,hongling.cai@pgi.cn
-            //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+            message.To.Add(to_add); //收件人
+            message.CC.Add(to_cc);//抄送收件人
             message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
             message.Subject = "【开票通知单】上传成功";//主题            
@@ -330,6 +343,15 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
         string resultFilePath = MapPath("~") + savepath + @"\" + new_filename;
         //File.Delete(resultFilePath);
 
+        //获取金额
+        DataTable dt_con = DbHelperSQL.Query(@"select ih_bill_name,sum(inv_tax_sum) inv_tax_sum from idh_invoice_upload here new_filename='" + new_filename + "' group by ih_bill_name").Tables[0];
+        string body = "Dear all:<br />以下开票通知单取消开票，需重新上传附件。";
+        foreach (DataRow item in dt_con.Rows)
+        {
+            body = body + "<br />票据开往名称：" + item["ih_bill_name"].ToString() + ",总金额：" + item["inv_tax_sum"].ToString();
+        }
+        body = body + "<br/><br/><a href='http://172.16.5.26:8010/Fin/Fin_idh_invoice_Report.aspx'>请点击查看</a>";//内容         
+
         //发邮件给上传人、蔡红玲 <hongling.cai@pgi.cn>，Cc '徐殿青'<edward.xu@pgi.cn>徐镇jim.xu <jim.xu@pgi.cn>
         DataTable dt = DbHelperSQL.Query("SELECT  * FROM V_HRM_EMP_MES where workcode='" + ((LoginUser)Session["LogUser"]).UserId + "' or workcode='" + createbyid + "'").Tables[0];
         string to_add = "";
@@ -338,6 +360,19 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
             to_add = to_add + dt.Rows[0]["email"].ToString() + ",";
         }
         to_add = to_add.Substring(0, to_add.Length - 1);
+        to_add = to_add + ",hongling.cai@pgi.cn"; //收件人:上传人,hongling.cai@pgi.cn
+
+        //抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+        string to_cc = "";
+        //获取销售负责人
+        DataTable dt_xs = DbHelperSQL.Query(@"select a.ih_bill,b.xs_fuzeren_email
+                                                from (select distinct ih_bill from idh_invoice_upload where new_filename='" + new_filename + @"') a
+	                                                inner join idh_invoice_bill_XS_Users b on a.ih_bill=b.ih_bill").Tables[0];
+        foreach (DataRow item in dt_xs.Rows)
+        {
+            to_cc = to_cc + item["xs_fuzeren_email"].ToString() + ",";
+        }
+        to_cc = to_cc + "edward.xu@pgi.cn,jim.xu@pgi.cn";
 
         SmtpClient mail = new SmtpClient();
         mail.DeliveryMethod = SmtpDeliveryMethod.Network; //发送方式           
@@ -346,12 +381,12 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
         MailMessage message = new MailMessage();//邮件信息            
         message.From = new MailAddress("oa@pgi.cn");//发件人           
-        message.To.Add(to_add + ",hongling.cai@pgi.cn"); //收件人            
-        //message.CC.Add("guiqin.he@pgi.cn,guiqin.he@pgi.cn");//抄送收件人edward.xu@pgi.cn,jim.xu@pgi.cn
+        message.To.Add(to_add); //收件人            
+        message.CC.Add(to_cc);//抄送收件人
         message.Bcc.Add("guiqin.he@pgi.cn,angela.xu@pgi.cn");
 
         message.Subject = "【开票通知单】删除成功";//主题            
-        //message.Body = "Dear all:<br />票据开往名称：" + ih_bill_name + ",总金额：" + sumamount.ToString();//内容           
+        message.Body = body;//内容           
         message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
         message.IsBodyHtml = true;//设置为HTML格式            
         message.Priority = MailPriority.Normal;//优先级
