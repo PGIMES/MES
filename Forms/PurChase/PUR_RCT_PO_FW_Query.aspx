@@ -24,7 +24,7 @@
                 $('#btn_po').hide();
             }
             if (DeptName.indexOf("财务") != -1 || DeptName.indexOf("IT") != -1) {
-                $('#btn_fw').show(); $('#btn_fw_2').hide();
+                $('#btn_fw').hide(); $('#btn_fw_2').show();
             } else {
                 $('#btn_fw').hide(); $('#btn_fw_2').hide();
             }
@@ -236,7 +236,7 @@
                         &nbsp;
                         <button id="btn_fw" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认</button>  
                         &nbsp;
-                        <button id="btn_fw_2" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认2</button>   
+                        <button id="btn_fw_2" type="button" class="btn btn-primary btn-large"><i class="fa fa-check fa-fw"></i>&nbsp;财务确认New</button>   
                     </td> 
                 </tr>
                 </table>
@@ -292,7 +292,7 @@
                             <dx:GridViewDataTextColumn Caption="已匹配数量" FieldName="pipei_qty" Width="60px" VisibleIndex="16" />
                             <dx:GridViewDataTextColumn Caption="未匹配数量" FieldName="no_pipei_qty" Width="60px" VisibleIndex="17" />
                             <dx:GridViewDataTextColumn Caption="单价" FieldName="NoTaxPrice" Width="70px" VisibleIndex="18" />
-                            <dx:GridViewDataTextColumn Caption="匹配金额" FieldName="FPAmount" Width="0px" VisibleIndex="19" />
+                            <dx:GridViewDataTextColumn Caption="匹配金额" FieldName="FPAmount" Width="80px" VisibleIndex="19" />
                             <dx:GridViewDataTextColumn Caption="采购金额合计" FieldName="notax_TotalPrice" Width="80px" VisibleIndex="19" />
                             <dx:GridViewDataTextColumn Caption="税金额N" FieldName="TaxRatePrice" Width="80px" VisibleIndex="20" />
                             <dx:GridViewDataTextColumn Caption="税款合计N" FieldName="TotalPrice" Width="80px" VisibleIndex="21" />
