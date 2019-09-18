@@ -351,7 +351,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
         //File.Delete(resultFilePath);
 
         //获取金额
-        DataTable dt_con = DbHelperSQL.Query(@"select ih_bill_name,sum(inv_tax_sum) inv_tax_sum from idh_invoice_upload here new_filename='" + new_filename + "' group by ih_bill_name").Tables[0];
+        DataTable dt_con = DbHelperSQL.Query(@"select ih_bill_name,sum(inv_tax_sum) inv_tax_sum from idh_invoice_upload where new_filename='" + new_filename + "' group by ih_bill_name").Tables[0];
         string body = "Dear all:<br />以下开票通知单取消开票，需重新上传附件。";
         foreach (DataRow item in dt_con.Rows)
         {
