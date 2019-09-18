@@ -129,7 +129,14 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
             message.Attachments.Add(attach);
 
             mail.Send(message);
-            
+
+            //临时表 导入正式表
+            string sql_prd = @"insert into idh_invoice_upload 
+		                            (idh_part, ih_inv_nbr, ih_ship, idh_qty_inv, idh_price_inv, idh_taxc_new, ori_filename, new_filename, ih_inv_date, isdel, CreateById, status, ih_bill, ih_bill_name, inv_tax_sum)
+	                            select idh_part, ih_inv_nbr, ih_ship, idh_qty_inv, idh_price_inv, idh_taxc_new, ori_filename, new_filename, ih_inv_date, isdel, CreateById, status, ih_bill, ih_bill_name, inv_tax_sum
+	                            from idh_invoice_upload_multi_temp";
+            int i = DbHelperSQL.ExecuteSql(sql_prd);
+
         }
         catch (Exception ex)
         {
