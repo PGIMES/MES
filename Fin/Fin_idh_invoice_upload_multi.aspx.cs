@@ -157,11 +157,12 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                 DataColumn col_9 = new DataColumn("isdel", typeof(string));
                 DataColumn col_10 = new DataColumn("CreateById", typeof(string));
                 DataColumn col_11 = new DataColumn("status", typeof(string));
-                DataColumn col_12 = new DataColumn("ih_bill_name", typeof(string));
-                DataColumn col_13 = new DataColumn("inv_tax_sum", typeof(decimal));
+                DataColumn col_12 = new DataColumn("ih_bill", typeof(string));
+                DataColumn col_13 = new DataColumn("ih_bill_name", typeof(string));
+                DataColumn col_14 = new DataColumn("inv_tax_sum", typeof(decimal));
                 dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4); dt.Columns.Add(col_5);
                 dt.Columns.Add(col_6); dt.Columns.Add(col_7); dt.Columns.Add(col_8); dt.Columns.Add(col_9); dt.Columns.Add(col_10);
-                dt.Columns.Add(col_11); dt.Columns.Add(col_12); dt.Columns.Add(col_13);
+                dt.Columns.Add(col_11); dt.Columns.Add(col_12); dt.Columns.Add(col_13); dt.Columns.Add(col_14);
 
                 for (int k = 0; k < dtExcel.Rows.Count; k++)
                 {
@@ -209,6 +210,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                     dt_r["isdel"] = "N";
                     dt_r["CreateById"] = ((LoginUser)Session["LogUser"]).UserId;
                     dt_r["status"] = "待开票";
+                    dt_r["ih_bill"] = dr["票据开往"].ToString().Trim();
                     dt_r["ih_bill_name"] = dr["票据开往名称"].ToString().Trim();
                     dt_r["inv_tax_sum"] = dr["税款合计new"].ToString().Trim();
                     dt.Rows.Add(dt_r);
@@ -279,6 +281,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
                     bulkCopy.ColumnMappings.Add("isdel", "isdel");
                     bulkCopy.ColumnMappings.Add("CreateById", "CreateById");
                     bulkCopy.ColumnMappings.Add("status", "status");
+                    bulkCopy.ColumnMappings.Add("ih_bill", "ih_bill");
                     bulkCopy.ColumnMappings.Add("ih_bill_name", "ih_bill_name");
                     bulkCopy.ColumnMappings.Add("inv_tax_sum", "inv_tax_sum");
 
