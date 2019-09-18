@@ -135,7 +135,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 		                            (idh_part, ih_inv_nbr, ih_ship, idh_qty_inv, idh_price_inv, idh_taxc_new, ori_filename, new_filename, ih_inv_date, isdel, CreateById, status, ih_bill, ih_bill_name, inv_tax_sum)
 	                            select idh_part, ih_inv_nbr, ih_ship, idh_qty_inv, idh_price_inv, idh_taxc_new, ori_filename, new_filename, ih_inv_date, isdel, CreateById, status, ih_bill, ih_bill_name, inv_tax_sum
 	                            from idh_invoice_upload_multi_temp";
-            int i = DbHelperSQL.ExecuteSql(sql_prd);
+            int j = DbHelperSQL.ExecuteSql(sql_prd);
 
         }
         catch (Exception ex)
@@ -352,7 +352,7 @@ public partial class Fin_Fin_idh_invoice_upload_multi : System.Web.UI.Page
 
         //获取金额
         DataTable dt_con = DbHelperSQL.Query(@"select ih_bill_name,sum(inv_tax_sum) inv_tax_sum from idh_invoice_upload where new_filename='" + new_filename + "' group by ih_bill_name").Tables[0];
-        string body = "Dear all:<br />以下开票通知单取消开票，需重新上传附件。";
+        string body = "Dear all:<br />以下开票通知单取消开票，需重新上传附件。<br />";
         foreach (DataRow item in dt_con.Rows)
         {
             body = body + "<br />票据开往名称：" + item["ih_bill_name"].ToString() + ",总金额：" + item["inv_tax_sum"].ToString();
