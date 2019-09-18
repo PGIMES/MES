@@ -700,6 +700,37 @@
                 flag=false;return flag;
             }
 
+            if(flag){
+                var applyid=$("#DQXX input[id*='ApplyId']").val();
+
+                var formno=$("#CPXX input[id*='FormNo']").val();
+                var part=("#ljXX input[id*='part']").val();
+                var domain=$("#ljXX input[id*='domain']").val();
+                var ver=$("#ljXX input[id*='ver']").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "PackScheme.aspx/CheckData",
+                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','ver':'" + ver + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj=eval(data.d);
+
+                        if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
+                        if(obj[0].part_flag!=""){ msg+=obj[0].part_flag; }
+
+                        if(msg!=""){  
+                            flag=false;
+                            layer.alert(msg);
+                            return flag;
+                        }
+                    }
+
+                });
+            }
+
             return flag;
         }
     </script>

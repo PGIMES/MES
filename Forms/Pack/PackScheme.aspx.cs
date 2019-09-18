@@ -569,6 +569,93 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     }
     #endregion
 
+    public static string CheckVer_data(string part, string domain, string ver, string formno)
+    {
+        string flag = "";
+        string sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "'";
+        if (formno != "") { sql = sql + " and formno<>'" + formno + "'"; }
+
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count > 0)
+        {
+            flag = "PGI_零件号" + part + "申请工厂" + domain + "正在申请中，不能申请!<br />";
+        }
+
+        if (flag == "")
+        {
+            if (ver == "A0")
+            {
+                sql = @"select * from [dbo].[PGI_PackScheme_Main] where part='" + part + "' and domain='" + domain + "'";
+                DataTable dt_A0 = DbHelperSQL.Query(sql).Tables[0];
+
+                if (dt_A0.Rows.Count > 0)
+                {
+                    flag = "PGI_零件号" + part + "申请工厂" + domain + "已经存在，不能新增申请!<br />";
+                }
+            }
+            else
+            {
+                //获取最新版本的版本号
+                sql = @"select a.part,a.domain,a.ver,b.sort 
+                    from [dbo].[PGI_PackScheme_Main] a 
+                        left join [dbo].[PGI_PackScheme_Ver] b on a.ver=b.ver
+                    where a.b_flag=1 and a.part='" + part + "' and domain='" + domain + "'";
+                DataTable dt_other = DbHelperSQL.Query(sql).Tables[0];
+
+                if (dt_other.Rows.Count > 0)
+                {
+                    DataTable dt_ver = DbHelperSQL.Query("select top 1 ver,sort from [dbo].[PGI_PackScheme_Ver] where sort>"+ Convert.ToInt32(dt_other.Rows[0]["sort"].ToString())+" order by sort").Tables[0];
+                    if (dt_ver.Rows[0]["ver"].ToString() != ver)
+                    {
+                        flag = "PGI_零件号" + part + "申请工厂" + domain + "修改申请版本" + ver + "，不正确，不能申请!<br />";
+                    }
+                }
+                else
+                {
+                    flag = "PGI_零件号" + part + "申请工厂" + domain + "没有申请过，不能修改申请!<br />";
+                }
+            }
+
+        }
+        return flag;
+    }
+
+
+    [WebMethod]
+    public static string CheckData(string applyid, string formno, string part, string domain, string ver)
+    {
+        string manager_flag = ""; string zg_id = "", manager_id = "";
+        CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
+
+        string part_flag = CheckVer_data(part, domain, ver, formno);
+
+        string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
+        return result;
+
+    }
+
+    public static void CheckData_manager(string applyid, out string manager_flag, out string zg_id, out string manager_id)
+    {
+        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        manager_flag = ""; 
+
+        DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + applyid + "')").Tables[0];
+        zg_id = dt_manager.Rows[0]["zg_id"].ToString();
+        manager_id = dt_manager.Rows[0]["manager_id"].ToString();
+
+        if (zg_id == "")
+        {
+            manager_flag += "工程师(" + applyid + ")的直属主管不存在，不能提交!<br />";
+        }
+        if (manager_id == "")
+        {
+            manager_flag += "工程师(" + applyid + ")的部门经理不存在，不能提交!<br />";
+        }
+
+    }
+
+
+
     private bool SaveData()
     {
         bool bflag = false;
