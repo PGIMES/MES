@@ -102,30 +102,43 @@ public partial class Forms_PurChase_PUR_RCT_PO_FW_Sure_fw : System.Web.UI.Page
 
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
-        string sql_insert = @"update PUR_RCT_PO_FW set OptionType='已匹配',fw_qr_time=getdate()
+
+        string code_f = ""; string rctnos = "";
+        string sql_update_fp_kjkm = @"update PUR_RCT_PO_FW set FPAmount='{1}',kjkm_code='{2}',kjkm_name='{3}' where rctno='{0}'";
+
+        //明细数据自动生成SQL，并增入SUM
+        foreach (DataRow item in ldt.Rows)
+        {
+            Pgi.Auto.Common ls_update_fp_kjkm = new Pgi.Auto.Common();
+            string sql = "";
+
+            if (code_f == "")
+            {
+                code_f = item["domain"].ToString() == "200" ? "K" : "S";
+            }
+            rctnos = rctnos + "'" + item["rctno"] + "',";
+
+            string kjkm_code = item["kjkm_code"].ToString().Substring(0, item["kjkm_code"].ToString().IndexOf("|"));
+            string kjkm_name = item["kjkm_code"].ToString().Substring(item["kjkm_code"].ToString().IndexOf("|") + 1);
+            sql = string.Format(sql_update_fp_kjkm, item["rctno"], item["FPAmount"], kjkm_code, kjkm_name);
+
+            ls_update_fp_kjkm.Sql = sql;
+            ls_sum.Add(ls_update_fp_kjkm);
+        }
+
+        //更新这批次的 qad单号为同一个单号
+        Pgi.Auto.Common ls_update_update_fpno = new Pgi.Auto.Common();
+        string sql_update_fpno = @"update PUR_RCT_PO_FW set OptionType='已匹配',fw_qr_time=getdate()
                                                     ,qad_fp_no='{1}'+CONVERT(nvarchar(4),getdate(),12)
                                                                 +right('000'+cast(
 																	                (select isnull(max(cast(right(qad_fp_no,3) as int)),0) from PUR_RCT_PO_FW 
                                                                                     where qad_fp_no like '{1}'+CONVERT(nvarchar(4),getdate(),12)+'%'
                                                                                     )
 																                +1 as nvarchar(max)),3)
-                                                    ,FPAmount='{2}',kjkm_code='{3}',kjkm_name='{4}'
-                            where rctno='{0}'";
-
-        //明细数据自动生成SQL，并增入SUM
-        foreach (DataRow item in ldt.Rows)
-        {
-            Pgi.Auto.Common ls_insert = new Pgi.Auto.Common();
-            string sql = "";
-
-            string code_f = item["domain"].ToString() == "200" ? "K" : "S";
-            string kjkm_code = item["kjkm_code"].ToString().Substring(0, item["kjkm_code"].ToString().IndexOf("|"));
-            string kjkm_name = item["kjkm_code"].ToString().Substring(item["kjkm_code"].ToString().IndexOf("|") + 1);
-            sql = string.Format(sql_insert, item["rctno"], code_f + "F", item["FPAmount"], kjkm_code, kjkm_name);
-
-            ls_insert.Sql = sql;
-            ls_sum.Add(ls_insert);
-        }
+                                    where rctno in({0})";
+        sql_update_fpno = string.Format(sql_update_fpno, rctnos.Substring(0, rctnos.Length - 1), code_f + "F");
+        ls_update_update_fpno.Sql = sql_update_fpno;
+        ls_sum.Add(ls_update_update_fpno);
 
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
         string remsg = "";
