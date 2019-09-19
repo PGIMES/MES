@@ -352,17 +352,22 @@
         }
 
         function setvalue_bm(vi,domain_v, bm_v, mc_v, cc_v, dz_v, cl_v, gys_v,dj_v,bclb_v) {
-            var domain= eval('domain' + vi);domain.SetText(domain_v);
-            var bm= eval('bm' + vi);bm.SetText(bm_v);
-            var mc= eval('mc' + vi);mc.SetText(mc_v);
-            var cc= eval('cc' + vi);cc.SetText(cc_v);
-            var dz= eval('dz' + vi);dz.SetText(dz_v);
-            var cl= eval('cl' + vi);cl.SetText(cl_v);
-            var gys= eval('gys' + vi);gys.SetText(gys_v);
-            var dj= eval('dj' + vi);dj.SetText(dj_v);
-            var bclb= eval('bclb' + vi);bclb.SetText(bclb_v);
+            if ($.trim(bclb_v)=="") {
+                layer.alert("包装箱编码"+bm_v+"对应的包材类别为空，请重新选择！"); 
+            }else {    
+                var domain= eval('domain' + vi);domain.SetText(domain_v);
+                var bm= eval('bm' + vi);bm.SetText(bm_v);
+                var mc= eval('mc' + vi);mc.SetText(mc_v);
+                var cc= eval('cc' + vi);cc.SetText(cc_v);
+                var dz= eval('dz' + vi);dz.SetText(dz_v);
+                var cl= eval('cl' + vi);cl.SetText(cl_v);
+                var gys= eval('gys' + vi);gys.SetText(gys_v);
+                var dj= eval('dj' + vi);dj.SetText(dj_v);
+                var bclb= eval('bclb' + vi);bclb.SetText(bclb_v);
 
-            RefreshRow();
+                RefreshRow();
+            }
+
         }
 
         function RefreshMain(){                 
@@ -410,16 +415,21 @@
 
             var xs_price=Number($.trim($("#cbXX input[id*='cbfj_xs_price']").val()) == "" ? 0 : $.trim($("#cbXX input[id*='cbfj_xs_price']").val())); //销售价格 
 
-            //grid底部total
-            var zz_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(12)").text();//包装材料总重
-            var zj_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(14)").text();//包装材料总价 
-
             //包装材料总重
+            var zz_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(12)").text();//包装材料总重
             var bc_w_total=(Number($.trim(zz_value_sum) == "" ? 0 : $.trim(zz_value_sum))).toFixed(2);
             $("#cbXX input[id*='cbfj_bc_w_total']").val(bc_w_total);
 
-            //成本/托==包装明细总价  
-            var cb_t_total=(Number($.trim(zj_value_sum) == "" ? 0 : $.trim(zj_value_sum))).toFixed(2);
+            //成本/托==包装明细总价,包材类别=E的总价  
+            var zj_value_sum=0; 
+            if($("[id$=gv] input[id*=sl]").length>0){
+                $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                    var zj = eval('zj' + index);var bclb = eval('bclb' + index);                	
+                    var zj_value=Number($.trim(zj.GetText()) == "" ? 0 : $.trim(zj.GetText()));//总价=(单价*数量)                    
+                    zj_value_sum=zj_value_sum+Number(zj_value);//合计总价     
+                });
+            }
+            var cb_t_total=zj_value_sum.toFixed(2);
             $("#cbXX input[id*='cbfj_cb_t_total']").val(cb_t_total);
             
             //毛重/托(KG)=(净重/托+包材总重)	
@@ -458,6 +468,7 @@
                     var sl = eval('sl' + index);var djyl=eval('djyl' + index);
                     var dz = eval('dz' + index);var zz = eval('zz' + index);
                     var dj = eval('dj' + index);var zj = eval('zj' + index);
+                    var bclb = eval('bclb' + index);
 
                     var sl_value=Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()));//数量
                     var dz_value=Number($.trim(dz.GetText()) == "" ? 0 : $.trim(dz.GetText()));//单重2
@@ -581,6 +592,49 @@
     </script>
 
     <script type="text/javascript">
+        function clearNoNum(obj){
+            obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+            obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+            obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+            obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+            obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+            if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+                if(obj.value.substr(0,1) == '0' && obj.value.length == 2){ 
+                    obj.value= parseFloat(obj.value);     
+                } 
+            }
+            if (obj.value=="") {
+                obj.value=parseFloat("0");
+            }
+        }
+        function formatNum (obj){ 
+            clearNoNum(obj);
+            var numMatch = String(obj.value).match(/\d*(\.\d{0,2})?/); 
+            return (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00'); 
+        }
+
+        function clearNoNum_grid(obj){
+            var numMatch = String(obj.GetValue()==null?"":obj.GetValue()).match(/\d*(\.\d{0,2})?/); 
+            obj.SetValue( (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00') ); 
+
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/[^\d.]/g,"")); //清除"数字"和"."以外的字符
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/^\./g,"")); //验证第一个字符是数字
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/\.{2,}/g,".")); //只保留第一个, 清除多余的
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(".","$#$").replace(/\./g,"").replace("$#$","."));
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')); //只能输入两个小数
+            if((obj.GetValue()==null?"":obj.GetValue()).indexOf(".")< 0 && obj.GetValue() !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+                if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0' && (obj.GetValue()==null?"":obj.GetValue()).length == 2){ 
+                    obj.SetValue(parseFloat(obj.GetValue()));     
+                } 
+            }
+            if (obj.GetValue()=="") {
+                obj.SetValue(parseFloat("0"));
+            }
+            var numMatch = String(obj.GetValue()==null?"":obj.GetValue()).match(/\d*(\.\d{0,2})?/); 
+            obj.SetValue( (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00') );
+        }
+    </script>
+    <script type="text/javascript">
 
         function validate(action){
             var flag=true;var msg="";
@@ -610,12 +664,18 @@
                 }
                 if($("#ljXX input[id*='ljcc_l']").val()==""){
                     msg+="【零件尺寸(L)】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='ljcc_l']").val())<=0){
+                    msg+="【零件尺寸(L)】不可小于等于0.<br />";
                 }
                 if($("#ljXX input[id*='ljcc_w']").val()==""){
                     msg+="【零件尺寸(W)】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='ljcc_w']").val())<=0){
+                    msg+="【零件尺寸(W)】不可小于等于0.<br />";
                 }
                 if($("#ljXX input[id*='ljcc_h']").val()==""){
                     msg+="【零件尺寸(H)】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='ljcc_h']").val())<=0){
+                    msg+="【零件尺寸(H)】不可小于等于0.<br />";
                 }
                 if($("#ljXX input[id*='gdsl_cp']").val()==""){
                     msg+="【工单数量(成品)】不可为空.<br />";
@@ -663,17 +723,25 @@
                 }
                 if($("#zxXX input[id*='bzx_t_l']").val()==""){
                     msg+="【托尺寸(L)】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_t_l']").val())<=0){
+                    msg+="【托尺寸(L)】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_t_w']").val()==""){
                     msg+="【托尺寸(W)】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_t_w']").val())<=0){
+                    msg+="【托尺寸(W)】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_t_h']").val()==""){
                     msg+="【托尺寸(H)】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_t_h']").val())<=0){
+                    msg+="【托尺寸(H)】不可小于等于0.<br />";
                 }
 
                 
                 if($("#cbXX input[id*='cbfj_mb_j']").val()==""){
                     msg+="【目标成本/件】不可为空.<br />";
+                }else if(Number($("#cbXX input[id*='cbfj_mb_j']").val())<=0){
+                    msg+="【目标成本/件】不可小于等于0.<br />";
                 }
 
 
@@ -682,11 +750,21 @@
                 }else {
                     if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
                         msg+="【包装材料明细】格式必须正确.<br />";
-                    } 
+                    } else {
+                        $("[id$=gv] tr[class*=DataRow]").each(function (index, item) {     
+                            //var bclb=eval('bclb' + index);
+                            //var sl=eval('sl' + index);
+
+                            //if(bclb.GetText()==""){
+                            //    msg+="【包装材料明细】的【包材类别】不可为空.<br />";
+                            //}
+
+                            //if(Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()))<=0){
+                            //    msg+="【包装材料明细】的【数量】必须是正的两位小数.<br />";
+                            //}
+                        });
+                    }
                 }
-
-
-            
             }
             
 
@@ -884,20 +962,21 @@
                                 <td><font color="red">*</font>零件尺寸(L)</td>
                                 <td><%--限制文本框只能输入正数，小数--%>
                                     <%--<asp:TextBox ID="ljcc_l"  runat="server" class="linewrite" Width="260px"/>--%>
+                                     <%--onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" --%>
                                     <input id="ljcc_l" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(W)</td>
                                 <td><%--限制文本框只能输入正数，小数--%>
                                    <%-- <asp:TextBox ID="ljcc_w" runat="server"  class="linewrite" Width="260px"></asp:TextBox>--%>
                                     <input id="ljcc_w" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(H)</td>
                                 <td>
                                     <%--<asp:TextBox ID="ljcc_h" runat="server" class="linewrite" Width="260px"/>--%>
                                     <input id="ljcc_h" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                             </tr>
                             <tr>
@@ -1053,19 +1132,19 @@
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_l"  runat="server" class="linewrite" Width="260px" />--%>
                                     <input id="bzx_t_l" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                                 <td><font color="red">*</font>托尺寸(W)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_w" runat="server" class="linewrite" Width="260px" />--%>
                                     <input id="bzx_t_w" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                                 <td><font color="red">*</font>托尺寸(H)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_h" runat="server" class="linewrite" Width="260px"/>--%>
                                     <input id="bzx_t_h" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                             </tr>
                         </table>
@@ -1091,7 +1170,7 @@
                                 <td>
                                     <%--<asp:TextBox ID="cbfj_mb_j" runat="server" class="linewrite" Width="260px" />--%>
                                     <input id="cbfj_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" />
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>销售价格</td>
                                 <td>
@@ -1303,9 +1382,7 @@
                                                 <dx:ASPxTextBox ID="sl" Width="60px" runat="server" Value='<%# Eval("sl")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "sl"+Container.VisibleIndex.ToString() %>'>
-                                                    <ValidationSettings ValidationGroup="ValueValidationGroup_HR" Display="Dynamic" ErrorTextPosition="Bottom">
-                                                        <RegularExpression ErrorText="请输入正数！" ValidationExpression="^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$" />
-                                                    </ValidationSettings>
+                                                    <ClientSideEvents LostFocus="function(s, e) {clearNoNum_grid(s);}"   />
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                              <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>

@@ -637,7 +637,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     protected void gv_DataBound(object sender, EventArgs e)
     {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color(); RefreshRow();", true);
+        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);//RefreshRow();
     }
 
     //绑定申请类别
@@ -838,9 +838,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
 
     }
-
-
-
+    
     private bool SaveData()
     {
         bool bflag = false;
@@ -1078,6 +1076,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         return bflag;
     }
+
 
     #region "保存，发送流程固定用法，不可随意变更"
     string script = "";//全局前端控制Script
