@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -133,27 +134,22 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             }
             else
             {
-                //DataTable ldt = DbHelperSQL.Query(@"select a.*,d.pt_desc1,d.pt_desc2 
-                //                                    from PGI_GYLX_Main_Form a 
-                //                                        left join qad_pt_mstr d on a.projectno=d.pt_part and a.domain=d.pt_domain 
-                //                                    where formno='" + this.m_sid + "'").Tables[0];
-                //if (ldt.Rows.Count > 0)
-                //{
-                //    ldt.Rows[0]["pn"] = ldt.Rows[0]["pt_desc1"]; ldt.Rows[0]["pn_desc"] = ldt.Rows[0]["pt_desc2"];
-                //    //表头基本信息
-                //    txt_CreateById.Value = ldt.Rows[0]["CreateById"].ToString();
-                //    txt_CreateByName.Value = ldt.Rows[0]["CreateByName"].ToString();
-                //    txt_CreateByDept.Value = ldt.Rows[0]["CreateByDept"].ToString();
-                //    txt_CreateDate.Value = ldt.Rows[0]["CreateDate"].ToString();
-                //    SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                //    txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
-                //    applytype.SelectedValue = ldt.Rows[0]["applytype"].ToString();
-                //    modifyremark.Text = ldt.Rows[0]["modifyremark"].ToString();
-                //}
-                //else
-                //{
-                //    Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
-                //}
+                //表头赋值
+                DataTable ldt = DbHelperSQL.Query("select * from PGI_PackScheme_Main_Form where PackNo='" + this.m_sid + "'").Tables[0];
+                if (ldt.Rows.Count > 0)
+                {
+                    Pgi.Auto.Control.SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+
+                    if (ldt.Rows[0]["files_part"].ToString() != "")
+                    {
+                        this.ip_filelist_db.Value = ldt.Rows[0]["files_part"].ToString();
+                        bindtab();
+                    }
+                }
+                else
+                {
+                    Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
+                }
 
                 //lssql += " where GYGSNo='" + this.m_sid + "' order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)"; //order by a.typeno,op
             }
@@ -213,6 +209,195 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
+
+    void bindtab()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('"
+                                            + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='"
+                                            + this.m_sid + "' and stepname='包装工程师'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
+
+        #region 零件图片
+
+        tab1.Rows.Clear();
+        string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_oth = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            hl.Text = ls_files_oth[0].ToString();
+            hl.NavigateUrl = ls_files_oth[1].ToString();
+            hl.Target = "_blank";
+
+            Label lb = new Label();
+            lb.Text = ls_files_oth[2].ToString();          
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1.Rows.Add(tempRow);
+        }
+
+        #endregion
+
+        #region 包装箱内部
+
+        tab1_2.Rows.Clear();
+        string[] ls_files_2 = this.ip_filelist_db_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files_2.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_oth = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            hl.Text = ls_files_oth[0].ToString();
+            hl.NavigateUrl = ls_files_oth[1].ToString();
+            hl.Target = "_blank";
+
+            Label lb = new Label();
+            lb.Text = ls_files_oth[2].ToString();
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_2_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1_2.Rows.Add(tempRow);
+        }
+
+        #endregion
+
+        #region 包装箱外观
+
+        tab1_3.Rows.Clear();
+        string[] ls_files_3 = this.ip_filelist_db_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files_3.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_oth = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            hl.Text = ls_files_oth[0].ToString();
+            hl.NavigateUrl = ls_files_oth[1].ToString();
+            hl.Target = "_blank";
+
+            Label lb = new Label();
+            lb.Text = ls_files_oth[2].ToString();
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_3_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1_3.Rows.Add(tempRow);
+        }
+
+        #endregion
+    }
+
+    void Btn_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db.Value;
+        string[] ls_files = filedb.Split(';');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + ";"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db.Value = files;
+
+        bindtab();
+    }
+
+    void Btn_2_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db_2.Value;
+        string[] ls_files = filedb.Split(';');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + ";"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db_2.Value = files;
+
+        bindtab();
+    }
+
+    void Btn_3_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db_3.Value;
+        string[] ls_files = filedb.Split(';');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + ";"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db_3.Value = files;
+
+        bindtab();
+    }
+
     public void bind_grid(DataTable dt)
     {
         this.gv.DataSource = dt;
@@ -659,6 +844,237 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     private bool SaveData()
     {
         bool bflag = false;
+
+        //定义总SQL LIST
+        List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
+
+        //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
+        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PGI_PackScheme_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+
+        string applyid = ApplyId.Text;
+        string lspart = part.Text;
+        string lsdomain = domain.SelectedValue;
+        string lstypeno = typeno.Value.ToString();
+        string lsbzlb = bzlb.Value.ToString();
+
+        string manager_flag = ""; string zg_id = "", manager_id = "";
+        CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
+
+        if (this.m_sid == "")
+        {
+            //没有单号，自动生成
+            string lsid = "WLBZFA" + System.DateTime.Now.ToString("YYMMDD");
+            this.m_sid = Pgi.Auto.Public.GetNo("WLBZFA", lsid, 0, 4);
+
+            for (int i = 0; i < ls.Count; i++)
+            {
+                if (ls[i].Code.ToLower() == "formno")
+                {
+                    ls[i].Value = this.m_sid;
+                    FormNo.Text = this.m_sid;
+                    break;
+                }
+
+            }
+
+        }
+
+        for (int i = 0; i < ls.Count; i++)
+        {
+            if (ls[i].Code == "domain") { ls[i].Value = lsdomain; }//申请工厂
+            if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
+            if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
+        }
+
+        //主管
+        Pgi.Auto.Common lczg_id = new Pgi.Auto.Common();
+        lczg_id.Code = "zg_id";
+        lczg_id.Key = "";
+        lczg_id.Value = "u_" + zg_id;
+        ls.Add(lczg_id);
+
+        //经理
+        Pgi.Auto.Common lcmanager_id = new Pgi.Auto.Common();
+        lcmanager_id.Code = "manager_id";
+        lcmanager_id.Key = "";
+        lcmanager_id.Value = "u_" + manager_id;
+        ls.Add(lcmanager_id);
+
+        //自定义，上传文件
+        string savepath_new = @"\" + savepath + @"\";
+        var despath = MapPath("~") + savepath_new + m_sid + @"\";
+        if (!System.IO.Directory.Exists(despath))
+        {
+            System.IO.Directory.CreateDirectory(despath);
+        }
+
+        #region 零件图片
+
+        string files_part = "";
+        string[] ls_files = ip_filelist.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files)
+        {
+            string[] ls_files_oth = item.Split(',');
+           
+            //目的地存在的话，先删除
+            string tmp = despath + ls_files_oth[1].Replace(savepath_new, "");
+            if (File.Exists(tmp)) { File.Delete(tmp); }
+
+            //文件从临时目录转移到表单单号下面
+            FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
+            fi.MoveTo(tmp);
+
+            files_part += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
+        }
+
+        string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db)
+        {
+            files_part += item + ";";
+        }
+        if (files_part != "") { files_part = files_part.Substring(0, files_part.Length - 1); }
+
+        #endregion
+
+        #region 包装箱内部
+
+        string files_bzx_nb = "";
+        string[] ls_files_2 = ip_filelist_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_2)
+        {
+            string[] ls_files_oth = item.Split(',');
+
+            //目的地存在的话，先删除
+            string tmp = despath + ls_files_oth[1].Replace(savepath_new, "");
+            if (File.Exists(tmp)) { File.Delete(tmp); }
+
+            //文件从临时目录转移到表单单号下面
+            FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
+            fi.MoveTo(tmp);
+
+            files_bzx_nb += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
+        }
+
+        string[] ls_files_db_2 = ip_filelist_db_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db_2)
+        {
+            files_bzx_nb += item + ";";
+        }
+        if (files_bzx_nb != "") { files_bzx_nb = files_bzx_nb.Substring(0, files_bzx_nb.Length - 1); }
+
+        #endregion
+
+        #region 包装箱外观
+
+        string files_bzx_wg = "";
+        string[] ls_files_3 = ip_filelist_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_3)
+        {
+            string[] ls_files_oth = item.Split(',');
+
+            //目的地存在的话，先删除
+            string tmp = despath + ls_files_oth[1].Replace(savepath_new, "");
+            if (File.Exists(tmp)) { File.Delete(tmp); }
+
+            //文件从临时目录转移到表单单号下面
+            FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
+            fi.MoveTo(tmp);
+
+            files_bzx_wg += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
+        }
+
+        string[] ls_files_db_3 = ip_filelist_db_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db_3)
+        {
+            files_bzx_wg += item + ";";
+        }
+        if (files_bzx_wg != "") { files_bzx_wg = files_bzx_wg.Substring(0, files_bzx_wg.Length - 1); }
+
+        #endregion
+
+        // 增加上传文件列:零件图片
+        Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+        lcfile.Code = "files_part";
+        lcfile.Key = "";
+        lcfile.Value = files_part;
+        ls.Add(lcfile);
+
+        // 增加上传文件列:包装箱内部
+        Pgi.Auto.Common lcfiles_bzx_nb = new Pgi.Auto.Common();
+        lcfiles_bzx_nb.Code = "files_bzx_nb";
+        lcfiles_bzx_nb.Key = "";
+        lcfiles_bzx_nb.Value = files_bzx_nb;
+        ls.Add(lcfiles_bzx_nb);
+
+        // 增加上传文件列:包装箱外观
+        Pgi.Auto.Common lcfiles_bzx_wg = new Pgi.Auto.Common();
+        lcfiles_bzx_wg.Code = "files_bzx_wg";
+        lcfiles_bzx_wg.Key = "";
+        lcfiles_bzx_wg.Value = files_bzx_wg;
+        ls.Add(lcfiles_bzx_wg);
+
+        //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+
+        //主表相关字段赋值到明细表
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            ldt.Rows[i]["PackNo"] = m_sid;
+            ldt.Rows[i]["numid"] = (i + 1);
+        }
+
+        //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
+        //获取的表头信息，自动生成SQL，增加到SUM中
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_PackScheme_Main_Form"));
+
+
+        if (ldt.Rows.Count > 0)
+        {
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            string dtl_ids = "";
+            for (int i = 0; i < ldt.Rows.Count; i++)
+            {
+                if (ldt.Rows[i]["id"].ToString() != "") { dtl_ids = dtl_ids + ldt.Rows[i]["id"].ToString() + ","; }
+            }
+            if (dtl_ids != "")
+            {
+                dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
+                ls_del.Sql = "delete from PGI_PackScheme_Dtl_Form where PackNo='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+            }
+            else
+            {
+                ls_del.Sql = "delete from PGI_PackScheme_Dtl_Form where PackNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+            }
+            ls_sum.Add(ls_del);
+
+            //明细数据自动生成SQL，并增入SUM
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_PackScheme_Dtl_Form", "id", "Column1,flag");
+            for (int i = 0; i < ls1.Count; i++)
+            {
+                ls_sum.Add(ls1[i]);
+            }
+        }
+
+        //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
+
+        //批量提交
+        int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+        if (ln > 0)
+        {
+            bflag = true;
+
+            var titletype = lstypeno == "新增" ? "包装方案申请" : "包装方案修改";
+            string title = titletype + "[" + this.m_sid + "][" + lspart + "][" + lsdomain + "]";
+
+            script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
+                 "$('#customformtitle',parent.document).val('" + title + "');";
+
+        }
+        else
+        {
+            bflag = false;
+        }
 
         return bflag;
     }
