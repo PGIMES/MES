@@ -1,5 +1,6 @@
 ﻿using DevExpress.Web;
 using Maticsoft.DBUtility;
+using Pgi.Auto;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -847,7 +848,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("PGI_PackScheme_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_PackScheme_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
         string applyid = ApplyId.Text;
         string lspart = part.Text;
@@ -1118,6 +1119,139 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         {
             Page.ClientScript.RegisterStartupScript(Page.GetType(), "ok", script + " parent.flowSend(true);", true);
         }
+    }
+    #endregion
+
+    #region 将界面中控件值统计到List中
+
+    /// <summary>
+    /// 将界面中控件值统计到List中
+    /// </summary>
+    /// <param name="lsform_type">要显示字段大类</param>
+    /// <param name="lsform_div">要显示字段小类</param>
+    /// <param name="p">要统计的界面Page</param>
+    /// <param name="lscontrol_format">界面控件中要套用的控件ID格式</param>
+    /// <returns></returns>
+    public static List<Pgi.Auto.Common> GetControlValue(string lsform_type, string lsform_div, System.Web.UI.Page p, string lscontrol_format = "")
+    {
+        string lswhere = "";
+        if (lsform_type != "")
+        {
+            lswhere += " and form_type=@form_type";
+        }
+        if (lsform_div != "")
+        {
+            lswhere += " and form_div=@form_div";
+        }
+        string lsconn = ConfigurationSettings.AppSettings["ConnectionMES"];
+        DataTable ldt = Pgi.Auto.SQLHelper.ExecuteDataSet(lsconn, CommandType.Text, "select * from auto_form where 1=1 " + lswhere + "",
+            new SqlParameter[]{
+              new SqlParameter("@form_type",lsform_type)
+                ,new SqlParameter("@form_div",lsform_div)}).Tables[0];
+
+        List<Pgi.Auto.Common> ls = new List<Common>();
+        for (int i = 0; i < ldt.Rows.Count; i++)
+        {
+            string lscontrol_id = ldt.Rows[i]["control_id"].ToString().ToLower();
+            if (lscontrol_format != "")
+            {
+                lscontrol_id = lscontrol_format.Replace("{0}", lscontrol_id);
+            }
+            if (p.FindControl(lscontrol_id) != null)
+            {
+
+
+
+                Pgi.Auto.Common com = new Common();
+                com.Code = ldt.Rows[i]["control_id"].ToString().ToLower();
+                string lstr = "0|0";
+                string initlstr = "0|0";//初始lstr字符，以便忘记配置值而报错
+                                        //-----------------------------------控件判断开始----------------------------------
+                if (ldt.Rows[i]["control_type"].ToString() == "TEXTBOX")
+                {
+                    // ((TextBox)p.FindControl(ldt.Rows[i]["control_id"].ToString())).Enabled = true;
+                    // com.Value = ((TextBox)p.FindControl(ldt.Rows[i]["control_id"].ToString())).Text;
+                    com.Value = p.Request.Form[lscontrol_id].ToString();
+                    ((TextBox)p.FindControl(lscontrol_id)).Text = p.Request.Form[lscontrol_id].ToString();
+                    lstr = ((TextBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }else if (ldt.Rows[i]["control_type"].ToString() == "ASPXTEXTBOX")
+                {
+                    com.Value = p.Request.Form[lscontrol_id].ToString();
+                    ((ASPxTextBox)p.FindControl(lscontrol_id)).Text = p.Request.Form[lscontrol_id].ToString();
+                    lstr = ((ASPxTextBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "DROPDOWNLIST")
+                {
+                    com.Value = ((DropDownList)p.FindControl(lscontrol_id)).SelectedValue;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DropDownList)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXCOMBOBOX")
+                {
+                    //com.Value = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).Text;
+                    com.Value = "";
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxComboBox)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDATEEDIT")
+                {
+                    com.Value = ((DevExpress.Web.ASPxDateEdit)p.FindControl(lscontrol_id)).Text;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxDateEdit)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                else if (ldt.Rows[i]["control_type"].ToString() == "ASPXDROPDOWNEDIT")
+                {
+                    com.Value = ((DevExpress.Web.ASPxDropDownEdit)p.FindControl(lscontrol_id)).Text;
+                    if (com.Value == "")
+                    {
+                        if (p.Request.Form[lscontrol_id] != null)
+                        {
+                            com.Value = p.Request.Form[lscontrol_id].ToString();//无法获取
+                        }
+
+                    }
+                    lstr = ((DevExpress.Web.ASPxDropDownEdit)p.FindControl(lscontrol_id)).ToolTip.ToString();
+                    lstr = lstr == "" ? initlstr : lstr;
+                }
+                //-----------------------------------控件判断结束----------------------------------
+
+                string[] ls1 = lstr.Split('|');
+                com.Key = ls1[0];
+                if (ls1[1] == "1" && com.Value == "")
+                {
+                    com.Value = ldt.Rows[i]["control_dest"].ToString();
+                    com.Code = "";
+                }
+                ls.Add(com);
+            }
+        }
+        return ls;
     }
     #endregion
 }

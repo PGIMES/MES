@@ -55,22 +55,22 @@
                 $("#btntaskEnd").hide();
             }
 
-            //数量/层
-            $("#zxXX input[id*='bzx_sl_c']").change(function(){
-                RefreshMain();
-            });
-            //层数/箱
-            $("#zxXX input[id*='bzx_cs_x']").change(function(){
-                RefreshMain();
-            });
-            //箱数/层
-            $("#zxXX input[id*='bzx_xs_c']").change(function(){
-                RefreshMain();
-            });
-            //层/托
-            $("#zxXX input[id*='bzx_c_t']").change(function(){
-                RefreshMain();
-            });
+            ////数量/层
+            //$("#zxXX input[id*='bzx_sl_c']").change(function(){
+            //    RefreshMain();
+            //});
+            ////层数/箱
+            //$("#zxXX input[id*='bzx_cs_x']").change(function(){
+            //    RefreshMain();
+            //});
+            ////箱数/层
+            //$("#zxXX input[id*='bzx_xs_c']").change(function(){
+            //    RefreshMain();
+            //});
+            ////层/托
+            //$("#zxXX input[id*='bzx_c_t']").change(function(){
+            //    RefreshMain();
+            //});
         });
 
         //提出自定流程 JS 
@@ -592,28 +592,32 @@
     </script>
 
     <script type="text/javascript">
-        function clearNoNum(obj){
-            obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
-            obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
-            obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
-            obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
-            obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
-            if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-                if(obj.value.substr(0,1) == '0' && obj.value.length == 2){ 
-                    obj.value= parseFloat(obj.value);     
-                } 
-            }
-            if (obj.value=="") {
-                obj.value=parseFloat("0");
-            }
-        }
-        function formatNum (obj){ 
-            clearNoNum(obj);
-            var numMatch = String(obj.value).match(/\d*(\.\d{0,2})?/); 
-            return (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00'); 
+        //function clearNoNum(obj){
+        //    obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+        //    obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+        //    obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+        //    obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        //    obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+        //    if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+        //        if(obj.value.substr(0,1) == '0' && obj.value.length == 2){ 
+        //            obj.value= parseFloat(obj.value);     
+        //        } 
+        //    }
+        //    if (obj.value=="") {
+        //        obj.value=parseFloat("0");
+        //    }
+        //}
+        //function formatNum (obj){ 
+        //    clearNoNum(obj);
+        //    var numMatch = String(obj.value).match(/\d*(\.\d{0,2})?/); 
+        //    return (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00'); 
+        //}
+
+        function clearNoNum_dev_textbox_int(obj){
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/[^1-9]/g,'')); //清除"数字"和"."以外的字符
         }
 
-        function clearNoNum_grid(obj){
+        function clearNoNum_dev_textbox(obj){
             var numMatch = String(obj.GetValue()==null?"":obj.GetValue()).match(/\d*(\.\d{0,2})?/); 
             obj.SetValue( (numMatch[0] += numMatch[1] ? '00'.substr(0, 3 - numMatch[1].length) : '.00') ); 
 
@@ -963,20 +967,38 @@
                                 <td><%--限制文本框只能输入正数，小数--%>
                                     <%--<asp:TextBox ID="ljcc_l"  runat="server" class="linewrite" Width="260px"/>--%>
                                      <%--onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" --%>
-                                    <input id="ljcc_l" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="ljcc_l" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="ljcc_l" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(W)</td>
                                 <td><%--限制文本框只能输入正数，小数--%>
                                    <%-- <asp:TextBox ID="ljcc_w" runat="server"  class="linewrite" Width="260px"></asp:TextBox>--%>
-                                    <input id="ljcc_w" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="ljcc_w" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="ljcc_w" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(H)</td>
                                 <td>
                                     <%--<asp:TextBox ID="ljcc_h" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="ljcc_h" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="ljcc_h" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="ljcc_h" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                    </dx:ASPxTextBox>
                                 </td>
                             </tr>
                             <tr>
@@ -997,20 +1019,40 @@
                                 <td><font color="red">*</font>工单数量(成品)</td>
                                 <td>
                                     <%--<asp:TextBox ID="gdsl_cp"  runat="server" class="linewrite" Width="260px" />--%>
-                                    <input id="gdsl_cp" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                   <%-- <input id="gdsl_cp" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="gdsl_cp" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  />
+                                    </dx:ASPxTextBox>
+
                                 </td>
                                 <td><font color="red">*</font>工单数量(半成品)</td>
                                 <td>
                                     <%--<asp:TextBox ID="gdsl_bcp" runat="server" class="linewrite" Width="260px"></asp:TextBox>--%>
-                                    <input id="gdsl_bcp" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="gdsl_bcp" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="gdsl_bcp" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>扣料工序</td>
                                 <td>
                                     <%--<asp:TextBox ID="klgx" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="klgx" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="klgx" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="klgx" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                    </dx:ASPxTextBox>
+
                                 </td>
                             </tr>
                         </table>
@@ -1053,14 +1095,26 @@
                                 <td><font color="red">*</font>数量/层</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_sl_c" runat="server" class="linewrite" Width="260px"/>--%>                                    
-                                    <input id="bzx_sl_c" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_sl_c" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_sl_c" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  ValueChanged="function(s, e) {RefreshMain();}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>层数/箱</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_cs_x" runat="server" class="linewrite" Width="260px"/>--%>                                    
-                                    <input id="bzx_cs_x" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_cs_x" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_cs_x" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                             </tr>
                             <tr>
@@ -1081,14 +1135,26 @@
                                 <td><font color="red">*</font>箱数/层</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_xs_c" runat="server" class="linewrite" Width="260px" />--%>                                    
-                                    <input id="bzx_xs_c" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_xs_c" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_xs_c" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>层/托</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_c_t" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="bzx_c_t" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_c_t" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_c_t" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}"  />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">&nbsp;</font>箱数/托<br />(箱数/层*层/托)</td>
                                 <td>
@@ -1103,14 +1169,26 @@
                                 <td><font color="red">*</font>动载层数<br />(<font color="red">运输堆码层数</font>)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_dzcs" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="bzx_dzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_dzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_dzcs" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>静载层数<br />(<font color="red">仓储堆码层数</font>)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_jzcs" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="bzx_jzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />
+                                    <%--<input id="bzx_jzcs" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_jzcs" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                             </tr>
                             <tr>
@@ -1131,20 +1209,38 @@
                                 <td><font color="red">*</font>托尺寸(L)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_l"  runat="server" class="linewrite" Width="260px" />--%>
-                                    <input id="bzx_t_l" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="bzx_t_l" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_t_l" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>托尺寸(W)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_w" runat="server" class="linewrite" Width="260px" />--%>
-                                    <input id="bzx_t_w" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="bzx_t_w" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_t_w" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}" />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>托尺寸(H)</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_h" runat="server" class="linewrite" Width="260px"/>--%>
-                                    <input id="bzx_t_h" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="bzx_t_h" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="bzx_t_h" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                    </dx:ASPxTextBox>
                                 </td>
                             </tr>
                         </table>
@@ -1169,8 +1265,14 @@
                                 <td><font color="red">*</font>目标成本/件</td>
                                 <td>
                                     <%--<asp:TextBox ID="cbfj_mb_j" runat="server" class="linewrite" Width="260px" />--%>
-                                    <input id="cbfj_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
-                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />
+                                    <%--<input id="cbfj_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                        onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
+
+                                    <dx:ASPxTextBox ID="cbfj_mb_j" runat="server" Width="260px"  Height="25px"
+                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
+                                        <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                    </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">&nbsp;</font>销售价格</td>
                                 <td>
@@ -1382,7 +1484,7 @@
                                                 <dx:ASPxTextBox ID="sl" Width="60px" runat="server" Value='<%# Eval("sl")%>' 
                                                     ClientSideEvents-ValueChanged='<%# "function(s,e){RefreshRow("+Container.VisibleIndex+");}" %>' 
                                                     ClientInstanceName='<%# "sl"+Container.VisibleIndex.ToString() %>'>
-                                                    <ClientSideEvents LostFocus="function(s, e) {clearNoNum_grid(s);}"   />
+                                                    <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                              <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
