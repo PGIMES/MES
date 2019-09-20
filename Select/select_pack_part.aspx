@@ -40,7 +40,7 @@
 
                             <Columns>
 
-                                <asp:BoundField DataField="sod_domain" HeaderText="域" ReadOnly="True">
+                                <asp:BoundField DataField="sod_domain_desc" HeaderText="域" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="sod_part" HeaderText="PGI_零件号" ReadOnly="True">
