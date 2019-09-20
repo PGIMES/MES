@@ -450,8 +450,8 @@
 
             //包装成本比例=(实际成本/销售价格)
             var cb_rate=0;
-            if(xs_price!=0){cb_rate=(Number(sj_j)/xs_price);}
-            cb_rate=(Number(cb_rate.toFixed(4))*100).toString()+'%';
+            if(xs_price!=0){cb_rate=(Number(sj_j)/xs_price*100);}
+            cb_rate=(cb_rate.toFixed(2)).toString()+'%';
             $("#cbXX input[id*='cbfj_cb_rate']").val(cb_rate); 
             
             //年总价(包装)=(实际成本/件*年用量))

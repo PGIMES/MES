@@ -6,7 +6,7 @@
 <head runat="server">
     <title></title>
 </head>
-<body style="background: url(../images/bg.jpg) repeat-x;">
+<body> <%--style="background: url(../images/bg.jpg) repeat-x;"--%>
     <form id="form1" runat="server">
         <div>
             <table  >
