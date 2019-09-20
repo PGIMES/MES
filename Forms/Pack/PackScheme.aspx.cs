@@ -136,7 +136,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             else
             {
                 //表头赋值
-                DataTable ldt = DbHelperSQL.Query("select * from PGI_PackScheme_Main_Form where PackNo='" + this.m_sid + "'").Tables[0];
+                DataTable ldt = DbHelperSQL.Query("select * from PGI_PackScheme_Main_Form where formno='" + this.m_sid + "'").Tables[0];
                 if (ldt.Rows.Count > 0)
                 {
                     Pgi.Auto.Control.SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
@@ -883,16 +883,26 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             if (ls[i].Code == "domain") { ls[i].Value = lsdomain; }//申请工厂
             if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
             if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
+            if (ls[i].Code.ToLower() == "cbfj_cb_rate") { ls[i].Value = (Convert.ToDecimal(ls[i].Value == "" ? "0" : ls[i].Value) / 100).ToString(); }//包装类别
 
-            //if (ls[i].Value=="")
-            //{
-            //    if (ls[i].Code.ToLower() == "ljcc_l" || ls[i].Code.ToLower() == "ljcc_w" || ls[i].Code.ToLower() == "ljcc_h" 
-            //        || ls[i].Code.ToLower() == "gdsl_cp" || ls[i].Code.ToLower() == "gdsl_bcp" || ls[i].Code.ToLower() == "klgx"
-            //        || ls[i].Code.ToLower() == "bzx_sl_c" || ls[i].Code.ToLower() == "bzx_cs_x" || ls[i].Code.ToLower() == "bzx_sl_x")
-            //    {
-
-            //    }
-            //}
+            if (ls[i].Value == "")
+            {
+                if (ls[i].Code.ToLower() == "ljcc_l" || ls[i].Code.ToLower() == "ljcc_w" || ls[i].Code.ToLower() == "ljcc_h"
+                    || ls[i].Code.ToLower() == "ljzl" || ls[i].Code.ToLower() == "nyl" || ls[i].Code.ToLower() == "nzj"
+                    || ls[i].Code.ToLower() == "gdsl_cp" || ls[i].Code.ToLower() == "gdsl_bcp" || ls[i].Code.ToLower() == "klgx"
+                    || ls[i].Code.ToLower() == "bzx_w"
+                    || ls[i].Code.ToLower() == "bzx_sl_c" || ls[i].Code.ToLower() == "bzx_cs_x" || ls[i].Code.ToLower() == "bzx_sl_x"
+                    || ls[i].Code.ToLower() == "bzx_jz_x" || ls[i].Code.ToLower() == "bzx_mz_x" || ls[i].Code.ToLower() == "bzx_xs_c"
+                    || ls[i].Code.ToLower() == "bzx_c_t" || ls[i].Code.ToLower() == "bzx_xs_t" || ls[i].Code.ToLower() == "bzx_sl_t"
+                    || ls[i].Code.ToLower() == "bzx_dzcs" || ls[i].Code.ToLower() == "bzx_jzcs" || ls[i].Code.ToLower() == "bzx_jz_t"
+                    || ls[i].Code.ToLower() == "bzx_mz_t" || ls[i].Code.ToLower() == "bzx_ljfyzl" || ls[i].Code.ToLower() == "bzx_t_l"
+                    || ls[i].Code.ToLower() == "bzx_t_w" || ls[i].Code.ToLower() == "bzx_t_h" || ls[i].Code.ToLower() == "cbfj_sj_j"
+                    || ls[i].Code.ToLower() == "cbfj_mb_j" || ls[i].Code.ToLower() == "cbfj_xs_price" || ls[i].Code.ToLower() == "cbfj_bc_w_total"
+                    || ls[i].Code.ToLower() == "cbfj_cb_t_total")
+                {
+                    ls[i].Value = "0";
+                }
+            }
 
         }
 
