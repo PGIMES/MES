@@ -285,7 +285,7 @@
             layer.open({
                 title:'零件选择',
                 type: 2,
-                area: ['800px', '500px'],
+                area: ['900px', '500px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
@@ -950,11 +950,7 @@
                                 </td>
                                 <td><font color="red">&nbsp;</font>申请工厂</td>
                                 <td>
-                                    <asp:DropDownList ID="domain" runat="server" CssClass="lineread" Enabled="false" Width="260px" Height="27px">
-                                        <asp:ListItem Text="" Value=""></asp:ListItem>
-                                        <asp:ListItem Text="昆山工厂" Value="200"></asp:ListItem>
-                                        <asp:ListItem Text="上海工厂" Value="100"></asp:ListItem>
-                                    </asp:DropDownList>
+                                    <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
                                 <td style="width:105px;"><font color="red">&nbsp;</font>版本</td>
                                 <td><asp:TextBox ID="ver"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>                                

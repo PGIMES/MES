@@ -21,7 +21,7 @@
                     <td align="center" colspan="2">
 
                         <asp:Label ID="lb_msg" runat="server" Text="" ForeColor="Red"></asp:Label>
-                        <asp:GridView ID="GridView1" Width="780px"
+                        <asp:GridView ID="GridView1" Width="880px"
                             AllowMultiColumnSorting="True" AllowPaging="True"
                             AllowSorting="True" AutoGenerateColumns="False"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
@@ -40,7 +40,7 @@
 
                             <Columns>
 
-                                <asp:BoundField DataField="sod_domain_desc" HeaderText="域" ReadOnly="True">
+                                <asp:BoundField DataField="sod_domain_desc" HeaderText="申请工厂" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="sod_part" HeaderText="PGI_零件号" ReadOnly="True">

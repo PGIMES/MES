@@ -31,6 +31,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
         if (ViewState["ApplyId_i"] == null) { ViewState["ApplyId_i"] = ""; }
 
         //接收
@@ -169,7 +170,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         //    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
 
         //    ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-            
+
         //    //20190320 add 注释 释放GP12可以修改
         //    //if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
         //    //{
@@ -179,7 +180,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         //    //{
         //    //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
         //    //}
-            
+
         //}
 
         //if (StepID.ToUpper() != SQ_StepID && StepID != "A")
@@ -852,9 +853,11 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         string applyid = ApplyId.Text;
         string lspart = part.Text;
-        string lsdomain = domain.SelectedValue;
+        string lsdomain = domain.Text;
         string lstypeno = typeno.Value == null ? "" : typeno.Value.ToString();
         string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
+
+        return bflag;
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
@@ -880,10 +883,9 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         for (int i = 0; i < ls.Count; i++)
         {
-            if (ls[i].Code == "domain") { ls[i].Value = lsdomain; }//申请工厂
             if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
             if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
-            if (ls[i].Code.ToLower() == "cbfj_cb_rate") { ls[i].Value = (Convert.ToDecimal(ls[i].Value == "" ? "0" : ls[i].Value) / 100).ToString(); }//包装类别
+            if (ls[i].Code.ToLower() == "cbfj_cb_rate") { ls[i].Value = (Convert.ToDecimal(ls[i].Value == "" ? "0" : ls[i].Value) / 100).ToString(); }//包装成本比列
 
             if (ls[i].Value == "")
             {
