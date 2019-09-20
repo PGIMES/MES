@@ -614,7 +614,13 @@
         //}
 
         function clearNoNum_dev_textbox_int(obj){
-            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/[^1-9]/g,'')); //清除"数字"和"."以外的字符
+            obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/[^0-9]/g,'')); //清除"数字"和"."以外的字符
+
+            if(obj.GetValue() !=""){//以上已经过滤，此处控制的是首位不能为类似于 01、02的金额 
+                if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0'){ 
+                    obj.SetValue(parseInt(obj.GetValue()));     
+                } 
+            }
         }
 
         function clearNoNum_dev_textbox(obj){
@@ -626,8 +632,13 @@
             obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/\.{2,}/g,".")); //只保留第一个, 清除多余的
             obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(".","$#$").replace(/\./g,"").replace("$#$","."));
             obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')); //只能输入两个小数
-            if((obj.GetValue()==null?"":obj.GetValue()).indexOf(".")< 0 && obj.GetValue() !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-                if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0' && (obj.GetValue()==null?"":obj.GetValue()).length == 2){ 
+            //if((obj.GetValue()==null?"":obj.GetValue()).indexOf(".")< 0 && obj.GetValue() !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+            //    if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0' && (obj.GetValue()==null?"":obj.GetValue()).length == 2){ 
+            //        obj.SetValue(parseFloat(obj.GetValue()));     
+            //    } 
+            //}
+            if(obj.GetValue() !=""){//以上已经过滤，此处控制的是首位不能为类似于 01、02的金额 
+                if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0'){ 
                     obj.SetValue(parseFloat(obj.GetValue()));     
                 } 
             }
