@@ -424,9 +424,11 @@
             var zj_value_sum=0; 
             if($("[id$=gv] input[id*=sl]").length>0){
                 $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                    var zj = eval('zj' + index);var bclb = eval('bclb' + index);                	
-                    var zj_value=Number($.trim(zj.GetText()) == "" ? 0 : $.trim(zj.GetText()));//总价=(单价*数量)                    
-                    zj_value_sum=zj_value_sum+Number(zj_value);//合计总价     
+                    var zj = eval('zj' + index);var bclb = eval('bclb' + index);           
+                    if (bclb.GetText()=="E") {
+                        var zj_value=Number($.trim(zj.GetText()) == "" ? 0 : $.trim(zj.GetText()));//总价=(单价*数量)                    
+                        zj_value_sum=zj_value_sum+Number(zj_value);//合计总价     
+                    }                    
                 });
             }
             var cb_t_total=zj_value_sum.toFixed(2);
