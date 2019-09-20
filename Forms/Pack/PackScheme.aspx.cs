@@ -853,11 +853,11 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         string applyid = ApplyId.Text;
         string lspart = part.Text;
-        string lsdomain = domain.Text;
+        string lsver = ver.Text;
         string lstypeno = typeno.Value == null ? "" : typeno.Value.ToString();
-        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
+        lstypeno = lsver == "A0" ? "新增" : lstypeno;//新增，保存的时候，一直都是enabled,所以取不到值.
 
-        return bflag;
+        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
@@ -1087,7 +1087,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             bflag = true;
 
             var titletype = lstypeno == "新增" ? "包装方案申请" : "包装方案修改";
-            string title = titletype + "[" + this.m_sid + "][" + lspart + "][" + lsdomain + "]";
+            string title = titletype + "[" + this.m_sid + "][" + lspart + "][" + lsver + "]";
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
