@@ -618,10 +618,12 @@
         function clearNoNum_dev_textbox_int(obj){
             obj.SetValue((obj.GetValue()==null?"":obj.GetValue()).replace(/[^0-9]/g,'')); //清除"数字"和"."以外的字符
 
-            if(obj.GetValue() !=""){//以上已经过滤，此处控制的是首位不能为类似于 01、02的金额 
+            if((obj.GetValue()==null?"":obj.GetValue()) !=""){//以上已经过滤，此处控制的是首位不能为类似于 01、02的金额 
                 if((obj.GetValue()==null?"":obj.GetValue()).substr(0,1) == '0'){ 
                     obj.SetValue(parseInt(obj.GetValue()));     
                 } 
+            }else {
+                obj.SetValue(parseInt("0"));
             }
         }
 
@@ -696,12 +698,18 @@
                 }
                 if($("#ljXX input[id*='gdsl_cp']").val()==""){
                     msg+="【工单数量(成品)】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='gdsl_cp']").val())<=0){
+                    msg+="【工单数量(成品)】不可小于等于0.<br />";
                 }
                 if($("#ljXX input[id*='gdsl_bcp']").val()==""){
                     msg+="【工单数量(半成品)】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='gdsl_bcp']").val())<=0){
+                    msg+="【工单数量(半成品)】不可小于等于0.<br />";
                 }
                 if($("#ljXX input[id*='klgx']").val()==""){
                     msg+="【扣料工序】不可为空.<br />";
+                }else if(Number($("#ljXX input[id*='klgx']").val())<=0){
+                    msg+="【扣料工序】不可小于等于0.<br />";
                 }
 
 
@@ -716,15 +724,23 @@
                 }
                 if($("#zxXX input[id*='bzx_sl_c']").val()==""){
                     msg+="【数量/层】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_sl_c']").val())<=0){
+                    msg+="【数量/层】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_cs_x']").val()==""){
                     msg+="【层数/箱】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_cs_x']").val())<=0){
+                    msg+="【层数/箱】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_xs_c']").val()==""){
                     msg+="【箱数/层】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_xs_c']").val())<=0){
+                    msg+="【箱数/层)】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_c_t']").val()==""){
                     msg+="【层/托】不可为空.<br />";
+                }else if(Number($("#zxXX input[id*='bzx_c_t']").val())<=0){
+                    msg+="【托尺寸(L)】不可小于等于0.<br />";
                 }
                 if($("#zxXX input[id*='bzx_xs_t']").val()==""){
                     msg+="【箱数/托】不可为空.<br />";
@@ -769,16 +785,16 @@
                         msg+="【包装材料明细】格式必须正确.<br />";
                     } else {
                         $("[id$=gv] tr[class*=DataRow]").each(function (index, item) {     
-                            //var bclb=eval('bclb' + index);
-                            //var sl=eval('sl' + index);
+                            var bclb=eval('bclb' + index);
+                            var sl=eval('sl' + index);
 
-                            //if(bclb.GetText()==""){
-                            //    msg+="【包装材料明细】的【包材类别】不可为空.<br />";
-                            //}
+                            if(bclb.GetText()==""){
+                                msg+="【包装材料明细】的【包材类别】不可为空.<br />";
+                            }
 
-                            //if(Number($.trim(sl.GetText()) == "" ? 0 : $.trim(sl.GetText()))<=0){
-                            //    msg+="【包装材料明细】的【数量】必须是正的两位小数.<br />";
-                            //}
+                            if(Number(sl.GetText())<=0){
+                                msg+="【包装材料明细】的【数量】不可小于等于0.<br />";
+                            }
                         });
                     }
                 }

@@ -853,8 +853,8 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         string applyid = ApplyId.Text;
         string lspart = part.Text;
         string lsdomain = domain.SelectedValue;
-        string lstypeno = typeno.Value.ToString();
-        string lsbzlb = bzlb.Value.ToString();
+        string lstypeno = typeno.Value == null ? "" : typeno.Value.ToString();
+        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
@@ -862,7 +862,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         if (this.m_sid == "")
         {
             //没有单号，自动生成
-            string lsid = "WLBZFA" + System.DateTime.Now.ToString("YYMMDD");
+            string lsid = "WLBZFA" + System.DateTime.Now.ToString("yyMMdd");
             this.m_sid = Pgi.Auto.Public.GetNo("WLBZFA", lsid, 0, 4);
 
             for (int i = 0; i < ls.Count; i++)
@@ -883,6 +883,17 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             if (ls[i].Code == "domain") { ls[i].Value = lsdomain; }//申请工厂
             if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
             if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
+
+            //if (ls[i].Value=="")
+            //{
+            //    if (ls[i].Code.ToLower() == "ljcc_l" || ls[i].Code.ToLower() == "ljcc_w" || ls[i].Code.ToLower() == "ljcc_h" 
+            //        || ls[i].Code.ToLower() == "gdsl_cp" || ls[i].Code.ToLower() == "gdsl_bcp" || ls[i].Code.ToLower() == "klgx"
+            //        || ls[i].Code.ToLower() == "bzx_sl_c" || ls[i].Code.ToLower() == "bzx_cs_x" || ls[i].Code.ToLower() == "bzx_sl_x")
+            //    {
+
+            //    }
+            //}
+
         }
 
         //主管
