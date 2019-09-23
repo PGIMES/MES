@@ -88,44 +88,34 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                 //修改申请
                 if (Request.QueryString["formno"] != null && state == "edit")
                 {
-                    ////----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
+                    //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
+                    string domain_edit = "";
+                    if (Request.QueryString["domain_code"].ToString() == "200") { domain_edit = "昆山工厂"; }
+                    if (Request.QueryString["domain_code"].ToString() == "100") { domain_edit = "上海工厂"; }
 
-                    //string re_sql = @"select top 1 a.InstanceID,b.createbyid,b.createbyname 
-                    //                from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID='ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0,1))  a
-                    //                    inner join PGI_GYLX_Main_Form b on a.InstanceID=b.formno 
-                    //                 where b.projectno='" + Request.QueryString["pgi_no"] + "' and b.pgi_no_t='" + Request.QueryString["pgi_no_t"] + "'";
-                    //DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
+                    string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + Request.QueryString["part"] + "' and domain='" + domain_edit + "'";
+                    DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
-                    //if (re_dt.Rows.Count > 0)
-                    //{
-                    //    Pgi.Auto.Public.MsgBox(this, "alert", Request.QueryString["pgi_no"] + "(" + Request.QueryString["pgi_no_t"]
-                    //        + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:"
-                    //        + re_dt.Rows[0]["createbyid"].ToString() + "-" + re_dt.Rows[0]["createbyname"].ToString() + ")!");
-                    //}
-                    //else
-                    //{
-                    //    string sql_head = @"select a.id, a.FormNo, a.projectno,d.pt_desc1 pn,d.pt_desc2 pn_desc, a.domain, a.typeno, a.state
-                    //                        , a.containgp, nchar(ascii(isnull(ver,'A'))+1) ver, a.pgi_no_t
-                    //                        , a.CreateById, a.CreateByName, a.CreateByDept, a.CreateDate, a.ModifyGP 
-                    //                        ,c.product_user,c.zl_user,c.yz_user,c.bz_user 
-                    //                from PGI_GYLX_Main a 
-                    //                    left join form3_Sale_Product_MainTable c on left(a.projectno,5)=c.pgino 
-                    //                    left join qad_pt_mstr d on a.projectno=d.pt_part and a.domain=d.pt_domain
-                    //                where formno='" + Request.QueryString["formno"] + "'";
-                    //    DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
+                    if (re_dt.Rows.Count > 0)
+                    {
+                        Pgi.Auto.Public.MsgBox(this, "alert", Request.QueryString["part"] + "(" + domain_edit
+                            + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() + ",申请人:"
+                            + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + ")!");
+                    }
+                    else
+                    {
+                        string sql_head = @"exec  '" + Request.QueryString["formno"] + "'";
+                        DataTable ldt = DbHelperSQL.Query(sql_head).Tables[0];
 
-                    //    SetControlValue("PGI_GYLX_Main_Form", "HEAD_NEW_3", this.Page, ldt.Rows[0], "ctl00$MainContent$");
-                    //    txt_domain.Text = ldt.Rows[0]["domain"].ToString(); txt_pn.Text = ldt.Rows[0]["pn"].ToString();
+                        SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                        FormNo.Text = "";
 
-
-                    //    ((TextBox)this.FindControl("ctl00$MainContent$formno")).Text = "";
-
-                    //    lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
-                    //            , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver
-                    //            , '" + ldt.Rows[0]["pn"].ToString() + @"' pn, isnull(IsXh_op,'') IsXh_op,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
-                    //       from PGI_GYLX_Dtl a 
-                    //       where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
-                    //}
+                        lssql = @"select null id, '' GYGSNo, typeno, pgi_no, pgi_no_t, op, op_desc, op_remark, gzzx, gzzx_desc, IsBg, JgNum, JgSec, WaitSec, ZjSecc, JtNum, TjOpSec, JSec, JHour
+                                , col1, col2, EquipmentRate, col3, col4, col5, col6, col7, weights, acupoints, capacity, UpdateById, UpdateByName, UpdateDate, domain, nchar(ascii(isnull(ver,'A'))+1) ver
+                                , '" + ldt.Rows[0]["pn"].ToString() + @"' pn, isnull(IsXh_op,'') IsXh_op,ROW_NUMBER() OVER(ORDER BY UpdateDate) numid
+                           from PGI_GYLX_Dtl a 
+                           where GYGSNo='" + Request.QueryString["formno"] + "' and pgi_no='" + Request.QueryString["pgi_no"] + "'  order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)";
+                    }
 
                 }
                 else//新增申请
@@ -551,21 +541,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     public void setread(int i)
     {
-        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
-        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
-
-        //((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
-        //((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
-
-        //((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-        //((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-
-        //applytype.CssClass = "lineread";
-        //applytype.Enabled = false;
-
-        //modifyremark.ReadOnly = true;
-
         bzlb.Enabled = false;//包装类别
         ljcc_l.Enabled = false; ljcc_w.Enabled = false; ljcc_h.Enabled = false;
         gdsl_cp.Enabled = false; gdsl_bcp.Enabled = false; klgx.Enabled = false;
