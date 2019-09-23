@@ -867,6 +867,12 @@
         .dxeButtonDisabled {
             display: none;
         }
+        .i_hidden{
+            display:none;
+        }
+         .i_show{
+            display:inline-block;
+        }   
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -1000,6 +1006,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(W)</td>
@@ -1012,6 +1019,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>零件尺寸(H)</td>
@@ -1024,6 +1032,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                             </tr>
@@ -1052,6 +1061,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
 
                                 </td>
@@ -1065,6 +1075,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>扣料工序</td>
@@ -1077,6 +1088,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
 
                                 </td>
@@ -1128,6 +1140,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  ValueChanged="function(s, e) {RefreshMain();}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>层数/箱</td>
@@ -1140,6 +1153,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                             </tr>
@@ -1168,6 +1182,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>层/托</td>
@@ -1180,6 +1195,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" ValueChanged="function(s, e) {RefreshMain();}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">&nbsp;</font>箱数/托<br />(箱数/层*层/托)</td>
@@ -1202,6 +1218,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>静载层数<br />(<font color="red">仓储堆码层数</font>)</td>
@@ -1214,6 +1231,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                             </tr>
@@ -1242,6 +1260,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"   />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>托尺寸(W)</td>
@@ -1254,6 +1273,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}" />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">*</font>托尺寸(H)</td>
@@ -1266,6 +1286,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                             </tr>
@@ -1298,6 +1319,7 @@
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
+                                        <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
                                 <td><font color="red">&nbsp;</font>销售价格</td>
