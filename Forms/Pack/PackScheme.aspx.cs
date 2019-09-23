@@ -178,6 +178,11 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                         if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_rate"].ToString()) == 0) { cbfx_cb_rate.Text = ""; }
                     }
 
+                    if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_rate"].ToString()) != 0) 
+                    {
+                        cbfx_cb_rate.Text = (Convert.ToSingle(ldt.Rows[0]["cbfx_cb_rate"].ToString()) * 100).ToString() + "%";
+                    }
+
                     if (ldt.Rows[0]["files_part"].ToString() != "")
                     {
                         this.ip_filelist_db.Value = ldt.Rows[0]["files_part"].ToString();
