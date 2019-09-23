@@ -573,6 +573,7 @@
                                         <li><a href="/Forms/MaterialBase/WuLiao_Report_Query.aspx" target="_blank">生产性物料查询</a></li>
 										<li><a href="/Forms/PgiOp/GYLX_Report_Query.aspx" target="_blank">工艺路线查询</a></li>
                                         <li><a href="/Forms/Bom/bom_query.aspx" target="_blank">BOM查询</a></li>
+                                        <li><a href="/Forms/Pack/Pack_Report_Query.aspx" target="_blank">包装方案查询</a></li>
                                         <li><a href="/Forms/PgiOp/Rpt_GYBom_Query.aspx" target="_blank">物料.工艺.BOM流程状态查询</a></li>
                                     </ul>
                                 </div>
