@@ -69,8 +69,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         if (!IsPostBack)
         {
             DataTable ldt_detail = null;
-            string lssql = @"select a.*,ROW_NUMBER() OVER (ORDER BY a.id) numid 
-                            from [dbo].[PGI_PackScheme_Dtl_Form] a";
+            string lssql = @"select a.* from [dbo].[PGI_PackScheme_Dtl_Form] a";
 
             if (this.m_sid == "")
             {
@@ -178,12 +177,21 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                         if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_t_total"].ToString()) == 0) { cbfx_cb_t_total.Text = ""; }
                         if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_rate"].ToString()) == 0) { cbfx_cb_rate.Text = ""; }
                     }
-                   
 
                     if (ldt.Rows[0]["files_part"].ToString() != "")
                     {
                         this.ip_filelist_db.Value = ldt.Rows[0]["files_part"].ToString();
                         bindtab();
+                    }
+                    if (ldt.Rows[0]["files_bzx_nb"].ToString() != "")
+                    {
+                        this.ip_filelist_db_2.Value = ldt.Rows[0]["files_bzx_nb"].ToString();
+                        bindtab_2();
+                    }
+                    if (ldt.Rows[0]["files_bzx_wg"].ToString() != "")
+                    {
+                        this.ip_filelist_db_3.Value = ldt.Rows[0]["files_bzx_wg"].ToString();
+                        bindtab_3();
                     }
                 }
                 else
@@ -191,10 +199,14 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                //lssql += " where GYGSNo='" + this.m_sid + "' order by a.typeno, pgi_no, pgi_no_t,cast(right(op,len(op)-2) as int)"; //order by a.typeno,op
+                lssql += " where PackNo='" + this.m_sid + "' order by a.numid"; 
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             bind_grid(ldt_detail);
+        }
+        else
+        {
+            bindtab(); bindtab_2(); bindtab_3();
         }
 
         if (ver.Text == "A0" || ver.Text == "")
@@ -256,12 +268,13 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
 
+    #region 零件图片
     void bindtab()
     {
         bool is_del = true;
         DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('"
                                             + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='"
-                                            + this.m_sid + "' and stepname='包装工程师'").Tables[0];
+                                            + this.m_sid + "' and stepname='包装工程师申请'").Tables[0];
 
         if (ldt_flow.Rows.Count == 0)
         {
@@ -271,8 +284,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         {
             is_del = false;
         }
-
-        #region 零件图片
 
         tab1.Rows.Clear();
         string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
@@ -287,7 +298,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             hl.Target = "_blank";
 
             Label lb = new Label();
-            lb.Text = ls_files_oth[2].ToString();          
+            lb.Text = ls_files_oth[2].ToString();
 
             TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
             tempRow.Cells.Add(td1);
@@ -298,24 +309,41 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             if (is_del)
             {
                 LinkButton Btn = new LinkButton();
-                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+                Btn.Text = "删除"; Btn.ID = "btn_lj_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
 
                 TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
                 tempRow.Cells.Add(td3);
             }
             tab1.Rows.Add(tempRow);
         }
+    }
 
-        #endregion
+    #endregion
 
-        #region 包装箱内部
+    #region 包装箱内部
+
+    void bindtab_2()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('"
+                                            + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='"
+                                            + this.m_sid + "' and stepname='包装工程师申请'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
 
         tab1_2.Rows.Clear();
         string[] ls_files_2 = this.ip_filelist_db_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < ls_files_2.Length; i++)
         {
             TableRow tempRow = new TableRow();
-            string[] ls_files_oth = ls_files[i].Split(',');
+            string[] ls_files_oth = ls_files_2[i].Split(',');
 
             HyperLink hl = new HyperLink();
             hl.Text = ls_files_oth[0].ToString();
@@ -334,24 +362,41 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             if (is_del)
             {
                 LinkButton Btn = new LinkButton();
-                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_2_Click);
+                Btn.Text = "删除"; Btn.ID = "btn_nb_" + i.ToString(); Btn.Click += new EventHandler(Btn_2_Click);
 
                 TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
                 tempRow.Cells.Add(td3);
             }
             tab1_2.Rows.Add(tempRow);
         }
+    }
 
-        #endregion
+    #endregion
 
-        #region 包装箱外观
+    #region 包装箱外观
+
+    void bindtab_3()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query("select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] where cast(stepid as varchar(36))=cast('"
+                                            + StepID + "' as varchar(36)) and cast(flowid as varchar(36))=cast('" + FlowID + "' as varchar(36)) and instanceid='"
+                                            + this.m_sid + "' and stepname='包装工程师申请'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
 
         tab1_3.Rows.Clear();
         string[] ls_files_3 = this.ip_filelist_db_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < ls_files_3.Length; i++)
         {
             TableRow tempRow = new TableRow();
-            string[] ls_files_oth = ls_files[i].Split(',');
+            string[] ls_files_oth = ls_files_3[i].Split(',');
 
             HyperLink hl = new HyperLink();
             hl.Text = ls_files_oth[0].ToString();
@@ -370,22 +415,22 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             if (is_del)
             {
                 LinkButton Btn = new LinkButton();
-                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_3_Click);
+                Btn.Text = "删除"; Btn.ID = "btn_wg_" + i.ToString(); Btn.Click += new EventHandler(Btn_3_Click);
 
                 TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
                 tempRow.Cells.Add(td3);
             }
             tab1_3.Rows.Add(tempRow);
         }
-
-        #endregion
     }
+
+    #endregion
 
     void Btn_Click(object sender, EventArgs e)
     {
         //var btn = sender as Button;
         var btn = sender as LinkButton;
-        int index = Convert.ToInt32(btn.ID.Substring(4));
+        int index = Convert.ToInt32(btn.ID.Substring(7));
 
         string filedb = ip_filelist_db.Value;
         string[] ls_files = filedb.Split(';');
@@ -406,7 +451,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     {
         //var btn = sender as Button;
         var btn = sender as LinkButton;
-        int index = Convert.ToInt32(btn.ID.Substring(4));
+        int index = Convert.ToInt32(btn.ID.Substring(7));
 
         string filedb = ip_filelist_db_2.Value;
         string[] ls_files = filedb.Split(';');
@@ -420,14 +465,14 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         ip_filelist_db_2.Value = files;
 
-        bindtab();
+        bindtab_2();
     }
 
     void Btn_3_Click(object sender, EventArgs e)
     {
         //var btn = sender as Button;
         var btn = sender as LinkButton;
-        int index = Convert.ToInt32(btn.ID.Substring(4));
+        int index = Convert.ToInt32(btn.ID.Substring(7));
 
         string filedb = ip_filelist_db_3.Value;
         string[] ls_files = filedb.Split(';');
@@ -441,7 +486,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         ip_filelist_db_3.Value = files;
 
-        bindtab();
+        bindtab_3();
     }
 
     public void bind_grid(DataTable dt)
@@ -1089,6 +1134,18 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         lcfiles_bzx_wg.Key = "";
         lcfiles_bzx_wg.Value = files_bzx_wg;
         ls.Add(lcfiles_bzx_wg);
+
+        //bom 修改
+        string IsModifyByBom = "N";
+        if (lstypeno == "包装明细修改")
+        {
+            IsModifyByBom = "Y";
+        }
+        Pgi.Auto.Common lcIsModifyByBom = new Pgi.Auto.Common();
+        lcIsModifyByBom.Code = "IsModifyByBom";
+        lcIsModifyByBom.Key = "";
+        lcIsModifyByBom.Value = IsModifyByBom;
+        ls.Add(lcIsModifyByBom);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
