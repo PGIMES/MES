@@ -1356,7 +1356,7 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
                         <table style="width: 100%; font-size: 12px;">
                             <tr>
-                                <td style="width:100px;"><font color="red">*</font>零件图片</td>
+                                <td style="width:100px;"><font color="red">*</font>零件图片</td><%--border-bottom-style:solid; border-bottom-width:1px;--%>
                                 <td colspan="5">
                                      <dx:ASPxUploadControl ID="uploadcontrol" runat="server" Width="500px" BrowseButton-Text="浏览" Visible="true" ClientInstanceName="UploadControl"
                                         ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced" AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
