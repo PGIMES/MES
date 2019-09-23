@@ -19,7 +19,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     public string DisplayModel;
     public string fieldStatus;
 
-    public string SQ_StepID = "F882B5B3-78BE-4804-BB42-72C0D6B680AB";
+    public string SQ_StepID = "F7AEA12F-90B3-4C99-997C-FB06333F1312";
     public string is_hr_zy = "";
 
     string FlowID = "A";
@@ -140,7 +140,45 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                 DataTable ldt = DbHelperSQL.Query("select * from PGI_PackScheme_Main_Form where formno='" + this.m_sid + "'").Tables[0];
                 if (ldt.Rows.Count > 0)
                 {
-                    Pgi.Auto.Control.SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+
+                    if (StepID.ToUpper() == SQ_StepID || StepID == "A")//申请步骤是，为0的字段置空
+                    {
+                        if (Convert.ToDecimal(ldt.Rows[0]["ljcc_l"].ToString()) == 0) { ljcc_l.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["ljcc_w"].ToString()) == 0) { ljcc_w.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["ljcc_h"].ToString()) == 0) { ljcc_h.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["ljzl"].ToString()) == 0) { ljzl.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["nyl"].ToString()) == 0) { nyl.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["nzj"].ToString()) == 0) { nzj.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["gdsl_cp"].ToString()) == 0) { gdsl_cp.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["gdsl_bcp"].ToString()) == 0) { gdsl_bcp.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["klgx"].ToString()) == 0) { klgx.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_w"].ToString()) == 0) { bzx_w.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_sl_c"].ToString()) == 0) { bzx_sl_c.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_cs_x"].ToString()) == 0) { bzx_cs_x.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_sl_x"].ToString()) == 0) { bzx_sl_x.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_jz_x"].ToString()) == 0) { bzx_jz_x.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_mz_x"].ToString()) == 0) { bzx_mz_x.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_xs_c"].ToString()) == 0) { bzx_xs_c.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_c_t"].ToString()) == 0) { bzx_c_t.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_xs_t"].ToString()) == 0) { bzx_xs_t.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_sl_t"].ToString()) == 0) { bzx_sl_t.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_dzcs"].ToString()) == 0) { bzx_dzcs.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_jzcs"].ToString()) == 0) { bzx_jzcs.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_jz_t"].ToString()) == 0) { bzx_jz_t.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_mz_t"].ToString()) == 0) { bzx_mz_t.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_t_h"].ToString()) == 0) { bzx_t_h.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_ljfyzl"].ToString()) == 0) { bzx_ljfyzl.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_t_l"].ToString()) == 0) { bzx_t_l.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["bzx_t_w"].ToString()) == 0) { bzx_t_w.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_sj_j"].ToString()) == 0) { cbfx_sj_j.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_mb_j"].ToString()) == 0) { cbfx_mb_j.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_xs_price"].ToString()) == 0) { cbfx_xs_price.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_bc_w_total"].ToString()) == 0) { cbfx_bc_w_total.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_t_total"].ToString()) == 0) { cbfx_cb_t_total.Text = ""; }
+                        if (Convert.ToDecimal(ldt.Rows[0]["cbfx_cb_rate"].ToString()) == 0) { cbfx_cb_rate.Text = ""; }
+                    }
+                   
 
                     if (ldt.Rows[0]["files_part"].ToString() != "")
                     {
@@ -157,6 +195,12 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             }
             ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             bind_grid(ldt_detail);
+        }
+
+        if (ver.Text == "A0" || ver.Text == "")
+        {
+            typeno.Value = "新增";
+            typeno.Enabled = false;
         }
 
         // //if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit")
@@ -852,11 +896,10 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         List<Pgi.Auto.Common> ls = GetControlValue("PGI_PackScheme_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
         string applyid = ApplyId.Text;
+        string applyname = ApplyName.Text;
         string lspart = part.Text;
         string lsver = ver.Text;
-        string lstypeno = typeno.Value == null ? "" : typeno.Value.ToString();
-        lstypeno = lsver == "A0" ? "新增" : lstypeno;//新增，保存的时候，一直都是enabled,所以取不到值.
-
+        string lstypeno = typeno.Value.ToString();//typeno.Value == null ? "" : typeno.Value.ToString();
         string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
@@ -885,7 +928,19 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         {
             if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
             if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
-            if (ls[i].Code.ToLower() == "cbfj_cb_rate") { ls[i].Value = (Convert.ToDecimal(ls[i].Value == "" ? "0" : ls[i].Value) / 100).ToString(); }//包装成本比列
+            if (ls[i].Code.ToLower() == "cbfx_cb_rate")
+            {//包装成本比列
+
+                if (ls[i].Value == "")
+                {
+                    ls[i].Value = (Convert.ToDecimal("0") / 100).ToString();
+                }
+                else
+                {
+                    ls[i].Value = (Convert.ToDecimal(ls[i].Value.Left(ls[i].Value.Length - 1)) / 100).ToString();
+                }
+                
+            }
 
             if (ls[i].Value == "")
             {
@@ -898,9 +953,9 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                     || ls[i].Code.ToLower() == "bzx_c_t" || ls[i].Code.ToLower() == "bzx_xs_t" || ls[i].Code.ToLower() == "bzx_sl_t"
                     || ls[i].Code.ToLower() == "bzx_dzcs" || ls[i].Code.ToLower() == "bzx_jzcs" || ls[i].Code.ToLower() == "bzx_jz_t"
                     || ls[i].Code.ToLower() == "bzx_mz_t" || ls[i].Code.ToLower() == "bzx_ljfyzl" || ls[i].Code.ToLower() == "bzx_t_l"
-                    || ls[i].Code.ToLower() == "bzx_t_w" || ls[i].Code.ToLower() == "bzx_t_h" || ls[i].Code.ToLower() == "cbfj_sj_j"
-                    || ls[i].Code.ToLower() == "cbfj_mb_j" || ls[i].Code.ToLower() == "cbfj_xs_price" || ls[i].Code.ToLower() == "cbfj_bc_w_total"
-                    || ls[i].Code.ToLower() == "cbfj_cb_t_total")
+                    || ls[i].Code.ToLower() == "bzx_t_w" || ls[i].Code.ToLower() == "bzx_t_h" || ls[i].Code.ToLower() == "cbfx_sj_j"
+                    || ls[i].Code.ToLower() == "cbfx_mb_j" || ls[i].Code.ToLower() == "cbfx_xs_price" || ls[i].Code.ToLower() == "cbfx_bc_w_total"
+                    || ls[i].Code.ToLower() == "cbfx_cb_t_total")
                 {
                     ls[i].Value = "0";
                 }
@@ -1087,7 +1142,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             bflag = true;
 
             var titletype = lstypeno == "新增" ? "包装方案申请" : "包装方案修改";
-            string title = titletype + "[" + this.m_sid + "][" + lspart + "][" + lsver + "]";
+            string title = titletype + "[" + this.m_sid + "][" + applyname + "][" + lspart + "][" + lsver + "]";
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
@@ -1276,5 +1331,90 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
         return ls;
     }
+
+    #endregion
+
+    #region 将TableRow栏位值赋值给页面中的控件
+
+    //把表中值初始化给控件 added by fish:
+    /// <summary>
+    /// 将TableRow栏位值赋值给页面中的控件
+    /// </summary>
+    /// <param name="lsform_type">页面识别参数</param>
+    /// <param name="lsform_div">div显示范围识别参数</param>
+    /// <param name="p">page</param>
+    /// <param name="dr">a DataRow</param>
+    public static void SetControlValue(string lsform_type, string lsform_div, System.Web.UI.Page p, DataRow dr, string lscontrolformat = "")
+    {
+        string lswhere = "";
+        if (lsform_type != "")
+        {
+            lswhere += " and form_type=@form_type";
+        }
+        if (lsform_div != "")
+        {
+            lswhere += " and form_div=@form_div";
+        }
+        string lsconn = ConfigurationSettings.AppSettings["ConnectionMES"];
+        DataTable ldt = Pgi.Auto.SQLHelper.ExecuteDataSet(lsconn, CommandType.Text, "select * from auto_form where 1=1 and isnull(control_id,'')<>''" + lswhere + "",
+            new SqlParameter[]{
+                                    new SqlParameter("@form_type",lsform_type)
+                                    ,new SqlParameter("@form_div",lsform_div)}).Tables[0];
+
+
+        foreach (DataRow row in ldt.Rows)
+        {
+            if (p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower()) != null)
+            {
+                var columnValue = dr[row["control_id"].ToString().ToLower()].ToString();
+                if (row["control_type"].ToString() == "TEXTBOX")
+                {
+                    ((TextBox)p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower())).Text = columnValue;
+                } else if (row["control_type"].ToString() == "ASPXTEXTBOX")
+                {
+                    ((ASPxTextBox)p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower())).Text = columnValue;
+                }
+                else if (row["control_type"].ToString() == "DROPDOWNLIST")
+                {
+                    var drop = (DropDownList)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (drop != null)
+                    {
+                        ListItem item = drop.Items.FindByValue(columnValue);
+                        if (item != null)
+                        {
+                            // drop.ClearSelection();
+                            //  item.Selected = true;
+                            drop.SelectedValue = columnValue;
+                        }
+                    }
+                }
+                else if (row["control_type"].ToString() == "ASPXCOMBOBOX")
+                {
+                    var drop = (DevExpress.Web.ASPxComboBox)p.FindControl(lscontrolformat + row["control_id"].ToString());
+                    if (drop != null)
+                    {
+
+                        drop.Value = columnValue;
+
+                    }
+                }
+                else if (row["control_type"].ToString() == "FILEUPLOAD")
+                {
+                    var upload = (FileUpload)p.FindControl(lscontrolformat + row["control_id"].ToString().ToLower());
+                    var link = (HyperLink)p.FindControl(lscontrolformat + "link_" + row["control_id"].ToString().ToLower());
+                    if (link != null && columnValue != "")
+                    {
+                        link.NavigateUrl = columnValue;
+                        var name = columnValue.Substring(columnValue.LastIndexOf(@"\") + 1);
+                        link.Text = name;
+                        link.Target = "_blank";
+                    }
+                }
+
+            }
+        }
+        // return ls;
+    }
+
     #endregion
 }

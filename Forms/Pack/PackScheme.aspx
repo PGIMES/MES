@@ -295,7 +295,6 @@
         function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price) 
         {            
             $("#ljXX input[id*='ver']").val('A0');
-            typeno_c.SetValue("新增");typeno_c.SetEnabled(false);
             $("#ljXX input[id*='klgx']").val('600');
 
             $("#ljXX [id*='domain']").val(domain);
@@ -306,7 +305,7 @@
             $("#ljXX input[id*='custpart']").val(custpart);
             $("#ljXX input[id*='ljzl']").val(ljzl);
             $("#ljXX input[id*='nyl']").val(nyl);
-            $("#cbXX input[id*='cbfj_xs_price']").val(xs_price);
+            $("#cbXX input[id*='cbfx_xs_price']").val(xs_price);
 
             RefreshMain();
         }
@@ -413,12 +412,12 @@
             var jz_t=Number($.trim($("#zxXX input[id*='bzx_jz_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_jz_t']").val()));//净重/托(KG)=(单件重量*数量/托)
             var sl_t=Number($.trim($("#zxXX input[id*='bzx_sl_t']").val()) == "" ? 0 : $.trim($("#zxXX input[id*='bzx_sl_t']").val())); //数量/托=(箱数/托*数量/箱)
 
-            var xs_price=Number($.trim($("#cbXX input[id*='cbfj_xs_price']").val()) == "" ? 0 : $.trim($("#cbXX input[id*='cbfj_xs_price']").val())); //销售价格 
+            var xs_price=Number($.trim($("#cbXX input[id*='cbfx_xs_price']").val()) == "" ? 0 : $.trim($("#cbXX input[id*='cbfx_xs_price']").val())); //销售价格 
 
             //包装材料总重
             var zz_value_sum=$("[id$=gv] tr[id*=DXFooterRow]").find("td:eq(12)").text();//包装材料总重
             var bc_w_total=(Number($.trim(zz_value_sum) == "" ? 0 : $.trim(zz_value_sum))).toFixed(2);
-            $("#cbXX input[id*='cbfj_bc_w_total']").val(bc_w_total);
+            $("#cbXX input[id*='cbfx_bc_w_total']").val(bc_w_total);
 
             //成本/托==包装明细总价,包材类别=E的总价  
             var zj_value_sum=0; 
@@ -432,7 +431,7 @@
                 });
             }
             var cb_t_total=zj_value_sum.toFixed(2);
-            $("#cbXX input[id*='cbfj_cb_t_total']").val(cb_t_total);
+            $("#cbXX input[id*='cbfx_cb_t_total']").val(cb_t_total);
             
             //毛重/托(KG)=(净重/托+包材总重)	
             var mz_t=(jz_t+Number(bc_w_total)).toFixed(2);
@@ -448,13 +447,13 @@
             var sj_j=0;
             if(sl_t!=0){sj_j=(Number(cb_t_total)/sl_t);}
             sj_j=sj_j.toFixed(2);
-            $("#cbXX input[id*='cbfj_sj_j']").val(sj_j);     
+            $("#cbXX input[id*='cbfx_sj_j']").val(sj_j);     
 
             //包装成本比例=(实际成本/销售价格)
             var cb_rate=0;
             if(xs_price!=0){cb_rate=(Number(sj_j)/xs_price*100);}
             cb_rate=(cb_rate.toFixed(2)).toString()+'%';
-            $("#cbXX input[id*='cbfj_cb_rate']").val(cb_rate); 
+            $("#cbXX input[id*='cbfx_cb_rate']").val(cb_rate); 
             
             //年总价(包装)=(实际成本/件*年用量))
             var nzj=(Number(sj_j)*nyl).toFixed(2);
@@ -771,9 +770,9 @@
                 }
 
                 
-                if($("#cbXX input[id*='cbfj_mb_j']").val()==""){
+                if($("#cbXX input[id*='cbfx_mb_j']").val()==""){
                     msg+="【目标成本/件】不可为空.<br />";
-                }else if(Number($("#cbXX input[id*='cbfj_mb_j']").val())<=0){
+                }else if(Number($("#cbXX input[id*='cbfx_mb_j']").val())<=0){
                     msg+="【目标成本/件】不可小于等于0.<br />";
                 }
 
@@ -807,8 +806,10 @@
                 return flag;
             }
 
-            if(!parent.checkSign()){
-                flag=false;return flag;
+            if(action=='submit'){
+                if(!parent.checkSign()){
+                    flag=false;return flag;
+                }
             }
 
             if(flag){
@@ -1285,15 +1286,15 @@
                             <tr>
                                 <td><font color="red">&nbsp;</font>实际成本/件<br />(成本/托除数量/托)</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_sj_j" runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                    <asp:TextBox ID="cbfx_sj_j" runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
                                 <td><font color="red">*</font>目标成本/件</td>
                                 <td>
-                                    <%--<asp:TextBox ID="cbfj_mb_j" runat="server" class="linewrite" Width="260px" />--%>
-                                    <%--<input id="cbfj_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
+                                    <%--<asp:TextBox ID="cbfx_mb_j" runat="server" class="linewrite" Width="260px" />--%>
+                                    <%--<input id="cbfx_mb_j" type="text" runat="server" class="linewrite" style="width:260px;" 
                                         onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
 
-                                    <dx:ASPxTextBox ID="cbfj_mb_j" runat="server" Width="260px"  Height="25px"
+                                    <dx:ASPxTextBox ID="cbfx_mb_j" runat="server" Width="260px"  Height="25px"
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
@@ -1301,21 +1302,21 @@
                                 </td>
                                 <td><font color="red">&nbsp;</font>销售价格</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_xs_price" runat="server" class="lineread" ReadOnly="True" Width="260px"/>
+                                    <asp:TextBox ID="cbfx_xs_price" runat="server" class="lineread" ReadOnly="True" Width="260px"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td><font color="red">&nbsp;</font>包装材料总重</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_bc_w_total" runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                    <asp:TextBox ID="cbfx_bc_w_total" runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>成本/托<br />(包装明细总价)</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_cb_t_total" runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                    <asp:TextBox ID="cbfx_cb_t_total" runat="server" class="lineread" ReadOnly="True" Width="260px" />
                                 </td>
                                 <td><font color="red">&nbsp;</font>包装成本比例<br />(实际成本/销售价格)</td>
                                 <td>
-                                    <asp:TextBox ID="cbfj_cb_rate" runat="server" class="lineread" ReadOnly="True" Width="260px"/>
+                                    <asp:TextBox ID="cbfx_cb_rate" runat="server" class="lineread" ReadOnly="True" Width="260px"/>
                                 </td>
                             </tr>
                         </table>
