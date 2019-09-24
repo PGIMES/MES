@@ -1000,7 +1000,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><font color="red">*</font>零件尺寸(L)</td>
+                                <td><font color="red">*</font>零件尺寸(L)mm</td>
                                 <td><%--限制文本框只能输入正数，小数--%>
                                     <%--<asp:TextBox ID="ljcc_l"  runat="server" class="linewrite" Width="260px"/>--%>
                                      <%--onkeyup="value=value.replace(/[^\d.]/g,'')" onafterpaste="value=value.replace(/[^\d.]/g,'')" onblur="value=value.replace(/[^\d.]/g,'')" --%>
@@ -1014,7 +1014,7 @@
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
-                                <td><font color="red">*</font>零件尺寸(W)</td>
+                                <td><font color="red">*</font>零件尺寸(W)mm</td>
                                 <td><%--限制文本框只能输入正数，小数--%>
                                    <%-- <asp:TextBox ID="ljcc_w" runat="server"  class="linewrite" Width="260px"></asp:TextBox>--%>
                                     <%--<input id="ljcc_w" type="text" runat="server" class="linewrite" style="width:260px;" 
@@ -1027,7 +1027,7 @@
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
-                                <td><font color="red">*</font>零件尺寸(H)</td>
+                                <td><font color="red">*</font>零件尺寸(H)mm</td>
                                 <td>
                                     <%--<asp:TextBox ID="ljcc_h" runat="server" class="linewrite" Width="260px"/>--%>
                                     <%--<input id="ljcc_h" type="text" runat="server" class="linewrite" style="width:260px;" 
@@ -1255,7 +1255,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><font color="red">*</font>托尺寸(L)</td>
+                                <td><font color="red">*</font>托尺寸(L)mm</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_l"  runat="server" class="linewrite" Width="260px" />--%>
                                     <%--<input id="bzx_t_l" type="text" runat="server" class="linewrite" style="width:260px;" 
@@ -1268,7 +1268,7 @@
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
-                                <td><font color="red">*</font>托尺寸(W)</td>
+                                <td><font color="red">*</font>托尺寸(W)mm</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_w" runat="server" class="linewrite" Width="260px" />--%>
                                     <%--<input id="bzx_t_w" type="text" runat="server" class="linewrite" style="width:260px;" 
@@ -1281,7 +1281,7 @@
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
                                     </dx:ASPxTextBox>
                                 </td>
-                                <td><font color="red">*</font>托尺寸(H)</td>
+                                <td><font color="red">*</font>托尺寸(H)mm</td>
                                 <td>
                                     <%--<asp:TextBox ID="bzx_t_h" runat="server" class="linewrite" Width="260px"/>--%>
                                     <%--<input id="bzx_t_h" type="text" runat="server" class="linewrite" style="width:260px;" 
