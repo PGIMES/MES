@@ -543,7 +543,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     {
         bzlb.Enabled = false;//包装类别
         ljcc_l.Enabled = false; ljcc_w.Enabled = false; ljcc_h.Enabled = false;
-        gdsl_cp.Enabled = false; gdsl_bcp.Enabled = false; klgx.Enabled = false;
+        gdsl_cp.Enabled = false; gdsl_bcp.Enabled = false; //klgx.Enabled = false;
         bzx_cc.CssClass = "lineread"; bzx_cc.ReadOnly = true;//箱尺寸(L*W*H)
         bzx_sl_c.Enabled = false; bzx_cs_x.Enabled = false;
         bzx_xs_c.Enabled = false; bzx_c_t.Enabled = false;

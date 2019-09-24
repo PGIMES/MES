@@ -21,7 +21,7 @@
                     <td align="center" colspan="2">
 
                         <asp:Label ID="lb_msg" runat="server" Text="" ForeColor="Red"></asp:Label>
-                        <asp:GridView ID="GridView1" Width="880px"
+                        <asp:GridView ID="GridView1" Width="930px"
                             AllowMultiColumnSorting="True" AllowPaging="True"
                             AllowSorting="True" AutoGenerateColumns="False"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
@@ -66,7 +66,10 @@
                                 </asp:BoundField>
                                 <asp:BoundField DataField="dj" HeaderText="销售价格" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
-                                </asp:BoundField>   
+                                </asp:BoundField> 
+                                <asp:BoundField DataField="op" HeaderText="扣料工序" ReadOnly="True">
+                                    <HeaderStyle Wrap="True" />
+                                </asp:BoundField>  
                                 <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
                                     ShowSelectButton="True" HeaderText="选择" />
                             </Columns>

@@ -68,10 +68,11 @@ public partial class select_pack_part : System.Web.UI.Page
         string ljzl = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
         string nyl = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
         string xs_price = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
+        string klgx = GridView1.SelectedRow.Cells[9].Text.Trim().Replace("&nbsp;", "");
 
         string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + site + "','"
            + ship + "','" + ad_name + "','" + custpart + "','" + ljzl + "','"
-           + nyl + "','" + xs_price + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+           + nyl + "','" + xs_price + "','" + klgx + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
 
         Response.Write(temp.Trim());
     }

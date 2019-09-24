@@ -290,17 +290,16 @@
             layer.open({
                 title:'零件选择',
                 type: 2,
-                area: ['900px', '500px'],
+                area: ['950px', '500px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
             }); 
         }
 
-        function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price) 
+        function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price,klgx) 
         {            
             $("#ljXX input[id*='ver']").val('A0');
-            $("#ljXX input[id*='klgx']").val('600');
 
             $("#ljXX [id*='domain']").val(domain);
             $("#ljXX input[id*='part']").val(part);
@@ -311,6 +310,7 @@
             $("#ljXX input[id*='ljzl']").val(ljzl);
             $("#ljXX input[id*='nyl']").val(nyl);
             $("#cbXX input[id*='cbfx_xs_price']").val(xs_price);
+            $("#ljXX input[id*='klgx']").val(klgx);
 
             RefreshMain();
         }
@@ -1089,12 +1089,14 @@
                                     <%--<input id="klgx" type="text" runat="server" class="linewrite" style="width:260px;" 
                                         onkeyup="value=value.replace(/[^1-9]/g,'')" onafterpaste="value=value.replace(/[^1-9]/g,'')" onblur="value=value.replace(/[^1-9]/g,'')" />--%>
 
-                                    <dx:ASPxTextBox ID="klgx" runat="server" Width="260px"  Height="25px"
+                                    <%--<dx:ASPxTextBox ID="klgx" runat="server" Width="260px"  Height="25px"
                                             BackColor="#FDF7D9" ForeColor="#31708f"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox_int(s);}" />
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
-                                    </dx:ASPxTextBox>
+                                    </dx:ASPxTextBox>--%>
+
+                                    <asp:TextBox ID="klgx" runat="server" class="lineread" ReadOnly="true" Width="260px"/>
 
                                 </td>
                             </tr>
