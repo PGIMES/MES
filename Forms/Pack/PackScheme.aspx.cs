@@ -252,8 +252,10 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         //    }
         //}
 
+
+
         Setbzlb();//绑定申请类别
-        Settypeno();//绑定包装类别
+        Settypeno(ver.Text);//绑定包装类别
         //Setfilestype();//绑定附件类别
 
         DisplayModel = Request.QueryString["display"] ?? "0";
@@ -651,13 +653,22 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     }
 
     //绑定申请类别
-    public void Settypeno()
+    public void Settypeno(string ver)
     {
         typeno.Columns.Clear();
-        string lssql = @"select [Code],[Name]
+        string lssql = "";
+        if (ver == "A0" || ver == "")
+        {
+            lssql = @"select [Code],[Name]
                         from (
 	                        select '新增' [Code],'新增' [Name],0 rownum
-	                        union 
+	                        ) a
+                        order by rownum";
+        }
+        else
+        {
+            lssql = @"select [Code],[Name]
+                        from (
 	                        select '零件信息修改' [Code],'零件信息修改' [Name],1 rownum
 	                        union 
 	                        select '装箱数据修改' [Code],'装箱数据修改' [Name],2 rownum
@@ -665,6 +676,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 	                        select '包装明细修改' [Code],'包装明细修改' [Name],3 rownum
 	                        ) a
                         order by rownum";
+        }
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
         typeno.ValueField = "Name";
         typeno.Columns.Add("Name", "描述", 80);
