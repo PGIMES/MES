@@ -17,6 +17,7 @@
             if (r != null) return unescape(r[2]); return null;
         }
         var stepid = getQueryString("stepid");
+        var state = getQueryString("state");
 
         $(document).ready(function () {
             $("#mestitle").html("【包装方案申请单】<a href='/userguide/TGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>");
@@ -71,6 +72,10 @@
             //$("#zxXX input[id*='bzx_c_t']").change(function(){
             //    RefreshMain();
             //});
+            if (state=='edit') {
+                RefreshMain();
+                RefreshRow();
+            }
         });
 
         //提出自定流程 JS 
