@@ -135,7 +135,9 @@
                             <dx:GridViewDataTextColumn Caption="发往工厂" FieldName="ship" Width="80px" VisibleIndex="2"/>
                             <dx:GridViewDataTextColumn Caption="单件重量" FieldName="ljzl" Width="80px" VisibleIndex="2"/>
                             <dx:GridViewDataTextColumn Caption="整托数量" FieldName="bzx_sl_t" Width="70px" VisibleIndex="3"/>
-                            <dx:GridViewDataTextColumn Caption="整托尺寸" FieldName="bzx_t_lwh" Width="160px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(L)" FieldName="bzx_t_l" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(W)" FieldName="bzx_t_w" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(H)" FieldName="bzx_t_h" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整托净重" FieldName="bzx_jz_t" Width="70px" VisibleIndex="5"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整托毛重" FieldName="bzx_mz_t" Width="70px" VisibleIndex="6"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整托成本" FieldName="cbfx_cb_t_total" Width="70px" VisibleIndex="7"></dx:GridViewDataTextColumn>

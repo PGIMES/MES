@@ -208,29 +208,10 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             typeno.Enabled = false;
         }
 
-        // //if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit")
-        //if ((StepID.ToUpper() != SQ_StepID && StepID != "A") || state == "edit" || (this.m_sid != "" && txt_CreateById.Value == "")) 
-        //{
-        //    ((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
-        //    ((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        //    ((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
-
-        //    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
-        //    ((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
-
-        //    ((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-
-        //    //20190320 add 注释 释放GP12可以修改
-        //    //if (((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).SelectedValue == "Y")
-        //    //{
-        //    //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = false;
-        //    //}
-        //    //else
-        //    //{
-        //    //    ((RadioButtonList)this.FindControl("ctl00$MainContent$containgp")).Enabled = true;
-        //    //}
-
-        //}
+        if (ver.Text != "A0" && ver.Text != "")
+        {
+            cbfx_mb_j.Enabled = false;//目标成本/件：升级版本时候就不可以更改了
+        }
 
         //if (StepID.ToUpper() != SQ_StepID && StepID != "A")
         //{

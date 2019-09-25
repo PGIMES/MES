@@ -75,6 +75,7 @@
             if (state=='edit') {
                 RefreshMain();
                 RefreshRow();
+                setReadOnly("");
             }
         });
 
@@ -511,6 +512,193 @@
             //询问框
             return confirm('确认要删除吗？');
         }
+
+        function typeno_change(s){
+            var typeno=s.GetValue()==null?"":s.GetValue();
+            setReadOnly(typeno);
+        }
+        function setReadOnly(typeno){
+            if (typeno=="零件信息修改") {
+                set_ljxx_write();set_zxXX_read();set_gv_read();
+
+            }else if (typeno=="装箱数据修改") {
+                set_ljxx_read(); set_zxXX_write();set_gv_read();
+            }else if (typeno=="包装明细修改") {
+                set_ljxx_read(); set_zxXX_read();set_gv_write();
+            }else {
+                set_ljxx_read(); set_zxXX_read();set_gv_read();
+            }
+        }
+
+        function set_ljxx_read(){
+            $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_l']").removeClass("dxeTextBox_form_input_write");  
+            $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_l']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+                
+            $("#ljXX table[id*='ljcc_w']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_w']").removeClass("dxeTextBox_form_input_write"); 
+            $("#ljXX table[id*='ljcc_w']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_w']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+                
+            $("#ljXX table[id*='ljcc_h']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_h']").removeClass("dxeTextBox_form_input_write"); 
+            $("#ljXX table[id*='ljcc_h']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_h']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+                
+            $("#ljXX table[id*='gdsl_cp']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='gdsl_cp']").removeClass("dxeTextBox_form_input_write"); 
+            $("#ljXX table[id*='gdsl_cp']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='gdsl_cp']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+                
+            $("#ljXX table[id*='gdsl_bcp']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='gdsl_bcp']").removeClass("dxeTextBox_form_input_write");
+            $("#ljXX table[id*='gdsl_bcp']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='gdsl_bcp']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+        }
+
+        function set_ljxx_write(){
+            $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_l']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_l']").addClass("dxeTextBox_form_input_write");
+
+            $("#ljXX table[id*='ljcc_w']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_w']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#ljXX table[id*='ljcc_w']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_w']").addClass("dxeTextBox_form_input_write");
+            
+            $("#ljXX table[id*='ljcc_h']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='ljcc_h']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#ljXX table[id*='ljcc_h']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='ljcc_h']").addClass("dxeTextBox_form_input_write");
+            
+            $("#ljXX table[id*='gdsl_cp']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='gdsl_cp']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#ljXX table[id*='gdsl_cp']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='gdsl_cp']").addClass("dxeTextBox_form_input_write");
+            
+            $("#ljXX table[id*='gdsl_bcp']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='gdsl_bcp']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#ljXX table[id*='gdsl_bcp']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='gdsl_bcp']").addClass("dxeTextBox_form_input_write");
+        }
+
+        function set_zxXX_read(){
+            $("#zxXX input[id*='bzx_cc']").removeClass("linewrite");
+            $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("lineread");
+
+            $("#zxXX table[id*='bzx_sl_c']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_sl_c']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_sl_c']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_sl_c']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+
+            $("#zxXX table[id*='bzx_cs_x']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_cs_x']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_cs_x']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_cs_x']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_xs_c']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_xs_c']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_xs_c']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_xs_c']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_c_t']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_c_t']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_c_t']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_c_t']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_dzcs']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_dzcs']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_dzcs']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_dzcs']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_jzcs']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_jzcs']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_jzcs']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_jzcs']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_t_l']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_l']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_t_l']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_l']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_t_w']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_w']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_t_w']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_w']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+            
+            $("#zxXX table[id*='bzx_t_h']").removeClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_h']").removeClass("dxeTextBox_form_input_write");
+            $("#zxXX table[id*='bzx_t_h']").addClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_h']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+        }
+
+        function set_zxXX_write(){
+            
+            $("#zxXX input[id*='bzx_cc']").removeAttr("readonly").removeClass("lineread");
+            $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("linewrite");
+
+            $("#zxXX table[id*='bzx_sl_c']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_sl_c']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_sl_c']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_sl_c']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_cs_x']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_cs_x']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_cs_x']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_cs_x']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_xs_c']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_xs_c']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_xs_c']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_xs_c']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_c_t']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_c_t']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_c_t']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_c_t']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_dzcs']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_dzcs']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_dzcs']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_dzcs']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_jzcs']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_jzcs']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_jzcs']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_jzcs']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_t_l']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_l']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_t_l']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_l']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_t_w']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_w']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_t_w']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_w']").addClass("dxeTextBox_form_input_write");
+            
+            $("#zxXX table[id*='bzx_t_h']").removeClass("dxeTextBox_form_table_read");
+            $("#zxXX input[id*='bzx_t_h']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#zxXX table[id*='bzx_t_h']").addClass("dxeTextBox_form_table_write");
+            $("#zxXX input[id*='bzx_t_h']").addClass("dxeTextBox_form_input_write");
+        }
+
+        function set_gv_read(){
+            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                $(item).find("table[id*=sl]").addClass("dxeTextBox_read");
+                $(item).find("input[id*=sl]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+            });
+        }
+
+        function set_gv_write(){
+            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                $(item).find("table[id*=sl]").removeClass("dxeTextBox_read");
+                $(item).find("input[id*=sl]").removeAttr("readOnly").addClass("dxeTextBox_read");
+            });
+        }
+
     </script>
 
     <script type="text/javascript">
@@ -877,7 +1065,24 @@
         }
          .i_show{
             display:inline-block;
-        }   
+        } 
+         .dxeTextBox_read{
+            border:none !important ;
+        }  
+
+         .dxeTextBox_form_table_read{
+            border:none !important ;border-bottom: 1px solid #ccc !important;background-color:#ffffff !important;
+        } 
+         .dxeTextBox_form_input_read{
+            border:none !important ;background-color:#ffffff !important;
+        }
+
+         .dxeTextBox_form_table_write{
+            border:none !important ;border-bottom: 1px solid #ccc !important;background-color:#FDF7D9 !important;
+        } 
+          .dxeTextBox_form_input_write{
+            border:none !important ;background-color:#FDF7D9 !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -967,7 +1172,14 @@
                                 <td style="width:105px;"><font color="red">&nbsp;</font>版本</td>
                                 <td><asp:TextBox ID="ver"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>                                
                             </tr>
-                            <tr>                                
+                            <tr>       
+                                <td><font color="red">*</font>申请类型</td>
+                                <td>
+                                    <dx:ASPxComboBox ID="typeno" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="typeno_c">
+                                        <ClientSideEvents LostFocus="function(s, e) {typeno_change(s);}"   />
+                                        <DisabledStyle CssClass="lineread" ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                    </dx:ASPxComboBox>
+                                </td>                         
                                 <td><font color="red">&nbsp;</font>发自</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="site" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
@@ -975,12 +1187,6 @@
                                 <td><font color="red">&nbsp;</font>发至</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="ship" class="lineread" ReadOnly="True" Width="260px"/>
-                                </td>
-                                <td><font color="red">*</font>申请类型</td>
-                                <td>
-                                    <dx:ASPxComboBox ID="typeno" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="typeno_c">
-                                        <DisabledStyle CssClass="lineread" ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                    </dx:ASPxComboBox>
                                 </td>
                             </tr>
                             <tr>
@@ -1008,7 +1214,7 @@
                                         onkeyup="clearNoNum(this)" onafterpaste="clearNoNum(this)" onblur="value=formatNum(this)" />--%>
 
                                     <dx:ASPxTextBox ID="ljcc_l" runat="server" Width="260px"  Height="25px"
-                                            BackColor="#FDF7D9" ForeColor="#31708f"
+                                            BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="clt_ljcc_l"
                                             Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" BorderBottom-BorderColor="#cccccc" BorderBottom-BorderWidth="1px">
                                         <ClientSideEvents LostFocus="function(s, e) {clearNoNum_dev_textbox(s);}"  />
                                         <DisabledStyle BackColor="#FFFFFF" ></DisabledStyle>
