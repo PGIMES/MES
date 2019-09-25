@@ -531,6 +531,15 @@
         }
 
         function set_ljxx_read(){
+            $("#ljXX table[id*='bzlb'] ").addClass("dxeDisabled");
+            $("#ljXX input[id*='bzlb'] ").addClass("dxeDisabled");
+            $("#ljXX td[id*='bzlb'] ").addClass("dxeButtonDisabled");
+
+            $("#ljXX table[id*='bzlb']").removeClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='bzlb']").removeClass("dxeTextBox_form_input_write");  
+            $("#ljXX table[id*='bzlb']").addClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='bzlb']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+
             $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_write");
             $("#ljXX input[id*='ljcc_l']").removeClass("dxeTextBox_form_input_write");  
             $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_read");
@@ -558,6 +567,15 @@
         }
 
         function set_ljxx_write(){
+            $("#ljXX table[id*='bzlb'] ").removeClass("dxeDisabled");
+            $("#ljXX input[id*='bzlb'] ").removeClass("dxeDisabled");
+            $("#ljXX td[id*='bzlb'] ").removeClass("dxeButtonDisabled");
+
+            $("#ljXX table[id*='bzlb']").removeClass("dxeTextBox_form_table_read");
+            $("#ljXX input[id*='bzlb']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read"); 
+            $("#ljXX table[id*='bzlb']").addClass("dxeTextBox_form_table_write");
+            $("#ljXX input[id*='bzlb']").addClass("dxeTextBox_form_input_write");
+
             $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_read");
             $("#ljXX input[id*='ljcc_l']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
             $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_write");
@@ -686,16 +704,26 @@
         }
 
         function set_gv_read(){
+            $("#bzclXX input[id*='btnadd']").hide();
+            $("#bzclXX input[id*='btndel']").hide();
+
             $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
                 $(item).find("table[id*=sl]").addClass("dxeTextBox_read");
                 $(item).find("input[id*=sl]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
+
+                $(item).find("table[id*=bm]").parent().next().find("i[id*=bm_i]").removeClass("i_show").addClass("i_hidden");
             });
         }
 
         function set_gv_write(){
+            $("#bzclXX input[id*='btnadd']").show();
+            $("#bzclXX input[id*='btndel']").show();
+
             $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
                 $(item).find("table[id*=sl]").removeClass("dxeTextBox_read");
                 $(item).find("input[id*=sl]").removeAttr("readOnly").addClass("dxeTextBox_read");
+
+                $(item).find("table[id*=bm]").parent().next().find("i[id*=bm_i]").removeClass("i_hidden").addClass("i_show");
             });
         }
 
@@ -870,6 +898,7 @@
             }
 
             if(action=='submit'){
+                //if($("#ljXX select[id*='bzlb']").val()==""){
                 if($("input[type!=hidden][id*='bzlb']").val()==""){
                     msg+="【包装类别】不可为空.<br />";
                 }
@@ -1177,7 +1206,7 @@
                                 <td>
                                     <dx:ASPxComboBox ID="typeno" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="typeno_c">
                                         <ClientSideEvents LostFocus="function(s, e) {typeno_change(s);}"   />
-                                        <DisabledStyle CssClass="lineread" ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
                                     </dx:ASPxComboBox>
                                 </td>                         
                                 <td><font color="red">&nbsp;</font>发自</td>
@@ -1201,8 +1230,15 @@
                                 <td style="width:100px;"><font color="red">*</font>包装类别</td>
                                 <td>
                                     <dx:ASPxComboBox ID="bzlb" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="bzlb_c">
-                                        <DisabledStyle CssClass="lineread" ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
                                     </dx:ASPxComboBox>
+                                   <%-- <asp:DropDownList ID="bzlb" runat="server" class="linewrite"  style="width:260px" Height="27px"> 
+                                        <asp:ListItem Text="" Value=""></asp:ListItem>                            
+                                        <asp:ListItem Text="成品可回用" Value="成品可回用"></asp:ListItem>                                                                               
+                                        <asp:ListItem Text="成品一次性" Value="成品一次性"></asp:ListItem>
+                                        <asp:ListItem Text="原材料包装" Value="原材料包装"></asp:ListItem>
+                                        <asp:ListItem Text="内包装" Value="内包装"></asp:ListItem>
+                                    </asp:DropDownList>--%>
                                 </td>
                             </tr>
                             <tr>

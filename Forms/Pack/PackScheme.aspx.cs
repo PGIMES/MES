@@ -235,8 +235,8 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
 
 
-        Setbzlb();//绑定申请类别
-        Settypeno(ver.Text);//绑定包装类别
+        Setbzlb();//绑定包装类别
+        Settypeno(ver.Text);//绑定申请类别
         //Setfilestype();//绑定附件类别
 
         DisplayModel = Request.QueryString["display"] ?? "0";
@@ -690,7 +690,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     ////绑定附件类别
     //public void Setfilestype()
     //{
-    //    bzlb.Columns.Clear();
+    //    files_type.Columns.Clear();
     //    string lssql = @"select [Code],[Name]
     //                    from (
     //                     select '零件图片' [Code],'零件图片' [Name],0 rownum
@@ -857,7 +857,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         string lspart = part.Text;
         string lsver = ver.Text;
         string lstypeno = typeno.Value.ToString();//typeno.Value == null ? "" : typeno.Value.ToString();
-        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();
+        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();//bzlb.SelectedValue;
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
