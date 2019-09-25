@@ -59,14 +59,14 @@ public partial class select_pack_part_bzx : System.Web.UI.Page
     }
     protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string domain = GridView1.SelectedRow.Cells[0].Text.Trim().Replace("&nbsp;", "");
-        string part = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
-        string gg = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
-        string cc = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
-        string zl = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
-        string XC = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
-        string CT = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
-        string XT = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
+        string domain = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
+        string part = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
+        string gg = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
+        string cc = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
+        string zl = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
+        string XC = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
+        string CT = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
+        string XT = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
 
         string temp = @"<script>parent.setvalue_bzx_part('" + domain + "','" + part + "','" + gg + "','"
            + cc + "','" + zl + "','" + XC + "','" + CT + "','"

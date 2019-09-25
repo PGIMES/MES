@@ -39,7 +39,8 @@
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 
                             <Columns>
-
+                                <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
+                                    ShowSelectButton="True" HeaderText="选择" />
                                 <asp:BoundField DataField="pt_domain" HeaderText="域" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>
@@ -64,8 +65,6 @@
                                 <asp:BoundField DataField="XT" HeaderText="箱数/托" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>
-                                <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
-                                    ShowSelectButton="True" HeaderText="选择" />
                             </Columns>
                         </asp:GridView>
 

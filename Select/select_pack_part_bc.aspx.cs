@@ -59,15 +59,15 @@ public partial class select_pack_part_bc : System.Web.UI.Page
     }
     protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string domain = GridView1.SelectedRow.Cells[0].Text.Trim().Replace("&nbsp;", "");
-        string part = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
-        string mc = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
-        string cc = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
-        string dz = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
-        string cl = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
-        string gys = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
-        string dj = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
-        string bclb = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
+        string domain = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
+        string part = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
+        string mc = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
+        string cc = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
+        string dz = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
+        string cl = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
+        string gys = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
+        string dj = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
+        string bclb = GridView1.SelectedRow.Cells[9].Text.Trim().Replace("&nbsp;", "");
 
         string temp = @"<script>parent.setvalue_bm('" + Request.QueryString["vi"].ToString() + "','" + domain + "','" + part + "','" + mc + "','"
            + cc + "','" + dz + "','" + cl + "','" + gys + "','"+ dj + "','" + bclb + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";

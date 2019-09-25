@@ -59,16 +59,16 @@ public partial class select_pack_part : System.Web.UI.Page
     }
     protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string domain = GridView1.SelectedRow.Cells[0].Text.Trim().Replace("&nbsp;", "");
-        string part = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
-        string site = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
-        string ship = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
-        string ad_name = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
-        string custpart = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
-        string ljzl = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
-        string nyl = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
-        string xs_price = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
-        string klgx = GridView1.SelectedRow.Cells[9].Text.Trim().Replace("&nbsp;", "");
+        string domain = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
+        string part = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
+        string site = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
+        string ship = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
+        string ad_name = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
+        string custpart = GridView1.SelectedRow.Cells[6].Text.Trim().Replace("&nbsp;", "");
+        string ljzl = GridView1.SelectedRow.Cells[7].Text.Trim().Replace("&nbsp;", "");
+        string nyl = GridView1.SelectedRow.Cells[8].Text.Trim().Replace("&nbsp;", "");
+        string xs_price = GridView1.SelectedRow.Cells[9].Text.Trim().Replace("&nbsp;", "");
+        string klgx = GridView1.SelectedRow.Cells[10].Text.Trim().Replace("&nbsp;", "");
 
         string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + site + "','"
            + ship + "','" + ad_name + "','" + custpart + "','" + ljzl + "','"

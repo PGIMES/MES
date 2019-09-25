@@ -38,8 +38,9 @@
                             <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" HorizontalAlign="Center" />
                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 
-                            <Columns>
-
+                            <Columns>                                
+                                <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
+                                    ShowSelectButton="True" HeaderText="选择" />
                                 <asp:BoundField DataField="sod_domain_desc" HeaderText="申请工厂" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>
@@ -70,8 +71,6 @@
                                 <asp:BoundField DataField="op" HeaderText="扣料工序" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>  
-                                <asp:CommandField ButtonType="Button" SelectText="选择" ItemStyle-HorizontalAlign="Center"
-                                    ShowSelectButton="True" HeaderText="选择" />
                             </Columns>
                         </asp:GridView>
 
