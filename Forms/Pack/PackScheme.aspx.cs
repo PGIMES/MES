@@ -753,28 +753,28 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     }
     #endregion
 
-    public static string CheckVer_data(string part, string domain, string ver, string formno)
+    public static string CheckVer_data(string part, string domain, string site, string ship, string ver, string formno)
     {
         string flag = "";
-        string sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "'";
+        string sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
         if (formno != "") { sql = sql + " and formno<>'" + formno + "'"; }
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         if (dt.Rows.Count > 0)
         {
-            flag = "PGI_零件号" + part + "申请工厂" + domain + "正在申请中，不能申请!<br />";
+            flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "正在申请中，不能申请!<br />";
         }
 
         if (flag == "")
         {
             if (ver == "A0")
             {
-                sql = @"select * from [dbo].[PGI_PackScheme_Main] where part='" + part + "' and domain='" + domain + "'";
+                sql = @"select * from [dbo].[PGI_PackScheme_Main] where part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                 DataTable dt_A0 = DbHelperSQL.Query(sql).Tables[0];
 
                 if (dt_A0.Rows.Count > 0)
                 {
-                    flag = "PGI_零件号" + part + "申请工厂" + domain + "已经存在，不能新增申请!<br />";
+                    flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "已经存在，不能新增申请!<br />";
                 }
             }
             else
@@ -783,7 +783,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                 sql = @"select a.part,a.domain,a.ver,b.sort 
                     from [dbo].[PGI_PackScheme_Main] a 
                         left join [dbo].[PGI_PackScheme_Ver] b on a.ver=b.ver
-                    where a.b_flag=1 and a.part='" + part + "' and domain='" + domain + "'";
+                    where a.b_flag=1 and a.part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                 DataTable dt_other = DbHelperSQL.Query(sql).Tables[0];
 
                 if (dt_other.Rows.Count > 0)
@@ -791,12 +791,12 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                     DataTable dt_ver = DbHelperSQL.Query("select top 1 ver,sort from [dbo].[PGI_PackScheme_Ver] where sort>"+ Convert.ToInt32(dt_other.Rows[0]["sort"].ToString())+" order by sort").Tables[0];
                     if (dt_ver.Rows[0]["ver"].ToString() != ver)
                     {
-                        flag = "PGI_零件号" + part + "申请工厂" + domain + "修改申请版本" + ver + "，不正确，不能申请!<br />";
+                        flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "修改申请版本" + ver + "，不正确，不能申请!<br />";
                     }
                 }
                 else
                 {
-                    flag = "PGI_零件号" + part + "申请工厂" + domain + "没有申请过，不能修改申请!<br />";
+                    flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "没有申请过，不能修改申请!<br />";
                 }
             }
 
@@ -806,12 +806,12 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
 
     [WebMethod]
-    public static string CheckData(string applyid, string formno, string part, string domain, string ver)
+    public static string CheckData(string applyid, string formno, string part, string domain, string site, string ship, string ver)
     {
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
 
-        string part_flag = CheckVer_data(part, domain, ver, formno);
+        string part_flag = CheckVer_data(part, domain, site, ship, ver, formno);
 
         string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
         return result;

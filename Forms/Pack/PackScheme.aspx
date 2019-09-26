@@ -711,6 +711,7 @@
             $("#cbXX table[id*='cbfx_mb_j']").addClass("dxeTextBox_form_table_read");
             $("#cbXX input[id*='cbfx_mb_j']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
         }
+
         function set_cbXX_write(){
             $("#cbXX table[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_table_read");
             $("#cbXX input[id*='cbfx_mb_j']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
@@ -908,6 +909,15 @@
             if($("#ljXX input[id*='ver']").val()==""){
                 msg+="【版本】不可为空.<br />";
             }
+            if($("#ljXX input[id*='domain']").val()==""){
+                msg+="【申请工厂】不可为空.<br />";
+            }
+            if($("#ljXX input[id*='site']").val()==""){
+                msg+="【发自】不可为空.<br />";
+            }
+            if($("#ljXX input[id*='ship']").val()==""){
+                msg+="【发至】不可为空.<br />";
+            }
             if($("input[type!=hidden][id*='typeno']").val()==""){
                 msg+="【申请类型】不可为空.<br />";
             }
@@ -1055,12 +1065,14 @@
                 var formno=$("#CPXX input[id*='FormNo']").val();
                 var part=("#ljXX input[id*='part']").val();
                 var domain=$("#ljXX input[id*='domain']").val();
+                var site=$("#ljXX input[id*='site']").val();
+                var ship=$("#ljXX input[id*='ship']").val();
                 var ver=$("#ljXX input[id*='ver']").val();
 
                 $.ajax({
                     type: "post",
                     url: "PackScheme.aspx/CheckData",
-                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','ver':'" + ver + "'}",
+                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','ver':'" + ver + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

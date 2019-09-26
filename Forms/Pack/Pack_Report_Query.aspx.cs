@@ -61,17 +61,18 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckData(string part, string domain, string formno)
+    public static string CheckData(string part, string domain, string site, string ship, string formno)
     {
         //------------------------------------------------------------------------------验证申请中
         string re_flag = "";
 
-        string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "'";
+        string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
         DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
         if (re_dt.Rows.Count > 0)
         {
-            re_flag = part + "(" + domain + ")正在<font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",<font color='red'>申请人:"
+            re_flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship
+                + "正在 < font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",<font color='red'>申请人:"
                 + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + "</font>)!";
         }
 
