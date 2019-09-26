@@ -11,7 +11,7 @@
         <div>
             <table  >
                 <tr>
-                    <td>PGI_零件号：                        
+                    <td>料号：                        
                         <asp:TextBox ID="txtPart" runat="server" Width="300px"></asp:TextBox>
                         <asp:Button ID="BtnStartSearch" runat="server" Text="查询" OnClick="BtnStartSearch_Click" />
                     </td>

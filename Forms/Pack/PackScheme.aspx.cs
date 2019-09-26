@@ -20,7 +20,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     public string fieldStatus;
 
     public string SQ_StepID = "F7AEA12F-90B3-4C99-997C-FB06333F1312";
-    public string is_hr_zy = "";
+    public string UserId = "";
 
     string FlowID = "A";
     string StepID = "A";
@@ -66,6 +66,8 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
 
         Session["LogUser"] = LogUserModel;
+        UserId = LogUserModel.UserId;
+
         if (!IsPostBack)
         {
             DataTable ldt_detail = null;
@@ -89,24 +91,24 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                 if (Request.QueryString["formno"] != null && state == "edit")
                 {
                     //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
-                    string domain_edit = "";
-                    if (Request.QueryString["domain_code"].ToString() == "200") { domain_edit = "昆山工厂"; }
-                    if (Request.QueryString["domain_code"].ToString() == "100") { domain_edit = "上海工厂"; }
+                    string sql_prd = @"select * from PGI_PackScheme_Main where formno='" + Request.QueryString["formno"] + "'";
+                    DataTable dt_prd = DbHelperSQL.Query(sql_prd).Tables[0];
 
-                    string part_edit = Request.QueryString["part"].ToString();
-                    string formno_edit = Request.QueryString["formno"].ToString();
+                    string part = dt_prd.Rows[0]["part"].ToString(); string domain = dt_prd.Rows[0]["domain"].ToString();
+                    string site = dt_prd.Rows[0]["site"].ToString(); string ship = dt_prd.Rows[0]["ship"].ToString();
 
-                    string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part_edit + "' and domain='" + domain_edit + "'";
+                    string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                     DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
 
                     if (re_dt.Rows.Count > 0)
                     {
-                        Pgi.Auto.Public.MsgBox(this, "alert", part_edit + "(" + domain_edit + ")项目正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() 
+                        Pgi.Auto.Public.MsgBox(this, "alert", "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship 
+                            + "正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString() 
                             + ",申请人:" + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + ")!");
                     }
                     else
                     {
-                        string sql_head_con = @"exec Report_Pack_edit '" + formno_edit + "','" + part_edit + "','" + domain_edit + "','"+ LogUserModel.UserId + "'";
+                        string sql_head_con = @"exec Report_Pack_edit '" + part + "','" + domain + "','" + site + "','" + ship + "','" + LogUserModel.UserId + "'";
                         DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
                         DataTable ldt_head = ds_head_con.Tables[0];
                         ldt_detail = ds_head_con.Tables[1];
@@ -837,7 +839,22 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
 
     }
-    
+
+
+    [WebMethod]
+    public static string GetData(string part, string domain, string site, string ship,string UserId)
+    {
+        //string manager_flag = "";
+        string sql_head_con = @"exec Report_Pack_edit '" + part + "','" + domain + "','" + site + "','" + ship + "','" + UserId + "'";
+        DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
+        DataTable ldt_head = ds_head_con.Tables[0];
+        DataTable ldt_detail = ds_head_con.Tables[1];
+
+        string result = ldt_head.ToJsonString(); //"[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
+        return result;
+
+    }
+
     private bool SaveData()
     {
         bool bflag = false;

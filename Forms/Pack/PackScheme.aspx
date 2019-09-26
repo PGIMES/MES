@@ -11,6 +11,8 @@
     <link href="/Content/css/custom.css?t=20190516" rel="stylesheet" />
 
     <script type="text/javascript">
+        var UserId = '<%=UserId%>';
+
         function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
             var r = decodeURI(window.location.search).substr(1).match(reg);
@@ -530,6 +532,43 @@
             }else {
                 set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_read();
             }
+           
+            var part=$("#ljXX input[id*='part']").val();
+            var domain=$("#ljXX input[id*='domain']").val();
+            var site=$("#ljXX input[id*='site']").val();
+            var ship=$("#ljXX input[id*='ship']").val();
+            
+            $.ajax({
+                type: "post",
+                url: "PackScheme.aspx/GetData",
+                data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','UserId':'" + UserId + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj=eval(data.d);
+
+                    //if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
+                    //if(obj[0].part_flag!=""){ msg+=obj[0].part_flag; }
+
+                    //if(msg!=""){  
+                    //    flag=false;
+                    //    layer.alert(msg);
+                    //    return flag;
+                    //}
+
+                    //$.each(obj, function (i, item) {                                
+                    //    if (data.d == "") {
+                    //        layer.msg("未获取到部门.");                            
+                    //    }
+                    //    else {   
+                    //        var option = $("<option>").val(item.Dept_Name).text(item.Dept_Name);
+                    //        $("#applydept").append(option); 
+                    //    }
+                    //});   
+                }
+
+            });
         }
 
         function set_ljxx_read(){
