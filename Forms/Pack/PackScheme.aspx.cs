@@ -844,17 +844,30 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     [WebMethod]
     public static string GetData(string part, string domain, string site, string ship,string UserId)
     {
-        //string manager_flag = "";
         string sql_head_con = @"exec Report_Pack_edit '" + part + "','" + domain + "','" + site + "','" + ship + "','" + UserId + "'";
         DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
         DataTable ldt_head = ds_head_con.Tables[0];
-        DataTable ldt_detail = ds_head_con.Tables[1];
+        //DataTable ldt_detail = ds_head_con.Tables[1];
 
-        string result = ldt_head.ToJsonString(); //"[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
+        string result = ldt_head.ToJsonString(); 
         return result;
 
     }
 
+    protected void gv_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
+    {
+        string param = e.Parameters.Trim();
+        if (param == "reload")
+        {
+            string sql_head_con = @"exec Report_Pack_edit '" + part.Text + "','" + domain.Text + "','" + site.Text + "','" + ship.Text + "','" + UserId + "'";
+            DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
+            //DataTable ldt_head = ds_head_con.Tables[0];
+            DataTable ldt_detail = ds_head_con.Tables[1];
+
+            this.gv.DataSource = ldt_detail;
+            this.gv.DataBind();
+        }
+    }
     private bool SaveData()
     {
         bool bflag = false;
@@ -1399,4 +1412,5 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     }
 
     #endregion
+
 }

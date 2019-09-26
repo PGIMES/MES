@@ -77,9 +77,7 @@
 
             var typeno=$("input[type!=hidden][id*='typeno']").val();
             if (state=='edit'|| (typeno!="" && typeno!="新增")) {
-                RefreshMain();
-                RefreshRow();
-                setReadOnly(typeno);
+                ResetCal();
             }
         });
 
@@ -519,9 +517,61 @@
 
         function typeno_change(s){
             var typeno=s.GetValue()==null?"":s.GetValue();
+            ReloadData(typeno);
+        }
+
+        function ReloadData(typeno){
+            //--先重新加载数据            
+            gv.PerformCallback("reload");
+
+            var part=$("#ljXX input[id*='part']").val();
+            var domain=$("#ljXX input[id*='domain']").val();
+            var site=$("#ljXX input[id*='site']").val();
+            var ship=$("#ljXX input[id*='ship']").val();
+
+            $.ajax({
+                type: "post",
+                url: "PackScheme.aspx/GetData",
+                data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','UserId':'" + UserId +"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                success: function (data) {
+                    var obj=eval(data.d);
+
+                    $("#zxXX input[id*='bzx_cc']").val(obj[0].bzx_cc);
+                    $("#zxXX input[id*='bzx_sl_c']").val(obj[0].bzx_sl_c);
+                    $("#zxXX input[id*='bzx_cs_x']").val(obj[0].bzx_cs_x);
+                    $("#zxXX input[id*='bzx_xs_c']").val(obj[0].bzx_xs_c);
+                    $("#zxXX input[id*='bzx_c_t']").val(obj[0].bzx_c_t);
+                    $("#zxXX input[id*='bzx_dzcs']").val(obj[0].bzx_dzcs);
+                    $("#zxXX input[id*='bzx_jzcs']").val(obj[0].bzx_jzcs);
+                    $("#zxXX input[id*='bzx_t_l']").val(obj[0].bzx_t_l);
+                    $("#zxXX input[id*='bzx_t_w']").val(obj[0].bzx_t_w);
+                    $("#zxXX input[id*='bzx_t_h']").val(obj[0].bzx_t_h);
+                    
+                    $("#ljXX input[type!=hidden][id*='bzlb']").val(obj[0].bzlb);
+                    $("#ljXX input[id*='ljcc_l']").val(obj[0].ljcc_l);
+                    $("#ljXX input[id*='ljcc_w']").val(obj[0].ljcc_w);
+                    $("#ljXX input[id*='ljcc_h']").val(obj[0].ljcc_h);
+                    $("#ljXX input[id*='gdsl_cp']").val(obj[0].gdsl_cp);
+                    $("#ljXX input[id*='gdsl_bcp']").val(obj[0].gdsl_bcp);
+                   
+
+                }
+            });
+        }
+
+        function ResetCal(){
+            var typeno=$("input[type!=hidden][id*='typeno']").val();
+
+            RefreshMain();
+            RefreshRow();
             setReadOnly(typeno);
         }
+
         function setReadOnly(typeno){
+            //--设置只读
             if (typeno=="零件信息修改") {
                 set_ljxx_write();set_zxXX_read();set_cbXX_read();set_gv_read();
 
@@ -532,46 +582,11 @@
             }else {
                 set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_read();
             }
-           
-            var part=$("#ljXX input[id*='part']").val();
-            var domain=$("#ljXX input[id*='domain']").val();
-            var site=$("#ljXX input[id*='site']").val();
-            var ship=$("#ljXX input[id*='ship']").val();
-            
-            $.ajax({
-                type: "post",
-                url: "PackScheme.aspx/GetData",
-                data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','UserId':'" + UserId + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                success: function (data) {
-                    var obj=eval(data.d);
-
-                    //if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
-                    //if(obj[0].part_flag!=""){ msg+=obj[0].part_flag; }
-
-                    //if(msg!=""){  
-                    //    flag=false;
-                    //    layer.alert(msg);
-                    //    return flag;
-                    //}
-
-                    //$.each(obj, function (i, item) {                                
-                    //    if (data.d == "") {
-                    //        layer.msg("未获取到部门.");                            
-                    //    }
-                    //    else {   
-                    //        var option = $("<option>").val(item.Dept_Name).text(item.Dept_Name);
-                    //        $("#applydept").append(option); 
-                    //    }
-                    //});   
-                }
-
-            });
         }
 
         function set_ljxx_read(){
+            $("#ljXX i[id*=part_i]").removeClass("i_show").addClass("i_hidden");
+
             $("#ljXX table[id*='bzlb'] ").addClass("dxeDisabled");
             $("#ljXX input[id*='bzlb'] ").addClass("dxeDisabled");
             $("#ljXX td[id*='bzlb'] ").addClass("dxeButtonDisabled");
@@ -608,6 +623,8 @@
         }
 
         function set_ljxx_write(){
+            $("#ljXX i[id*=part_i]").removeClass("i_hidden").addClass("i_show");
+
             $("#ljXX table[id*='bzlb'] ").removeClass("dxeDisabled");
             $("#ljXX input[id*='bzlb'] ").removeClass("dxeDisabled");
             $("#ljXX td[id*='bzlb'] ").removeClass("dxeButtonDisabled");
@@ -644,6 +661,8 @@
         }
 
         function set_zxXX_read(){
+            $("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
+
             $("#zxXX input[id*='bzx_cc']").removeClass("linewrite");
             $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("lineread");
 
@@ -694,6 +713,7 @@
         }
 
         function set_zxXX_write(){
+            $("#zxXX i[id*=bzx_part_i]").removeClass("i_hidden").addClass("i_show");
             
             $("#zxXX input[id*='bzx_cc']").removeAttr("readonly").removeClass("lineread");
             $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("linewrite");
@@ -1791,8 +1811,9 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound"><%--OnCustomCallback="gv_CustomCallback" --%>
-                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
+                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound"
+                                     OnCustomCallback="gv_CustomCallback">
+                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" EndCallback="function(s, e) { ResetCal(); }" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
