@@ -72,10 +72,12 @@
             //$("#zxXX input[id*='bzx_c_t']").change(function(){
             //    RefreshMain();
             //});
-            if (state=='edit') {
+
+            var typeno=$("input[type!=hidden][id*='typeno']").val();
+            if (state=='edit'|| (typeno!="" && typeno!="新增")) {
                 RefreshMain();
                 RefreshRow();
-                setReadOnly("");
+                setReadOnly(typeno);
             }
         });
 
@@ -519,14 +521,14 @@
         }
         function setReadOnly(typeno){
             if (typeno=="零件信息修改") {
-                set_ljxx_write();set_zxXX_read();set_gv_read();
+                set_ljxx_write();set_zxXX_read();set_cbXX_read();set_gv_read();
 
             }else if (typeno=="装箱数据修改") {
-                set_ljxx_read(); set_zxXX_write();set_gv_read();
+                set_ljxx_read(); set_zxXX_write();set_cbXX_read();set_gv_read();
             }else if (typeno=="包装明细修改") {
-                set_ljxx_read(); set_zxXX_read();set_gv_write();
+                set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_write();
             }else {
-                set_ljxx_read(); set_zxXX_read();set_gv_read();
+                set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_read();
             }
         }
 
@@ -703,6 +705,19 @@
             $("#zxXX input[id*='bzx_t_h']").addClass("dxeTextBox_form_input_write");
         }
 
+        function set_cbXX_read(){//目标成本/件：升级版本时候就不可以更改了
+            $("#cbXX table[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_table_write");
+            $("#cbXX input[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_input_write");
+            $("#cbXX table[id*='cbfx_mb_j']").addClass("dxeTextBox_form_table_read");
+            $("#cbXX input[id*='cbfx_mb_j']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
+        }
+        function set_cbXX_write(){
+            $("#cbXX table[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_table_read");
+            $("#cbXX input[id*='cbfx_mb_j']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
+            $("#cbXX table[id*='cbfx_mb_j']").addClass("dxeTextBox_form_table_write");
+            $("#cbXX input[id*='cbfx_mb_j']").addClass("dxeTextBox_form_input_write");
+        }
+
         function set_gv_read(){
             $("#bzclXX input[id*='btnadd']").hide();
             $("#bzclXX input[id*='btndel']").hide();
@@ -768,9 +783,9 @@
                     fileSize = fileData[2];                
                 var eqno=uploadedFiles_2.length-1;
 
-                var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                var tbody_tr='<tr id="tr_2_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
                         +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_2" onclick ="del_data_2(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_2" onclick ="del_data_2(tr_2_'+eqno+','+eqno+')" >删除</span></td>'
                         +'</tr>';
 
                 $('#tbl_filelist_2').append(tbody_tr);
@@ -795,9 +810,9 @@
                     fileSize = fileData[2];                
                 var eqno=uploadedFiles_3.length-1;
 
-                var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                var tbody_tr='<tr id="tr_3_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
                         +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_3" onclick ="del_data_3(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_3" onclick ="del_data_3(tr_3_'+eqno+','+eqno+')" >删除</span></td>'
                         +'</tr>';
 
                 $('#tbl_filelist_3').append(tbody_tr);
