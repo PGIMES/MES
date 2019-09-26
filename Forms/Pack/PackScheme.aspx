@@ -77,7 +77,10 @@
 
             var typeno=$("input[type!=hidden][id*='typeno']").val();
             if (state=='edit'|| (typeno!="" && typeno!="新增")) {
-                ResetCal();
+                RefreshMain();
+                RefreshRow();
+                $("#ljXX i[id*=part_i]").removeClass("i_show").addClass("i_hidden");
+                $("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
             }
         });
 
@@ -303,6 +306,7 @@
         function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price,klgx) 
         {            
             $("#ljXX input[id*='ver']").val('A0');
+            $("#ljXX input[id*='typeno']").val('新增');
 
             $("#ljXX [id*='domain']").val(domain);
             $("#ljXX input[id*='part']").val(part);
@@ -514,294 +518,6 @@
             //询问框
             return confirm('确认要删除吗？');
         }
-
-        function typeno_change(s){
-            var typeno=s.GetValue()==null?"":s.GetValue();
-            ReloadData(typeno);
-        }
-
-        function ReloadData(typeno){
-            //--先重新加载数据            
-            gv.PerformCallback("reload");
-
-            var part=$("#ljXX input[id*='part']").val();
-            var domain=$("#ljXX input[id*='domain']").val();
-            var site=$("#ljXX input[id*='site']").val();
-            var ship=$("#ljXX input[id*='ship']").val();
-
-            $.ajax({
-                type: "post",
-                url: "PackScheme.aspx/GetData",
-                data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','UserId':'" + UserId +"'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                success: function (data) {
-                    var obj=eval(data.d);
-
-                    $("#zxXX input[id*='bzx_cc']").val(obj[0].bzx_cc);
-                    $("#zxXX input[id*='bzx_sl_c']").val(obj[0].bzx_sl_c);
-                    $("#zxXX input[id*='bzx_cs_x']").val(obj[0].bzx_cs_x);
-                    $("#zxXX input[id*='bzx_xs_c']").val(obj[0].bzx_xs_c);
-                    $("#zxXX input[id*='bzx_c_t']").val(obj[0].bzx_c_t);
-                    $("#zxXX input[id*='bzx_dzcs']").val(obj[0].bzx_dzcs);
-                    $("#zxXX input[id*='bzx_jzcs']").val(obj[0].bzx_jzcs);
-                    $("#zxXX input[id*='bzx_t_l']").val(obj[0].bzx_t_l);
-                    $("#zxXX input[id*='bzx_t_w']").val(obj[0].bzx_t_w);
-                    $("#zxXX input[id*='bzx_t_h']").val(obj[0].bzx_t_h);
-                    
-                    $("#ljXX input[type!=hidden][id*='bzlb']").val(obj[0].bzlb);
-                    $("#ljXX input[id*='ljcc_l']").val(obj[0].ljcc_l);
-                    $("#ljXX input[id*='ljcc_w']").val(obj[0].ljcc_w);
-                    $("#ljXX input[id*='ljcc_h']").val(obj[0].ljcc_h);
-                    $("#ljXX input[id*='gdsl_cp']").val(obj[0].gdsl_cp);
-                    $("#ljXX input[id*='gdsl_bcp']").val(obj[0].gdsl_bcp);
-                   
-
-                }
-            });
-        }
-
-        function ResetCal(){
-            var typeno=$("input[type!=hidden][id*='typeno']").val();
-
-            RefreshMain();
-            RefreshRow();
-            setReadOnly(typeno);
-        }
-
-        function setReadOnly(typeno){
-            //--设置只读
-            if (typeno=="零件信息修改") {
-                set_ljxx_write();set_zxXX_read();set_cbXX_read();set_gv_read();
-
-            }else if (typeno=="装箱数据修改") {
-                set_ljxx_read(); set_zxXX_write();set_cbXX_read();set_gv_read();
-            }else if (typeno=="包装明细修改") {
-                set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_write();
-            }else {
-                set_ljxx_read(); set_zxXX_read();set_cbXX_read();set_gv_read();
-            }
-        }
-
-        function set_ljxx_read(){
-            $("#ljXX i[id*=part_i]").removeClass("i_show").addClass("i_hidden");
-
-            $("#ljXX table[id*='bzlb'] ").addClass("dxeDisabled");
-            $("#ljXX input[id*='bzlb'] ").addClass("dxeDisabled");
-            $("#ljXX td[id*='bzlb'] ").addClass("dxeButtonDisabled");
-
-            $("#ljXX table[id*='bzlb']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='bzlb']").removeClass("dxeTextBox_form_input_write");  
-            $("#ljXX table[id*='bzlb']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='bzlb']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-
-            $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_l']").removeClass("dxeTextBox_form_input_write");  
-            $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_l']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-                
-            $("#ljXX table[id*='ljcc_w']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_w']").removeClass("dxeTextBox_form_input_write"); 
-            $("#ljXX table[id*='ljcc_w']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_w']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-                
-            $("#ljXX table[id*='ljcc_h']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_h']").removeClass("dxeTextBox_form_input_write"); 
-            $("#ljXX table[id*='ljcc_h']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_h']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-                
-            $("#ljXX table[id*='gdsl_cp']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='gdsl_cp']").removeClass("dxeTextBox_form_input_write"); 
-            $("#ljXX table[id*='gdsl_cp']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='gdsl_cp']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-                
-            $("#ljXX table[id*='gdsl_bcp']").removeClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='gdsl_bcp']").removeClass("dxeTextBox_form_input_write");
-            $("#ljXX table[id*='gdsl_bcp']").addClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='gdsl_bcp']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-        }
-
-        function set_ljxx_write(){
-            $("#ljXX i[id*=part_i]").removeClass("i_hidden").addClass("i_show");
-
-            $("#ljXX table[id*='bzlb'] ").removeClass("dxeDisabled");
-            $("#ljXX input[id*='bzlb'] ").removeClass("dxeDisabled");
-            $("#ljXX td[id*='bzlb'] ").removeClass("dxeButtonDisabled");
-
-            $("#ljXX table[id*='bzlb']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='bzlb']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read"); 
-            $("#ljXX table[id*='bzlb']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='bzlb']").addClass("dxeTextBox_form_input_write");
-
-            $("#ljXX table[id*='ljcc_l']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_l']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#ljXX table[id*='ljcc_l']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_l']").addClass("dxeTextBox_form_input_write");
-
-            $("#ljXX table[id*='ljcc_w']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_w']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#ljXX table[id*='ljcc_w']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_w']").addClass("dxeTextBox_form_input_write");
-            
-            $("#ljXX table[id*='ljcc_h']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='ljcc_h']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#ljXX table[id*='ljcc_h']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='ljcc_h']").addClass("dxeTextBox_form_input_write");
-            
-            $("#ljXX table[id*='gdsl_cp']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='gdsl_cp']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#ljXX table[id*='gdsl_cp']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='gdsl_cp']").addClass("dxeTextBox_form_input_write");
-            
-            $("#ljXX table[id*='gdsl_bcp']").removeClass("dxeTextBox_form_table_read");
-            $("#ljXX input[id*='gdsl_bcp']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#ljXX table[id*='gdsl_bcp']").addClass("dxeTextBox_form_table_write");
-            $("#ljXX input[id*='gdsl_bcp']").addClass("dxeTextBox_form_input_write");
-        }
-
-        function set_zxXX_read(){
-            $("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
-
-            $("#zxXX input[id*='bzx_cc']").removeClass("linewrite");
-            $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("lineread");
-
-            $("#zxXX table[id*='bzx_sl_c']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_sl_c']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_sl_c']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_sl_c']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-
-            $("#zxXX table[id*='bzx_cs_x']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_cs_x']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_cs_x']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_cs_x']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_xs_c']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_xs_c']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_xs_c']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_xs_c']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_c_t']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_c_t']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_c_t']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_c_t']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_dzcs']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_dzcs']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_dzcs']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_dzcs']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_jzcs']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_jzcs']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_jzcs']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_jzcs']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_t_l']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_l']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_t_l']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_l']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_t_w']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_w']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_t_w']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_w']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-            
-            $("#zxXX table[id*='bzx_t_h']").removeClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_h']").removeClass("dxeTextBox_form_input_write");
-            $("#zxXX table[id*='bzx_t_h']").addClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_h']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-        }
-
-        function set_zxXX_write(){
-            $("#zxXX i[id*=bzx_part_i]").removeClass("i_hidden").addClass("i_show");
-            
-            $("#zxXX input[id*='bzx_cc']").removeAttr("readonly").removeClass("lineread");
-            $("#zxXX input[id*='bzx_cc']").attr("readOnly","readOnly").addClass("linewrite");
-
-            $("#zxXX table[id*='bzx_sl_c']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_sl_c']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_sl_c']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_sl_c']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_cs_x']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_cs_x']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_cs_x']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_cs_x']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_xs_c']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_xs_c']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_xs_c']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_xs_c']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_c_t']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_c_t']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_c_t']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_c_t']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_dzcs']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_dzcs']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_dzcs']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_dzcs']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_jzcs']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_jzcs']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_jzcs']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_jzcs']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_t_l']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_l']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_t_l']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_l']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_t_w']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_w']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_t_w']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_w']").addClass("dxeTextBox_form_input_write");
-            
-            $("#zxXX table[id*='bzx_t_h']").removeClass("dxeTextBox_form_table_read");
-            $("#zxXX input[id*='bzx_t_h']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#zxXX table[id*='bzx_t_h']").addClass("dxeTextBox_form_table_write");
-            $("#zxXX input[id*='bzx_t_h']").addClass("dxeTextBox_form_input_write");
-        }
-
-        function set_cbXX_read(){//目标成本/件：升级版本时候就不可以更改了
-            $("#cbXX table[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_table_write");
-            $("#cbXX input[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_input_write");
-            $("#cbXX table[id*='cbfx_mb_j']").addClass("dxeTextBox_form_table_read");
-            $("#cbXX input[id*='cbfx_mb_j']").attr("readOnly","readOnly").addClass("dxeTextBox_form_input_read");
-        }
-
-        function set_cbXX_write(){
-            $("#cbXX table[id*='cbfx_mb_j']").removeClass("dxeTextBox_form_table_read");
-            $("#cbXX input[id*='cbfx_mb_j']").removeAttr("readOnly").removeClass("dxeTextBox_form_input_read");                
-            $("#cbXX table[id*='cbfx_mb_j']").addClass("dxeTextBox_form_table_write");
-            $("#cbXX input[id*='cbfx_mb_j']").addClass("dxeTextBox_form_input_write");
-        }
-
-        function set_gv_read(){
-            $("#bzclXX input[id*='btnadd']").hide();
-            $("#bzclXX input[id*='btndel']").hide();
-
-            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                $(item).find("table[id*=sl]").addClass("dxeTextBox_read");
-                $(item).find("input[id*=sl]").attr("readOnly","readOnly").addClass("dxeTextBox_read");
-
-                $(item).find("table[id*=bm]").parent().next().find("i[id*=bm_i]").removeClass("i_show").addClass("i_hidden");
-            });
-        }
-
-        function set_gv_write(){
-            $("#bzclXX input[id*='btnadd']").show();
-            $("#bzclXX input[id*='btndel']").show();
-
-            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                $(item).find("table[id*=sl]").removeClass("dxeTextBox_read");
-                $(item).find("input[id*=sl]").removeAttr("readOnly").addClass("dxeTextBox_read");
-
-                $(item).find("table[id*=bm]").parent().next().find("i[id*=bm_i]").removeClass("i_hidden").addClass("i_show");
-            });
-        }
-
     </script>
 
     <script type="text/javascript">
@@ -1287,14 +1003,7 @@
                                 <td style="width:105px;"><font color="red">&nbsp;</font>版本</td>
                                 <td><asp:TextBox ID="ver"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>                                
                             </tr>
-                            <tr>       
-                                <td><font color="red">*</font>申请类型</td>
-                                <td>
-                                    <dx:ASPxComboBox ID="typeno" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="typeno_c">
-                                        <ClientSideEvents LostFocus="function(s, e) {typeno_change(s);}"   />
-                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                    </dx:ASPxComboBox>
-                                </td>                         
+                            <tr>                          
                                 <td><font color="red">&nbsp;</font>发自</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="site" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
@@ -1302,7 +1011,11 @@
                                 <td><font color="red">&nbsp;</font>发至</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="ship" class="lineread" ReadOnly="True" Width="260px"/>
-                                </td>
+                                </td>    
+                                <td><font color="red">&nbsp;</font>申请类型</td>
+                                <td>
+                                    <asp:TextBox ID="typeno"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                </td>  
                             </tr>
                             <tr>
                                 <td><font color="red">&nbsp;</font>顾客</td>
@@ -1811,9 +1524,8 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound"
-                                     OnCustomCallback="gv_CustomCallback">
-                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" EndCallback="function(s, e) { ResetCal(); }" />
+                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound">
+                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />

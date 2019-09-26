@@ -203,14 +203,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         {
             bindtab(); bindtab_2(); bindtab_3();
         }
-
-        if (ver.Text == "A0" || ver.Text == "")
-        {
-            typeno.Value = "新增";
-            typeno.Enabled = false;
-        }
-
-
+        
         //if (StepID.ToUpper() != SQ_StepID && StepID != "A")
         //{
         //    applytype.CssClass = "lineread";
@@ -234,8 +227,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
 
         Setbzlb();//绑定包装类别
-        Settypeno(ver.Text);//绑定申请类别
-        //Setfilestype();//绑定附件类别
 
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
@@ -631,37 +622,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);//RefreshRow();
     }
 
-    //绑定申请类别
-    public void Settypeno(string ver)
-    {
-        typeno.Columns.Clear();
-        string lssql = "";
-        if (ver == "A0" || ver == "")
-        {
-            lssql = @"select [Code],[Name]
-                        from (
-	                        select '新增' [Code],'新增' [Name],0 rownum
-	                        ) a
-                        order by rownum";
-        }
-        else
-        {
-            lssql = @"select [Code],[Name]
-                        from (
-	                        select '零件信息修改' [Code],'零件信息修改' [Name],1 rownum
-	                        union 
-	                        select '装箱数据修改' [Code],'装箱数据修改' [Name],2 rownum
-	                        union 
-	                        select '包装明细修改' [Code],'包装明细修改' [Name],3 rownum
-	                        ) a
-                        order by rownum";
-        }
-        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
-        typeno.ValueField = "Name";
-        typeno.Columns.Add("Name", "描述", 80);
-        typeno.DataSource = ldt;
-        typeno.DataBind();
-    }
 
     //绑定包装类别
     public void Setbzlb()
@@ -684,26 +644,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         bzlb.DataSource = ldt;
         bzlb.DataBind();
     }
-
-    ////绑定附件类别
-    //public void Setfilestype()
-    //{
-    //    files_type.Columns.Clear();
-    //    string lssql = @"select [Code],[Name]
-    //                    from (
-    //                     select '零件图片' [Code],'零件图片' [Name],0 rownum
-    //                     union 
-    //                     select '包装箱内部' [Code],'包装箱内部' [Name],1 rownum
-    //                     union 
-    //                     select '包装箱外观' [Code],'包装箱外观' [Name],2 rownum
-    //                     ) a
-    //                    order by rownum";
-    //    DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
-    //    files_type.ValueField = "Name";
-    //    files_type.Columns.Add("Name", "描述", 80);
-    //    files_type.DataSource = ldt;
-    //    files_type.DataBind();
-    //}
 
 
     #region "上传文件"
@@ -840,34 +780,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     }
 
-
-    [WebMethod]
-    public static string GetData(string part, string domain, string site, string ship,string UserId)
-    {
-        string sql_head_con = @"exec Report_Pack_edit '" + part + "','" + domain + "','" + site + "','" + ship + "','" + UserId + "'";
-        DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
-        DataTable ldt_head = ds_head_con.Tables[0];
-        //DataTable ldt_detail = ds_head_con.Tables[1];
-
-        string result = ldt_head.ToJsonString(); 
-        return result;
-
-    }
-
-    protected void gv_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
-    {
-        string param = e.Parameters.Trim();
-        if (param == "reload")
-        {
-            string sql_head_con = @"exec Report_Pack_edit '" + part.Text + "','" + domain.Text + "','" + site.Text + "','" + ship.Text + "','" + UserId + "'";
-            DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
-            //DataTable ldt_head = ds_head_con.Tables[0];
-            DataTable ldt_detail = ds_head_con.Tables[1];
-
-            this.gv.DataSource = ldt_detail;
-            this.gv.DataBind();
-        }
-    }
     private bool SaveData()
     {
         bool bflag = false;
@@ -882,7 +794,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         string applyname = ApplyName.Text;
         string lspart = part.Text;
         string lsver = ver.Text;
-        string lstypeno = typeno.Value.ToString();//typeno.Value == null ? "" : typeno.Value.ToString();
+        string lstypeno = typeno.Text;
         string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();//bzlb.SelectedValue;
 
         string manager_flag = ""; string zg_id = "", manager_id = "";
@@ -909,7 +821,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         for (int i = 0; i < ls.Count; i++)
         {
-            if (ls[i].Code.ToLower() == "typeno") { ls[i].Value = lstypeno; }//申请类型
             if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
             if (ls[i].Code.ToLower() == "cbfx_cb_rate")
             {//包装成本比列
@@ -1075,10 +986,10 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         //bom 修改
         string IsModifyByBom = "N";
-        if (lstypeno == "包装明细修改")
-        {
-            IsModifyByBom = "Y";
-        }
+        //if (lstypeno == "包装明细修改")
+        //{
+        //    IsModifyByBom = "Y";
+        //}
         Pgi.Auto.Common lcIsModifyByBom = new Pgi.Auto.Common();
         lcIsModifyByBom.Code = "IsModifyByBom";
         lcIsModifyByBom.Key = "";
