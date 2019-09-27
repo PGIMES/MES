@@ -452,7 +452,7 @@
             // 零件发运重量=(毛重/托÷数量/托)  
             var ljfyzl=0;
             if(sl_t!=0){ljfyzl=(Number(mz_t)/sl_t);}
-            ljfyzl=ljfyzl.toFixed(4);
+            ljfyzl=ljfyzl.toFixed(10);
             $("#zxXX input[id*='bzx_ljfyzl']").val(ljfyzl);
 
             //实际成本/件=(成本/托÷数量/托) 
