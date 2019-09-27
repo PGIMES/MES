@@ -119,6 +119,27 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
             }
         }
     }
+
+    protected void gv_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType == GridViewRowType.Data)
+        {
+            string part = Convert.ToString(e.GetValue("part"));
+            string GroupID = Convert.ToString(e.GetValue("GroupID"));
+            if (GroupID != "")
+            {
+                string FormNo = Convert.ToString(e.GetValue("FormNo"));
+                string groupid = Convert.ToString(e.GetValue("GroupID"));
+                e.Row.Cells[2].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=6fe4a501-d522-458b-a46c-0baa6162d8d3&instanceid=" 
+                    + e.GetValue("FormNo") + "&groupid=" + groupid + "&display=1' target='_blank'>" + part + "</a>";
+
+            }
+            else
+            {
+                e.Row.Cells[2].Text = part;
+            }
+        }
+    }
 }
 
 public class key

@@ -110,7 +110,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="FormNo" AutoGenerateColumns="False" Width="1000px" OnPageIndexChanged="gv_PageIndexChanged"  
-                        ClientInstanceName="grid" OnCustomSummaryCalculate="gv_CustomSummaryCalculate">
+                        ClientInstanceName="grid" OnCustomSummaryCalculate="gv_CustomSummaryCalculate" OnHtmlRowCreated="gv_HtmlRowCreated">
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -122,14 +122,13 @@
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>            
                             <dx:GridViewDataTextColumn Caption="PGI零件号" FieldName="part" Width="70px" VisibleIndex="1" >
-                                <Settings AllowCellMerge="True" /> 
-                                <DataItemTemplate>
+                                <%--<DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_part" runat="server" Text='<%# Eval("part")%>' Cursor="pointer" ClientInstanceName='<%# "part"+Container.VisibleIndex.ToString() %>'
-                                         NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=6fe4a501-d522-458b-a46c-0baa6162d8d3&instanceid="+ Eval("FormNo")+"&groupid="+ Eval("GroupID")+"&display=1" %>'  
+                                        NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=6fe4a501-d522-458b-a46c-0baa6162d8d3&instanceid="+ Eval("FormNo")+"&groupid="+ Eval("GroupID")+"&display=1" %>'
                                          Target="_blank"
                                         >                                        
                                     </dx:ASPxHyperLink>
-                                </DataItemTemplate> 
+                                </DataItemTemplate> --%>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="顾客零件号" FieldName="custpart" Width="120px" VisibleIndex="2" />
                             <dx:GridViewDataTextColumn Caption="顾客" FieldName="custname" Width="260px" VisibleIndex="2"/>
@@ -155,6 +154,8 @@
                             <dx:GridViewDataTextColumn Caption="包装类别" FieldName="bzlb" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="版本" FieldName="ver" Width="40px" VisibleIndex="15" />
                             <dx:GridViewDataTextColumn Caption="发自" FieldName="site" Width="40px" VisibleIndex="16" />
+                            <dx:GridViewDataTextColumn Caption="GroupID" FieldName="GroupID" VisibleIndex="98" Width="0px"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                             <%--<dx:GridViewDataTextColumn Caption="表单编号" FieldName="FormNo" Width="130px" VisibleIndex="26"/>
                             <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="28"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="id_dtl" FieldName="id_dtl" VisibleIndex="99"
