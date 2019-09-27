@@ -203,7 +203,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         {
             bindtab(); bindtab_2(); bindtab_3();
         }
-        
+
         //if (StepID.ToUpper() != SQ_StepID && StepID != "A")
         //{
         //    applytype.CssClass = "lineread";
@@ -226,6 +226,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
 
 
+        SetVer();//绑定版本
         Setbzlb();//绑定包装类别
 
         DisplayModel = Request.QueryString["display"] ?? "0";
@@ -458,10 +459,10 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     {
         this.gv.DataSource = dt;
         this.gv.DataBind();
-        setGridIsRead(dt, ver.Text);
+        setGridIsRead(dt, typeno.Text);
     }
 
-    public void setGridIsRead(DataTable ldt_detail,string ver)
+    public void setGridIsRead(DataTable ldt_detail,string typeno)
     {
         //特殊处理，签核界面，明细的框框拿掉
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
@@ -472,7 +473,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
-            if (state == "edit" || ver != "A0")
+            if (state == "edit" || typeno != "新增")
             {
                 //((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
                 //((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
@@ -483,7 +484,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
                 //((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
 
-                if (state != "edit" && ver != "A0")
+                if (state != "edit" && typeno != "新增")
                 {
                     if (ldt_flow_pro.Rows.Count == 0)
                     {
@@ -511,7 +512,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     public void setread(int i)
     {
-        bzlb.Enabled = false;//包装类别
+        ver.Enabled = false;bzlb.Enabled = false;//包装类别
         ljcc_l.Enabled = false; ljcc_w.Enabled = false; ljcc_h.Enabled = false;
         gdsl_cp.Enabled = false; gdsl_bcp.Enabled = false; //klgx.Enabled = false;
         bzx_cc.CssClass = "lineread"; bzx_cc.ReadOnly = true;//箱尺寸(L*W*H)
@@ -622,7 +623,17 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);//RefreshRow();
     }
 
-
+    //绑定版本
+    public void SetVer()
+    {
+        ver.Columns.Clear();
+        string lssql = @"select ver from [dbo].[PGI_PackScheme_Ver] order by sort";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+        ver.ValueField = "ver";
+        ver.Columns.Add("ver", "版本", 80);
+        ver.DataSource = ldt;
+        ver.DataBind();
+    }
     //绑定包装类别
     public void Setbzlb()
     {
@@ -695,7 +706,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
     }
     #endregion
 
-    public static string CheckVer_data(string part, string domain, string site, string ship, string ver, string formno)
+    public static string CheckVer_data(string part, string domain, string site, string ship, string typeno, string formno)
     {
         string flag = "";
         string sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
@@ -709,7 +720,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         if (flag == "")
         {
-            if (ver == "A0")
+            if (typeno == "新增")
             {
                 sql = @"select * from [dbo].[PGI_PackScheme_Main] where part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                 DataTable dt_A0 = DbHelperSQL.Query(sql).Tables[0];
@@ -722,21 +733,11 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             else
             {
                 //获取最新版本的版本号
-                sql = @"select a.part,a.domain,a.ver,b.sort 
-                    from [dbo].[PGI_PackScheme_Main] a 
-                        left join [dbo].[PGI_PackScheme_Ver] b on a.ver=b.ver
+                sql = @"select a.* from [dbo].[PGI_PackScheme_Main] a 
                     where a.b_flag=1 and a.part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                 DataTable dt_other = DbHelperSQL.Query(sql).Tables[0];
 
-                if (dt_other.Rows.Count > 0)
-                {
-                    DataTable dt_ver = DbHelperSQL.Query("select top 1 ver,sort from [dbo].[PGI_PackScheme_Ver] where sort>"+ Convert.ToInt32(dt_other.Rows[0]["sort"].ToString())+" order by sort").Tables[0];
-                    if (dt_ver.Rows[0]["ver"].ToString() != ver)
-                    {
-                        flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "修改申请版本" + ver + "，不正确，不能申请!<br />";
-                    }
-                }
-                else
+                if (dt_other.Rows.Count <= 0)
                 {
                     flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship + "没有申请过，不能修改申请!<br />";
                 }
@@ -748,12 +749,12 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
 
     [WebMethod]
-    public static string CheckData(string applyid, string formno, string part, string domain, string site, string ship, string ver)
+    public static string CheckData(string applyid, string formno, string part, string domain, string site, string ship, string typeno)
     {
         string manager_flag = ""; string zg_id = "", manager_id = "";
         CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
 
-        string part_flag = CheckVer_data(part, domain, site, ship, ver, formno);
+        string part_flag = CheckVer_data(part, domain, site, ship, typeno, formno);
 
         string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
         return result;
@@ -780,7 +781,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
     }
 
-    private bool SaveData()
+    private bool SaveData(string action)
     {
         bool bflag = false;
 
@@ -792,7 +793,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
         string applyid = ApplyId.Text;
         string applyname = ApplyName.Text;
-        string lspart = part.Text;
+        string lspart = part.Text; string lsdomain = domain.Text; string lssite = site.Text; string lsship = ship.Text;
         string lsver = ver.Text;
         string lstypeno = typeno.Text;
         string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();//bzlb.SelectedValue;
@@ -984,18 +985,6 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         lcfiles_bzx_wg.Value = files_bzx_wg;
         ls.Add(lcfiles_bzx_wg);
 
-        //bom 修改
-        string IsModifyByBom = "N";
-        //if (lstypeno == "包装明细修改")
-        //{
-        //    IsModifyByBom = "Y";
-        //}
-        Pgi.Auto.Common lcIsModifyByBom = new Pgi.Auto.Common();
-        lcIsModifyByBom.Code = "IsModifyByBom";
-        lcIsModifyByBom.Key = "";
-        lcIsModifyByBom.Value = IsModifyByBom;
-        ls.Add(lcIsModifyByBom);
-
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
 
@@ -1005,6 +994,28 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
             ldt.Rows[i]["PackNo"] = m_sid;
             ldt.Rows[i]["numid"] = (i + 1);
         }
+
+        //---------------------------------------------------------根据表体数据与上一版本数据比较，更新IsNeedCloseWork---------------------------------------------------------------------
+        string IsModifyByBom = "";//修改申请时，决定是bom修改的条件：包材类别=E时，与上一版本比较，存在新增行，删除行，修改行（修改数量）
+
+        if (action == "submit")
+        {
+            try
+            {
+                PackSheme pack = new PackSheme();
+                IsModifyByBom = pack.PackSheme_IsModifyByBom(ldt, lstypeno, this.m_sid, lspart, lsdomain, lssite, lsship).Rows[0][0].ToString();
+            }
+            catch (Exception ex)
+            {
+                IsModifyByBom = "e";
+            }
+        }
+
+        Pgi.Auto.Common lcIsModifyByBom = new Pgi.Auto.Common();
+        lcIsModifyByBom.Code = "IsModifyByBom";
+        lcIsModifyByBom.Key = "";
+        lcIsModifyByBom.Value = IsModifyByBom;
+        ls.Add(lcIsModifyByBom);
 
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
@@ -1076,7 +1087,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
         else
         {
-            flag = SaveData();
+            flag = SaveData("save");
         }
         //保存当前流程
         if (flag == true)
@@ -1096,7 +1107,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
         }
         else
         {
-            flag = SaveData();
+            flag = SaveData("submit");
         }
         //发送
         if (flag == true)

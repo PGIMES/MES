@@ -75,7 +75,7 @@
             //    RefreshMain();
             //});
 
-            var typeno=$("input[type!=hidden][id*='typeno']").val();
+            var typeno=$("#ljXX input[id*='typeno']").val();
             if (state=='edit'|| (typeno!="" && typeno!="新增")) {
                 RefreshMain();
                 RefreshRow();
@@ -305,7 +305,7 @@
 
         function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price,klgx) 
         {            
-            $("#ljXX input[id*='ver']").val('A0');
+            $("#ljXX input[type!=hidden][id*='ver']").val('A0');
             $("#ljXX input[id*='typeno']").val('新增');
 
             $("#ljXX [id*='domain']").val(domain);
@@ -681,7 +681,7 @@
             if($("#ljXX input[id*='part']").val()==""){
                 msg+="【PGI_零件号】不可为空.<br />";
             }
-            if($("#ljXX input[id*='ver']").val()==""){
+            if($("#ljXX input[type!=hidden][id*='ver']").val()==""){
                 msg+="【版本】不可为空.<br />";
             }
             if($("#ljXX input[id*='domain']").val()==""){
@@ -842,12 +842,12 @@
                 var domain=$("#ljXX input[id*='domain']").val();
                 var site=$("#ljXX input[id*='site']").val();
                 var ship=$("#ljXX input[id*='ship']").val();
-                var ver=$("#ljXX input[id*='ver']").val();
+                var typeno=$("#ljXX input[id*='typeno']").val();
 
                 $.ajax({
                     type: "post",
                     url: "PackScheme.aspx/CheckData",
-                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','ver':'" + ver + "'}",
+                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','typeno':'" + typeno + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -999,11 +999,21 @@
                                 <td><font color="red">&nbsp;</font>申请工厂</td>
                                 <td>
                                     <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
-                                </td>
-                                <td style="width:105px;"><font color="red">&nbsp;</font>版本</td>
-                                <td><asp:TextBox ID="ver"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>                                
+                                </td>   
+                                <td><font color="red">&nbsp;</font>申请类型</td>
+                                <td>
+                                    <asp:TextBox ID="typeno"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                </td>                       
                             </tr>
-                            <tr>                          
+                            <tr>   
+                                <td style="width:105px;"><font color="red">*</font>版本</td>
+                                <td>
+                                    <%--<asp:TextBox ID="ver"  runat="server" class="lineread" ReadOnly="True" Width="260px" />--%>
+                                    <dx:ASPxComboBox ID="ver" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="ver_c">
+                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                    </dx:ASPxComboBox>
+                                    <%--<asp:Label ID="lbl_m" runat="server" Text="新增时默认A0,修改时默认最新生效版本" ></asp:Label>--%>
+                                </td>                        
                                 <td><font color="red">&nbsp;</font>发自</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="site" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
@@ -1011,21 +1021,9 @@
                                 <td><font color="red">&nbsp;</font>发至</td>
                                 <td>
                                     <asp:TextBox runat="server" ID="ship" class="lineread" ReadOnly="True" Width="260px"/>
-                                </td>    
-                                <td><font color="red">&nbsp;</font>申请类型</td>
-                                <td>
-                                    <asp:TextBox ID="typeno"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
-                                </td>  
+                                </td>   
                             </tr>
                             <tr>
-                                <td><font color="red">&nbsp;</font>顾客</td>
-                                <td>
-                                    <asp:TextBox ID="custname"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
-                                </td>
-                                <td><font color="red">&nbsp;</font>顾客零件号</td>
-                                <td>
-                                    <asp:TextBox runat="server" ID="custpart" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
-                                </td>
                                 <td style="width:100px;"><font color="red">*</font>包装类别</td>
                                 <td>
                                     <dx:ASPxComboBox ID="bzlb" runat="server" ValueType="System.String" CssClass="linewrite" Width="260px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f" ClientInstanceName="bzlb_c">
@@ -1038,6 +1036,14 @@
                                         <asp:ListItem Text="原材料包装" Value="原材料包装"></asp:ListItem>
                                         <asp:ListItem Text="内包装" Value="内包装"></asp:ListItem>
                                     </asp:DropDownList>--%>
+                                </td>
+                                <td><font color="red">&nbsp;</font>顾客</td>
+                                <td>
+                                    <asp:TextBox ID="custname"  runat="server" class="lineread" ReadOnly="True" Width="260px" />
+                                </td>
+                                <td><font color="red">&nbsp;</font>顾客零件号</td>
+                                <td>
+                                    <asp:TextBox runat="server" ID="custpart" class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
                                 </td>
                             </tr>
                             <tr>
