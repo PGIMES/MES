@@ -133,20 +133,34 @@
                             <dx:GridViewDataTextColumn Caption="顾客零件号" FieldName="custpart" Width="120px" VisibleIndex="2" />
                             <dx:GridViewDataTextColumn Caption="顾客" FieldName="custname" Width="260px" VisibleIndex="2"/>
                             <dx:GridViewDataTextColumn Caption="发往工厂" FieldName="ship" Width="80px" VisibleIndex="2"/>
-                            <dx:GridViewDataTextColumn Caption="单件重量" FieldName="ljzl" Width="80px" VisibleIndex="2"/>
+                            <dx:GridViewDataTextColumn Caption="单件重量" FieldName="ljzl" Width="60px" VisibleIndex="2">
+                                <PropertiesTextEdit DisplayFormatString="{0:N3}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整托数量" FieldName="bzx_sl_t" Width="70px" VisibleIndex="3"/>
-                            <dx:GridViewDataTextColumn Caption="整托尺寸(L)" FieldName="bzx_t_l" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整托尺寸(W)" FieldName="bzx_t_w" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整托尺寸(H)" FieldName="bzx_t_h" Width="90px" VisibleIndex="4"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整托净重" FieldName="bzx_jz_t" Width="70px" VisibleIndex="5"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整托毛重" FieldName="bzx_mz_t" Width="70px" VisibleIndex="6"></dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="整托成本" FieldName="cbfx_cb_t_total" Width="70px" VisibleIndex="7"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(L)" FieldName="bzx_t_l" Width="80px" VisibleIndex="4">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(W)" FieldName="bzx_t_w" Width="80px" VisibleIndex="4">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托尺寸(H)" FieldName="bzx_t_h" Width="80px" VisibleIndex="4">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托净重" FieldName="bzx_jz_t" Width="70px" VisibleIndex="5">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托毛重" FieldName="bzx_mz_t" Width="70px" VisibleIndex="6">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="整托成本" FieldName="cbfx_cb_t_total" Width="70px" VisibleIndex="7">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="单件成本" FieldName="cbfx_sj_j" Width="60px" VisibleIndex="8"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="年用量" FieldName="nyl" Width="80px" VisibleIndex="9">
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="年包装成本" FieldName="nzj" Width="80px" VisibleIndex="10">
-                                <PropertiesTextEdit DisplayFormatString="{0:N2}"></PropertiesTextEdit>
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="销售价格" FieldName="cbfx_xs_price" Width="60px" VisibleIndex="12"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="包装成本率" FieldName="cbfx_cb_rate" Width="70px" VisibleIndex="12"></dx:GridViewDataTextColumn>
@@ -162,9 +176,9 @@
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>--%>
                         </Columns>
                         <TotalSummary>
-                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="custname" ShowInColumn="custname" ShowInGroupFooterColumn="custname" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="nzj" ShowInColumn="nzj" ShowInGroupFooterColumn="nzj" SummaryType="Sum" />
-                            <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="cbfx_cb_rate" ShowInColumn="cbfx_cb_rate" ShowInGroupFooterColumn="cbfx_cb_rate" SummaryType="Custom" />
+                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="part" ShowInColumn="part" ShowInGroupFooterColumn="part" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="nzj" ShowInColumn="nzj" ShowInGroupFooterColumn="nzj" SummaryType="Sum" />
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N1}" FieldName="cbfx_cb_rate" ShowInColumn="cbfx_cb_rate" ShowInGroupFooterColumn="cbfx_cb_rate" SummaryType="Custom" />
                         </TotalSummary>
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
