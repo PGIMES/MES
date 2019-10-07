@@ -86,7 +86,8 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
 
     }
 
-    decimal sum = 0;    //和
+    decimal sum_nyl = 0;    //和
+    decimal sum_nzj = 0;    //和
     List<key> key_list = new List<key>();
     protected void gv_CustomSummaryCalculate(object sender, DevExpress.Data.CustomSummaryEventArgs e)
     {
@@ -99,7 +100,7 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
                 switch (e.SummaryProcess)
                 {
                     case CustomSummaryProcess.Start:
-                        sum = 0; key_list.Clear();
+                        sum_nyl = 0; sum_nzj = 0; key_list.Clear();
                         break;
                     case CustomSummaryProcess.Calculate:
                         key keys = new key();
@@ -108,12 +109,13 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
                         //不存在 返回null
                         if (key_list.FirstOrDefault(x => x.formno == keys.formno) == null)
                         {
-                            sum += Convert.ToDecimal(e.FieldValue.ToString().Replace("%",""));
+                            sum_nyl += Convert.ToDecimal(view.GetRowValues(e.RowHandle, "ncb").ToString());
+                            sum_nzj += Convert.ToDecimal(view.GetRowValues(e.RowHandle, "nxsjg").ToString());
                             key_list.Add(keys);
                         }
                         break;
                     case CustomSummaryProcess.Finalize:
-                        e.TotalValue = sum.ToString() + "%";
+                        e.TotalValue = (sum_nyl / sum_nzj * 100).ToString("0.0") + "%";
                         break;
                 }
             }

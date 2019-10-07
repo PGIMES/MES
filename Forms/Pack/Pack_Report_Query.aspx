@@ -168,7 +168,12 @@
                             <dx:GridViewDataTextColumn Caption="包装类别" FieldName="bzlb" Width="100px" VisibleIndex="14"></dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="版本" FieldName="ver" Width="40px" VisibleIndex="15" />
                             <dx:GridViewDataTextColumn Caption="发自" FieldName="site" Width="40px" VisibleIndex="16" />
-                            <dx:GridViewDataTextColumn Caption="GroupID" FieldName="GroupID" VisibleIndex="98" Width="0px"
+                            <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="60px" VisibleIndex="17" />
+                            <dx:GridViewDataTextColumn Caption="GroupID" FieldName="GroupID" VisibleIndex="97" Width="0px"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="ncb" FieldName="ncb" VisibleIndex="98" Width="0px"
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="nxsjg" FieldName="nxsjg" VisibleIndex="99" Width="0px"
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                             <%--<dx:GridViewDataTextColumn Caption="表单编号" FieldName="FormNo" Width="130px" VisibleIndex="26"/>
                             <dx:GridViewDataTextColumn Caption="导入QAD" FieldName="isftp" Width="60px" VisibleIndex="28"></dx:GridViewDataTextColumn>
@@ -183,7 +188,7 @@
                         <Styles>
                             <Header BackColor="#99CCFF"></Header>
                             <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
-                            <Footer HorizontalAlign="Right" Font-Bold="true" ForeColor="Red"></Footer>
+                            <Footer HorizontalAlign="Right" ForeColor="Red"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
                 </td>
