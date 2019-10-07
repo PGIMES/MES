@@ -458,8 +458,9 @@
             //实际成本/件=(成本/托÷数量/托) 
             var sj_j=0;
             if(sl_t!=0){sj_j=(Number(cb_t_total)/sl_t);}
-            sj_j=sj_j.toFixed(2);
-            $("#cbXX input[id*='cbfx_sj_j']").val(sj_j);     
+            //sj_j=sj_j.toFixed(2);
+            //$("#cbXX input[id*='cbfx_sj_j']").val(sj_j);     
+            $("#cbXX input[id*='cbfx_sj_j']").val(sj_j.toFixed(2)); 
 
             //包装成本比例=(实际成本/销售价格)
             var cb_rate=0;
