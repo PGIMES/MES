@@ -78,51 +78,53 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
             return;
         }
 
-        int pono_index = 0; int isprint_index = 0;
+        int pono_index = 0; //int isprint_index = 0;
         for (int i = 0; i < this.GV_PART.DataColumns.Count; i++)
         {
             if (this.GV_PART.DataColumns[i].FieldName == "PoNo")
             {
                 pono_index = i;
             }
-            if (this.GV_PART.DataColumns[i].FieldName == "IsPrint")
-            {
-                isprint_index = i;
-            }
+            //if (this.GV_PART.DataColumns[i].FieldName == "IsPrint")
+            //{
+            //    isprint_index = i;
+            //}
         }
 
         string PoNo = Convert.ToString(e.GetValue("PoNo"));
         string groupid = Convert.ToString(e.GetValue("GroupID"));
         string stepid = Convert.ToString(e.GetValue("StepID"));
         e.Row.Cells[pono_index].Text = "<a href='/Platform/WorkFlowRun/Default.aspx?flowid=ce701853-e13b-4c39-9cd6-b97e18656d31&appid=7d6cf334-0227-4fcd-9faf-c2536d10cf8e&instanceid="
-                    + e.GetValue("PoNo") + "&stepid=" + stepid + "&groupid=" + groupid + "&display=1' target='_blank'>" + PoNo.ToString() + "</a>";
+                    + e.GetValue("PoNo") + "&stepid=" + stepid + "&groupid=" + groupid + "&display=1' target='_blank'>" + PoNo.ToString() + "</a>";        
 
-        e.Row.Cells[isprint_index].Style.Add("color", "blue");
-        e.Row.Cells[isprint_index].Attributes.Add("onclick", "show_his('" + PoNo + "')");
-
+        //e.Row.Cells[isprint_index].Style.Add("color", "blue");
+        //e.Row.Cells[isprint_index].Attributes.Add("onclick", "show_his('" + PoNo + "')");
     }
     protected void GV_PART_HtmlRowPrepared(object sender, ASPxGridViewTableRowEventArgs e)
     {
         if (e.RowType != GridViewRowType.Data) return;
 
+        string PoNo = e.GetValue("PoNo").ToString();
         DateTime plan_date = Convert.ToDateTime(e.GetValue("PlanReceiveDate").ToString());
         DateTime deliveryDate = Convert.ToDateTime(e.GetValue("deliveryDate").ToString());
         string tr_effdate = e.GetValue("tr_effdate").ToString();
         TimeSpan ts = plan_date - deliveryDate;
         int minutes = Convert.ToInt32(e.GetValue("TOPTime").ToString());
 
-        int jh = 0, sj = 0, top1 = 0;
+        int jh = 0, sj = 0, top1 = 0, isprint = 0;
         if (drop_type.SelectedValue == "PO")
         {
             jh = 23;//计划到货期
-            sj = 26;//实际到货日期
             top1 = 25;//TOP1时间
+            sj = 26;//实际到货日期
+            isprint = 30;//打印状态
         }
         else
         {
             jh = 18;//计划到货期
-            sj = 21;//实际到货日期
             top1 = 20;//TOP1时间
+            sj = 21;//实际到货日期
+            isprint = 22;//打印状态
         }
 
         if (tr_effdate == "" && ts.Days > 3)
@@ -175,6 +177,10 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         {
             e.Row.Cells[top1].Style.Add("background-color", "yellow");//TOP1时间
         }
+
+
+        e.Row.Cells[isprint].Style.Add("color", "blue");
+        e.Row.Cells[isprint].Attributes.Add("onclick", "show_his('" + PoNo + "')");
 
     }
     protected void GV_PART_HtmlDataCellPrepared(object sender, ASPxGridViewTableDataCellEventArgs e)
