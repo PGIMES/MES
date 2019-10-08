@@ -319,6 +319,7 @@
                                             </ul>
                                         </li>
                                         <li><a href="/Fin/Fin_idh_invoice_Report.aspx" target="_blank">国内客户开票通知</a></li>
+                                        <li><a href="/Fin/Fin_xxwms_det_Query.aspx" target="_blank">物流仓储运费浏览</a></li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_Fin" name="div_Fin">
