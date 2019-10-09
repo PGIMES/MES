@@ -2284,7 +2284,7 @@ public partial class Pur_Po : System.Web.UI.Page
         }
         else
         {
-            sql_po_wltype = @"select LB as value from PUR_PO_CLASS";
+            sql_po_wltype = @"select LB as value from PUR_PO_CLASS where ms_code='3'";
         }
         DataTable ldt_po_wltype = DbHelperSQL.Query(sql_po_wltype).Tables[0];
 
