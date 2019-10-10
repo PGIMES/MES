@@ -43,7 +43,7 @@
                         var ls_line = values[0][1];
                         var fkrate = values[0][2].replace("%", "");//累计付款比例
                         var fkamt = values[0][3];//付款金额(原币)
-                        var checkdate = values[0][4];//验收日期
+                        var checkdate = values[0][4] == null ? "" : values[0][4];//验收日期
                         var payclause_rate = values[0][5];//条款摘要
                         var domain = values[0][6];//域
 
