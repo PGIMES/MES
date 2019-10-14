@@ -65,7 +65,7 @@
             <SortedDescendingHeaderStyle BackColor="#4870BE" />
         </asp:GridView>
         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ApplicationServices %>" 
-            SelectCommand="SELECT * FROM [PUR_PR_Category_dtl] ORDER BY [ID]" 
+            SelectCommand="SELECT * FROM [PUR_PR_Category_dtl] where yn='Y' ORDER BY [ID]" 
             UpdateCommand="UPDATE PUR_PR_Category_dtl SET deptcode = @deptcode, deptname = @deptname WHERE (ID = @ID)">
             <UpdateParameters>
                 <asp:Parameter Name="deptcode" />
