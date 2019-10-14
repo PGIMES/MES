@@ -1097,6 +1097,7 @@
                                                                                       
                                     <asp:Button ID="btnAddDetl" runat="server" Text="添加" CssClass="btn btn-default btn-sm" OnClientClick="return Add_check()"   OnClick="btnAddDetl_Click"/>
                                     <asp:Button ID="btnDelete" runat="server" Text="删除"  CssClass="btn btn-default btn-sm"   OnClick="btnDelete_Click"/><%--btn btn-primary btn-sm--%>
+                                    <asp:Button ID="btnupload_dj_x" runat="server" Text="导入修磨刀"  CssClass="btn btn-default btn-sm"/>
 
                                     <%--Border-BorderColor="#DCDCDC"--%>
                                         <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue" 
