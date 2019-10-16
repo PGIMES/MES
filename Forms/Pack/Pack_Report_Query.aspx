@@ -181,7 +181,7 @@
                                  HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>--%>
                         </Columns>
                         <TotalSummary>
-                            <dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="part" ShowInColumn="part" ShowInGroupFooterColumn="part" SummaryType="Sum" />
+                            <%--<dx:aspxsummaryitem DisplayFormat="合计:{0:N0}" FieldName="part" ShowInColumn="part" ShowInGroupFooterColumn="part" SummaryType="Sum" />--%>
                             <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="nzj" ShowInColumn="nzj" ShowInGroupFooterColumn="nzj" SummaryType="Sum" />
                             <dx:ASPxSummaryItem DisplayFormat="{0:N1}" FieldName="cbfx_cb_rate" ShowInColumn="cbfx_cb_rate" ShowInGroupFooterColumn="cbfx_cb_rate" SummaryType="Custom" />
                         </TotalSummary>
