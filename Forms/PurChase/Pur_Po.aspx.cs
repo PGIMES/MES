@@ -1675,7 +1675,7 @@ public partial class Pur_Po : System.Web.UI.Page
                     }
 
                 }*/
-            if (ldt1.Rows[i]["deliveryDate"].ToString() != "")
+                if (ldt1.Rows[i]["deliveryDate"].ToString() != "")
                 {
                     ldr["deliveryDate"] = Convert.ToDateTime(ldt1.Rows[i]["deliveryDate"].ToString()).ToShortDateString();
                 }
@@ -1693,6 +1693,18 @@ public partial class Pur_Po : System.Web.UI.Page
 
                 ldr["attachments"] = ldt1.Rows[i]["attachments"].ToString();
                 ldr["attachments_name"] = "查看";
+
+                if (ldt1.Rows[i]["wlh"].ToString().Length >= 1)
+                {
+                    if (ldt1.Rows[i]["wlh"].ToString().Right(1).ToUpper() == "X")//修磨刀
+                    {
+                        ldr["po_wltype"] = "刀具";
+                        ldr["taxrate"] = "13";
+                        ldr["taxprice"] = (Convert.ToDecimal(ldt1.Rows[i]["notax_targetPrice"].ToString()) * (1 + Convert.ToDecimal(ldr["taxrate"]) / 100)).ToString("0.0000");
+                        ldr["TotalPrice"] = (Convert.ToDecimal(ldr["taxprice"]) * Convert.ToDecimal(ldt1.Rows[i]["qty"].ToString())).ToString("0.0000");
+                        ldr["PlanReceiveDate"] = ldr["deliveryDate"];
+                    }
+                }
 
                 ln += 1;
                 ldt.Rows.Add(ldr);
