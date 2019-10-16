@@ -18,6 +18,9 @@ using ICSharpCode.SharpZipLib.Zip;
 
 public partial class PUR_PR : PGIBasePage
 {
+    public string js_UserId = "";
+    public string js_DeptName = "";
+
     string m_sid = "";
     public string fieldStatus;    
     public string DisplayModel;
@@ -223,6 +226,15 @@ protected void Page_Load(object sender, EventArgs e)
         Session["UserAD"] = LogUserModel.ADAccount;
         Session["UserId"] = LogUserModel.UserId;
 
+        js_UserId = LogUserModel.UserId;
+        js_DeptName = LogUserModel.DepartName;
+
+        //批量上传修磨刀
+        //if (LogUserModel.UserId == "00837 " || LogUserModel.DepartName.Contains("IT") == true)
+        //{
+        //    link_upload_dj_x.Visible = true;
+        //}
+
         if (!IsPostBack)
         {   //文件上传在updatepanel需用此方法+enctype = "multipart/form-data" ，否则无法上传文件
             PostBackTrigger trigger = new PostBackTrigger();
@@ -292,7 +304,7 @@ protected void Page_Load(object sender, EventArgs e)
 
                 if (dtMst.Rows.Count > 0)
                 {
-                    PRNo.Text = dtMst.Rows[0]["PRNo"].ToString(); prtype_value = dtMst.Rows[0]["PRType"].ToString();
+                    PRNo.Text = dtMst.Rows[0]["PRNo"].ToString(); prtype_value = dtMst.Rows[0]["PRType"].ToString(); prtype_hd.Text = prtype_value;
 
                     CreateById.Text = dtMst.Rows[0]["CreateById"].ToString();
                     CreateByName.Text = dtMst.Rows[0]["CreateByName"].ToString();
@@ -303,7 +315,7 @@ protected void Page_Load(object sender, EventArgs e)
                     bind_prtype(CreateById.Text);
 
                     //将表单主表值给页面
-                    Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main_new", this, dtMst.Rows[0]);
+                    Pgi.Auto.Control.SetControlValue("PUR_PR_Main_Form", "main_new_1", this, dtMst.Rows[0]);
 
                     //显示文件
                     //ShowFile(dtMst.Rows[0]["files"] == null ? "" : dtMst.Rows[0]["files"].ToString(), '|');
@@ -328,7 +340,23 @@ protected void Page_Load(object sender, EventArgs e)
             PRNo.Text = m_sid;
             //ViewState["PRNo"] = m_sid;
             //ViewState["dtl"] = ldt_detail;
-            loadControl(ldt_detail);
+
+            //loadControl(ldt_detail);
+            //setGridIsRead(ldt_detail, prtype_value);
+
+            if (dj_x.Text=="Y")
+            {
+                btnAddDetl.Visible = false;
+                btnDelete.Visible = false;
+                gvdtl.Visible = false;
+
+                gvdtl_dj_x.Visible = true;
+                loadControl_dj_x(ldt_detail);
+            }
+            else
+            {
+                loadControl(ldt_detail);
+            }
 
             setGridIsRead(ldt_detail, prtype_value);
 
@@ -497,13 +525,13 @@ protected void Page_Load(object sender, EventArgs e)
 
         btnAddDetl.Visible = false;
         btnDelete.Visible = false;
+        link_upload_dj_x.Visible = false;
 
         //phone.CssClass = "lineread";
         domain.CssClass = "lineread";
         applydept.CssClass = "lineread";
         prtype.CssClass = "lineread";
         prreason.CssClass = "lineread";
-
 
         domain.Enabled = false;
         applydept.Enabled = false;
@@ -512,85 +540,88 @@ protected void Page_Load(object sender, EventArgs e)
         //file.Visible = false;
         this.uploadcontrol.Visible = false;
 
-        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh") is TextBox)
+        if (this.gvdtl.Visible == true)
         {
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BackColor = System.Drawing.Color.Transparent;
-        }
-        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice") is TextBox)
-        {
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
-        }
-        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype") is TextBox)
-        {
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
-        }
-        if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype") is TextBox)
-        {
-            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
-        }
-        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit") is ASPxComboBox)
-        {
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
-        }
+            if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh") is TextBox)
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).ReadOnly = true;
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BorderStyle = BorderStyle.None;
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).Attributes.Remove("ondblclick");
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlh"], "wlh")).BackColor = System.Drawing.Color.Transparent;
+            }
+            if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice") is TextBox)
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).Style.Add("text-align", "right");
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_historyprice"], "notax_historyprice")).BackColor = System.Drawing.Color.Transparent;
+            }
+            if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype") is TextBox)
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlsubtype"], "wlsubtype")).BackColor = System.Drawing.Color.Transparent;
+            }
+            if (this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype") is TextBox)
+            {
+                ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wltype"], "wltype")).BackColor = System.Drawing.Color.Transparent;
+            }
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit") is ASPxComboBox)
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Enabled = false;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).Width = Unit.Pixel(30);
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["unit"], "unit")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            }
 
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).Width = Unit.Pixel(120);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["recmdvendorname"], "recmdvendorname")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(110);
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).Width = Unit.Pixel(110);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["usefor"], "usefor")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
-        ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Enabled = false;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).Width = Unit.Pixel(30);
+            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["currency"], "currency")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).ReadOnly = true;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
-                
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BorderStyle = BorderStyle.None;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BackColor = System.Drawing.Color.Transparent;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).Style.Add("text-align", "right");
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlmc"], "wlmc")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["wlms"], "wlms")).BorderStyle = BorderStyle.None;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BackColor = System.Drawing.Color.Transparent;
 
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BackColor = System.Drawing.Color.Transparent;
-        
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
-        ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["notax_targettotal"], "notax_targettotal")).BackColor = System.Drawing.Color.Transparent;
 
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(72);
-        ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["qty"], "qty")).BackColor = System.Drawing.Color.Transparent;
 
-        if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc") is ASPxComboBox)
-        {
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Enabled = false;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
-            ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["Note"], "Note")).BackColor = System.Drawing.Color.Transparent;
+
+            ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Enabled = false;
+            ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+            ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).Width = Unit.Pixel(72);
+            ((ASPxDateEdit)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["deliverydate"], "deliverydate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc") is ASPxComboBox)
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Enabled = false;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            }
         }
     }
 
@@ -688,46 +719,61 @@ protected void Page_Load(object sender, EventArgs e)
         {
             //暂时取pt_mstr表的名称、描述，不然历史价格开窗会有问题
             //sql = @"select a.wlh,a.wlmc,a.ms,a.class,a.type,a.upload,b.pt_status
-            sql = @"select a.wlh,b.pt_desc1 wlmc,b.pt_desc2 ms,a.class,a.type,a.upload,b.pt_status
-                    from dbo.PGI_BASE_PART_DATA a 
-	                    left join dbo.qad_pt_mstr b on a.domain=b.pt_domain and a.wlh=b.pt_part
-                    where a.wlh='{0}' and a.domain='{1}' and RIGHT(a.wlh,1)<>'X' and (b.pt_status<>'DEAD' and b.pt_status<>'OBS')";
+            sql = @"select * 
+                    from (
+                        select a.wlh,b.pt_desc1 wlmc,b.pt_desc2 ms,a.class,a.type,a.upload,b.pt_status
+                            , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.domain and [pod_sched]=1 and [pod_part]=a.wlh  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                        from dbo.PGI_BASE_PART_DATA a 
+	                        left join dbo.qad_pt_mstr b on a.domain=b.pt_domain and a.wlh=b.pt_part
+                        where a.wlh='{0}' and a.domain='{1}' and RIGHT(a.wlh,1)<>'X' and (b.pt_status<>'DEAD' and b.pt_status<>'OBS')
+                        ) aa where ispodsched=0
+                    order by aa.wlh";
         }
 
         if (P3 == "非刀具辅料类")
         {
-            sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
-                    from dbo.qad_pt_mstr a
-	                    left join(
-		                    select distinct pl_domain, PL_PROD_LINE 
-			                    ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
-				                    when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
-				                    end as pt_prod_line_mc 
-		                    from qad.dbo.qad_pl_mstr
-		                    where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
-		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
-                    where pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'z%' and pt_prod_line<>'4010'
-                        and pt_part='{0}' and pt_domain='{1}' ";
+            sql = @"select * 
+                    from (
+                        select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
+                            , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                        from dbo.qad_pt_mstr a
+	                        left join(
+		                        select distinct pl_domain, PL_PROD_LINE 
+			                        ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
+				                        when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
+				                        end as pt_prod_line_mc 
+		                        from qad.dbo.qad_pl_mstr
+		                        where left(pl_prod_line,1) in ('4') and pl_prod_line<>'4010'
+		                        ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
+                        where pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'z%' and pt_prod_line<>'4010'
+                            and pt_part='{0}' and pt_domain='{1}' 
+                        ) aa where ispodsched=0
+                    order by aa.wlh";
         }
 
         if (P3 == "原材料")
         {
-            sql = @"select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
-                    from dbo.qad_pt_mstr a
-	                    left join(
-		                    select distinct pl_domain, PL_PROD_LINE 
-			                    ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
-				                    when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
-				                    end as pt_prod_line_mc 
-		                    from qad.dbo.qad_pl_mstr
-		                    where left(pl_prod_line,1) in ('1','2','3')
-		                    ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
-                    where 
-                        (
-                            (pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'P%' and pt_prod_line like '1%' ) 
-                            or pt_part='P0170AA' or pt_part='P0739AA-01' or pt_part='P0738AA-01' or pt_part='P0591AA-01' or pt_part='P0125BA' or pt_part='P0744AA-02' or pt_part='P0744AA-04'
-                        )
-                        and pt_part='{0}' and pt_domain='{1}' ";
+            sql = @"select * 
+                    from (
+                        select pt_part wlh,pt_desc1 wlmc,pt_desc2 ms,pt_prod_line+'-'+isnull(b.pt_prod_line_mc,'') class,'' type,'' upload
+                            , (SELECT  count(1)  FROM [qad].[dbo].[qad_pod_det] where [pod_domain]=a.pt_domain and [pod_sched]=1 and [pod_part]=a.pt_part  and getdate()<=isnull( [pod_end_eff[1]]] , getdate() )    )ispodsched 
+                        from dbo.qad_pt_mstr a
+	                        left join(
+		                        select distinct pl_domain, PL_PROD_LINE 
+			                        ,case when len(pl_desc)-len(replace(pl_desc,'-',''))=2 then SUBSTRING(pl_desc,dbo.fn_find('-',pl_desc,2)+1 ,LEN(pl_desc)-dbo.fn_find('-',pl_desc,1))
+				                        when   len(pl_desc)-len(replace(pl_desc,'-',''))=1 then substring(pl_desc,charindex('-',pl_desc)+1,len(pl_desc)-charindex('-',pl_desc)) else pl_desc
+				                        end as pt_prod_line_mc 
+		                        from qad.dbo.qad_pl_mstr
+		                        where left(pl_prod_line,1) in ('1','2','3')
+		                        ) b on a.pt_domain=b.pl_domain and a.pt_prod_line=b.pl_prod_line
+                        where 
+                            (
+                                (pt_pm_code = 'P' and (pt_status<>'DEAD' and pt_status<>'OBS') and pt_part like 'P%' and pt_prod_line like '1%' ) 
+                                or pt_part='P0170AA' or pt_part='P0739AA-01' or pt_part='P0738AA-01' or pt_part='P0591AA-01' or pt_part='P0125BA' or pt_part='P0744AA-02' or pt_part='P0744AA-04'
+                            )
+                            and pt_part='{0}' and pt_domain='{1}' 
+                        ) aa where ispodsched=0
+                    order by aa.wlh";
         }
         var value = DbHelperSQL.Query(string.Format(sql, P1, P2)).Tables[0];
         if (value.Rows.Count > 0)
@@ -945,21 +991,31 @@ protected void Page_Load(object sender, EventArgs e)
         try
         {
             //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-            formtype = prtype.SelectedValue;
+            formtype = prtype.SelectedValue == "" ? prtype_hd.Text: prtype.SelectedValue;
             string domain_value = domain.SelectedValue;
             //string applydept_value = applydept.SelectedValue;//签核的时候可以读取到，新申请界面 读取不到，这个控件绑定 是通过前台绑定的
 
-            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new", this);
+            List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("pur_pr_main_form", "main_new_1", this);
 
             for (int i = 0; i < ls.Count; i++)
             {
-                if (ls[i].Code.ToLower() == "prtype") { ls[i].Value = formtype; }
+                //if (ls[i].Code.ToLower() == "prtype") { ls[i].Value = formtype; }
+                if (ls[i].Value == "采购类别") { ls[i].Code = "prtype"; ls[i].Value = formtype; }
                 if (ls[i].Code.ToLower() == "domain") { ls[i].Value = domain_value; }
                 //if (ls[i].Code.ToLower() == "applydept") { ls[i].Value = applydept_value; }
             }
 
             //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
-            DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
+            //DataTable dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
+            DataTable dtl;
+            if (gvdtl.Visible == true)
+            {
+                dtl = Pgi.Auto.Control.AgvToDt(gvdtl);
+            }
+            else//(gvdtl_dj_x.Visible == true)
+            {
+                dtl = Pgi.Auto.Control.AgvToDt(gvdtl_dj_x);
+            }
 
             //获取单号
             //this.m_sid = ViewState["PRNo"].ToString();
@@ -1045,14 +1101,15 @@ protected void Page_Load(object sender, EventArgs e)
 
 
             //主表相关字段赋值到明细表
-            string formno_main = "";
-            for (int j = 0; j < ls.Count; j++)
-            {
-                if (ls[j].Code.ToLower() == "prno") { formno_main = ls[j].Value; }
-            }
+            //string formno_main = "";
+            //for (int j = 0; j < ls.Count; j++)
+            //{
+            //    if (ls[j].Code.ToLower() == "prno") { formno_main = ls[j].Value; }
+            //}
             for (int i = 0; i < dtl.Rows.Count; i++)
             {
-                dtl.Rows[i]["prno"] = formno_main;
+                //dtl.Rows[i]["prno"] = formno_main;
+                dtl.Rows[i]["prno"] = this.m_sid;
 
                 if (formtype == "刀具类")//刀具类 隐藏了这两列
                 {
@@ -1347,6 +1404,12 @@ protected void Page_Load(object sender, EventArgs e)
 
     }
 
+    public void loadControl_dj_x(DataTable ldt)
+    {
+        this.gvdtl_dj_x.DataSource = ldt;
+        this.gvdtl_dj_x.DataBind();
+    }
+
     //protected void prtype_SelectedIndexChanged(object sender, EventArgs e)
     //{
     //    string formtype = prtype.SelectedValue;
@@ -1411,6 +1474,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         //ViewState["dtl"] = dtl;
         loadControl(dtl);
+        link_upload_dj_x.Visible = false;
     }
 
     protected void btnDelete_Click(object sender, EventArgs e)
@@ -1427,6 +1491,7 @@ protected void Page_Load(object sender, EventArgs e)
         ldt.AcceptChanges();
         //ViewState["dtl"] = ldt;       
         loadControl(ldt);
+        link_upload_dj_x.Visible = false;
         Pgi.Auto.Public.MsgBox(this.Page, "alert", "删除成功!");
     }
 
@@ -1532,6 +1597,7 @@ protected void Page_Load(object sender, EventArgs e)
         {
             dtl = DbHelperSQL.Query("select *,'查看' attachments_name from pur_pr_dtl_form where 1=0 order by rowid asc").Tables[0];
             //ViewState["dtl"] = dtl; ;
+
         }
 
         loadControl(dtl);
@@ -1673,6 +1739,27 @@ protected void Page_Load(object sender, EventArgs e)
         }
     }
     */
+
+    protected void gvdtl_dj_x_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
+    {
+        if (Session["pr_dj_x_im"] != null)
+        {
+            DataTable ldt1 = (DataTable)Session["pr_dj_x_im"];
+            loadControl_dj_x(ldt1); 
+
+             Session["pr_dj_x_im"] = null;
+        }
+    }
+
+
+    protected void link_upload_dj_x_Click(object sender, EventArgs e)
+    {
+        btnAddDetl.Visible = false;
+        btnDelete.Visible = false;
+        gvdtl.Visible = false;
+
+        gvdtl_dj_x.Visible = true;
+    }
 }
 
 

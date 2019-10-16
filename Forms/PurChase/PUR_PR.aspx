@@ -28,11 +28,35 @@
     <script src="../../../Content/js/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
     <script src="../../Scripts/RFlow.js"></script>
     <script type="text/javascript">
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = decodeURI(window.location.search).substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+        var stepid = getQueryString("stepid");
+        var instanceid = getQueryString("instanceid");
+
         var paramMap;
         $(document).ready(function () {
             $("#mestitle").html("【请购申请单(PR)】<a href='/userguide/PRGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>"
-                +"&nbsp;&nbsp;<a href='PUR_PRCategoryDtlMaintain.aspx' target='_blank' class='h5' style='color:red'>用途类别</a>"); 
-             
+                +"&nbsp;&nbsp;<a href='PUR_PRCategoryDtlMaintain.aspx' target='_blank' class='h5' style='color:red'>用途类别</a>");             
+            
+            //alert(instanceid);
+            if (instanceid==null || instanceid=="" || $("#domain").attr("disabled") || $("#dj_x").val()!="Y") {
+                $("#link_upload_dj_x").hide();
+            }else {
+                $("#link_upload_dj_x").show();
+            }
+            if ($("#prtype").attr("disabled")) {
+                
+            }else {
+                //alert($("#prtype").val());
+                if($("#prtype").val()!=""){
+                    $("#prtype").attr("disabled","disabled");	
+                }
+            }
+
             SetButtons();
 
             getTotalPrice();                                                
@@ -55,6 +79,13 @@
             //采购类别
             $("select[id*='prtype']").change(function(){
                 var prtype=$("#prtype").val();
+                if (prtype=="刀具类" && (js_UserId_qt=="00837" || js_DeptName_qt.indexOf("IT") != -1)) {
+                    $("#link_upload_dj_x").show();
+                }else {
+                    $("#link_upload_dj_x").hide();
+                }
+                $("#prtype_hd").val(prtype);
+                $("#prtype").attr("disabled","disabled");
                 grid.PerformCallback(prtype);
             });
                         
@@ -75,6 +106,44 @@
             appendSearch();
             
         });// end ready
+
+        function dj_x_click(){
+            var domain=$("#domain").val();
+            var prtype=$("#prtype").val();
+
+            if (domain=="") {
+                layer.alert("请选择【申请公司】");
+                return false;
+            }
+            if (prtype!="刀具类") {
+                layer.alert("请选择【采购类别】为刀具类");
+                return false;
+            }
+            var url = "/Forms/PurChase/PUR_PR_Upload_dj_x.aspx?domain="+domain;
+
+            layer.open({
+                title: '导入修磨刀具明细',
+                closeBtn: 2,
+                type: 2,
+                area: ['500px', '350px'],
+                fixed: false, //不固定
+                maxmin: true, //开启最大化最小化按钮
+                content: url,
+                cancel: function (index, layero) {//取消事件
+                },
+                end: function () {//无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。layer.open关闭事件
+                    $("#dj_x").val("Y");
+                }
+            });
+        }
+
+        function getZJ(){
+            var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace('合计:','');//未税总价
+            //alert(zj_value_sum);
+            $("#notax_totalMoney").val(zj_value_sum);
+            $("#dj_x").val("Y");
+        }
+
 
         //添加选取、查看历史单价功能
         function appendSearch(){
@@ -283,6 +352,9 @@
 </head>
 <body>
     <script type="text/javascript">
+        var js_UserId_qt = '<%=js_UserId%>';
+        var js_DeptName_qt = '<%=js_DeptName%>';
+
 	   <%-- var initData = <%=BWorkFlow.GetFormDataJsonString(initData)%>;--%>
         var fieldStatus = "1"=="<%=Request.QueryString["isreadonly"]%>"? {} : <%=fieldStatus%>;
         var fieldSet=<%=fieldStatus%>;
@@ -301,147 +373,157 @@
                 layer.alert("请选择归属公司及部门.");
                 return false;
             }
-            if($("#deptm").val()=="" || $("#deptmfg").val()==""){
-                layer.alert("部门经理(或分管副总)未设定，请联系IT设定.");
-                return false;
-            }
-            <%=ValidScript%>
-            var flag=true;
-            var msg="";
-
-            if($("#gvdtl input[id*=wlmc]").length==0){
-                layer.alert("请添加明细信息再提交发送.");
-                return false;
-            }
-
-            if ($("#prtype").val()=="费用服务类" || $("#prtype").val()=="合同类") {
-
-                $("#gvdtl input[id*=wlmc]").each(function (){
-                    if($(this).val()==""){
-                        msg+="【名称】不可为空.<br />";
-                        flag=false;
-                        return false;
-                    }
-                });
-                $("#gvdtl input[id*=wlms]").each(function (){
-                    if($(this).val()==""){
-                        msg+="【描述】不可为空.<br />";
-                        flag=false;
-                        return false;
-                    }
-                });
-                $("#gvdtl input[id*=wltype]").each(function (){
-                    if($(this).val()==""){
-                        msg+="【类别】不可为空.<br />";
-                        flag=false;
-                        return false;
-                    }else if($(this).val()=="模具" || $(this).val()=="夹具" || $(this).val()=="量检具"){
-                        var assetattributedesc=$(this).parent().parent().find("input[type=text][id*=assetattributedesc]");
-                        if(assetattributedesc.val()==""){
-                            msg+="【"+$(this).val()+"】对应的【资产属性】不可为空.<br />";
-                            flag=false;
-                            return false;
-                        }
-                    }
-                });
+            //alert($("#dj_x").val());
+            if ($("#dj_x").val()=="Y") {
+                if($("[id$=gvdtl_dj_x] tr[id*=DXEmptyRow]").length==1){
+                    layer.alert("请导入修磨刀明细信息再提交发送.");
+                    return false;
+                }
             }else {
-                $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
-                    if($(this).val()==""){
-                        msg+="【物料号】不可为空.<br />";
+                if($("#deptm").val()=="" || $("#deptmfg").val()==""){
+                    layer.alert("部门经理(或分管副总)未设定，请联系IT设定.");
+                    return false;
+                }
+                <%=ValidScript%>
+                var flag=true;
+                var msg="";
+
+                if($("#gvdtl input[id*=wlmc]").length==0){
+                    layer.alert("请添加明细信息再提交发送.");
+                    return false;
+                }
+
+                if ($("#prtype").val()=="费用服务类" || $("#prtype").val()=="合同类") {
+
+                    $("#gvdtl input[id*=wlmc]").each(function (){
+                        if($(this).val()==""){
+                            msg+="【名称】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }
+                    });
+                    $("#gvdtl input[id*=wlms]").each(function (){
+                        if($(this).val()==""){
+                            msg+="【描述】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }
+                    });
+                    $("#gvdtl input[id*=wltype]").each(function (){
+                        if($(this).val()==""){
+                            msg+="【类别】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }else if($(this).val()=="模具" || $(this).val()=="夹具" || $(this).val()=="量检具"){
+                            var assetattributedesc=$(this).parent().parent().find("input[type=text][id*=assetattributedesc]");
+                            if(assetattributedesc.val()==""){
+                                msg+="【"+$(this).val()+"】对应的【资产属性】不可为空.<br />";
+                                flag=false;
+                                return false;
+                            }
+                        }
+                    });
+                }else {
+                    $("#gvdtl").find("tr td input[id*=wlh]").each(function () {
+                        if($(this).val()==""){
+                            msg+="【物料号】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }else {
+                            var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                            var wlms= $(this).parent().parent().find("input[id*=wlms]");
+                            var wlType= $(this).parent().parent().find("input[id*=wltype]");
+                            var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
+
+                            if(wlms.val()==""){
+                                msg+="【物料名称】不可为空.<br />";
+                                flag=false;
+                                return false;
+                            }
+                            if(wlms.val()==""){
+                                msg+="【物料描述】不可为空.<br />";
+                                flag=false;
+                                return false;
+                            }
+                            if($("#prtype").val()!="刀具类" ){
+                                if(wlType.val()==""){
+                                    msg+="【物料类别】不可为空.<br />";
+                                    flag=false;
+                                    return false;
+                                }
+                            }
+                            if($("#prtype").val()=="刀具类" ){
+                                if(wlSubType.val()==""){
+                                    msg+="【物料子类别】不可为空.<br />";
+                                    flag=false;
+                                    return false;
+                                }
+                            }
+                       
+                        }
+                    });
+                }
+
+                //validate wlh
+                $("#gvdtl input[id*=usefor]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【用于产品/项目】不可为空.<br />";
                         flag=false;
                         return false;
-                    }else {
-                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
-                        var wlms= $(this).parent().parent().find("input[id*=wlms]");
-                        var wlType= $(this).parent().parent().find("input[id*=wltype]");
-                        var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
-
-                        if(wlms.val()==""){
-                            msg+="【物料名称】不可为空.<br />";
-                            flag=false;
-                            return false;
-                        }
-                        if(wlms.val()==""){
-                            msg+="【物料描述】不可为空.<br />";
-                            flag=false;
-                            return false;
-                        }
-                        if($("#prtype").val()!="刀具类" ){
-                            if(wlType.val()==""){
-                                msg+="【物料类别】不可为空.<br />";
-                                flag=false;
-                                return false;
-                            }
-                        }
-                        if($("#prtype").val()=="刀具类" ){
-                            if(wlSubType.val()==""){
-                                msg+="【物料子类别】不可为空.<br />";
-                                flag=false;
-                                return false;
-                            }
-                        }
-                       
                     }
                 });
-            }
+                $("#gvdtl input[id*=unit]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【单位】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                $("#gvdtl input[id*=currency]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【币别】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                $("#gvdtl input[id*=notax_historyprice]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【历史最低单价(未税)】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                $("#gvdtl input[id*=notax_targetprice]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【目标价】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                //validate qty
+                $("#gvdtl input[id*=qty]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【数量】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                //validate deliverydate
+                $("#gvdtl input[id*=deliverydate]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【要求到货日期】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
 
-            //validate wlh
-            $("#gvdtl input[id*=usefor]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【用于产品/项目】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            $("#gvdtl input[id*=unit]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【单位】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            $("#gvdtl input[id*=currency]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【币别】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            $("#gvdtl input[id*=notax_historyprice]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【历史最低单价(未税)】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            $("#gvdtl input[id*=notax_targetprice]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【目标价】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            //validate qty
-            $("#gvdtl input[id*=qty]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【数量】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
-            //validate deliverydate
-            $("#gvdtl input[id*=deliverydate]").each(function (){
-                if( $(this).val()==""){
-                    msg+="【要求到货日期】不可为空.<br />";
-                    flag=false;
-                    return false;
-                }
-            });
+            }
 
             if(flag==false){  
                 layer.alert(msg);
                 return false;
             }
+
             if($("#upload").val()==""&& $("#link_upload").text()==""){
                 layer.alert("请选择【附件】");
                 return false;
@@ -878,7 +960,6 @@
                 layer.alert("请选择【采购类别】");
                 return false;
             }
-
             return true;
         }
     </script>
@@ -912,7 +993,7 @@
         }
         
     </script>
-    
+
     <form id="form1" runat="server" enctype="multipart/form-data">
 
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -1053,6 +1134,8 @@
                                                 <%--<asp:DropDownList ID="prtype" runat="server" CssClass="linewrite" ToolTip="0|1" Width="200px" Height="27px"
                                                     AutoPostBack="True" OnSelectedIndexChanged="prtype_SelectedIndexChanged"></asp:DropDownList>--%>
                                                 <asp:DropDownList ID="prtype" runat="server" CssClass="linewrite" ToolTip="0|1" Width="100%" Height="27px"></asp:DropDownList>
+                                                
+                                                <asp:TextBox id="prtype_hd"  style=" width: 50px;display:none" runat="server"  />
                                             </td>
                                         </tr>                                        
                                         <tr>
@@ -1063,7 +1146,8 @@
                                         </tr>
                                     </table>
                                   <%-- </ContentTemplate></asp:UpdatePanel>--%>
-                                     <asp:TextBox ID="notax_totalMoney" runat="server"  Width="80px" ToolTip="0|0" CssClass=" hidden" />   
+                                     <asp:TextBox ID="notax_totalMoney" runat="server"  Width="80px" ToolTip="0|0" CssClass=" hidden"/>   
+                                     <asp:TextBox ID="dj_x" runat="server"  Width="80px" ToolTip="0|0" CssClass=" hidden"/> 
                                 </div>
                             </div>
                         </div>
@@ -1090,14 +1174,14 @@
                                                 getMatInfo();
                                                 //OnClientClick="return Add_check()"
                                                 get_notax_TotalMoney();
-                                               SetControlStatus2(<%=fieldStatus%>);
+                                                SetControlStatus2(<%=fieldStatus%>);
+                                                
                                             });
-                                        </script>
-                                        
-                                                                                      
+                                        </script>  
+                                                                               
                                     <asp:Button ID="btnAddDetl" runat="server" Text="添加" CssClass="btn btn-default btn-sm" OnClientClick="return Add_check()"   OnClick="btnAddDetl_Click"/>
                                     <asp:Button ID="btnDelete" runat="server" Text="删除"  CssClass="btn btn-default btn-sm"   OnClick="btnDelete_Click"/><%--btn btn-primary btn-sm--%>
-                                    <asp:Button ID="btnupload_dj_x" runat="server" Text="导入修磨刀"  CssClass="btn btn-default btn-sm"/>
+                                    <asp:LinkButton ID="link_upload_dj_x" runat="server" OnClientClick="dj_x_click()" OnClick="link_upload_dj_x_Click">导入修磨刀</asp:LinkButton>
 
                                     <%--Border-BorderColor="#DCDCDC"--%>
                                         <dx:ASPxGridView ID="gvdtl" runat="server" Width="1200px" ClientInstanceName="grid" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue" 
@@ -1135,6 +1219,66 @@
                                                     <DataItemTemplate>
                                                         <asp:CheckBox ID="txtcb" runat="server" />
                                                     </DataItemTemplate>
+                                                </dx:GridViewDataTextColumn>
+                                            </Columns>
+                                            <TotalSummary>
+                                                <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>合计:{0:N2}</font>" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
+                                            </TotalSummary>
+                                        </dx:ASPxGridView>
+
+                                         <dx:ASPxGridView ID="gvdtl_dj_x" runat="server" Width="1200px" ClientInstanceName="grid_dj_x" KeyFieldName="rowid" EnableTheming="True" Theme="MetropolisBlue" 
+                                                Border-BorderColor="#F0F0F0" OnCustomCallback="gvdtl_dj_x_CustomCallback" Visible="false">
+                                            <ClientSideEvents  EndCallback="function(s, e) { getZJ();}"/>
+                                            <SettingsBehavior AllowDragDrop="false" AllowFocusedRow="false" AllowSelectByRowClick="false" AllowSort="false"  />
+                                            <SettingsPager PageSize="1000"></SettingsPager>
+                                            <Settings ShowFilterRow="false" ShowFilterRowMenu="false" ShowFilterRowMenuLikeItem="false" ShowFooter="True" />
+                                            <SettingsSearchPanel Visible="false" />
+                                            <SettingsFilterControl AllowHierarchicalColumns="True">
+                                            </SettingsFilterControl>
+                                            <Styles>
+                                                <Header BackColor="#31708f" Font-Bold="True" ForeColor="white" Border-BorderStyle="None"></Header>
+                                                <SelectedRow BackColor="#FDF7D9"></SelectedRow> 
+                                                <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>     
+                                                <Footer HorizontalAlign="Right" BackColor="#cfcfcf" Font-Bold="True" ForeColor="red" Font-Size="11pt"></Footer>
+                                                <Cell Border-BorderStyle="None"></Cell>
+                                            </Styles>
+                                            <Columns>
+                                                <dx:GridViewDataTextColumn Caption="行号" FieldName="rowid" Width="40px" VisibleIndex="1" />
+                                                <dx:GridViewDataTextColumn Caption="物料号" FieldName="wlh" Width="70px" VisibleIndex="2" />
+                                                <dx:GridViewDataTextColumn Caption="物料名称" FieldName="wlmc" Width="100px" VisibleIndex="3" />
+                                                <dx:GridViewDataTextColumn Caption="描述" FieldName="wlms" Width="140px" VisibleIndex="4" />
+                                                <dx:GridViewDataTextColumn Caption="类别" FieldName="wlsubtype" Width="40px" VisibleIndex="5" />
+                                                <dx:GridViewDataTextColumn Caption="推荐供应商" FieldName="recmdvendorname" Width="160px" VisibleIndex="5" />
+                                                <dx:GridViewDataTextColumn Caption="币别" FieldName="currency" Width="40px" VisibleIndex="6" />
+                                                <dx:GridViewDataTextColumn Caption="目标单价<br />(未税)" FieldName="notax_targetprice" Width="50px" VisibleIndex="7" />
+                                                <dx:GridViewDataTextColumn Caption="数量" FieldName="qty" Width="50px" VisibleIndex="8" />
+                                                <dx:GridViewDataTextColumn Caption="目标总价<br />(未税)" FieldName="notax_targettotal" Width="80px" VisibleIndex="9" />
+                                                <dx:GridViewDataTextColumn Caption="要求<br />到货日期" FieldName="deliverydate" Width="90px" VisibleIndex="10" />
+                                                <dx:GridViewDataTextColumn Caption="说明" FieldName="note" Width="160px" VisibleIndex="11" />
+                                                <dx:GridViewDataTextColumn FieldName="wltype" Width="0px">
+                                                    <HeaderStyle CssClass="hidden" />
+                                                    <CellStyle CssClass="hidden"></CellStyle>
+                                                    <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn FieldName="unit" Width="0px">
+                                                    <HeaderStyle CssClass="hidden" />
+                                                    <CellStyle CssClass="hidden"></CellStyle>
+                                                    <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn FieldName="notax_historyprice" Width="0px">
+                                                    <HeaderStyle CssClass="hidden" />
+                                                    <CellStyle CssClass="hidden"></CellStyle>
+                                                    <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn FieldName="id" Width="0px">
+                                                    <HeaderStyle CssClass="hidden" />
+                                                    <CellStyle CssClass="hidden"></CellStyle>
+                                                    <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn FieldName="prno" Width="0px">
+                                                    <HeaderStyle CssClass="hidden" />
+                                                    <CellStyle CssClass="hidden"></CellStyle>
+                                                    <FooterCellStyle CssClass="hidden"></FooterCellStyle>
                                                 </dx:GridViewDataTextColumn>
                                             </Columns>
                                             <TotalSummary>
