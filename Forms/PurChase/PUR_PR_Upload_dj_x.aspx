@@ -42,6 +42,9 @@
         <div class="row row-container">
             <table style="margin:10px 10px;">
                 <tr>
+                    <td><asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/UserGuide/pr_daoju_x_uploadformat.xlsx" Target="_blank">upload format</asp:HyperLink></td>
+                </tr>
+                <tr>
                     <td>
                         <%--<asp:Label ID="lbl_domain" runat="server" Text="" Visible="false"></asp:Label>--%>
                         <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="430px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
