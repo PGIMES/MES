@@ -115,7 +115,14 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
                         }
                         break;
                     case CustomSummaryProcess.Finalize:
-                        e.TotalValue = (sum_nyl / sum_nzj * 100).ToString("0.0") + "%";
+                        if (sum_nzj==0)
+                        {
+                            e.TotalValue = "0.0%";
+                        }
+                        else
+                        {
+                            e.TotalValue = (sum_nyl / sum_nzj * 100).ToString("0.0") + "%";
+                        }                        
                         break;
                 }
             }
