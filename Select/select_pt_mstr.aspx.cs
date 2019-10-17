@@ -30,7 +30,8 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
     }
     public void QueryASPxGridView()
     {
-        string sql = "";
+        /*
+        string sql = "";        
         if (prtype == "刀具类")
         {
             // select a.wlh,a.wlmc,a.ms,b.pt_status,a.type
@@ -70,8 +71,11 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
                                 and a.pt_domain = '{0}' 
                          ) aa where ispodsched=0
                     order by aa.wlh";
-        }
+        }        
         sql = string.Format(sql, Request.QueryString["domain"].ToString());
+        */
+        string sql = "exec [z_select_pt_mstr] '{0}','{1}'";
+        sql = string.Format(sql, prtype, Request.QueryString["domain"].ToString());
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 

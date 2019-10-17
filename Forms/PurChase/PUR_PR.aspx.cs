@@ -714,6 +714,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         //20181108 modify heguiqin
         string result = "";
+        /*
         string sql = "";
         if (P3 == "刀具类")
         {
@@ -776,6 +777,11 @@ protected void Page_Load(object sender, EventArgs e)
                     order by aa.wlh";
         }
         var value = DbHelperSQL.Query(string.Format(sql, P1, P2)).Tables[0];
+        */
+        string sql = "exec [z_select_pt_mstr] '{0}','{1}','{2}'";
+        sql = string.Format(sql, P3, P2, P1);
+        var value = DbHelperSQL.Query(sql).Tables[0];
+        
         if (value.Rows.Count > 0)
         { result = value.ToJsonString(); }
         return result;
