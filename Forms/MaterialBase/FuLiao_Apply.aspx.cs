@@ -98,7 +98,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
                 CreateByName.Text = LogUserModel.UserName;
                 CreateByDept.Text = LogUserModel.DepartName;
                 CreateDate.Text = System.DateTime.Now.ToString();
-                var tbltype = DbHelperSQL.Query("select '' as value ,'-请选择-' as text,'' as val union all  select cp_line as value, name as text,cp_code as val from PGI_BASE_PART_ddl where type = '辅料类'  order by value").Tables[0];
+                var tbltype = DbHelperSQL.Query("select '' as value ,'-请选择-' as text,'' as val union all  select cp_line as value, name as text,cp_code as val from PGI_BASE_PART_ddl where type = '辅料类' and value<>'4010'   order by value").Tables[0];
                 fun.initDropDownList(fltype, tbltype, "value", "text");
                 var tbldomain = DbHelperSQL.Query(" select cateid,catevalue from pgi_base_data where cate='domain' ").Tables[0];
                 fun.initCheckBoxList(ddldomain, tbldomain, "cateid", "catevalue");
@@ -116,6 +116,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
                         Pgi.Auto.Public.MsgBox(this, "alert", "物料号正在申请中，不能修改(物料号:" + re_dt.Rows[0]["wlh"].ToString() + ")!");
                         btnflowSend.Visible = false;
                     }
+                   
                     
                 }
                 
@@ -160,6 +161,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             cpname = dtMst.Rows[0]["lxmc"].ToString();
             IsAttach = dtMst.Rows[0]["IsAttach"].ToString();
             IsAttachment.Checked = Convert.ToBoolean(IsAttach);
+          
             Setpage(Convert.ToBoolean(IsAttach));
             for (int i = 0; i < this.ddldomain.Items.Count; i++)
             {
@@ -168,7 +170,11 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             IsAttachment.Enabled = false;
         }
         loadControl(IsAttach);
-     
+        RadioButtonList bclb = (RadioButtonList)this.FindControl("bclb") as RadioButtonList;
+        ((RadioButtonList)this.FindControl("bclb")).Enabled = false;
+        if (dtMst.Rows.Count > 0 && bclb!=null)
+        { ((RadioButtonList)this.FindControl("bclb")).SelectedValue = dtMst.Rows[0]["bclb"].ToString(); }
+       
      
    
         //发起【修改申请】初始化值给画面
@@ -183,6 +189,12 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
         }
         if (dtMstOld != null && dtMstOld.Rows.Count > 0)
         {
+            if (dtMstOld.Rows[0]["line"].ToString()== "4010")
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", "刀具清单修改请至刀具查询页面修改!");
+                btnflowSend.Visible = false;
+                btnSave.Visible = false;
+            }
             string strsql = string.Format("select cp_line as value, name as text,cp_code as val from PGI_BASE_PART_ddl where type = '辅料类'and cp_line='{0}'", dtMstOld.Rows[0]["line"].ToString());
             strType = DbHelperSQL.Query(strsql).Tables[0].Rows[0]["text"].ToString();
             fltype.SelectedItem.Text = strType;
@@ -198,6 +210,9 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             cpname = dtMstOld.Rows[0]["lxmc"].ToString();
             IsAttach = "False";// dtMstOld.Rows[0]["IsAttach"].ToString();
             IsAttachment.Checked = Convert.ToBoolean(IsAttach);
+            //包材类别
+            ((RadioButtonList)this.FindControl("bclb")).SelectedValue = dtMstOld.Rows[0]["bclb"].ToString();
+            
             //取当前QAD安全库存量
             string str_kc = string.Format("select pt_sfty_stk from qad_pt_mstr where pt_part='{0}' and pt_domain='{1}'", wlh, company);
             string qad_aqkc = DbHelperSQL.Query(str_kc).Tables[0].Rows[0][0].ToString();
@@ -1013,17 +1028,29 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
         string stat = formstate.Text;
         //获取表单页面数据
         List<Pgi.Auto.Common> ls = Pgi.Auto.Control.GetControlValue("FL_Main", "", this);
-
+      //RadioButtonList  bclb = ((RadioButtonList)this.FindControl("bclb")) as RadioButtonList;
         for (int i = 0; i < ls.Count; i++)
         {
             Pgi.Auto.Common com = new Pgi.Auto.Common();
             com = ls[i];
+          
             if (ls[i].Code == "")
             {
                 var msg = ls[i].Value + "不能为空!";
                 flag = false; //
                 ScriptManager.RegisterStartupScript(Page, this.GetType(), "", "layer.alert('" + msg + "');", true);//$(#'" + ls[i].Code + "').focus();
                 return flag;
+            }
+            if (ls[i].Code.ToLower() == "bclb")
+            {
+                if (this.FindControl("bclb") is RadioButtonList)
+                {
+                    RadioButtonList bclb = ((RadioButtonList)this.FindControl("bclb")) as RadioButtonList;
+                    if (bclb != null)
+                        ls[i].Value = ((RadioButtonList)this.FindControl("bclb")).SelectedValue;
+                }
+                //if (bclb != null)
+                //    ls[i].Value = ((RadioButtonList)this.FindControl("bclb")).SelectedValue;
             }
         }
 
@@ -1063,6 +1090,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
                         ((TextBox)this.FindControl("Formno")).Text = this.m_sid;
 
                     }
+                  
 
                 }
             }
@@ -1260,7 +1288,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
                 gvFile_ddfj.DataBind();
 
                 DataTable dt = DbHelperSQL.Query(@"  select  ROW_NUMBER() OVER(ORDER BY ID) 序号,wlh as 物料号,domain as 申请工厂,wlmc as 描述一,ms as 描述二,line as 产品类, pt_status as 产品状态申请,jzweight as 净重,jzunit as 净重单位,aqkc as 安全库存,status as 产品状态财务,
-                   buyer_planner as 采购员,dhperiod as 订货周期,quantity_min as 最小订单量,quantity_max as 最大订单量,ddbs as 订单倍数,ddsl as 订单数量,purchase_days as 采购提前期,cailiao1 as 材料一,cailiao2 as 材料二  from PGI_FLMstr_DATA_Form_Tmp 
+                   buyer_planner as 采购员,dhperiod as 订货周期,quantity_min as 最小订单量,quantity_max as 最大订单量,ddbs as 订单倍数,ddsl as 订单数量,purchase_days as 采购提前期,cailiao1 as 材料一,cailiao2 as 材料二,bclb as 包材类别  from PGI_FLMstr_DATA_Form_Tmp 
                    where  formno='" + m_sid+"' order by wlh").Tables[0];
                 if (dt.Rows.Count > 0)
                 {
@@ -1474,9 +1502,10 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             string purchase_days = cells[i, 13].StringValue.Trim();
             string cailiao1 = cells[i, 14].StringValue.Trim();
             string cailiao2 = cells[i, 15].StringValue.Trim();
+            string bclb = cells[i, 16].StringValue.Trim() == null ? "" : cells[i, 16].StringValue.Trim();
 
             //  判断汇入的栏位格式是否正确
-            DataTable dt = DbHelperSQL.Query("exec FL_Data_Import   0, '" + formno + "','" + comp + "','" + ms1 + "','" + ms2 + "','" + line + "','" + unit + "','" + apply_status + "','" + jz + "','" + jzunit + "','','" + aqkc + "','" + dhperiod + "','" + quantity_min + "','" + quantity_max + "','" + ddbs + "','" + ddsl + "','" + purchase_days + "','" + dropline + "','" + UidRole + "','"+cailiao1+"','"+cailiao2+"'").Tables[0];
+            DataTable dt = DbHelperSQL.Query("exec FL_Data_Import   0, '" + formno + "','" + comp + "','" + ms1 + "','" + ms2 + "','" + line + "','" + unit + "','" + apply_status + "','" + jz + "','" + jzunit + "','','" + aqkc + "','" + dhperiod + "','" + quantity_min + "','" + quantity_max + "','" + ddbs + "','" + ddsl + "','" + purchase_days + "','" + dropline + "','" + UidRole + "','" + cailiao1 + "','" + cailiao2 + "','" + bclb + "'").Tables[0];
 
 
             if (dt.Rows[0][0].ToString() != "")
@@ -1488,7 +1517,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
             {
                 // 将汇入的资料导入临时表
 
-                int row = DbHelperSQL.ExecuteSql("exec FL_Data_Import   1, '" + formno + "','" + comp + "','" + ms1 + "','" + ms2 + "','" + line + "','" + unit + "','" + apply_status + "','" + jz + "','" + jzunit + "','','" + aqkc + "','" + dhperiod + "','" + quantity_min + "','" + quantity_max + "','" + ddbs + "','" + ddsl + "','" + purchase_days + "','" + dropline + "','','" + cailiao1 + "','" + cailiao2 + "'");
+                int row = DbHelperSQL.ExecuteSql("exec FL_Data_Import   1, '" + formno + "','" + comp + "','" + ms1 + "','" + ms2 + "','" + line + "','" + unit + "','" + apply_status + "','" + jz + "','" + jzunit + "','','" + aqkc + "','" + dhperiod + "','" + quantity_min + "','" + quantity_max + "','" + ddbs + "','" + ddsl + "','" + purchase_days + "','" + dropline + "','','" + cailiao1 + "','" + cailiao2 + "','" + bclb + "'");
               
             }
 
@@ -1500,7 +1529,7 @@ public partial class Forms_MaterialBase_FuLiao_Apply : System.Web.UI.Page
         }
         else
         {
-            DataTable dt = DbHelperSQL.Query("exec FL_Data_Import   2, '" + m_sid + "','','','','','','','','','','','','','','','','','','','',''").Tables[0];
+            DataTable dt = DbHelperSQL.Query("exec FL_Data_Import   2, '" + m_sid + "','','','','','','','','','','','','','','','','','','','','',''").Tables[0];
             Pgi.Auto.Control.SetGrid(this.gv, dt, 70);
             gv.Visible = true;
             this.gv.Columns[0].Width = 50;

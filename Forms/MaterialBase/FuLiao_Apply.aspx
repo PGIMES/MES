@@ -26,12 +26,18 @@
             SetButtons();
             $("input[id='unit_I']").css("background-color", "#FDF7D9");
             var type = $("#fltype").find("option:selected").text();
-            if (type != "" && type != "包材") {  
+            if (type != "" && type != "包材") {
                 $("#cailiao1").css("display", "none");
                 $("#lbl_FL_Main_Main_10").css("display", "none");
                 $("#cailiao2").css("display", "none");
+                //$("input[id*='bclb']").css("visibility","hidden");
+                document.getElementById("bclb").style.visibility = "hidden";
                 $("#lbl_FL_Main_Main_11").css("display", "none");
+                $("#lbl_FL_Main_Main_12").css("display", "none");
+
+
             }
+
             //工厂多选
             $("input[id*='ddldomain']").click(function () {
                 var val = "";
@@ -67,7 +73,7 @@
             if ((paramMap.state == "edit") || ($("#formstate").val().indexOf("edit") != -1))
             { $("#warning").css("display", ""); }
 
-        });      // end ready
+        });       // end ready
 
 
         //提出自定流程 JS 
@@ -166,9 +172,12 @@
          
             if($("#wlmc").val()=="" ||  $("#ms").val()=="" )
              { msg+="请填写【描述一】或【描述二】.<br />";} 
-            if(type=="包材" && ( $("#cailiao1").val()=="" ||  $("#cailiao2").val()==""))
+
+            var bclb = $("input[id*='bclb']:checked").val();//新增包材类别
+         
+            if(type=="包材" && ( $("#cailiao1").val()=="" ||  $("#cailiao2").val()=="" ||  (typeof(bclb)=="undefined") ))
             {
-            msg+="包材类请填写【材料一】和【材料二】.<br />";
+            msg+="包材类请填写【材料一】和【材料二】和包材类别.<br />";
             }
 
             var wlmc=$("#wlmc").val();
