@@ -697,6 +697,12 @@
             if($("input[type!=hidden][id*='typeno']").val()==""){
                 msg+="【申请类型】不可为空.<br />";
             }
+            if($("#ljXX input[id*='ljzl']").val()==""){
+                msg+="【零件重量】不可为空.<br />";
+            }
+            if ($("#cbXX input[id*='cbfx_xs_price']").val()=="") {
+                msg+="【销售价格】不可为空.<br />";
+            }
 
             if(action=='submit'){
                 //if($("#ljXX select[id*='bzlb']").val()==""){
