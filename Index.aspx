@@ -702,7 +702,8 @@
                                         </li>
                                          
                                          <li><a href="/Wuliu/Edi_BMW_Query.aspx"  target="_blank">BMW Edi对比</a></li>  
-                                         <li><a href="/Wuliu/Report_Planning.aspx"  target="_blank">Planning</a></li>    
+                                         <li><a href="/Wuliu/Report_Planning.aspx"  target="_blank">Planning</a></li>  
+                                         <li><a href="/Wuliu/Report_so.aspx"  target="_blank">客户日程单异常报表</a></li>     
                                         <li><a href="javascript:void(0)"  target="_blank"></a></li>                                       
                                     </ul>
                                 </div>
