@@ -20,17 +20,18 @@
             $('#btn_edit').click(function () {
                 if (grid.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues('FormNo;part;domain;site;ship', function GetVal(values) {
+                grid.GetSelectedFieldValues('FormNo;part;domain;site;ship;domain_code', function GetVal(values) {
                     var formno = values[0][0];
                     var part = values[0][1];
                     var domain = values[0][2];
                     var site = values[0][3];
                     var ship = values[0][4];
+                    var domain_code = values[0][5];// alert(domain_code);
 
                     $.ajax({
                         type: "post",
                         url: "Pack_Report_Query.aspx/CheckData",
-                        data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','formno':'" + formno + "'}",
+                        data: "{'part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','domain_code':'" + domain_code + "','formno':'" + formno + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

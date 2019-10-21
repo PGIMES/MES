@@ -61,7 +61,7 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string CheckData(string part, string domain, string site, string ship, string formno)
+    public static string CheckData(string part, string domain, string site, string ship, string domain_code, string formno)
     {
         //------------------------------------------------------------------------------验证申请中
         string re_flag = "";
@@ -71,16 +71,36 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
 
         if (re_dt.Rows.Count > 0)
         {
-            re_flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship
+            re_flag = "【PGI_零件号】" + part + "【申请工厂】" + domain + "【发自】" + site + "【发至】" + ship
                 + "正在<font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",申请人:"
                 + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + ")!";
         }
 
-        //DataTable re_dt_2 = DbHelperSQL.Query(@"select * from  PGI_PackScheme_Main_Form where formno='" + formno + "' and ApplyType='删除工艺'").Tables[0];
-        //if (re_dt_2.Rows.Count > 0)
-        //{
-        //    re_flag = re_flag + "<br />" + part + "(" + domain + ")已经失效，不能升版本！";
-        //}
+        if (re_flag == "")
+        {
+            //注释 生效的日程，历史数据也可以.
+            string re_sql_2 = @"select sod.sod_domain, sod.sod_custpart, sod.sod_end_eff, sod.sod_site, sod.sod_part, so.so_ship,so.so_bill, sod.sod_pr_list 
+	                            , so.ad_sort, so.ad_name
+                            from (
+	                            select sod_domain, sod_custpart, [sod_end_eff[1]]] AS sod_end_eff, sod_site, sod_part, sod_nbr, sod_pr_list
+	                            from qad.dbo.qad_sod_det
+	                            --WHERE ([sod_end_eff[1]]] IS NULL OR [sod_end_eff[1]]] >= CONVERT(VARCHAR(10), GETDATE(), 120)) AND (sod_pr_list <> '')
+	                            ) sod
+	                            left join (
+		                            select so.*,ad.ad_sort, ad.ad_name 
+		                            from qad.dbo.qad_so_mstr so 
+			                            INNER JOIN dbo.qad_ad_mstr ad ON ad.ad_domain = so.so_domain AND ad.ad_addr = so.so_ship AND ad.ad_bus_relation = so.so_bill
+		                            ) so ON so.so_domain = sod.sod_domain AND so.so_nbr = sod.sod_nbr AND so.so_site = sod.sod_site
+                            where sod.sod_domain='{0}' and sod.sod_part='{1}' and sod.sod_site='{2}' and so.so_ship='{3}'
+                            ";
+            re_sql_2 = string.Format(re_sql_2, domain_code, part, site, ship);
+            DataTable re_dt_2 = DbHelperSQL.Query(re_sql_2).Tables[0];
+            if (re_dt_2.Rows.Count <= 0)
+            {
+                re_flag = "【PGI_零件号】" + part + "【申请工厂】" + domain + "【发自】" + site + "【发至】" + ship + "不存在，不能编辑！";
+            }
+        }
+        
         string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
         return result;
 
