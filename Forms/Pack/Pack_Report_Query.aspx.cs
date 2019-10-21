@@ -72,8 +72,8 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
         if (re_dt.Rows.Count > 0)
         {
             re_flag = "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship
-                + "正在 < font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",<font color='red'>申请人:"
-                + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + "</font>)!";
+                + "正在<font color='red'>申请中</font>，不能修改(单号:" + re_dt.Rows[0]["formno"].ToString() + ",申请人:"
+                + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + ")!";
         }
 
         //DataTable re_dt_2 = DbHelperSQL.Query(@"select * from  PGI_PackScheme_Main_Form where formno='" + formno + "' and ApplyType='删除工艺'").Tables[0];
