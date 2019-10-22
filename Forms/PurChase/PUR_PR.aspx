@@ -143,7 +143,7 @@
         }
 
         function getZJ(){
-            var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace('合计:','');//未税总价
+            var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace('合计:','').replace(',','');//未税总价
             //alert(zj_value_sum);
             $("#notax_totalMoney").val(zj_value_sum);
             $("#dj_x").val("Y");
