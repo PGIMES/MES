@@ -157,6 +157,13 @@ public partial class Forms_PurChase_PUR_PR_Upload_dj_x : System.Web.UI.Page
                         break;
                     }
 
+                    //推荐供应商
+                    if (recmdvendorid == "")
+                    {
+                        result = "物料号" + wlh + " 【推荐供应商】不可为空！" + "<br />";
+                        break;
+                    }
+
                     DataRow dt_r = dt.NewRow();
                     dt_r["rowid"] = dt.Rows.Count + 1;
                     dt_r["wlh"] = wlh;
