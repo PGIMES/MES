@@ -53,7 +53,7 @@
             }else {
                 //alert($("#prtype").val());
                 if($("#prtype").val()!=""){
-                    $("#prtype").attr("disabled","disabled");	
+                    //$("#prtype").attr("disabled","disabled");	
                 }
             }
 
@@ -79,13 +79,18 @@
             //采购类别
             $("select[id*='prtype']").change(function(){
                 var prtype=$("#prtype").val();
+                if ($("#prtype_hd").val()!="") {
+                    $("#prtype").val($("#prtype_hd").val());
+                     layer.alert("【采购类别】不可重新选择");
+                    return;
+                }
                 if (prtype=="刀具类" && (js_UserId_qt=="00837" || js_DeptName_qt.indexOf("IT") != -1)) {
                     $("#link_upload_dj_x").show();
                 }else {
                     $("#link_upload_dj_x").hide();
                 }
                 $("#prtype_hd").val(prtype);
-                $("#prtype").attr("disabled","disabled");
+                //$("#prtype").attr("disabled","disabled");
                 grid.PerformCallback(prtype);
             });
                         
