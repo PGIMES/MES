@@ -84,23 +84,28 @@
             }
 
             if (state=='edit'){//加载附件
-                var s=$("#<%=ip_filelist.ClientID%>").val().split(';');
-                for(var i=0;i<s.length;i++){
-                    uploadedFiles.push(s[i]);
-                    bind_table(s[i].split(','));
+                if($("#<%=ip_filelist.ClientID%>").val()!=""){
+                    var s=$("#<%=ip_filelist.ClientID%>").val().split(';');
+                    for(var i=0;i<s.length;i++){
+                        uploadedFiles.push(s[i]);
+                        bind_table(s[i].split(','));
+                    }
                 }
-                
-                var s_2=$("#<%=ip_filelist_2.ClientID%>").val().split(';');
-                for(var i=0;i<s_2.length;i++){
-                    uploadedFiles_2.push(s_2[i]);
-                    bind_table_2(s_2[i].split(','));
+            
+                if($("#<%=ip_filelist_2.ClientID%>").val()!=""){
+                    var s_2=$("#<%=ip_filelist_2.ClientID%>").val().split(';');
+                    for(var i=0;i<s_2.length;i++){
+                        uploadedFiles_2.push(s_2[i]);
+                        bind_table_2(s_2[i].split(','));
+                    }
                 }
-
-                
-                var s_3=$("#<%=ip_filelist_3.ClientID%>").val().split(';');
-                for(var i=0;i<s_3.length;i++){
-                    uploadedFiles_3.push(s_3[i]);
-                    bind_table_3(s_3[i].split(','));
+    
+                if($("#<%=ip_filelist_3.ClientID%>").val()!=""){
+                    var s_3=$("#<%=ip_filelist_3.ClientID%>").val().split(';');
+                    for(var i=0;i<s_3.length;i++){
+                        uploadedFiles_3.push(s_3[i]);
+                        bind_table_3(s_3[i].split(','));
+                    }
                 }
             }
         });

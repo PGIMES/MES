@@ -103,9 +103,14 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                     string files_bzx_wg = dt_prd.Rows[0]["files_bzx_wg"].ToString();
 
                     //解析附件，挪到临时目录
-                    string files_part_new = jxfiles(files_part);
-                    string files_bzx_nb_new = jxfiles(files_bzx_nb);
-                    string files_bzx_wg_new = jxfiles(files_bzx_wg);
+                    string files_part_new = "";
+                    if (files_part != "") { files_part_new = jxfiles(files_part); }
+
+                    string files_bzx_nb_new = "";
+                    if (files_bzx_nb != "") { files_bzx_nb_new = jxfiles(files_bzx_nb); }
+
+                    string files_bzx_wg_new = "";
+                    if (files_bzx_wg != "") { files_bzx_wg_new = jxfiles(files_bzx_wg); }
 
                     string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
                     DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
@@ -125,9 +130,9 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
 
                         SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt_head.Rows[0], "ctl00$MainContent$");
                         //绑定上一张的附件
-                        if (files_part_new != "") { this.ip_filelist.Value = files_part_new; }
-                        if (files_bzx_nb_new != "") { this.ip_filelist_2.Value = files_bzx_nb_new; }
-                        if (files_bzx_wg_new != "") { this.ip_filelist_3.Value = files_bzx_wg_new; }
+                        this.ip_filelist.Value = files_part_new;
+                        this.ip_filelist_2.Value = files_bzx_nb_new;
+                        this.ip_filelist_3.Value = files_bzx_wg_new;
                     }
 
                 }
