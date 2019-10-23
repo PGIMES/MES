@@ -174,6 +174,7 @@
                         <Columns>
                         </Columns>
                         <TotalSummary>
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="qty" SummaryType="Sum" /> 
                             <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="targetzj" SummaryType="Sum" />                                       
                         </TotalSummary>
                         <Styles>
