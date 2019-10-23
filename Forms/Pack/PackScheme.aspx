@@ -82,6 +82,27 @@
                 $("#ljXX i[id*=part_i]").removeClass("i_show").addClass("i_hidden");
                 $("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
             }
+
+            if (state=='edit'){//加载附件
+                var s=$("#<%=ip_filelist.ClientID%>").val().split(';');
+                for(var i=0;i<s.length;i++){
+                    uploadedFiles.push(s[i]);
+                    bind_table(s[i].split(','));
+                }
+                
+                var s_2=$("#<%=ip_filelist_2.ClientID%>").val().split(';');
+                for(var i=0;i<s_2.length;i++){
+                    uploadedFiles_2.push(s_2[i]);
+                    bind_table_2(s_2[i].split(','));
+                }
+
+                
+                var s_3=$("#<%=ip_filelist_3.ClientID%>").val().split(';');
+                for(var i=0;i<s_3.length;i++){
+                    uploadedFiles_3.push(s_3[i]);
+                    bind_table_3(s_3[i].split(','));
+                }
+            }
         });
 
         //提出自定流程 JS 
@@ -525,21 +546,24 @@
         var uploadedFiles = [];
         function onFileUploadComplete(s, e) {
             if(e.callbackData) {
-                var fileData = e.callbackData.split('|');uploadedFiles.push(fileData);$("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
-                var fileName = fileData[0],
-                    fileUrl = fileData[1],
-                    fileSize = fileData[2];                
-                var eqno=uploadedFiles.length-1;
-
-                var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
-                        +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="del_data(tr_'+eqno+','+eqno+')" >删除</span></td>'
-                        +'</tr>';
-
-               $('#tbl_filelist').append(tbody_tr);
-                //alert(fileName);
-                //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+                var fileData = e.callbackData.split('|');uploadedFiles.push(fileData);$("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));               
+                bind_table(fileData);
             }
+        }
+        
+        function bind_table(fileData){
+             var fileName = fileData[0],
+                 fileUrl = fileData[1],
+                 fileSize = fileData[2];    
+
+            var eqno=uploadedFiles.length-1;
+
+            var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                    +'<td Width="60px">'+fileSize+'</td>'
+                    +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="del_data(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                    +'</tr>';
+
+            $('#tbl_filelist').append(tbody_tr);
         }
 
 
@@ -555,20 +579,23 @@
         function onFileUploadComplete_2(s, e) {
             if(e.callbackData) {
                 var fileData = e.callbackData.split('|');uploadedFiles_2.push(fileData);$("#<%=ip_filelist_2.ClientID%>").val(uploadedFiles_2.join(";"));
-                var fileName = fileData[0],
-                    fileUrl = fileData[1],
-                    fileSize = fileData[2];                
-                var eqno=uploadedFiles_2.length-1;
-
-                var tbody_tr='<tr id="tr_2_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
-                        +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_2" onclick ="del_data_2(tr_2_'+eqno+','+eqno+')" >删除</span></td>'
-                        +'</tr>';
-
-                $('#tbl_filelist_2').append(tbody_tr);
+                bind_table_2(fileData);
             }
         }
 
+        function bind_table_2(fileData){
+            var fileName = fileData[0],
+                fileUrl = fileData[1],
+                fileSize = fileData[2];                
+            var eqno=uploadedFiles_2.length-1;
+
+            var tbody_tr='<tr id="tr_2_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                    +'<td Width="60px">'+fileSize+'</td>'
+                    +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_2" onclick ="del_data_2(tr_2_'+eqno+','+eqno+')" >删除</span></td>'
+                    +'</tr>';
+
+            $('#tbl_filelist_2').append(tbody_tr);
+        }
 
         function del_data_2(a,eno){
             $(a).remove();
@@ -582,20 +609,23 @@
         function onFileUploadComplete_3(s, e) {
             if(e.callbackData) {
                 var fileData = e.callbackData.split('|');uploadedFiles_3.push(fileData);$("#<%=ip_filelist_3.ClientID%>").val(uploadedFiles_3.join(";"));
-                var fileName = fileData[0],
-                    fileUrl = fileData[1],
-                    fileSize = fileData[2];                
-                var eqno=uploadedFiles_3.length-1;
-
-                var tbody_tr='<tr id="tr_3_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
-                        +'<td Width="60px">'+fileSize+'</td>'
-                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_3" onclick ="del_data_3(tr_3_'+eqno+','+eqno+')" >删除</span></td>'
-                        +'</tr>';
-
-                $('#tbl_filelist_3').append(tbody_tr);
+                bind_table_3(fileData);
             }
         }
+        
+        function bind_table_3(fileData){
+            var fileName = fileData[0],
+                fileUrl = fileData[1],
+                fileSize = fileData[2];                
+            var eqno=uploadedFiles_3.length-1;
 
+            var tbody_tr='<tr id="tr_3_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                    +'<td Width="60px">'+fileSize+'</td>'
+                    +'<td><span style="color:blue;cursor:pointer" id="tbl_delde_3" onclick ="del_data_3(tr_3_'+eqno+','+eqno+')" >删除</span></td>'
+                    +'</tr>';
+
+            $('#tbl_filelist_3').append(tbody_tr);
+        }
 
         function del_data_3(a,eno){
             $(a).remove();
