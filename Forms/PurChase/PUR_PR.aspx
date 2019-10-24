@@ -143,7 +143,8 @@
         }
 
         function getZJ(){
-            var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace('合计:','').replace(',','');//未税总价
+            //var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace('合计:','').replace(',','');//未税总价
+            var zj_value_sum=$("[id$=gvdtl_dj_x] tr[id*=DXFooterRow]").find("td:eq(10)").text().replace(',','');//未税总价
             //alert(zj_value_sum);
             $("#notax_totalMoney").val(zj_value_sum);
             $("#dj_x").val("Y");
@@ -1287,7 +1288,9 @@
                                                 </dx:GridViewDataTextColumn>
                                             </Columns>
                                             <TotalSummary>
-                                                <dx:ASPxSummaryItem DisplayFormat="<font color='red' Size='2'>合计:{0:N2}</font>" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
+                                                <dx:ASPxSummaryItem DisplayFormat="合计:{0:N0}" FieldName="currency" ShowInColumn="currency" ShowInGroupFooterColumn="currency" SummaryType="Sum" />
+                                                <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="qty" ShowInColumn="qty" ShowInGroupFooterColumn="qty" SummaryType="Sum" />
+                                                <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="notax_targettotal" ShowInColumn="notax_targettotal" ShowInGroupFooterColumn="notax_targettotal" SummaryType="Sum" />
                                             </TotalSummary>
                                         </dx:ASPxGridView>
 
