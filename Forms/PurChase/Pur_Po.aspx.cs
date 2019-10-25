@@ -1931,6 +1931,11 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             ln = ((lzj - lmbzj) / lmbzj) * 100;
         }
+        else//目标总价(未税)=0,采购总价(未税)直接就亮红色
+        {
+            e.Row.Cells[lncindex_cell].Style.Add("color", "white");
+            e.Row.Cells[lncindex_cell].Style.Add("background-color", "red");
+        }
 
         if (ln > 0 && ln <= 20)
         {
