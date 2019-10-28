@@ -686,7 +686,7 @@ protected void Page_Load(object sender, EventArgs e)
         //开窗选择，根据名称及描述
         string sql = @"exec [z_SelectWindow] 'historyprice','{0},','{1}','','',''";
 
-        sql = string.Format(sql, mc + "," + ms, p2);
+        sql = string.Format(sql, HttpUtility.UrlDecode(mc) + "," + HttpUtility.UrlDecode(ms), p2);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         result = dt.Rows[0]["价格"].ToString();
         if (dt.Rows.Count >= 2)

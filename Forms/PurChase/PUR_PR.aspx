@@ -373,6 +373,33 @@
                 
         });
 
+        function getStringBytesLength(str)    
+        {    
+            var len = 0; 
+            for(var i = 0; i < str.length; i++)  
+            {   
+                var charCode = str.charCodeAt(i); 
+                if(charCode>=0 && charCode<=255)   
+                len++; 
+                else 
+                len+=2;  
+            }   
+            return len;    
+        }
+
+        function getStringBytesLength_IsContain_HZ(str)    
+        {    
+            var bf = false; 
+            for(var i = 0; i < str.length; i++)  
+            {   
+                var charCode = str.charCodeAt(i); 
+                if(charCode>255) {
+                    bf=true;break;
+                }
+            }   
+            return bf;    
+        }
+
         //验证
         function validate(id){
             if($("#applydept").val()==""){
@@ -406,6 +433,16 @@
                             msg+="【名称】不可为空.<br />";
                             flag=false;
                             return false;
+                        }else{
+                            if(getStringBytesLength($(this).val())>24){
+                                msg+="【名称】长度不可超过24字节.<br />";
+                                flag=false;
+                                return false;
+                            }else if(getStringBytesLength_IsContain_HZ($(this).val())==false){
+                                msg+="【名称】至少包含一个汉字.<br />";
+                                flag=false;
+                                return false;
+                            }    
                         }
                     });
                     $("#gvdtl input[id*=wlms]").each(function (){
@@ -413,6 +450,12 @@
                             msg+="【描述】不可为空.<br />";
                             flag=false;
                             return false;
+                        }else{
+                            if(getStringBytesLength($(this).val())>24){
+                                msg+="【描述】长度不可超过24字节.<br />";
+                                flag=false;
+                                return false;
+                            }
                         }
                     });
                     $("#gvdtl input[id*=wltype]").each(function (){
@@ -440,17 +483,40 @@
                             var wlms= $(this).parent().parent().find("input[id*=wlms]");
                             var wlType= $(this).parent().parent().find("input[id*=wltype]");
                             var wlSubType= $(this).parent().parent().find("input[id*=wlsubtype]"); 
+                            //alert(getStringBytesLength(wlmc.val()));
+                            //alert(getStringBytesLength(wlms.val()));
 
-                            if(wlms.val()==""){
+                            if(wlmc.val()==""){
                                 msg+="【物料名称】不可为空.<br />";
                                 flag=false;
                                 return false;
+                            }else{
+                                if($(this).val()=="无"){
+                                    if(getStringBytesLength(wlmc.val())>24){
+                                        msg+="【物料名称】长度不可超过24字节.<br />";
+                                        flag=false;
+                                        return false;
+                                    }else if(getStringBytesLength_IsContain_HZ(wlmc.val())==false){
+                                        msg+="【物料名称】至少包含一个汉字.<br />";
+                                        flag=false;
+                                        return false;
+                                    }                                    
+                                }
                             }
                             if(wlms.val()==""){
                                 msg+="【物料描述】不可为空.<br />";
                                 flag=false;
                                 return false;
+                            }else{
+                                 if($(this).val()=="无"){
+                                    if(getStringBytesLength(wlms.val())>24){
+                                        msg+="【物料名称】长度不可超过24字节.<br />";
+                                        flag=false;
+                                        return false;
+                                    }                                 
+                                }
                             }
+                            
                             if($("#prtype").val()!="刀具类" ){
                                 if(wlType.val()==""){
                                     msg+="【物料类别】不可为空.<br />";
@@ -548,7 +614,7 @@
             $.ajax({
                 type: "Post",async: false,
                 url: "PUR_PR.aspx/getHisToryPrice_By_mc_ms" , 
-                data: "{'mc':'"+wlmc.val()+"','ms':'"+wlms.val()+"','p2':'"+p2+"'}",
+                data: "{'mc':'"+encodeURIComponent(wlmc.val())+"','ms':'"+encodeURIComponent(wlms.val())+"','p2':'"+p2+"'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {//返回的数据用data.d获取内容//                             
@@ -562,9 +628,17 @@
                         $("#"+ctrl).val(aNew);
                     }                   
                 },
-                error: function (err) {
-                    layer.alert(err);
+                error: function (jqXHR, textStatus, errorThrown) {
+                    /*弹出jqXHR对象的信息*/
+                    alert(jqXHR.responseText);
+                    //alert(jqXHR.status);
+                    //alert(jqXHR.readyState);
+                    //alert(jqXHR.statusText);
+                    /*弹出其他两个参数的信息*/
+                    //alert(textStatus);
+                    //alert(errorThrown);
                 }
+
             });
         }
 
