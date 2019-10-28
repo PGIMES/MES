@@ -74,7 +74,7 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
         }        
         sql = string.Format(sql, Request.QueryString["domain"].ToString());
         */
-        string sql = "exec [z_select_pt_mstr] '{0}','{1}'";
+        string sql = "exec [z_select_pt_mstr_show] '{0}','{1}'";
         sql = string.Format(sql, prtype, Request.QueryString["domain"].ToString());
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
