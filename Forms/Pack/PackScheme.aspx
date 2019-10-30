@@ -80,7 +80,8 @@
                 RefreshMain();
                 RefreshRow();
                 $("#ljXX i[id*=part_i]").removeClass("i_show").addClass("i_hidden");
-                $("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
+                //2019.10.30注释，修改的时候可以修改
+                //$("#zxXX i[id*=bzx_part_i]").removeClass("i_show").addClass("i_hidden");
             }
 
             if (state=='edit'){//加载附件
