@@ -40,6 +40,9 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
             txt_PurQty.Text = purqty.ToString();
             txt_qty_dsh.Text = qty_dsh.ToString();
 
+            //包材合同，收货数量默认等于待收货数量，也就是总数量，一次性验收
+            if (syscontractno.StartsWith("108")) { txt_qty.Text = qty_dsh.ToString(); }
+
             ActualReceiveDate.MaxDate = DateTime.Now;
             ActualReceiveDate.Value = DateTime.Now;
         }
