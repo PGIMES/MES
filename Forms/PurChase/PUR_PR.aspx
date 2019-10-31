@@ -510,7 +510,7 @@
                             }else{
                                  if($(this).val()=="无"){
                                     if(getStringBytesLength(wlms.val())>24){
-                                        msg+="【物料名称】长度不可超过24字节.<br />";
+                                        msg+="【物料描述】长度不可超过24字节.<br />";
                                         flag=false;
                                         return false;
                                     }                                 
