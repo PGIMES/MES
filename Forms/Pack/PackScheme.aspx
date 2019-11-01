@@ -22,7 +22,7 @@
         var state = getQueryString("state");
 
         $(document).ready(function () {
-            $("#mestitle").html("【包装方案申请单】<a href='/userguide/TGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>");
+            $("#mestitle").html("【包装方案申请单】");//<a href='/userguide/TGuide.pps' target='_blank' class='h5' style='color:red'>使用说明</a>
 
             //提出自定流程 JS 
             if ($('#3B271F67-0433-4082-AD1A-8DF1B967B879', parent.document).length == 0) {
