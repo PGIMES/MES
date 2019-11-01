@@ -762,13 +762,13 @@
                 }
                 if($("#ljXX input[id*='gdsl_cp']").val()==""){
                     msg+="【工单数量(成品)】不可为空.<br />";
-                }else if(Number($("#ljXX input[id*='gdsl_cp']").val())<=0){
-                    msg+="【工单数量(成品)】不可小于等于0.<br />";
+                }else if(Number($("#ljXX input[id*='gdsl_cp']").val())<0){
+                    msg+="【工单数量(成品)】不可小于0.<br />";
                 }
                 if($("#ljXX input[id*='gdsl_bcp']").val()==""){
                     msg+="【工单数量(半成品)】不可为空.<br />";
-                }else if(Number($("#ljXX input[id*='gdsl_bcp']").val())<=0){
-                    msg+="【工单数量(半成品)】不可小于等于0.<br />";
+                }else if(Number($("#ljXX input[id*='gdsl_bcp']").val())<0){
+                    msg+="【工单数量(半成品)】不可小于0.<br />";
                 }
                 if($("#ljXX input[id*='klgx']").val()==""){
                     msg+="【扣料工序】不可为空.<br />";
