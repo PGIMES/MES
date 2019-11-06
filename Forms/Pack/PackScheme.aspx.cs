@@ -150,7 +150,7 @@ public partial class Forms_Pack_PackScheme : System.Web.UI.Page
                 {
                     SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
 
-                    if (StepID.ToUpper() == SQ_StepID || StepID == "A")//申请步骤是，为0的字段置空
+                    if ((StepID.ToUpper() == SQ_StepID || StepID == "A") && Request.QueryString["display"] == null)//申请步骤是，为0的字段置空
                     {
                         if (Convert.ToDecimal(ldt.Rows[0]["ljcc_l"].ToString()) == 0) { ljcc_l.Text = ""; }
                         if (Convert.ToDecimal(ldt.Rows[0]["ljcc_w"].ToString()) == 0) { ljcc_w.Text = ""; }
