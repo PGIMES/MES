@@ -1239,7 +1239,11 @@
                 msg+="【申请人部门】不可为空.<br />";
             }
             if($("#CJJH select[id*='TravelClass']").val()==""){
-                msg+="【出差类别】不可为空.<br />";
+                msg+="【出差类型】不可为空.<br />";
+            }else if($("#CJJH select[id*='TravelClass']").val()=="培训"){
+                if($("#<%=ip_filelist.ClientID%>").val()=="" && $("#MainContent_tab1").find("tr").length==0){
+                    msg+="【出差类型】是培训，必须上传培训申请单.<br />";
+                }
             }
             if($("#CJJH input[id*='PlanStartTime']").val()==""){
                 msg+="【预计出发日期】不可为空.<br />";
@@ -1475,6 +1479,36 @@
             return ((new Date(s1.replace(/-/g,"\/")))>(new Date(s2.replace(/-/g,"\/"))));
         }
 
+    </script>
+
+    <script type="text/javascript">
+        var uploadedFiles = [];
+        function onFileUploadComplete(s, e) {
+            if(e.callbackData) {
+                var fileData = e.callbackData.split(',');uploadedFiles.push(fileData);$("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join("|"));
+                var fileName = fileData[0],
+                    fileUrl = fileData[1],
+                    fileSize = fileData[2];                
+                var eqno=uploadedFiles.length-1;
+
+                var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                        +'<td Width="60px">'+fileSize+'</td>'
+                        +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="del_data(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                        +'</tr>';
+
+               $('#tbl_filelist').append(tbody_tr);
+                //alert(fileName);
+                //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+            }
+        }
+
+
+        function del_data(a,eno){
+            $(a).remove();
+            uploadedFiles[eno]=null;
+           $("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join("|"));
+        }
+        
     </script>
 
 </asp:Content>
@@ -2059,6 +2093,37 @@
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#fjXX">
+                    <strong>附件信息</strong>
+                </div>
+                <div class="panel-body" id="fjXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1000px;">
+                        <div style="margin-top:5px;">
+                            <dx:aspxuploadcontrol ID="uploadcontrol" runat="server" Width="500px" BrowseButton-Text="浏览"  Visible="true" ClientInstanceName="UploadControl" 
+                                ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced"   AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
+                                onfileuploadcomplete="uploadcontrol_FileUploadComplete" >
+                                <AdvancedModeSettings EnableDragAndDrop="True" EnableFileList="True" EnableMultiSelect="True">
+                                </AdvancedModeSettings>
+                                <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
+                            </dx:aspxuploadcontrol>
+                            <input type="hidden" id="ip_filelist" name="ip_filelist" runat="server" />                              
+                            <table id="tbl_filelist"  Width="500px">  
+                            </table>
+
+                            <asp:UpdatePanel runat="server" ID="p11" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <textarea id="ip_filelist_db" name="ip_filelist" runat="server" cols="200" rows="2" visible="false"></textarea>
+                                    <asp:Table ID="tab1" Width="500px" runat="server">
+                                    </asp:Table>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
                 </div>
             </div>
         </div>

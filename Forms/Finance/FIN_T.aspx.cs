@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -113,6 +114,13 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
                     //表头基本信息
                     Pgi.Auto.Control.SetControlValue("Fin_T_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     str_IsHrReserve = ldt.Rows[0]["IsHrReserveByForm"].ToString();
+
+                    //显示文件
+                    if (ldt.Rows[0]["files"].ToString() != "")
+                    {
+                        this.ip_filelist_db.Value = ldt.Rows[0]["files"].ToString();
+                        bindtab();
+                    }
                 }
                 else
                 {
@@ -157,6 +165,78 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+    }
+
+    void bindtab()
+    {
+        bool is_del = true;
+        DataTable ldt_flow = DbHelperSQL.Query(@"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                                        where cast(stepid as varchar(36))=cast('" + Request.QueryString["stepid"] + "' as varchar(36)) and cast(flowid as varchar(36))=cast('"
+                                        + Request.QueryString["flowid"] + "' as varchar(36)) and instanceid='" + this.m_sid + "' and stepname='申请人'").Tables[0];
+
+        if (ldt_flow.Rows.Count == 0)
+        {
+            is_del = false;
+        }
+        if (Request.QueryString["display"] != null)//未发送之前
+        {
+            is_del = false;
+        }
+
+        tab1.Rows.Clear();
+        string[] ls_files = this.ip_filelist_db.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            TableRow tempRow = new TableRow();
+            string[] ls_files_2 = ls_files[i].Split(',');
+
+            HyperLink hl = new HyperLink();
+            Label lb = new Label();
+
+            hl.Text = ls_files_2[0].ToString();
+            hl.NavigateUrl = ls_files_2[1].ToString();
+            hl.Target = "_blank";
+
+            lb.Text = ls_files_2[2].ToString();
+
+            TableCell td1 = new TableCell(); td1.Controls.Add(hl); td1.Width = Unit.Pixel(400);
+            tempRow.Cells.Add(td1);
+
+            TableCell td2 = new TableCell(); td2.Controls.Add(lb); td2.Width = Unit.Pixel(60);
+            tempRow.Cells.Add(td2);
+
+            if (is_del)
+            {
+                //Button Btn = new Button(); 
+                LinkButton Btn = new LinkButton();
+                Btn.Text = "删除"; Btn.ID = "btn_" + i.ToString(); Btn.Click += new EventHandler(Btn_Click);
+
+                TableCell td3 = new TableCell(); td3.Controls.Add(Btn);
+                tempRow.Cells.Add(td3);
+            }
+            tab1.Rows.Add(tempRow);
+        }
+    }
+
+    void Btn_Click(object sender, EventArgs e)
+    {
+        //var btn = sender as Button;
+        var btn = sender as LinkButton;
+        int index = Convert.ToInt32(btn.ID.Substring(4));
+
+        string filedb = ip_filelist_db.Value;
+        string[] ls_files = filedb.Split('|');
+
+        string files = "";
+        for (int i = 0; i < ls_files.Length; i++)
+        {
+            if (i != index) { files += ls_files[i] + "|"; }
+        }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
+
+        ip_filelist_db.Value = files;
+
+        bindtab();
     }
 
     protected void GetGrid(DataTable DT)
@@ -236,6 +316,8 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     public void setread(int i)
     {
         ViewState["IsHrReserve_i"] = "Y";
+
+        this.uploadcontrol.Visible = false;
 
         ((TextBox)this.FindControl("ctl00$MainContent$PlanStartTime")).CssClass = "lineread";
         ((TextBox)this.FindControl("ctl00$MainContent$PlanStartTime")).Attributes.Remove("onclick");
@@ -515,6 +597,47 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
         lc_deptmfg.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
         ls.Add(lc_deptmfg);
 
+        //新增附件字段值
+        string filepath = "";
+        string[] ls_files = ip_filelist.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files)
+        {
+            string[] ls_files_2 = item.Split(',');
+            
+            FileInfo fi = new FileInfo(MapPath("~") + ls_files_2[1]);
+
+            var sorpath = @"\"+ savepath + @"\";
+            var despath = MapPath("~") + sorpath + @"\" + m_sid + @"\";
+            if (!System.IO.Directory.Exists(despath))
+            {
+                System.IO.Directory.CreateDirectory(despath);
+            }
+            string tmp = despath + ls_files_2[1].Replace(sorpath, "");
+            if (File.Exists(tmp))
+            {
+                File.Delete(tmp);
+            }
+            fi.MoveTo(tmp);
+
+            filepath += item.Replace(sorpath, sorpath + m_sid + @"\") + "|";
+           
+        }
+
+        string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in ls_files_db)
+        {
+            filepath += item + "|";
+        }
+        if (filepath != "") { filepath = filepath.Substring(0, filepath.Length - 1); }
+
+        // 增加上传文件列
+        Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
+        lcfile.Code = "files";
+        lcfile.Key = "";
+        lcfile.Value = filepath;
+        ls.Add(lcfile);
+
+
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = new DataTable(); DataTable ldt_hr = new DataTable();
         ldt = Pgi.Auto.Control.AgvToDt(this.gv_d);
@@ -722,6 +845,27 @@ public partial class Forms_Finance_FIN_T : System.Web.UI.Page
     //    }
     //    return "1";
     //}
+    #endregion
+
+    #region "上传文件"
+
+    //保存上传文件路径
+    public static string savepath = @"UploadFile\Fin\travel";
+    protected void uploadcontrol_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e)
+    {
+        string resultExtension = System.IO.Path.GetExtension(e.UploadedFile.FileName);
+        string resultFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetRandomFileName(), resultExtension);
+        string resultFilePath = MapPath("~") + savepath + "\\" + resultFileName;
+        e.UploadedFile.SaveAs(resultFilePath);
+
+        string name = e.UploadedFile.FileName;
+        long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+        string sizeText = sizeInKilobytes.ToString() + " KB";
+
+        e.CallbackData = name + "," + "\\" + savepath + "\\" + resultFileName + "," + sizeText;
+
+    }
+
     #endregion
 
 
