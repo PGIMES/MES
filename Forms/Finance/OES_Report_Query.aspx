@@ -5,6 +5,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
     <script type="text/javascript" src="/Content/js/jquery.min.js"></script>
+    <script src="../../Content/js/plugins/layer/laydate/laydate.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#mestitle").text("【费用报销单查询】");
@@ -37,7 +38,12 @@
                 </td>     
                 <td id="td_btn">  
                     <button id="btn_search" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_search_Click"><i class="fa fa-search fa-fw"></i>&nbsp;查询</button>  
-                    <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出</button>
+                    <button id="btn_import" type="button" class="btn btn-primary btn-large" runat="server" onserverclick="btn_import_Click"><i class="fa fa-download fa-fw"></i>&nbsp;导出（all）</button>
+                </td>
+
+                <td id="td_chuna" style="padding-left:50px">   
+                    财务核准期间<asp:TextBox ID="dateStart" runat="server" onclick="laydate()" Width="100px"></asp:TextBox>~<asp:TextBox ID="dateEnd" runat="server"  onclick="laydate()" Width="100px"></asp:TextBox>
+                    <button id="btnExport" type="button" class="btn btn-primary btn-large" runat="server"  onserverclick="btnExport_ServerClick" title="按核准区间且签核完毕"><i class="fa fa-download fa-fw"></i>&nbsp;导出（已签核）</button>
                 </td>
             </tr>                      
         </table>                   
@@ -47,6 +53,7 @@
         <table>
             <tr>
                 <td>
+                    
                     <dx:ASPxGridView ID="gv" runat="server" KeyFieldName="id" AutoGenerateColumns="False" Width="1660px" OnPageIndexChanged="gv_PageIndexChanged"  ClientInstanceName="grid"
                         OnCustomCellMerge="gv_CustomCellMerge">
                         <ClientSideEvents EndCallback="function(s, e) {setHeight();}"  />
@@ -118,10 +125,12 @@
                     </dx:ASPxGridView>
                     <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server" GridViewID="gv">
                     </dx:ASPxGridViewExporter>
+
+
                 </td>
             </tr>
         </table>
     </div>
-
+<asp:DataGrid ID="dgexp" runat="server" AllowPaging="false" AutoGenerateColumns="true"></asp:DataGrid>
 </asp:Content>
 

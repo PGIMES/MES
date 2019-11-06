@@ -68,4 +68,55 @@ public partial class Forms_Finance_OES_Report_Query : System.Web.UI.Page
         }
 
     }
+
+
+    public void ExportQuery()
+    {
+        string sql = string.Format("exec  Report_Fin_OES_xls '{0}','{1}','{2}','{3}','{4}'", ddl_domain.SelectedValue, LogUserModel.UserId, LogUserModel.DepartName,dateStart.Text,dateEnd.Text);
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        dgexp.DataSource = dt;
+        dgexp.DataBind();
+    }
+    protected void btnExport_ServerClick(object sender, EventArgs e)
+    {
+        ExportQuery();
+        for(int i = 0; i < dgexp.Items.Count; i++)
+        {
+            dgexp.Items[i].Cells[2].Attributes.Add("style", "vnd.ms-excel.numberformat:@");
+        }
+        Excel("excel", "报销记录"+DateTime.Now.ToString("yyMMddHHmm")+".xls");
+    }
+    /// <summary>
+    /// 下载数据
+    /// </summary>
+    /// <param name="FileType">文件类型</param>
+    /// <param name="FileName">Excel表名</param>
+    private void Excel(string FileType, string FileName)
+    {
+        try
+        {
+            Response.Clear();
+            Response.Buffer = true;
+            Response.Charset = "utf-8";
+            //返回与指定代码页关联的数据
+            Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+            //attachment表示作为附件下载，filename指定输出文件名称
+            Response.AppendHeader("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(FileName, System.Text.Encoding.UTF8).ToString());
+            //指定文件类型 
+            Response.ContentType = FileType;
+            this.EnableViewState = false;
+            System.Globalization.CultureInfo myCItrad = new System.Globalization.CultureInfo("ZH-CN", true);
+            //定义一输入流
+            System.IO.StringWriter tw = new System.IO.StringWriter(myCItrad);
+            HtmlTextWriter hw = new HtmlTextWriter(tw);
+            this.dgexp.RenderControl(hw);
+            Response.Write(tw.ToString());
+            Response.End();
+        }
+        catch (Exception err)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "js", "alert('发生错误：" + err.Message.Replace("\r\n", "\\r\\n").Replace("'", "‘") + "')", true);
+            return;
+        }
+    }
 }
