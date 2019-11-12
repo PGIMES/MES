@@ -360,6 +360,7 @@
     <script type="text/javascript">
         var js_UserId_qt = '<%=js_UserId%>';
         var js_DeptName_qt = '<%=js_DeptName%>';
+        var js_SQ_StepID='<%=SQ_StepID%>';
 
 	   <%-- var initData = <%=BWorkFlow.GetFormDataJsonString(initData)%>;--%>
         var fieldStatus = "1"=="<%=Request.QueryString["isreadonly"]%>"? {} : <%=fieldStatus%>;
@@ -434,15 +435,18 @@
                             flag=false;
                             return false;
                         }else{
-                            if(getStringBytesLength($(this).val())>24){
-                                msg+="【名称】长度不可超过24字节.<br />";
-                                flag=false;
-                                return false;
-                            }else if(getStringBytesLength_IsContain_HZ($(this).val())==false){
-                                msg+="【名称】至少包含一个汉字.<br />";
-                                flag=false;
-                                return false;
-                            }    
+                            if(stepid=="A" || stepid==js_SQ_StepID){
+                                 if(getStringBytesLength($(this).val())>24){
+                                    msg+="【名称】长度不可超过24字节.<br />";
+                                    flag=false;
+                                    return false;
+                                }else if(getStringBytesLength_IsContain_HZ($(this).val())==false){
+                                    msg+="【名称】至少包含一个汉字.<br />";
+                                    flag=false;
+                                    return false;
+                                }    
+                            }
+                           
                         }
                     });
                     $("#gvdtl input[id*=wlms]").each(function (){
@@ -451,10 +455,12 @@
                             flag=false;
                             return false;
                         }else{
-                            if(getStringBytesLength($(this).val())>24){
-                                msg+="【描述】长度不可超过24字节.<br />";
-                                flag=false;
-                                return false;
+                            if(stepid=="A" || stepid==js_SQ_StepID){
+                                if(getStringBytesLength($(this).val())>24){
+                                    msg+="【描述】长度不可超过24字节.<br />";
+                                    flag=false;
+                                    return false;
+                                }
                             }
                         }
                     });
@@ -491,16 +497,18 @@
                                 flag=false;
                                 return false;
                             }else{
-                                if($(this).val()=="无"){
-                                    if(getStringBytesLength(wlmc.val())>24){
-                                        msg+="【物料名称】长度不可超过24字节.<br />";
-                                        flag=false;
-                                        return false;
-                                    }else if(getStringBytesLength_IsContain_HZ(wlmc.val())==false){
-                                        msg+="【物料名称】至少包含一个汉字.<br />";
-                                        flag=false;
-                                        return false;
-                                    }                                    
+                                if(stepid=="A" || stepid==js_SQ_StepID){
+                                    if($(this).val()=="无"){
+                                        if(getStringBytesLength(wlmc.val())>24){
+                                            msg+="【物料名称】长度不可超过24字节.<br />";
+                                            flag=false;
+                                            return false;
+                                        }else if(getStringBytesLength_IsContain_HZ(wlmc.val())==false){
+                                            msg+="【物料名称】至少包含一个汉字.<br />";
+                                            flag=false;
+                                            return false;
+                                        }                                    
+                                    }
                                 }
                             }
                             if(wlms.val()==""){
@@ -508,12 +516,14 @@
                                 flag=false;
                                 return false;
                             }else{
-                                 if($(this).val()=="无"){
-                                    if(getStringBytesLength(wlms.val())>24){
-                                        msg+="【物料描述】长度不可超过24字节.<br />";
-                                        flag=false;
-                                        return false;
-                                    }                                 
+                                if(stepid=="A" || stepid==js_SQ_StepID){
+                                    if($(this).val()=="无"){
+                                        if(getStringBytesLength(wlms.val())>24){
+                                            msg+="【物料描述】长度不可超过24字节.<br />";
+                                            flag=false;
+                                            return false;
+                                        }                                 
+                                    }
                                 }
                             }
                             
