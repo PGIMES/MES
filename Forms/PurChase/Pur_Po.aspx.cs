@@ -2297,7 +2297,7 @@ public partial class Pur_Po : System.Web.UI.Page
         string sql_po_wltype = @"";
         if (potype == "PO")
         {
-            sql_po_wltype = @"select LB as value from PUR_PO_CLASS where ms_code<>'3'";
+            sql_po_wltype = @"select LB as value from PUR_PO_CLASS where ms_code<>'3' and ms_code<>'5'";
         }
         else
         {
