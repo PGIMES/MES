@@ -684,7 +684,7 @@ public partial class Pur_Po : System.Web.UI.Page
         }
     }
        
-    private bool SaveData()
+    private bool SaveData(string action)
     {
         bool bflag = false;
         string lspgi_no = "";
@@ -711,10 +711,13 @@ public partial class Pur_Po : System.Web.UI.Page
 
         ldt.AcceptChanges();
 
-        if (ldt.Rows.Count == 0)
+        if (action == "submit")
         {
-            Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
-            return false;
+            if (ldt.Rows.Count == 0)
+            {
+                Pgi.Auto.Public.MsgBox(this, "alert", "采购清单不能为空!");
+                return false;
+            }
         }
 
         string sql_pr_exist = "";//验证 一起选择数据的 问题，重复采购
@@ -757,12 +760,14 @@ public partial class Pur_Po : System.Web.UI.Page
 
         if (potype=="合同")//(potype_con == "合同模块")
         {
-            if (ldt_pay.Rows.Count == 0)
+            if (action == "submit")
             {
-                Pgi.Auto.Public.MsgBox(this, "alert", "付款信息不能为空!");
-                return false;
+                if (ldt_pay.Rows.Count == 0)
+                {
+                    Pgi.Auto.Public.MsgBox(this, "alert", "付款信息不能为空!");
+                    return false;
+                }
             }
-
             contracttype = ContractType.Value.ToString();
         }
         
@@ -1194,6 +1199,17 @@ public partial class Pur_Po : System.Web.UI.Page
         {
             Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
             ls_del.Sql = "delete from PUR_PO_Dtl_Form where pono='" + m_sid + "'";
+            //ls_sum.Add(ls_del);
+
+            DataTable ldt_del = DbHelperSQL.Query("select * from PUR_PO_Dtl_Form where pono='" + m_sid + "'").Tables[0];
+            for (int i = 0; i < ldt_del.Rows.Count; i++)
+            {
+                ls_del.Sql += "update PUR_PR_Dtl_Form set Status='0' where prno='" + ldt_del.Rows[i]["prno"].ToString() + "' and rowid='" + ldt_del.Rows[i]["prrowid"].ToString() + "'";
+                if (i > 0)
+                {
+                    ls_del.Sql += ";";
+                }
+            }
             ls_sum.Add(ls_del);
         }
 
@@ -1556,7 +1572,7 @@ public partial class Pur_Po : System.Web.UI.Page
         }
         else
         {
-            flag = SaveData();
+            flag = SaveData("save");
         }
         //保存当前流程
         if (flag == true)
@@ -1576,7 +1592,7 @@ public partial class Pur_Po : System.Web.UI.Page
         }
         else
         {
-            flag = SaveData();
+            flag = SaveData("submit");
         }
         //发送
         if (flag == true)

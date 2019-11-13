@@ -451,8 +451,10 @@
                 }
             //}
            
-            if($("[id$=gv] tr[id*=DataRow]").length==0){
-                msg+="【采购清单】不可为空.<br />";
+            if(action=='submit'){
+                if($("[id$=gv] tr[id*=DataRow]").length==0){
+                    msg+="【采购清单】不可为空.<br />";
+                }
             }
 
             $("[id$=gv] tr[id*=DataRow]").each(function (index, item) { 
@@ -469,21 +471,27 @@
             });
 
             if ($("input[type!=hidden][id*='PoType']").val()=="合同"){
-                if ($("[id*='PayType']").val()==""){                   
-                    msg+="【付款类型】不可为空.<br />";
+                //if ($("[id*='PayType']").val()==""){                   
+                //    msg+="【付款类型】不可为空.<br />";
+                //}
+                if(action=='submit'){
+                    if($("[id$=gv2] tr[id*=DataRow]").length==0){
+                        msg+="【付款信息】不可为空.<br />";
+                    }else{
+                        if ($("[id*='PayType']").val()==""){                   
+                            msg+="【付款类型】不可为空.<br />";
+                        }
+
+                        $("[id$=gv2] tr[id*=DataRow]").each(function (index, item) { 
+                            if($(item).find("input[id*=PayRate]").val()==""){
+                                msg+="第"+(index+1)+"行【付款比列】不可为空.<br />";
+                            }
+                            if($(item).find("input[id*=PlanPayDate]").val()==""){
+                                msg+="第"+(index+1)+"行【计划付款日期】不可为空.<br />";
+                            }
+                        });
+                    } 
                 }
-                if($("[id$=gv2] tr[id*=DataRow]").length==0){
-                    msg+="【付款信息】不可为空.<br />";
-                }else{
-                    $("[id$=gv2] tr[id*=DataRow]").each(function (index, item) { 
-                        if($(item).find("input[id*=PayRate]").val()==""){
-                            msg+="第"+(index+1)+"行【付款比列】不可为空.<br />";
-                        }
-                        if($(item).find("input[id*=PlanPayDate]").val()==""){
-                            msg+="第"+(index+1)+"行【计划付款日期】不可为空.<br />";
-                        }
-                    });
-                } 
             }
 
             if(msg!=""){  
