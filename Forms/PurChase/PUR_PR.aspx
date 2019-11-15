@@ -428,14 +428,14 @@
                 }
 
                 if ($("#prtype").val()=="费用服务类" || $("#prtype").val()=="合同类") {
-
+//alert(stepid);
                     $("#gvdtl input[id*=wlmc]").each(function (){
                         if($(this).val()==""){
                             msg+="【名称】不可为空.<br />";
                             flag=false;
                             return false;
                         }else{
-                            if(stepid=="A" || stepid==js_SQ_StepID){
+                            if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
                                  if(getStringBytesLength($(this).val())>24){
                                     msg+="【名称】长度不可超过24字节.<br />";
                                     flag=false;
@@ -455,7 +455,7 @@
                             flag=false;
                             return false;
                         }else{
-                            if(stepid=="A" || stepid==js_SQ_StepID){
+                            if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
                                 if(getStringBytesLength($(this).val())>24){
                                     msg+="【描述】长度不可超过24字节.<br />";
                                     flag=false;
@@ -497,7 +497,7 @@
                                 flag=false;
                                 return false;
                             }else{
-                                if(stepid=="A" || stepid==js_SQ_StepID){
+                                if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
                                     if($(this).val()=="无"){
                                         if(getStringBytesLength(wlmc.val())>24){
                                             msg+="【物料名称】长度不可超过24字节.<br />";
@@ -516,7 +516,7 @@
                                 flag=false;
                                 return false;
                             }else{
-                                if(stepid=="A" || stepid==js_SQ_StepID){
+                                if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
                                     if($(this).val()=="无"){
                                         if(getStringBytesLength(wlms.val())>24){
                                             msg+="【物料描述】长度不可超过24字节.<br />";
