@@ -289,11 +289,17 @@
                         var p3=$("#prtype").val();
                         if(p3=="费用服务类" || p3=="合同类"){    
                             if($(obj).attr("id").indexOf("_wlmc_")!="-1"){
+                                var wlms= $(obj).parent().parent().find("input[id*=wlms]");
                                 var wltype= $(obj).parent().parent().find("input[id*=wltype]");
                                 var note= $(obj).parent().parent().find("input[id*=note]");
 
                                 wltype.attr("onclick","Getwltype(this);");wltype.css("border",""); wltype.css("background-color","white");
                                 note.attr("onclick","Getwltype(this);");note.css("border",""); note.css("background-color","white");note.attr("readonly","readonly");
+
+                                //add 提示文字
+                                $(obj).attr("placeholder","品名含中文");
+                                wlms.attr("placeholder","规格型号");
+                                                                
                             }
                         }else{
 
@@ -303,7 +309,7 @@
                                 var wltype= $(obj).parent().parent().find("input[id*=wltype]");
                                 var wlsubtype= $(obj).parent().parent().find("input[id*=wlsubtype]");              
                                 var notax_historyprice=$(obj).parent().parent().find("input[id*=notax_historyprice]");
-                       
+
                                 if($(obj).val()!="无"){
                                     wlmc.attr("readonly","readonly");
                                     wlms.attr("readonly","readonly");
@@ -326,6 +332,10 @@
 
                                     if(p3=="刀具类"){wlsubtype.attr("onclick","Getwltype(this);");wlsubtype.css("border",""); wlsubtype.css("background-color","white");}
                                     if(p3!="刀具类"){wltype.attr("onclick","Getwltype(this);");wltype.css("border","");wltype.css("background-color","white"); }
+
+                                    //add 提示文字
+                                    wlmc.attr("placeholder","品名含中文");
+                                    wlms.attr("placeholder","规格型号");
                                 }
                             }
                         }
@@ -852,6 +862,10 @@
 
                 if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
                 if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+
+                //add 提示文字
+                wlmc.attr("placeholder","品名含中文");
+                wlms.attr("placeholder","规格型号");
             }
         }
 
@@ -965,11 +979,17 @@
                 //没有物料号字段
                 if(p3=="费用服务类" || p3=="合同类"){    
                     $("#gvdtl").find("tr td input[id*=wltype]").each(function () {
+                        var wlmc= $(this).parent().parent().find("input[id*=wlmc]");
+                        var wlms= $(this).parent().parent().find("input[id*=wlms]");
                         var wltype= $(this).parent().parent().find("input[id*=wltype]");
                         var note= $(this).parent().parent().find("input[id*=note]"); 
 
                         wltype.attr("onclick","Getwltype(this);");wltype.css("border",""); wltype.css("background-color","white");wltype.attr("readonly","readonly");
                         note.attr("onclick","Getwltype(this);");note.css("border",""); note.css("background-color","white");note.attr("readonly","readonly");
+                        
+                        //add 提示文字
+                        wlmc.attr("placeholder","品名含中文");
+                        wlms.attr("placeholder","规格型号");
                     });
                 }else {
                     //有料号字段
@@ -1006,6 +1026,10 @@
 
                                 if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
                                 if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+                                
+                                //add 提示文字
+                                wlmc.attr("placeholder","品名含中文");
+                                wlms.attr("placeholder","规格型号");
                             }
                         }); 
                     });
