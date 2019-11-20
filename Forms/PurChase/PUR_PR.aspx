@@ -440,7 +440,7 @@
                 if ($("#prtype").val()=="费用服务类" || $("#prtype").val()=="合同类") {
 //alert(stepid);
                     $("#gvdtl input[id*=wlmc]").each(function (){
-                        if($(this).val()==""){
+                        if($.trim($(this).val())==""){
                             msg+="【名称】不可为空.<br />";
                             flag=false;
                             return false;
@@ -460,7 +460,7 @@
                         }
                     });
                     $("#gvdtl input[id*=wlms]").each(function (){
-                        if($(this).val()==""){
+                        if($.trim($(this).val())==""){
                             msg+="【描述】不可为空.<br />";
                             flag=false;
                             return false;
@@ -502,7 +502,7 @@
                             //alert(getStringBytesLength(wlmc.val()));
                             //alert(getStringBytesLength(wlms.val()));
 
-                            if(wlmc.val()==""){
+                            if($.trim(wlmc.val())==""){
                                 msg+="【物料名称】不可为空.<br />";
                                 flag=false;
                                 return false;
@@ -521,7 +521,7 @@
                                     }
                                 }
                             }
-                            if(wlms.val()==""){
+                            if($.trim(wlms.val())==""){
                                 msg+="【物料描述】不可为空.<br />";
                                 flag=false;
                                 return false;
