@@ -63,6 +63,102 @@
             $('#comment', parent.document).val(val);
         }
 
+        function gv_SelectionChanged(s, e) {
+            //gv_color();
+        }
+        function gv_color(){
+            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+
+                var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FDF7D9");
+
+                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FDF7D9");
+                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FDF7D9");
+                }else {
+                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FFFFFF");
+
+                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FFFFFF");
+                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FFFFFF");
+                }
+
+                if($(item).find("input[id*=sl_"+index+"]").attr("readOnly")){
+                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
+                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
+                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FDF7D9");
+                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FDF7D9");
+                    }else {
+                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FFFFFF");
+                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FFFFFF");
+                    }
+                }else {
+                    
+                }
+            });
+        }
+
         //设定表字段状态（可编辑性）
         var tabName="pgi_packscheme_main_form";//表名
         function SetControlStatus(fieldStatus)
@@ -145,6 +241,123 @@
     </script>
 
     <script type="text/javascript">
+        function Get_ApplyId(){
+            var url = "/select/select_ApplyId.aspx?para=travel";
+
+            layer.open({
+                title:'申请人选择',
+                type: 2,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            });         
+        }
+
+        function setvalue_ApplyId(workcode,lastname ,ITEMVALUE ,dept_name , domain ,gc ,jobtitlename ,telephone, car) {
+
+            $("#DQXX input[id*='ApplyId']").val(workcode);
+            $("#DQXX input[id*='ApplyName']").val(lastname);
+            $("#DQXX input[id*='ApplyTelephone']").val(telephone);
+            $("#DQXX input[id*='ApplyDeptName']").val(dept_name);
+            
+        }
+
+        function Get_part() 
+        {
+            var url = "/select/select_CustomerSchedule_part.aspx";
+
+            layer.open({
+                title:'PGI零件号选择',
+                type: 2,
+                area: ['950px', '500px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
+        }
+
+        function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price,klgx) 
+        {            
+            /*$("#wlXX input[type!=hidden][id*='ver']").val('A0');
+            $("#wlXX input[id*='typeno']").val('新增');
+
+            $("#wlXX [id*='domain']").val(domain);
+            $("#wlXX input[id*='part']").val(part);
+            $("#wlXX input[id*='site']").val(site);
+            $("#wlXX input[id*='ship']").val(ship);
+            $("#wlXX input[id*='custname']").val(ad_name);
+            $("#wlXX input[id*='custpart']").val(custpart);*/
+
+        }
+
+        function Get_consignment_loc(vi){
+            var url = "/select/select_consignment_loc.aspx?vi="+vi;
+
+            layer.open({
+                title:'寄售地点明细',
+                type: 2,
+                area: ['1000px', '500px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url
+            }); 
+        }
+
+        function setvalue_consignment_loc(vi,domain_v, bm_v, mc_v, cc_v, dz_v, cl_v, gys_v,dj_v,bclb_v) {
+            /*if ($.trim(bclb_v)=="") {
+                layer.alert("包装箱编码"+bm_v+"对应的包材类别为空，请重新选择！"); 
+            }else {    
+                var domain= eval('domain' + vi);domain.SetText(domain_v);
+                var bm= eval('bm' + vi);bm.SetText(bm_v);
+                var mc= eval('mc' + vi);mc.SetText(mc_v);
+                var cc= eval('cc' + vi);cc.SetText(cc_v);
+                var dz= eval('dz' + vi);dz.SetText(dz_v);
+                var cl= eval('cl' + vi);cl.SetText(cl_v);
+                var gys= eval('gys' + vi);gys.SetText(gys_v);
+                var dj= eval('dj' + vi);dj.SetText(dj_v);
+                var bclb= eval('bclb' + vi);bclb.SetText(bclb_v);
+
+                RefreshRow();
+            }*/
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        var uploadedFiles = [];
+        function onFileUploadComplete(s, e) {
+            if(e.callbackData) {
+                var fileData = e.callbackData.split('|');uploadedFiles.push(fileData);$("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));               
+                bind_table(fileData);
+            }
+        }
+        
+        function bind_table(fileData){
+             var fileName = fileData[0],
+                 fileUrl = fileData[1],
+                 fileSize = fileData[2];    
+
+            var eqno=uploadedFiles.length-1;
+
+            var tbody_tr='<tr id="tr_'+eqno+'"><td Width="400px"><a href="'+fileUrl+'" target="_blank">'+fileName+'</a></td>'
+                    +'<td Width="60px">'+fileSize+'</td>'
+                    +'<td><span style="color:blue;cursor:pointer" id="tbl_delde" onclick ="del_data(tr_'+eqno+','+eqno+')" >删除</span></td>'
+                    +'</tr>';
+
+            $('#tbl_filelist').append(tbody_tr);
+        }
+
+
+        function del_data(a,eno){
+            $(a).remove();
+            uploadedFiles[eno]=null;
+           $("#<%=ip_filelist.ClientID%>").val(uploadedFiles.join(";"));
+        }
+        
+    </script>
+
+    <script type="text/javascript">
 
         function validate(action){
             var flag=true;var msg="";
@@ -158,10 +371,18 @@
                 msg+="【申请人部门】不可为空.<br />";
             }
 
+            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
+            var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
+
             if(action=='submit'){
-                
+                if (domain=="") {
+                    msg+="请选择【申请工厂】<br />";
+                }
+
+                if(delivery_mode==""){
+                    msg+="请选择【发货方式】<br />";
+                }
             }
-            
 
             if(msg!=""){  
                 flag=false;
@@ -212,6 +433,33 @@
         }
     </script>
 
+    <script>//20181108 add heguiqin
+        function Add_check(){
+            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
+            var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
+            var msg="";
+
+            if (domain=="") {
+                msg+="请选择【申请工厂】<br />";
+            }
+
+            if(delivery_mode==""){
+                msg+="请选择【发货方式】<br />";
+            }
+
+            if(msg!=""){  
+                layer.alert(msg);
+                return false;
+            }
+            return true;
+        }
+        function con_sure(){
+            if (gv.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
+            //询问框
+            return confirm('确认要删除吗？');
+        }
+    </script>
+
     <style>
         .lineread {
             /*font-size:9px;*/ 
@@ -227,7 +475,7 @@
             padding-left: 5px;
             border: none;
             border-bottom: 1px solid #ccc;
-            background-color: #FDF7D9; /*EFEFEF*/
+            background-color: #FDF7D9 !important; /*EFEFEF*/
         }
         .dxeButtonDisabled {
             display: none;
@@ -285,14 +533,14 @@
                         <table style="width: 100%; font-size: 12px;" border="0">
                             <tr>
                                 <td style="width:100px;">申请单号</td>
-                                <td><asp:TextBox ID="FormNo" runat="server" class="lineread"  ReadOnly="true" placeholder="自动产生" Width="260px" ToolTip="1|0" /></td>
-                                <td style="width:105px;"><font color="red">&nbsp;</font>申请日期</td>
-                                <td><asp:TextBox ID="ApplyDate"  runat="server" class="lineread" ReadOnly="True" Width="260px" /></td>
-                                <td style="width:100px;"><font color="red">&nbsp;</font>填单人</td>
+                                <td><asp:TextBox ID="FormNo" runat="server" class="lineread"  ReadOnly="true" placeholder="自动产生" Width="210px" ToolTip="1|0" /></td>
+                                <td style="width:100px;"><font color="red">&nbsp;</font>申请日期</td>
+                                <td><asp:TextBox ID="ApplyDate"  runat="server" class="lineread" ReadOnly="True" Width="210px" /></td>
+                                <td style="width:130px;"><font color="red">&nbsp;</font>填单人</td>
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="CreateId" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
-                                        <asp:TextBox runat="server" ID="CreateName"  class="lineread" ReadOnly="True" Width="198px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="CreateName"  class="lineread" ReadOnly="True" Width="148px"></asp:TextBox>
                                     </div>
                                 </td>
                             </tr>
@@ -301,17 +549,17 @@
                                 <td>
                                     <div class="form-inline">
                                         <asp:TextBox runat="server" ID="ApplyId" class="lineread" ReadOnly="True" Width="60px"></asp:TextBox>
-                                        <asp:TextBox runat="server" ID="ApplyName"  class="lineread" ReadOnly="True" Width="198px"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="ApplyName"  class="lineread" ReadOnly="True" Width="140px"></asp:TextBox>
                                         <i id="ApplyId_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" onclick="Get_ApplyId()"></i>
                                     </div>
                                 </td>
                                 <td><font color="red">&nbsp;</font>申请人部门</td>
                                 <td>
-                                    <asp:TextBox runat="server" ID="ApplyDeptName"  class="lineread" ReadOnly="True" Width="260px"></asp:TextBox>
+                                    <asp:TextBox runat="server" ID="ApplyDeptName"  class="lineread" ReadOnly="True" Width="210px"></asp:TextBox>
                                 </td>
                                 <td><font color="red">&nbsp;</font>电话(分机)</td>
                                 <td>
-                                    <asp:TextBox runat="server" ID="ApplyTelephone" class="lineread" Width="260px"/>
+                                    <asp:TextBox runat="server" ID="ApplyTelephone" class="lineread" Width="210px"/>
                                 </td>
                             </tr>
                         </table>
@@ -320,7 +568,338 @@
             </div>
         </div>
 
+        <div class="row row-container">
+            <div class="panel panel-infos">
+                <div class="panel-headings" data-toggle="collapse" data-target="#wlXX">
+                    <strong>客户物料信息</strong>
+                </div>
+                <div class="panel-body" id="wlXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
+                        <table style="width: 100%; font-size: 12px;" border="0" >
+                             <tr>
+                                <td style="width:100px;"><font color="red">*</font>申请工厂</td>
+                                <td style="width:292px;">
+                                    <dx:ASPxComboBox ID="domain" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="domain_c">
+                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                    </dx:ASPxComboBox>
+                                </td>  
+                                <td style="width:100px;"><font color="red">*</font>发货方式</td>
+                                <td style="width:292px;">
+                                    <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="delivery_mode_c">
+                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
+                                    </dx:ASPxComboBox>
+                                </td> 
+                                <td style="width:100px;"><font color="red">&nbsp;</font></td>
+                                <td style="width:292px;">
+                                </td>                   
+                            </tr>
+                            <tr>
+                                <td style="width:100px;"><font color="red">*</font>PGI_零件号</td>
+                                <td style="width:292px;">
+                                    <div class="form-inline">
+                                        <asp:TextBox ID="part" runat="server" class="lineread"  ReadOnly="true" Width="200px" />
+                                        <i id="part_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                            onclick="Get_part()"></i>
+                                    </div>
+                                </td>
+                                <td style="width:100px;"><font color="red">*</font>客户物料号</td>
+                                <td style="width:292px;">
+                                    <asp:TextBox ID="cust_part"  runat="server" class="linewrite" Width="210px" />
+                                </td>   
+                                <td style="width:130px;"><font color="red">*</font>显示客户物料号</td>
+                                <td>
+                                    <asp:TextBox ID="cust_partd"  runat="server" class="linewrite" Width="210px" />
+                                </td>                       
+                            </tr>
+                            <tr> 
+                                <td style="width:100px;"><font color="red">&nbsp;</font>说明</td>
+                                <td colspan="3">
+                                    <asp:TextBox ID="comment"  runat="server" class="linewrite" Width="600px" />
+                                </td>                            
+                                <td style="width:130px;"><font color="red">&nbsp;</font></td>
+                                <td>
+                                    
+                                </td>                    
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row row-container">
+            <div class="panel panel-infos">
+                <div class="panel-headings" data-toggle="collapse" data-target="#bzclXX">
+                    <strong>客户日程信息</strong>
+                </div>
+                <div class="panel-body" id="bzclXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
+                        <div style="padding: 2px 5px 5px 0px">                
+                            
+                        </div>
+                        <asp:UpdatePanel runat="server" ID="p1" UpdateMode="Conditional" >
+                            <ContentTemplate>
+                                
+                                <asp:Button ID="btnadd" runat="server" Text="新增" class="btn btn-default btn-sm"  OnClick="btnadd_Click" OnClientClick="return Add_check()"/>
+                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
+
+                                 <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
+                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound">
+                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
+                                    <SettingsPager PageSize="1000"></SettingsPager>
+                                    <Settings ShowFooter="True" />
+                                    <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
+                                    <Columns>
+                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
+                                        <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>                                           
+                                        <dx:GridViewDataTextColumn Caption="发货自" FieldName="site" Width="80px" VisibleIndex="1">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="site" runat="server" ValueType="System.String"
+                                                    Width="80px" ClientInstanceName='<%# "site"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>  
+                                        <dx:GridViewDataTextColumn Caption="发货至" FieldName="ship" Width="80px" VisibleIndex="2">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="ship" runat="server" ValueType="System.String"
+                                                    Width="80px" ClientInstanceName='<%# "ship"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>                                       
+                                        <dx:GridViewDataTextColumn Caption="销售订单" FieldName="nbr" Width="80px" VisibleIndex="3">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="mc" Width="80px" runat="server" Value='<%# Eval("nbr")%>' 
+                                                    ClientInstanceName='<%# "nbr"+Container.VisibleIndex.ToString() %>'> <%--CssClass="linewrite"--%>
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="票据开往" FieldName="bill" Width="80px" VisibleIndex="4">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="bill" Width="80px" runat="server" Value='<%# Eval("bill")%>' 
+                                                    ClientInstanceName='<%# "bill"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="货币" FieldName="curr" Width="50px" VisibleIndex="5">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="curr" Width="50px" runat="server" Value='<%# Eval("curr")%>' 
+                                                    ClientInstanceName='<%# "curr"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="价目表" FieldName="pr_list" Width="60px" VisibleIndex="6">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="pr_list" Width="60px" runat="server" Value='<%# Eval("pr_list")%>' 
+                                                    ClientInstanceName='<%# "pr_list"+Container.VisibleIndex.ToString() %>'>
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="应纳税" FieldName="taxable" Width="50px" VisibleIndex="7">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="taxable" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "taxable"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="税率" FieldName="taxc_rate" Width="50px" VisibleIndex="8">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="taxc_rate" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "taxc_rate"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="库位" FieldName="loc" Width="50px" VisibleIndex="9">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="loc" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "loc"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>  
+                                        <dx:GridViewDataTextColumn Caption="寄售" FieldName="consignment" Width="50px" VisibleIndex="10">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="consignment" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "consignment"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="寄售地点" FieldName="consignment_loc" Width="60px" VisibleIndex="11">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <%--<table>
+                                                    <tr>
+                                                        <td>
+                                                            <dx:ASPxTextBox ID="consignment_loc" Width="50px" runat="server" Value='<%# Eval("consignment_loc")%>' 
+                                                                ClientInstanceName='<%# "consignment_loc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                            </dx:ASPxTextBox>
+                                                        </td>
+                                                        <td><i id="consignment_loc_i_<%#Container.VisibleIndex.ToString() %>" 
+                                                            class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
+                                                            onclick="Get_consignment_loc(<%# Container.VisibleIndex %>)"></i>
+                                                        </td>
+                                                    </tr>
+                                                </table>--%>     
+                                                <dx:ASPxComboBox ID="consignment_loc" runat="server" ValueType="System.String"
+                                                    Width="60px" ClientInstanceName='<%# "consignment_loc"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>                                             
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="模型年" FieldName="modelyr" Width="70px" VisibleIndex="12">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="modelyr" runat="server" ValueType="System.String"
+                                                    Width="70px" ClientInstanceName='<%# "modelyr"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="应收款地点" FieldName="ysk_site" Width="80px" VisibleIndex="13"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="ysk_site" Width="80px" runat="server" Value='<%# Eval("ysk_site")%>' 
+                                                    ClientInstanceName='<%# "ysk_site"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="日记账集" FieldName="rjzj" Width="80px" VisibleIndex="14"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="rjzj" Width="80px" runat="server" Value='<%# Eval("rjzj")%>' 
+                                                    ClientInstanceName='<%# "rjzj"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="离岸价格" FieldName="lajg" Width="70px" VisibleIndex="15">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="lajg" Width="70px" runat="server" Value='<%# Eval("lajg")%>' 
+                                                    ClientInstanceName='<%# "lajg"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="渠道" FieldName="channel" Width="60px" VisibleIndex="16"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="channel" Width="60px" runat="server" Value='<%# Eval("channel")%>' 
+                                                    ClientInstanceName='<%# "channel"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="备注" FieldName="remark" Width="130px" VisibleIndex="17"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="remark" Width="130px" runat="server" Value='<%# Eval("remark")%>' 
+                                                    ClientInstanceName='<%# "remark"+Container.VisibleIndex.ToString() %>'>
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                        <%--<dx:GridViewDataTextColumn Caption="行" FieldName="line" Width="40px" VisibleIndex="11">
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="line" Width="40px" runat="server" Value='<%# Eval("line")%>' 
+                                                    ClientInstanceName='<%# "line"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>--%>
+                                        <dx:GridViewDataTextColumn FieldName="id" Width="0px">
+                                            <HeaderStyle CssClass="hidden" />
+                                            <CellStyle CssClass="hidden"></CellStyle>
+                                            <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="CSNo" Width="0px">
+                                            <HeaderStyle CssClass="hidden" />
+                                            <CellStyle CssClass="hidden"></CellStyle>
+                                            <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                    </Columns>       
+                                    <TotalSummary>
+                                        <dx:ASPxSummaryItem DisplayFormat="合计{0:N0}" FieldName="bm" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="{0:N4}" FieldName="zz" SummaryType="Sum" />
+                                        <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="zj" SummaryType="Sum" />
+                                    </TotalSummary>                                            
+                                    <Styles> 
+                                        <Header BackColor="#31708f" Font-Bold="True" ForeColor="white" Border-BorderStyle="None" HorizontalAlign="Left" VerticalAlign="Top"></Header>    
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>      
+                                        <Footer Font-Bold="true" ForeColor="Red" HorizontalAlign="Right"></Footer>
+                                    </Styles>                                          
+                                </dx:aspxgridview>
+
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row row-container">
+            <div class="panel panel-infos">
+                <div class="panel-headings" data-toggle="collapse" data-target="#fjXX">
+                    <strong>附件信息</strong>
+                </div>
+                <div class="panel-body" id="fjXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
+                        <dx:ASPxUploadControl ID="uploadcontrol" runat="server" Width="500px" BrowseButton-Text="浏览" Visible="true" ClientInstanceName="UploadControl"
+                            ShowAddRemoveButtons="True" RemoveButton-Text="删除" UploadMode="Advanced" AutoStartUpload="true" ShowUploadButton="false" ShowProgressPanel="true"
+                            OnFileUploadComplete="uploadcontrol_FileUploadComplete">
+                            <AdvancedModeSettings EnableDragAndDrop="True" EnableFileList="True" EnableMultiSelect="True">
+                            </AdvancedModeSettings>
+                            <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
+                        </dx:ASPxUploadControl>                       
+                        <input type="hidden" id="ip_filelist" name="ip_filelist" runat="server" />
+                        <table id="tbl_filelist" width="500px">
+                        </table>
+                        <asp:UpdatePanel runat="server" ID="p11" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <textarea id="ip_filelist_db" name="ip_filelist" runat="server" cols="200" rows="2" visible="false"></textarea>
+                                <asp:Table ID="tab1" Width="500px" runat="server">
+                                </asp:Table>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container">
+            <div class="panel panel-infos">
+                <div class="panel-headings" data-toggle="collapse" data-target="#CZRZ"> 
+                </div>
+                <div class="panel-body ">
+                    <table border="0"  width="100%"  >
+                        <tr>
+                            <td width="100px" ><label>处理意见：</label></td>
+                            <td>
+                                <textarea id="comment" cols="20" rows="2" placeholder="请在此处输入处理意见" class="form-control" onchange="setComment(this.value)" ></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div>
 
