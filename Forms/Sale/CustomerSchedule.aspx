@@ -290,38 +290,6 @@
             $("#wlXX input[id*='custpart']").val(custpart);*/
 
         }
-
-        function Get_consignment_loc(vi){
-            var url = "/select/select_consignment_loc.aspx?vi="+vi;
-
-            layer.open({
-                title:'寄售地点明细',
-                type: 2,
-                area: ['1000px', '500px'],
-                fixed: false, //不固定
-                maxmin: true,
-                content: url
-            }); 
-        }
-
-        function setvalue_consignment_loc(vi,domain_v, bm_v, mc_v, cc_v, dz_v, cl_v, gys_v,dj_v,bclb_v) {
-            /*if ($.trim(bclb_v)=="") {
-                layer.alert("包装箱编码"+bm_v+"对应的包材类别为空，请重新选择！"); 
-            }else {    
-                var domain= eval('domain' + vi);domain.SetText(domain_v);
-                var bm= eval('bm' + vi);bm.SetText(bm_v);
-                var mc= eval('mc' + vi);mc.SetText(mc_v);
-                var cc= eval('cc' + vi);cc.SetText(cc_v);
-                var dz= eval('dz' + vi);dz.SetText(dz_v);
-                var cl= eval('cl' + vi);cl.SetText(cl_v);
-                var gys= eval('gys' + vi);gys.SetText(gys_v);
-                var dj= eval('dj' + vi);dj.SetText(dj_v);
-                var bclb= eval('bclb' + vi);bclb.SetText(bclb_v);
-
-                RefreshRow();
-            }*/
-
-        }
     </script>
 
     <script type="text/javascript">
@@ -680,10 +648,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="票据开往" FieldName="bill" Width="80px" VisibleIndex="4">
+                                        <dx:GridViewDataTextColumn Caption="票据开往" FieldName="bill" Width="70px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="bill" Width="80px" runat="server" Value='<%# Eval("bill")%>' 
+                                                <dx:ASPxTextBox ID="bill" Width="70px" runat="server" Value='<%# Eval("bill")%>' 
                                                     ClientInstanceName='<%# "bill"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
@@ -724,11 +692,11 @@
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="库位" FieldName="loc" Width="50px" VisibleIndex="9">
+                                        <dx:GridViewDataTextColumn Caption="库位" FieldName="loc" Width="55px" VisibleIndex="9">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="loc" runat="server" ValueType="System.String"
-                                                    Width="50px" ClientInstanceName='<%# "loc"+Container.VisibleIndex.ToString() %>'
+                                                    Width="55px" ClientInstanceName='<%# "loc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
                                                     DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>    
@@ -746,20 +714,7 @@
                                         </dx:GridViewDataTextColumn> 
                                         <dx:GridViewDataTextColumn Caption="寄售地点" FieldName="consignment_loc" Width="60px" VisibleIndex="11">
                                             <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <%--<table>
-                                                    <tr>
-                                                        <td>
-                                                            <dx:ASPxTextBox ID="consignment_loc" Width="50px" runat="server" Value='<%# Eval("consignment_loc")%>' 
-                                                                ClientInstanceName='<%# "consignment_loc"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
-                                                            </dx:ASPxTextBox>
-                                                        </td>
-                                                        <td><i id="consignment_loc_i_<%#Container.VisibleIndex.ToString() %>" 
-                                                            class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
-                                                            onclick="Get_consignment_loc(<%# Container.VisibleIndex %>)"></i>
-                                                        </td>
-                                                    </tr>
-                                                </table>--%>     
+                                            <DataItemTemplate>  
                                                 <dx:ASPxComboBox ID="consignment_loc" runat="server" ValueType="System.String"
                                                     Width="60px" ClientInstanceName='<%# "consignment_loc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
@@ -777,34 +732,34 @@
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="应收款地点" FieldName="ysk_site" Width="80px" VisibleIndex="13"> 
+                                        <dx:GridViewDataTextColumn Caption="应收款地点" FieldName="ysk_site" Width="70px" VisibleIndex="13"> 
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="ysk_site" Width="80px" runat="server" Value='<%# Eval("ysk_site")%>' 
+                                                <dx:ASPxTextBox ID="ysk_site" Width="70px" runat="server" Value='<%# Eval("ysk_site")%>' 
                                                     ClientInstanceName='<%# "ysk_site"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="日记账集" FieldName="rjzj" Width="80px" VisibleIndex="14"> 
+                                        <dx:GridViewDataTextColumn Caption="日记账集" FieldName="rjzj" Width="50px" VisibleIndex="14"> 
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="rjzj" Width="80px" runat="server" Value='<%# Eval("rjzj")%>' 
+                                                <dx:ASPxTextBox ID="rjzj" Width="50px" runat="server" Value='<%# Eval("rjzj")%>' 
                                                     ClientInstanceName='<%# "rjzj"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="离岸价格" FieldName="lajg" Width="70px" VisibleIndex="15">
+                                        <dx:GridViewDataTextColumn Caption="离岸价格" FieldName="lajg" Width="50px" VisibleIndex="15">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="lajg" Width="70px" runat="server" Value='<%# Eval("lajg")%>' 
+                                                <dx:ASPxTextBox ID="lajg" Width="50px" runat="server" Value='<%# Eval("lajg")%>' 
                                                     ClientInstanceName='<%# "lajg"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="渠道" FieldName="channel" Width="60px" VisibleIndex="16"> 
+                                        <dx:GridViewDataTextColumn Caption="渠道" FieldName="channel" Width="40px" VisibleIndex="16"> 
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="channel" Width="60px" runat="server" Value='<%# Eval("channel")%>' 
+                                                <dx:ASPxTextBox ID="channel" Width="40px" runat="server" Value='<%# Eval("channel")%>' 
                                                     ClientInstanceName='<%# "channel"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
