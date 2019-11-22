@@ -273,7 +273,7 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
         Pgi.Auto.Common ls_update = new Pgi.Auto.Common();
         string sql_update = @"update PUR_PO_ContractPay_Plan_His set b_flag=0,UpdateId='{2}',UpdateName='{3}',UpdateTime=getdate() 
                             where domain='{0}' and SysContractNo='{1}' and ContractLine is not null and b_flag=1";
-        sql_update = string.Format(sql_update, domain, nbr, LogUserModel.UserId, LogUserModel.UserName);
+        sql_update = string.Format(sql_update, txt_domain.Text, SysContractNo.Text, LogUserModel.UserId, LogUserModel.UserName);
         ls_update.Sql = sql_update;
         ls_sum.Add(ls_update);
 
@@ -292,7 +292,7 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
                        select '{0}','{1}','{2}','{3}','{4}','{5}'
                             ,'{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}'
                             ,getdate(),'1'";
-                sql = string.Format(sql_insert, domain, nbr, item["ContractLine"], item["PlanPayDate"], item["PayRate"], item["PayMoney"]
+                sql = string.Format(sql_insert, txt_domain.Text, SysContractNo.Text, item["ContractLine"], item["PlanPayDate"], item["PayRate"], item["PayMoney"]
                                 , item["PayClause"], item["PayFunc"], item["PayFile"], item["FPDate"], item["FPAmount"], item["Remark"], LogUserModel.UserId, LogUserModel.UserName
                                 );
             }
@@ -304,7 +304,7 @@ public partial class Forms_PurChase_PO_Contract_Modify : System.Web.UI.Page
                        select '{0}','{1}','{2}','{3}','{4}','{5}'
                             ,'{6}','{7}','{8}','{9}','{10}','{11}'
                             ,getdate(),'1'";
-                sql = string.Format(sql_insert, domain, nbr, item["ContractLine"], item["PlanPayDate"], item["PayRate"], item["PayMoney"]
+                sql = string.Format(sql_insert, txt_domain.Text, SysContractNo.Text, item["ContractLine"], item["PlanPayDate"], item["PayRate"], item["PayMoney"]
                           , item["PayClause"], item["PayFunc"], item["PayFile"], item["Remark"], LogUserModel.UserId, LogUserModel.UserName
                            );
             }
