@@ -173,7 +173,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         SetDomain();//域
-        SetDelivery_moder();//绑定发货方式
+        //SetDelivery_moder();//绑定发货方式
 
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
@@ -353,50 +353,97 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                         order by rownum";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
         domain.ValueField = "Code";
-        domain.Columns.Add("Name", "描述", 80);
+        domain.Columns.Add("Code", "描述", 80);
         domain.DataSource = ldt;
         domain.DataBind();
     }
-
-    //绑定发货方式
-    public void SetDelivery_moder()
+    
+    //发货自
+    protected void site_Callback(object sender, CallbackEventArgsBase e)
     {
-        delivery_mode.Columns.Clear();
-        string lssql = @"select [Code],[Name]
-                        from (
-	                        select '直发' [Code],'直发' [Name],0 rownum
-	                        union 
-	                        select '中转库发' [Code],'中转库发' [Name],1 rownum
-	                        ) a
-                        order by rownum";
-        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
-        delivery_mode.ValueField = "Name";
-        delivery_mode.Columns.Add("Name", "描述", 80);
-        delivery_mode.DataSource = ldt;
-        delivery_mode.DataBind();
+        FillsiteCombo(sender as ASPxComboBox, e.Parameter);
+    }
+    protected void FillsiteCombo(ASPxComboBox cmb, string delivery_mode)
+    {
+        if (string.IsNullOrEmpty(delivery_mode)) return;
+
+        string domain_str = domain.Value == null ? "" : domain.Value.ToString();
+        cmb.Items.Clear();
+
+        string sql_site = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "'";
+        if (delivery_mode == "直发")
+        {
+            sql_site = sql_site + @" and si_domain=si_site";
+        }
+        sql_site = sql_site + @" order by si_site";
+        DataTable ldt_site = DbHelperSQL.Query(sql_site).Tables[0];
+
+        cmb.DataSource = ldt_site;
+        cmb.TextField = "value";
+        cmb.ValueField = "value";
+        cmb.Columns.Add("value", "发货自", 15);
+        cmb.TextFormatString = "{0}";
+        cmb.DataBind();
     }
 
+    //发货至
+    protected void ship_Callback(object sender, CallbackEventArgsBase e)
+    {
+        string[] para = e.Parameter.Split('|');
+        FillshipCombo(sender as ASPxComboBox, para[0], para[1]);
+    }
+    protected void FillshipCombo(ASPxComboBox cmb, string delivery_mode, string site)
+    {
+        if (string.IsNullOrEmpty(delivery_mode)) return;
+
+        string domain_str = domain.Value == null ? "" : domain.Value.ToString();
+        cmb.Items.Clear();
+
+        string sql_ship = @"select DebtorShipToCode as value,BusinessRelationCode as bill from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('" + domain_str + "',Debtor_Domain)>0";
+        if (delivery_mode == "中转库发" && site == domain_str)
+        {
+            sql_ship = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "' and si_domain<>si_site";
+        }
+        DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+        
+        cmb.DataSource = ldt_ship;
+        cmb.TextField = "value";
+        cmb.ValueField = "value";
+        cmb.Columns.Add("value", "发货至", 15);
+        cmb.TextFormatString = "{0}";
+        cmb.DataBind();
+    }
     protected void GetGrid(DataTable DT)
     {
         string domain_str = domain.Value == null ? "" : domain.Value.ToString();
-        string delivery_mode_str = delivery_mode.Value == null ? "" : delivery_mode.Value.ToString();
         DataTable ldt = DT;
         int index = gv.VisibleRowCount;
         for (int i = 0; i < gv.VisibleRowCount; i++)
         {
-            DevExpress.Web.ASPxComboBox tb_site = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["site"], "site");
-            DevExpress.Web.ASPxComboBox tb_ship = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["ship"], "ship");
-            DevExpress.Web.ASPxComboBox tb_modelyr = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["modelyr"], "modelyr");
-            DevExpress.Web.ASPxComboBox tb_loc = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["loc"], "loc");
-            DevExpress.Web.ASPxComboBox tb_taxable = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["taxable"], "taxable");
-            DevExpress.Web.ASPxComboBox tb_taxc_rate = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["taxc_rate"], "taxc_rate"); 
-            DevExpress.Web.ASPxComboBox tb_consignment = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment"], "consignment");
-            DevExpress.Web.ASPxComboBox tb_consignment_loc = (DevExpress.Web.ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment_loc"], "consignment_loc");
+            ASPxComboBox tb_delivery_mode = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["delivery_mode"], "delivery_mode");
+            ASPxComboBox tb_site = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["site"], "site");
+            ASPxComboBox tb_ship = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["ship"], "ship");
+            ASPxComboBox tb_curr = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["curr"], "curr");
+            ASPxComboBox tb_modelyr = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["modelyr"], "modelyr");
+            ASPxComboBox tb_loc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["loc"], "loc");
+            ASPxComboBox tb_taxable = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["taxable"], "taxable");
+            ASPxComboBox tb_taxc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["taxc"], "taxc"); 
+            ASPxComboBox tb_consignment = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment"], "consignment");
+            ASPxComboBox tb_consignment_loc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment_loc"], "consignment_loc");
 
-            //发货自
-            string sql_site = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "'";
-            //发货至
-            string sql_ship = @"select DebtorShipToCode as value,BusinessRelationCode as bill from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('" + domain_str+"',Debtor_Domain)>0";
+            FillsiteCombo(tb_site, ldt.Rows[i]["delivery_mode"].ToString());
+            FillshipCombo(tb_ship, ldt.Rows[i]["delivery_mode"].ToString(), ldt.Rows[i]["site"].ToString());
+
+            //发货方式
+            string sql_delivery_mode = @"select [value]
+                                from (
+	                                select '直发' [value],0 rownum
+	                                union 
+	                                select '中转库发' [value],1 rownum
+	                                ) a
+                                order by rownum";
+            string sql_curr = @"select 'CNY' value union select 'USD' value union select 'EUR' value union select 'JPY' value union select 'THB' value union select 'GBP' value";
+
             //模型年
             string sql_modelyr = @"select [value]
                                 from (
@@ -418,7 +465,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 	                                select '9080' [value],2 rownum
 	                                ) a
                                 order by rownum";
-            //string sql_loc = @"select loc_loc as value from qad.dbo.qad_loc_mstr where loc_domain='" + domain_str + "' and loc_site='" + ldt.Rows[i]["site"].ToString() + "'";
 
             string sql_YN = @"select [value]
                                 from (
@@ -433,43 +479,32 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
             string sql_consignment_loc = @"select loc_loc as value from qad.dbo.qad_loc_mstr where loc_domain='" + domain_str + "' and loc_status='CUSTOMER'";
 
-            if (i == 0)
-            {
-                sql_site = sql_site + @" and si_domain=si_site";
-
-                if (delivery_mode_str == "中转库发")
-                {
-                    sql_ship = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "' and si_domain<>si_site";
-                }
-            }
-            else
-            {
-                sql_site = sql_site + @" and si_domain<>si_site";
-            }
-
-            DataTable ldt_site = DbHelperSQL.Query(sql_site).Tables[0];
-            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+            DataTable ldt_delivery_mode = DbHelperSQL.Query(sql_delivery_mode).Tables[0];
+            DataTable ldt_curr = DbHelperSQL.Query(sql_curr).Tables[0];
             DataTable ldt_modelyr = DbHelperSQL.Query(sql_modelyr).Tables[0];
             DataTable ldt_loc = DbHelperSQL.Query(sql_loc).Tables[0];
             DataTable ldt_YN = DbHelperSQL.Query(sql_YN).Tables[0];
             DataTable ldt_TaxRate = DbHelperSQL.Query(sql_TaxRate).Tables[0];
             DataTable ldt_consignment_loc = DbHelperSQL.Query(sql_consignment_loc).Tables[0];
 
-            tb_site.DataSource = ldt_site;
-            tb_site.TextField = "value";
-            tb_site.ValueField = "value";
-            tb_site.Columns.Add("value", "发货自", 15);
-            tb_site.TextFormatString = "{0}";
-            tb_site.DataBind();
-            tb_site.Value = ldt.Rows[i]["site"].ToString();
+            tb_delivery_mode.DataSource = ldt_delivery_mode;
+            tb_delivery_mode.TextField = "value";
+            tb_delivery_mode.ValueField = "value";
+            tb_delivery_mode.Columns.Add("value", "发货方式", 25);
+            tb_delivery_mode.TextFormatString = "{0}";
+            tb_delivery_mode.DataBind();
+            tb_delivery_mode.Value = ldt.Rows[i]["delivery_mode"].ToString();
 
-            tb_ship.DataSource = ldt_ship;
-            tb_ship.TextField = "value";
-            tb_ship.ValueField = "value";
-            tb_ship.Columns.Add("value", "发货至", 15);
-            tb_ship.TextFormatString = "{0}";
-            tb_ship.DataBind();
+            tb_site.Value = ldt.Rows[i]["site"].ToString();           
             tb_ship.Value = ldt.Rows[i]["ship"].ToString();
+
+            tb_curr.DataSource = ldt_curr;
+            tb_curr.TextField = "value";
+            tb_curr.ValueField = "value";
+            tb_curr.Columns.Add("value", "币别", 15);
+            tb_curr.TextFormatString = "{0}";
+            tb_curr.DataBind();
+            tb_curr.Value = ldt.Rows[i]["curr"].ToString();
 
             tb_modelyr.DataSource = ldt_modelyr;
             tb_modelyr.TextField = "value";
@@ -495,13 +530,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             tb_taxable.DataBind();
             tb_taxable.Value = ldt.Rows[i]["taxable"].ToString();
 
-            tb_taxc_rate.DataSource = ldt_TaxRate;
-            tb_taxc_rate.TextField = "TaxRate";
-            tb_taxc_rate.ValueField = "TaxRate";
-            tb_taxc_rate.Columns.Add("TaxRate", "税率", 15);
-            tb_taxc_rate.TextFormatString = "{0}";
-            tb_taxc_rate.DataBind();
-            tb_taxc_rate.Value = ldt.Rows[i]["taxc_rate"].ToString();
+            tb_taxc.DataSource = ldt_TaxRate;
+            tb_taxc.TextField = "TaxRate_Code";
+            tb_taxc.ValueField = "TaxRate_Code";
+            tb_taxc.Columns.Add("TaxRate_Code", "税率", 15);
+            tb_taxc.TextFormatString = "{0}";
+            tb_taxc.DataBind();
+            tb_taxc.Value = ldt.Rows[i]["taxc"].ToString();
 
             tb_consignment.DataSource = ldt_YN;
             tb_consignment.TextField = "value";
@@ -902,6 +937,52 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
         */
         return bflag;
+    }
+
+    [WebMethod]
+    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
+    {
+        string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
+
+        if (delivery_mode == "中转库发" && site == domain)
+        {
+            string sql_ship = @"select a.ad_bus_relation,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                              from (select ad_bus_relation from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
+                                inner join qad.dbo.qad_cm_mstr b on a.ad_bus_relation=b.cm_addr and b.cm_domain='{0}' ";
+            sql_ship = string.Format(sql_ship, domain, ship);
+            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+            if (ldt_ship.Rows.Count > 0)
+            {
+                bill = ldt_ship.Rows[0]["ad_bus_relation"].ToString();
+                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
+                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
+                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
+                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
+            }
+        }
+        else
+        {
+            string sql_ship = @"select a.BusinessRelationCode,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                        from (
+                            select BusinessRelationCode 
+                            from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
+                            ) a
+                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'";
+            sql_ship = string.Format(sql_ship, domain, ship);
+            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+            if (ldt_ship.Rows.Count > 0)
+            {
+                bill = ldt_ship.Rows[0]["BusinessRelationCode"].ToString();
+                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
+                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
+                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
+                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
+            }
+        }
+
+        string result = "[{\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
+        return result;
+
     }
 
     #region "上传文件"

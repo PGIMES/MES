@@ -290,6 +290,54 @@
             $("#wlXX input[id*='custpart']").val(custpart);*/
 
         }
+        function Ondelivery_modeChanged(cmbDelivery,vi){
+            var site = eval('site' + vi);
+            site.PerformCallback(cmbDelivery.GetValue().toString());
+            
+            var ship = eval('ship' + vi);
+            ship.PerformCallback(cmbDelivery.GetValue().toString()+'|'+site.GetText());            
+        }
+        function OnSiteChanged(cmbSite,vi){  
+            var delivery_mode = eval('delivery_mode' + vi);   
+       
+            var ship = eval('ship' + vi);
+            ship.PerformCallback(delivery_mode.GetText()+'|'+cmbSite.GetValue().toString());            
+        }
+        function OnShipChanged(cmbShip,vi){
+            var nbr = eval('nbr' + vi);
+            nbr.SetText(cmbShip.GetValue().toString());
+
+            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
+
+            var delivery_mode = eval('delivery_mode' + vi); 
+            var site = eval('site' + vi);
+                        
+            var bill = eval('bill' + vi);
+            var curr = eval('curr' + vi);
+            var pr_list = eval('pr_list' + vi);
+            var taxable = eval('taxable' + vi);
+            var taxc = eval('taxc' + vi);
+
+            $.ajax({
+                    type: "post",
+                    url: "CustomerSchedule.aspx/GetDataByShip",
+                    data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj=eval(data.d);
+
+                        bill.SetText(obj[0].bill);
+                        curr.SetText(obj[0].curr);
+                        pr_list.SetText(obj[0].pr_list);
+                        taxable.SetText(obj[0].taxable);
+                        taxc.SetText(obj[0].taxc);
+                    }
+
+                });
+            
+        }
     </script>
 
     <script type="text/javascript">
@@ -404,16 +452,16 @@
     <script>//20181108 add heguiqin
         function Add_check(){
             var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
-            var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
+            //var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
             var msg="";
 
             if (domain=="") {
                 msg+="请选择【申请工厂】<br />";
             }
 
-            if(delivery_mode==""){
-                msg+="请选择【发货方式】<br />";
-            }
+            //if(delivery_mode==""){
+            //    msg+="请选择【发货方式】<br />";
+            //}
 
             if(msg!=""){  
                 layer.alert(msg);
@@ -551,11 +599,11 @@
                                         <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
                                     </dx:ASPxComboBox>
                                 </td>  
-                                <td style="width:100px;"><font color="red">*</font>发货方式</td>
+                                <td style="width:100px;"><%--<font color="red">*</font>发货方式--%></td>
                                 <td style="width:292px;">
-                                    <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="delivery_mode_c">
+                                   <%-- <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="delivery_mode_c">
                                         <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                    </dx:ASPxComboBox>
+                                    </dx:ASPxComboBox>--%>
                                 </td> 
                                 <td style="width:100px;"><font color="red">&nbsp;</font></td>
                                 <td style="width:292px;">
@@ -619,12 +667,24 @@
                                     <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
-                                        <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>                                           
+                                        <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>  
+                                        <dx:GridViewDataTextColumn Caption="发货方式" FieldName="delivery_mode" Width="80px" VisibleIndex="1">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String"
+                                                    Width="80px" ClientInstanceName='<%# "delivery_mode"+Container.VisibleIndex.ToString() %>'
+                                                    ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Ondelivery_modeChanged(s,"+Container.VisibleIndex+");}" %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn>                                         
                                         <dx:GridViewDataTextColumn Caption="发货自" FieldName="site" Width="80px" VisibleIndex="1">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="site" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "site"+Container.VisibleIndex.ToString() %>'
+                                                <dx:ASPxComboBox ID="site" runat="server" ValueType="System.String" OnCallback="site_Callback"
+                                                    Width="80px" ClientInstanceName='<%# "site"+Container.VisibleIndex.ToString() %>' 
+                                                    ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnSiteChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
                                                     DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>
@@ -633,8 +693,9 @@
                                         <dx:GridViewDataTextColumn Caption="发货至" FieldName="ship" Width="80px" VisibleIndex="2">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="ship" runat="server" ValueType="System.String"
+                                                <dx:ASPxComboBox ID="ship" runat="server" ValueType="System.String" OnCallback="ship_Callback"
                                                     Width="80px" ClientInstanceName='<%# "ship"+Container.VisibleIndex.ToString() %>'
+                                                    ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnShipChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
                                                     DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>    
@@ -643,8 +704,8 @@
                                         <dx:GridViewDataTextColumn Caption="销售订单" FieldName="nbr" Width="80px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="mc" Width="80px" runat="server" Value='<%# Eval("nbr")%>' 
-                                                    ClientInstanceName='<%# "nbr"+Container.VisibleIndex.ToString() %>'> <%--CssClass="linewrite"--%>
+                                                <dx:ASPxTextBox ID="nbr" Width="80px" runat="server" Value='<%# Eval("nbr")%>' 
+                                                    ClientInstanceName='<%# "nbr"+Container.VisibleIndex.ToString() %>'> 
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -659,9 +720,14 @@
                                         <dx:GridViewDataTextColumn Caption="货币" FieldName="curr" Width="50px" VisibleIndex="5">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="curr" Width="50px" runat="server" Value='<%# Eval("curr")%>' 
+                                                <%--<dx:ASPxTextBox ID="curr" Width="50px" runat="server" Value='<%# Eval("curr")%>' 
                                                     ClientInstanceName='<%# "curr"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
-                                                </dx:ASPxTextBox>
+                                                </dx:ASPxTextBox>--%>
+                                                <dx:ASPxComboBox ID="curr" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "curr"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                </dx:ASPxComboBox>    
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="价目表" FieldName="pr_list" Width="60px" VisibleIndex="6">
@@ -682,11 +748,11 @@
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
-                                        <dx:GridViewDataTextColumn Caption="税率" FieldName="taxc_rate" Width="50px" VisibleIndex="8">
+                                        <dx:GridViewDataTextColumn Caption="税率" FieldName="taxc" Width="50px" VisibleIndex="8">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="taxc_rate" runat="server" ValueType="System.String"
-                                                    Width="50px" ClientInstanceName='<%# "taxc_rate"+Container.VisibleIndex.ToString() %>'
+                                                <dx:ASPxComboBox ID="taxc" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "taxc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
                                                     DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
                                                 </dx:ASPxComboBox>    
