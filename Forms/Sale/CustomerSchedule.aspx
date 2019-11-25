@@ -160,7 +160,7 @@
         }
 
         //设定表字段状态（可编辑性）
-        var tabName="pgi_packscheme_main_form";//表名
+        var tabName="pgi_customerschedule_main_form";//表名
         function SetControlStatus(fieldStatus)
         {  // tabName_columnName:1_0
             var flag=true;
@@ -190,7 +190,7 @@
                 }
             }
         }
-        var tabName2="pgi_packscheme_dtl_form";//表名
+        var tabName2="pgi_customerschedule_dtl_form";//表名
         function SetControlStatus2(fieldStatus)
         {  // tabName_columnName:1_0
             var flag=true;
@@ -286,17 +286,21 @@
             $("#wlXX input[id*='cust_partd']").val(wlmc);
         }
         function Ondelivery_modeChanged(cmbDelivery,vi){
+            var domain=$("#wlXX input[id*='domain']").val();
+
             var site = eval('site' + vi);
-            site.PerformCallback(cmbDelivery.GetValue().toString());
+            site.PerformCallback(domain+'|'+cmbDelivery.GetValue().toString());
             
             var ship = eval('ship' + vi);
-            ship.PerformCallback(cmbDelivery.GetValue().toString()+'|'+site.GetText());            
+            ship.PerformCallback(domain+'|'+cmbDelivery.GetValue().toString()+'|'+site.GetText());            
         }
         function OnSiteChanged(cmbSite,vi){  
+            var domain=$("#wlXX input[id*='domain']").val();
+
             var delivery_mode = eval('delivery_mode' + vi);   
        
             var ship = eval('ship' + vi);
-            ship.PerformCallback(delivery_mode.GetText()+'|'+cmbSite.GetValue().toString());               
+            ship.PerformCallback(domain+'|'+delivery_mode.GetText()+'|'+cmbSite.GetValue().toString());               
             
             var ysk_site = eval('ysk_site' + vi);      
             ysk_site.SetText(cmbSite.GetValue().toString());
@@ -605,14 +609,14 @@
                                 <td style="width:100px;"><font color="red">*</font>PGI_零件号</td>
                                 <td style="width:292px;">
                                     <div class="form-inline">
-                                        <asp:TextBox ID="part" runat="server" class="lineread"  ReadOnly="true" Width="200px" />
+                                        <asp:TextBox ID="part" runat="server" class="lineread" ReadOnly="true"  Width="200px" />
                                         <i id="part_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
                                             onclick="Get_part()"></i>
                                     </div>
                                 </td>
                                 <td style="width:100px;"><font color="red">*</font>申请工厂</td>
                                 <td style="width:292px;">
-                                    <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
+                                    <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="true"  Width="210px" />
                                 </td> 
                                 <td style="width:100px;"><font color="red">&nbsp;</font></td>
                                 <td style="width:292px;">

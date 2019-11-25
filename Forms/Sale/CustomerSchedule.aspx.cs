@@ -340,13 +340,12 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     //发货自
     protected void site_Callback(object sender, CallbackEventArgsBase e)
     {
-        FillsiteCombo(sender as ASPxComboBox, e.Parameter);
+        string[] para = e.Parameter.Split('|');
+        FillsiteCombo(sender as ASPxComboBox, para[0], para[1]);
     }
-    protected void FillsiteCombo(ASPxComboBox cmb, string delivery_mode)
+    protected void FillsiteCombo(ASPxComboBox cmb, string domain_str, string delivery_mode)
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
-
-        string domain_str = domain.Text;
         cmb.Items.Clear();
 
         string sql_site = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "'";
@@ -369,13 +368,11 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     protected void ship_Callback(object sender, CallbackEventArgsBase e)
     {
         string[] para = e.Parameter.Split('|');
-        FillshipCombo(sender as ASPxComboBox, para[0], para[1]);
+        FillshipCombo(sender as ASPxComboBox, para[0], para[1], para[2]);
     }
-    protected void FillshipCombo(ASPxComboBox cmb, string delivery_mode, string site)
+    protected void FillshipCombo(ASPxComboBox cmb, string domain_str, string delivery_mode, string site)
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
-
-        string domain_str = domain.Text;
         cmb.Items.Clear();
 
         string sql_ship = @"select DebtorShipToCode as value,BusinessRelationCode as bill from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('" + domain_str + "',Debtor_Domain)>0";
@@ -410,8 +407,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             ASPxComboBox tb_consignment = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment"], "consignment");
             ASPxComboBox tb_consignment_loc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment_loc"], "consignment_loc");
 
-            FillsiteCombo(tb_site, ldt.Rows[i]["delivery_mode"].ToString());
-            FillshipCombo(tb_ship, ldt.Rows[i]["delivery_mode"].ToString(), ldt.Rows[i]["site"].ToString());
+            FillsiteCombo(tb_site, domain_str, ldt.Rows[i]["delivery_mode"].ToString());
+            FillshipCombo(tb_ship, domain_str, ldt.Rows[i]["delivery_mode"].ToString(), ldt.Rows[i]["site"].ToString());
 
             //发货方式
             string sql_delivery_mode = @"select [value]
