@@ -301,7 +301,10 @@
             var delivery_mode = eval('delivery_mode' + vi);   
        
             var ship = eval('ship' + vi);
-            ship.PerformCallback(delivery_mode.GetText()+'|'+cmbSite.GetValue().toString());            
+            ship.PerformCallback(delivery_mode.GetText()+'|'+cmbSite.GetValue().toString());               
+            
+            var ysk_site = eval('ysk_site' + vi);      
+            ysk_site.SetText(cmbSite.GetValue().toString());
         }
         function OnShipChanged(cmbShip,vi){
             var nbr = eval('nbr' + vi);
