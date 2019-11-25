@@ -172,9 +172,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             bindtab();
         }
 
-        SetDomain();//域
-        //SetDelivery_moder();//绑定发货方式
-
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
@@ -340,24 +337,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         //((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["sl"], "sl")).BorderStyle = BorderStyle.None;
     }
 
-    //域
-    public void SetDomain()
-    {
-        domain.Columns.Clear();
-        string lssql = @"select [Code],[Name]
-                        from (
-	                        select '200' [Code],'昆山工厂' [Name],0 rownum
-	                        union 
-	                        select '100' [Code],'上海工厂' [Name],1 rownum
-	                        ) a
-                        order by rownum";
-        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
-        domain.ValueField = "Code";
-        domain.Columns.Add("Code", "描述", 80);
-        domain.DataSource = ldt;
-        domain.DataBind();
-    }
-    
     //发货自
     protected void site_Callback(object sender, CallbackEventArgsBase e)
     {
@@ -367,7 +346,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
 
-        string domain_str = domain.Value == null ? "" : domain.Value.ToString();
+        string domain_str = domain.Text;
         cmb.Items.Clear();
 
         string sql_site = @"select si_site as value from qad.dbo.qad_si_mstr_ISYX where is_yx=1 and si_domain='" + domain_str + "'";
@@ -396,7 +375,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
 
-        string domain_str = domain.Value == null ? "" : domain.Value.ToString();
+        string domain_str = domain.Text;
         cmb.Items.Clear();
 
         string sql_ship = @"select DebtorShipToCode as value,BusinessRelationCode as bill from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('" + domain_str + "',Debtor_Domain)>0";
@@ -415,7 +394,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
     protected void GetGrid(DataTable DT)
     {
-        string domain_str = domain.Value == null ? "" : domain.Value.ToString();
+        string domain_str = domain.Text;
         DataTable ldt = DT;
         int index = gv.VisibleRowCount;
         for (int i = 0; i < gv.VisibleRowCount; i++)
@@ -649,7 +628,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     private bool SaveData(string action)
     {
         bool bflag = false;
-        string domains = domain.Value == null ? "" : domain.Value.ToString();//bzlb.SelectedValue;
+        string part_str = part.Text;
+        string domain_str = domain.Text;
         /*
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();

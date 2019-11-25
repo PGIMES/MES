@@ -270,25 +270,20 @@
             layer.open({
                 title:'PGI零件号选择',
                 type: 2,
-                area: ['950px', '500px'],
+                area: ['650px', '500px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
             }); 
         }
 
-        function setvalue_part(domain, part, site, ship, ad_name, custpart, ljzl,nyl,xs_price,klgx) 
-        {            
-            /*$("#wlXX input[type!=hidden][id*='ver']").val('A0');
-            $("#wlXX input[id*='typeno']").val('新增');
-
-            $("#wlXX [id*='domain']").val(domain);
+        function setvalue_part(domain, part, wlmc) 
+        {    
+            $("#wlXX input[id*='domain']").val(domain);
             $("#wlXX input[id*='part']").val(part);
-            $("#wlXX input[id*='site']").val(site);
-            $("#wlXX input[id*='ship']").val(ship);
-            $("#wlXX input[id*='custname']").val(ad_name);
-            $("#wlXX input[id*='custpart']").val(custpart);*/
-
+            //$("#<%=part.ClientID%>").val(part);
+            $("#wlXX input[id*='cust_part']").val(wlmc);
+            $("#wlXX input[id*='cust_partd']").val(wlmc);
         }
         function Ondelivery_modeChanged(cmbDelivery,vi){
             var site = eval('site' + vi);
@@ -310,7 +305,7 @@
             var nbr = eval('nbr' + vi);
             nbr.SetText(cmbShip.GetValue().toString());
 
-            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
+            var domain=$("#wlXX input[id*='domain']").val();
 
             var delivery_mode = eval('delivery_mode' + vi); 
             var site = eval('site' + vi);
@@ -390,16 +385,23 @@
                 msg+="【申请人部门】不可为空.<br />";
             }
 
-            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
-            var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
+            var domain=$("#wlXX input[id*='domain']").val();
+            var part=$("#<%=part.ClientID%>").val();
+            var cust_part=$("#wlXX input[id*='cust_part']").val();
+            var cust_partd=$("#wlXX input[id*='cust_partd']").val();
 
             if(action=='submit'){
                 if (domain=="") {
                     msg+="请选择【申请工厂】<br />";
                 }
-
-                if(delivery_mode==""){
-                    msg+="请选择【发货方式】<br />";
+                if (part=="") {
+                    msg+="请选择【PGI_零件号】<br />";
+                }
+                if (cust_part=="") {
+                    msg+="请输入【客户物料号】<br />";
+                }
+                if (cust_partd=="") {
+                    msg+="请输入【显示客户物料号】<br />";
                 }
             }
 
@@ -410,6 +412,11 @@
             }
 
             if(action=='submit'){
+
+
+
+
+
                 if(!parent.checkSign()){
                     flag=false;return flag;
                 }
@@ -453,18 +460,17 @@
     </script>
 
     <script>//20181108 add heguiqin
-        function Add_check(){
-            var domain=$("#wlXX input[type!=hidden][id*='domain']").val();
-            //var delivery_mode=$("#wlXX input[type!=hidden][id*='delivery_mode']").val();
+        function Add_check(){ 
+            var part=$("#<%=part.ClientID%>").val();
+            var domain=$("#wlXX input[id*='domain']").val();
             var msg="";
-
+            
+            if (part=="") {
+                msg+="请选择【PGI_零件号】<br />";
+            }
             if (domain=="") {
                 msg+="请选择【申请工厂】<br />";
             }
-
-            //if(delivery_mode==""){
-            //    msg+="请选择【发货方式】<br />";
-            //}
 
             if(msg!=""){  
                 layer.alert(msg);
@@ -596,23 +602,6 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
                         <table style="width: 100%; font-size: 12px;" border="0" >
                              <tr>
-                                <td style="width:100px;"><font color="red">*</font>申请工厂</td>
-                                <td style="width:292px;">
-                                    <dx:ASPxComboBox ID="domain" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="domain_c">
-                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                    </dx:ASPxComboBox>
-                                </td>  
-                                <td style="width:100px;"><%--<font color="red">*</font>发货方式--%></td>
-                                <td style="width:292px;">
-                                   <%-- <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String" CssClass="linewrite" Width="210px"  Height="27px" BackColor="#FDF7D9" ForeColor="#31708f"              ClientInstanceName="delivery_mode_c">
-                                        <DisabledStyle CssClass="lineread"  ForeColor="#31708f" BackColor="#FFFFFF"></DisabledStyle>
-                                    </dx:ASPxComboBox>--%>
-                                </td> 
-                                <td style="width:100px;"><font color="red">&nbsp;</font></td>
-                                <td style="width:292px;">
-                                </td>                   
-                            </tr>
-                            <tr>
                                 <td style="width:100px;"><font color="red">*</font>PGI_零件号</td>
                                 <td style="width:292px;">
                                     <div class="form-inline">
@@ -621,6 +610,15 @@
                                             onclick="Get_part()"></i>
                                     </div>
                                 </td>
+                                <td style="width:100px;"><font color="red">*</font>申请工厂</td>
+                                <td style="width:292px;">
+                                    <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
+                                </td> 
+                                <td style="width:100px;"><font color="red">&nbsp;</font></td>
+                                <td style="width:292px;">
+                                </td>                   
+                            </tr>
+                            <tr>                                
                                 <td style="width:100px;"><font color="red">*</font>客户物料号</td>
                                 <td style="width:292px;">
                                     <asp:TextBox ID="cust_part"  runat="server" class="linewrite" Width="210px" />
@@ -628,12 +626,15 @@
                                 <td style="width:130px;"><font color="red">*</font>显示客户物料号</td>
                                 <td>
                                     <asp:TextBox ID="cust_partd"  runat="server" class="linewrite" Width="210px" />
-                                </td>                       
+                                </td>      
+                                <td style="width:100px;"></td>
+                                <td style="width:292px;">
+                                </td>                   
                             </tr>
                             <tr> 
                                 <td style="width:100px;"><font color="red">&nbsp;</font>说明</td>
                                 <td colspan="3">
-                                    <asp:TextBox ID="comment"  runat="server" class="linewrite" Width="600px" />
+                                    <asp:TextBox ID="comment"  runat="server" class="linewrite" Width="628px" />
                                 </td>                            
                                 <td style="width:130px;"><font color="red">&nbsp;</font></td>
                                 <td>
