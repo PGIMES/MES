@@ -610,6 +610,7 @@
                                 <td style="width:292px;">
                                     <div class="form-inline">
                                         <asp:TextBox ID="part" runat="server" class="lineread" ReadOnly="true"  Width="200px" />
+                                        <input id="hd_part" runat="server" type="text" hidden="hidden" />
                                         <i id="part_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
                                             onclick="Get_part()"></i>
                                     </div>
@@ -617,6 +618,7 @@
                                 <td style="width:100px;"><font color="red">*</font>申请工厂</td>
                                 <td style="width:292px;">
                                     <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="true"  Width="210px" />
+                                    <input id="hd_domain" runat="server" type="text" hidden="hidden" />
                                 </td> 
                                 <td style="width:100px;"><font color="red">&nbsp;</font></td>
                                 <td style="width:292px;">
@@ -717,10 +719,10 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="票据开往" FieldName="bill" Width="70px" VisibleIndex="4">
+                                        <dx:GridViewDataTextColumn Caption="票据开往" FieldName="bill" Width="60px" VisibleIndex="4">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="bill" Width="70px" runat="server" Value='<%# Eval("bill")%>' 
+                                                <dx:ASPxTextBox ID="bill" Width="60px" runat="server" Value='<%# Eval("bill")%>' 
                                                     ClientInstanceName='<%# "bill"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        

@@ -391,7 +391,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
     protected void GetGrid(DataTable DT)
     {
-        string domain_str = domain.Text;
+        string domain_str = hd_domain.Value;
         DataTable ldt = DT;
         int index = gv.VisibleRowCount;
         for (int i = 0; i < gv.VisibleRowCount; i++)
@@ -625,8 +625,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     private bool SaveData(string action)
     {
         bool bflag = false;
-        string part_str = part.Text;
-        string domain_str = domain.Text;
+        string part_str = hd_part.Value;
+        string domain_str = hd_domain.Value;
         /*
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
