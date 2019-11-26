@@ -20,13 +20,16 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     public string DisplayModel;
     public string fieldStatus;
 
-    public string SQ_StepID = "";
+    public string SQ_StepID = "12d2501c-d316-4edd-a43e-2c44d11d2ef6";
     public string UserId = "";
 
     string FlowID = "A";
     string StepID = "A";
     string state = "";
     string m_sid = "";
+
+    string sql_TaxRate = @"SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
+                            where tx2_exp_date is null and tx2_tax_type='VAT'and tx2_domain in('100','200') and [tx2_pt_taxc]<>'13'";
 
     LoginUser LogUserModel = null;
 
@@ -150,7 +153,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 {
                     SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
 
-
                     if (ldt.Rows[0]["files"].ToString() != "")
                     {
                         this.ip_filelist_db.Value = ldt.Rows[0]["files"].ToString();
@@ -162,7 +164,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                lssql += " where PackNo='" + this.m_sid + "' order by a.numid";
+                lssql += " where CSNo='" + this.m_sid + "' order by a.numid";
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             }
             bind_grid(ldt_detail);
@@ -176,6 +178,24 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
+
+
+
+    //setCheckBoxListSelectValue(ddlopinion, dtMst.Rows[0]["opinion"].ToString(), ';', true);
+    //public void setCheckBoxListSelectValue(CheckBoxList checkboxlist, string checkedValue, char splitChar, bool enabled)
+    //{
+    //    var list = checkedValue.Split(splitChar);
+    //    foreach (var value in list)
+    //    {
+    //        ListItem item = checkboxlist.Items.FindByValue(value);
+    //        if (item != null)
+    //        {
+    //            item.Selected = true;
+    //            item.Enabled = enabled;
+    //        }
+    //    }
+    //    checkboxlist.Enabled = enabled;
+    //}
 
     void bindtab()
     {
@@ -249,8 +269,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
     public void bind_grid(DataTable dt)
     {
-        //this.gv.DataSource = dt;
-        //this.gv.DataBind();
+        this.gv.DataSource = dt;
+        this.gv.DataBind();
         GetGrid(dt);
         //setGridIsRead(dt, typeno.Text);
     }
@@ -331,6 +351,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         setread_grid(i);
     }
+
     public void setread_grid(int i)
     {
         //((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["sl"], "sl")).ReadOnly = true;
@@ -343,6 +364,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string[] para = e.Parameter.Split('|');
         FillsiteCombo(sender as ASPxComboBox, para[0], para[1]);
     }
+
     protected void FillsiteCombo(ASPxComboBox cmb, string domain_str, string delivery_mode)
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
@@ -370,6 +392,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string[] para = e.Parameter.Split('|');
         FillshipCombo(sender as ASPxComboBox, para[0], para[1], para[2]);
     }
+
     protected void FillshipCombo(ASPxComboBox cmb, string domain_str, string delivery_mode, string site)
     {
         if (string.IsNullOrEmpty(delivery_mode)) return;
@@ -389,9 +412,10 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         cmb.TextFormatString = "{0}";
         cmb.DataBind();
     }
+
     protected void GetGrid(DataTable DT)
     {
-        string domain_str = hd_domain.Value;
+        string domain_str = domain.Text;
         DataTable ldt = DT;
         int index = gv.VisibleRowCount;
         for (int i = 0; i < gv.VisibleRowCount; i++)
@@ -449,9 +473,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 	                                select 'no' [value],1 rownum
 	                                ) a
                                 order by rownum";
-
-            string sql_TaxRate = @"SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
-                            where tx2_exp_date is null and tx2_tax_type='VAT'and tx2_domain in('100','200') and [tx2_pt_taxc]<>'13'";
 
             string sql_consignment_loc = @"select loc_loc as value from qad.dbo.qad_loc_mstr where loc_domain='" + domain_str + "' and loc_status='CUSTOMER'";
 
@@ -622,33 +643,76 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);
     }
 
+    [WebMethod]
+    public static string CheckData(string applyid, string formno, string part, string domain, string cust_part, string typeno)
+    {
+        string manager_flag = ""; string zg_id = "";
+        CheckData_manager(applyid, out manager_flag, out zg_id);
+
+        string part_flag = CheckVer_data(part, domain, cust_part, typeno, formno);
+
+        string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"part_flag\":\"" + part_flag + "\"}]";
+        return result;
+
+    }
+
+    public static void CheckData_manager(string applyid, out string manager_flag, out string zg_id)
+    {
+        //------------------------------------------------------------------------------验证工程师对应主管是否为空
+        manager_flag = "";
+
+        DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + applyid + "')").Tables[0];
+        zg_id = dt_manager.Rows[0]["zg_id"].ToString();
+
+        if (zg_id == "")
+        {
+            manager_flag += "工程师(" + applyid + ")的直属主管不存在，不能提交!<br />";
+        }
+    }
+
+    public static string CheckVer_data(string part, string domain, string cust_part, string typeno, string formno)
+    {
+        string flag = "";
+
+        string sql = @"exec Report_CS_CheckData '{0}','{1}','{2}','{3}','{4}'";
+        sql = string.Format(sql, part, domain, cust_part, formno, typeno);
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        if (dt.Rows[0][0].ToString() == "Y1")
+        {
+            flag = "【PGI_零件号】" + part + "【申请工厂】" + domain + "【客户物料号】" + cust_part + "正在申请中，不能申请!<br />";
+        }
+
+        if (dt.Rows[0][0].ToString() == "Y2")
+        {
+            flag = "【PGI_零件号】" + part + "【申请工厂】" + domain + "【客户物料号】" + cust_part + "已经存在，不能新增申请!<br />";
+        }
+
+        return flag;
+    }
+
     private bool SaveData(string action)
     {
         bool bflag = false;
-        string part_str = hd_part.Value;
-        string domain_str = hd_domain.Value;
-        /*
+
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = GetControlValue("PGI_PackScheme_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
-        string applyid = ApplyId.Text;
-        string applyname = ApplyName.Text;
-        string lspart = part.Text; string lsdomain = domain.Text; string lssite = site.Text; string lsship = ship.Text;
-        string lsver = ver.Text;
+        string applyid = ApplyId.Text; string applyname = ApplyName.Text;
+        string lspart = part.Text; string lsdomain = domain.Text;
         string lstypeno = typeno.Text;
-        string lsbzlb = bzlb.Value == null ? "" : bzlb.Value.ToString();//bzlb.SelectedValue;
 
-        string manager_flag = ""; string zg_id = "", manager_id = "";
-        CheckData_manager(applyid, out manager_flag, out zg_id, out manager_id);
+        string manager_flag = ""; string zg_id = "";
+        CheckData_manager(applyid, out manager_flag, out zg_id);
 
         if (this.m_sid == "")
         {
             //没有单号，自动生成
-            string lsid = "WLBZFA" + System.DateTime.Now.ToString("yyMMdd");
-            this.m_sid = Pgi.Auto.Public.GetNo("WLBZFA", lsid, 0, 4);
+            string lsid = "CS" + System.DateTime.Now.ToString("yyMMdd");
+            this.m_sid = Pgi.Auto.Public.GetNo("CS", lsid, 0, 4);
 
             for (int i = 0; i < ls.Count; i++)
             {
@@ -663,57 +727,12 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         }
 
-        for (int i = 0; i < ls.Count; i++)
-        {
-            if (ls[i].Code.ToLower() == "bzlb") { ls[i].Value = lsbzlb; }//包装类别
-            if (ls[i].Code.ToLower() == "cbfx_cb_rate")
-            {//包装成本比列
-
-                if (ls[i].Value == "")
-                {
-                    ls[i].Value = (Convert.ToDecimal("0") / 100).ToString();
-                }
-                else
-                {
-                    ls[i].Value = (Convert.ToDecimal(ls[i].Value.Left(ls[i].Value.Length - 1)) / 100).ToString();
-                }
-
-            }
-
-            if (ls[i].Value == "")
-            {
-                if (ls[i].Code.ToLower() == "ljcc_l" || ls[i].Code.ToLower() == "ljcc_w" || ls[i].Code.ToLower() == "ljcc_h"
-                    || ls[i].Code.ToLower() == "ljzl" || ls[i].Code.ToLower() == "nyl" || ls[i].Code.ToLower() == "nzj"
-                    || ls[i].Code.ToLower() == "gdsl_cp" || ls[i].Code.ToLower() == "gdsl_bcp" || ls[i].Code.ToLower() == "klgx"
-                    || ls[i].Code.ToLower() == "bzx_w"
-                    || ls[i].Code.ToLower() == "bzx_sl_c" || ls[i].Code.ToLower() == "bzx_cs_x" || ls[i].Code.ToLower() == "bzx_sl_x"
-                    || ls[i].Code.ToLower() == "bzx_jz_x" || ls[i].Code.ToLower() == "bzx_mz_x" || ls[i].Code.ToLower() == "bzx_xs_c"
-                    || ls[i].Code.ToLower() == "bzx_c_t" || ls[i].Code.ToLower() == "bzx_xs_t" || ls[i].Code.ToLower() == "bzx_sl_t"
-                    || ls[i].Code.ToLower() == "bzx_dzcs" || ls[i].Code.ToLower() == "bzx_jzcs" || ls[i].Code.ToLower() == "bzx_jz_t"
-                    || ls[i].Code.ToLower() == "bzx_mz_t" || ls[i].Code.ToLower() == "bzx_ljfyzl" || ls[i].Code.ToLower() == "bzx_t_l"
-                    || ls[i].Code.ToLower() == "bzx_t_w" || ls[i].Code.ToLower() == "bzx_t_h" || ls[i].Code.ToLower() == "cbfx_sj_j"
-                    || ls[i].Code.ToLower() == "cbfx_mb_j" || ls[i].Code.ToLower() == "cbfx_xs_price" || ls[i].Code.ToLower() == "cbfx_bc_w_total"
-                    || ls[i].Code.ToLower() == "cbfx_cb_t_total")
-                {
-                    ls[i].Value = "0";
-                }
-            }
-
-        }
-
         //主管
         Pgi.Auto.Common lczg_id = new Pgi.Auto.Common();
         lczg_id.Code = "zg_id";
         lczg_id.Key = "";
         lczg_id.Value = "u_" + zg_id;
         ls.Add(lczg_id);
-
-        //经理
-        Pgi.Auto.Common lcmanager_id = new Pgi.Auto.Common();
-        lcmanager_id.Code = "manager_id";
-        lcmanager_id.Key = "";
-        lcmanager_id.Value = "u_" + manager_id;
-        ls.Add(lcmanager_id);
 
         //自定义，上传文件
         string savepath_new = @"\" + savepath + @"\";
@@ -723,9 +742,9 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             System.IO.Directory.CreateDirectory(despath);
         }
 
-        #region 零件图片
+        #region 附件
 
-        string files_part = "";
+        string files = "";
         string[] ls_files = ip_filelist.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var item in ls_files)
         {
@@ -739,94 +758,24 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
             fi.MoveTo(tmp);
 
-            files_part += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
+            files += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
         }
 
         string[] ls_files_db = ip_filelist_db.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var item in ls_files_db)
         {
-            files_part += item + ";";
+            files += item + ";";
         }
-        if (files_part != "") { files_part = files_part.Substring(0, files_part.Length - 1); }
+        if (files != "") { files = files.Substring(0, files.Length - 1); }
 
         #endregion
 
-        #region 包装箱内部
-
-        string files_bzx_nb = "";
-        string[] ls_files_2 = ip_filelist_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in ls_files_2)
-        {
-            string[] ls_files_oth = item.Split(',');
-
-            //目的地存在的话，先删除
-            string tmp = despath + ls_files_oth[1].Replace(savepath_new, "");
-            if (File.Exists(tmp)) { File.Delete(tmp); }
-
-            //文件从临时目录转移到表单单号下面
-            FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
-            fi.MoveTo(tmp);
-
-            files_bzx_nb += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
-        }
-
-        string[] ls_files_db_2 = ip_filelist_db_2.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in ls_files_db_2)
-        {
-            files_bzx_nb += item + ";";
-        }
-        if (files_bzx_nb != "") { files_bzx_nb = files_bzx_nb.Substring(0, files_bzx_nb.Length - 1); }
-
-        #endregion
-
-        #region 包装箱外观
-
-        string files_bzx_wg = "";
-        string[] ls_files_3 = ip_filelist_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in ls_files_3)
-        {
-            string[] ls_files_oth = item.Split(',');
-
-            //目的地存在的话，先删除
-            string tmp = despath + ls_files_oth[1].Replace(savepath_new, "");
-            if (File.Exists(tmp)) { File.Delete(tmp); }
-
-            //文件从临时目录转移到表单单号下面
-            FileInfo fi = new FileInfo(MapPath("~") + ls_files_oth[1]);
-            fi.MoveTo(tmp);
-
-            files_bzx_wg += item.Replace(savepath_new, savepath_new + m_sid + @"\") + ";";
-        }
-
-        string[] ls_files_db_3 = ip_filelist_db_3.Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in ls_files_db_3)
-        {
-            files_bzx_wg += item + ";";
-        }
-        if (files_bzx_wg != "") { files_bzx_wg = files_bzx_wg.Substring(0, files_bzx_wg.Length - 1); }
-
-        #endregion
-
-        // 增加上传文件列:零件图片
+        // 增加上传文件列:附件
         Pgi.Auto.Common lcfile = new Pgi.Auto.Common();
-        lcfile.Code = "files_part";
+        lcfile.Code = "files";
         lcfile.Key = "";
-        lcfile.Value = files_part;
+        lcfile.Value = files;
         ls.Add(lcfile);
-
-        // 增加上传文件列:包装箱内部
-        Pgi.Auto.Common lcfiles_bzx_nb = new Pgi.Auto.Common();
-        lcfiles_bzx_nb.Code = "files_bzx_nb";
-        lcfiles_bzx_nb.Key = "";
-        lcfiles_bzx_nb.Value = files_bzx_nb;
-        ls.Add(lcfiles_bzx_nb);
-
-        // 增加上传文件列:包装箱外观
-        Pgi.Auto.Common lcfiles_bzx_wg = new Pgi.Auto.Common();
-        lcfiles_bzx_wg.Code = "files_bzx_wg";
-        lcfiles_bzx_wg.Key = "";
-        lcfiles_bzx_wg.Value = files_bzx_wg;
-        ls.Add(lcfiles_bzx_wg);
 
         //---------------------------------------------------------------------------------------获取表体数据----------------------------------------------------------------------------------------
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
@@ -834,36 +783,35 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         //主表相关字段赋值到明细表
         for (int i = 0; i < ldt.Rows.Count; i++)
         {
-            ldt.Rows[i]["PackNo"] = m_sid;
+            ldt.Rows[i]["CSNo"] = m_sid;
             ldt.Rows[i]["numid"] = (i + 1);
         }
 
         //---------------------------------------------------------根据表体数据与上一版本数据比较，更新IsNeedCloseWork---------------------------------------------------------------------
-        string IsModifyByBom = "";//修改申请时，决定是bom修改的条件：包材类别=E时，与上一版本比较，存在新增行，删除行，修改行（修改数量）
+        string IsSign_HQ = "";//修改申请时，决定是bom修改的条件：包材类别=E时，与上一版本比较，存在新增行，删除行，修改行（修改数量）
 
         if (action == "submit")
         {
             try
             {
-                PackSheme pack = new PackSheme();
-                IsModifyByBom = pack.PackSheme_IsModifyByBom(ldt, lstypeno, this.m_sid, lspart, lsdomain, lssite, lsship).Rows[0][0].ToString();
+                //PackSheme pack = new PackSheme();
+                //IsSign_HQ = pack.PackSheme_IsModifyByBom(ldt, lstypeno, this.m_sid, lspart, lsdomain, lssite, lsship).Rows[0][0].ToString();
             }
             catch (Exception ex)
             {
-                IsModifyByBom = "e";
+                IsSign_HQ = "e";
             }
         }
 
-        Pgi.Auto.Common lcIsModifyByBom = new Pgi.Auto.Common();
-        lcIsModifyByBom.Code = "IsModifyByBom";
-        lcIsModifyByBom.Key = "";
-        lcIsModifyByBom.Value = IsModifyByBom;
-        ls.Add(lcIsModifyByBom);
+        Pgi.Auto.Common lcIsSign_HQ = new Pgi.Auto.Common();
+        lcIsSign_HQ.Code = "IsSign_HQ";
+        lcIsSign_HQ.Key = "";
+        lcIsSign_HQ.Value = IsSign_HQ;
+        ls.Add(lcIsSign_HQ);
 
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
-        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_PackScheme_Main_Form"));
-
+        ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_CustomerSchedule_Main_Form"));
 
         if (ldt.Rows.Count > 0)
         {
@@ -876,20 +824,34 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             if (dtl_ids != "")
             {
                 dtl_ids = dtl_ids.Substring(0, dtl_ids.Length - 1);
-                ls_del.Sql = "delete from PGI_PackScheme_Dtl_Form where PackNo='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
+                ls_del.Sql = "delete from PGI_CustomerSchedule_Dtl_Form where CSNo='" + m_sid + "' and id not in(" + dtl_ids + ")";    //删除数据库中的数据不在网页上暂时出来的        
             }
             else
             {
-                ls_del.Sql = "delete from PGI_PackScheme_Dtl_Form where PackNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
+                ls_del.Sql = "delete from PGI_CustomerSchedule_Dtl_Form where CSNo='" + m_sid + "'";//页面上没有数据库的id，也就是所有的都是新增的，需要根据表单单号清除数据库数据
             }
             ls_sum.Add(ls_del);
 
             //明细数据自动生成SQL，并增入SUM
-            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_PackScheme_Dtl_Form", "id", "Column1,flag");
+            List<Pgi.Auto.Common> ls1 = Pgi.Auto.Control.GetList(ldt, "PGI_CustomerSchedule_Dtl_Form", "id", "Column1,flag");
             for (int i = 0; i < ls1.Count; i++)
             {
                 ls_sum.Add(ls1[i]);
             }
+
+            //更新税率值
+            Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
+            ls_taxratecode.Sql = @"update PGI_CustomerSchedule_Dtl_Form set taxc_rate=a.TaxRate
+                                    from ({1}) a
+                                    where PGI_CustomerSchedule_Dtl_Form.CSNo='{0}' and PGI_CustomerSchedule_Dtl_Form.taxc=a.TaxRate_Code";
+            ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
+            ls_sum.Add(ls_taxratecode);
+        }
+        else
+        {
+            Pgi.Auto.Common ls_del = new Pgi.Auto.Common();
+            ls_del.Sql = "delete from PGI_CustomerSchedule_Dtl_Form where CSNo='" + m_sid + "'";
+            ls_sum.Add(ls_del);
         }
 
         //-----------------------------------------------------------需要即时验证是否存在正在申请的或者保存着的项目号
@@ -901,8 +863,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         {
             bflag = true;
 
-            var titletype = lstypeno == "新增" ? "包装方案申请" : "包装方案修改";
-            string title = titletype + "[" + this.m_sid + "][" + applyname + "][" + lspart + "][" + lsver + "]";
+            var titletype = lstypeno == "新增" ? "客户日程申请" : "客户日程修改";
+            string title = titletype + "[" + this.m_sid + "][" + applyname + "][" + lspart + "][" + lsdomain + "]";
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
@@ -912,7 +874,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         {
             bflag = false;
         }
-        */
+
         return bflag;
     }
 
@@ -989,7 +951,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         //保存数据
         bool flag = false;
-        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper())
         {
             flag = true;
         }
@@ -1009,7 +971,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         //保存数据
         bool flag = false;
-        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID)
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper())
         {
             flag = true;
         }

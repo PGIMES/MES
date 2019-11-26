@@ -56,6 +56,12 @@
                 //alert("终止");
                 $("#btntaskEnd").hide();
             }
+
+            $("#wlXX input[id*='cust_part']").change(function () {  
+                var cust_part=$("#wlXX input[id*='cust_part']").val();
+                $("#wlXX input[id*='cust_partd']").val(cust_part);
+            });
+            
         });
 
         //提出自定流程 JS 
@@ -279,6 +285,8 @@
 
         function setvalue_part(domain, part, wlmc) 
         {    
+            $("#wlXX input[id*='typeno']").val('新增');
+
             $("#wlXX input[id*='domain']").val(domain);
             $("#wlXX input[id*='part']").val(part);
             //$("#<%=part.ClientID%>").val(part);
@@ -389,23 +397,31 @@
                 msg+="【申请人部门】不可为空.<br />";
             }
 
+            if(msg!=""){  
+                flag=false;
+                layer.alert(msg);
+                return flag;
+            }
+
+            var typeno=$("#wlXX input[id*='typeno']").val();
             var domain=$("#wlXX input[id*='domain']").val();
             var part=$("#<%=part.ClientID%>").val();
             var cust_part=$("#wlXX input[id*='cust_part']").val();
-            var cust_partd=$("#wlXX input[id*='cust_partd']").val();
 
-            if(action=='submit'){
+            if(action=='submit'){   
+                if(typeno==""){
+                    msg+="【申请类型】不可为空.<br />";
+                }             
                 if (domain=="") {
                     msg+="请选择【申请工厂】<br />";
+                }else if(domain!="100" && domain!="200"){
+                    msg+="【申请工厂】只能是100、200.<br />";                    
                 }
                 if (part=="") {
                     msg+="请选择【PGI_零件号】<br />";
                 }
                 if (cust_part=="") {
                     msg+="请输入【客户物料号】<br />";
-                }
-                if (cust_partd=="") {
-                    msg+="请输入【显示客户物料号】<br />";
                 }
             }
 
@@ -416,30 +432,20 @@
             }
 
             if(action=='submit'){
-
-
-
-
-
                 if(!parent.checkSign()){
                     flag=false;return flag;
                 }
             }
 
             if(flag){
-                /*var applyid=$("#DQXX input[id*='ApplyId']").val();
-
-                var formno=$("#CPXX input[id*='FormNo']").val();
-                var part=("#ljXX input[id*='part']").val();
-                var domain=$("#ljXX input[id*='domain']").val();
-                var site=$("#ljXX input[id*='site']").val();
-                var ship=$("#ljXX input[id*='ship']").val();
-                var typeno=$("#ljXX input[id*='typeno']").val();
+                var applyid=$("#DQXX input[id*='ApplyId']").val();
+                var formno=$("#DQXX input[id*='FormNo']").val();
 
                 $.ajax({
                     type: "post",
                     url: "CustomerSchedule.aspx/CheckData",
-                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','site':'" + site + "','ship':'" + ship + "','typeno':'" + typeno + "'}",
+                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain 
+                            + "','cust_part':'" + cust_part + "','typeno':'" + typeno + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -456,7 +462,7 @@
                         }
                     }
 
-                });*/
+                });
             }
 
             return flag;
@@ -474,6 +480,8 @@
             }
             if (domain=="") {
                 msg+="请选择【申请工厂】<br />";
+            }else if(domain!="100" && domain!="200"){
+                msg+="【申请工厂】只能是100、200.<br />";                    
             }
 
             if(msg!=""){  
@@ -609,19 +617,18 @@
                                 <td style="width:100px;"><font color="red">*</font>PGI_零件号</td>
                                 <td style="width:292px;">
                                     <div class="form-inline">
-                                        <asp:TextBox ID="part" runat="server" class="lineread" ReadOnly="true"  Width="200px" />
-                                        <input id="hd_part" runat="server" type="text" hidden="hidden" />
+                                        <asp:TextBox ID="part" runat="server" class="linewrite" Width="200px" />
                                         <i id="part_i" class="fa fa-search <% =ViewState["ApplyId_i"].ToString() == "Y" ? "i_hidden" : "i_show" %>" 
                                             onclick="Get_part()"></i>
                                     </div>
                                 </td>
                                 <td style="width:100px;"><font color="red">*</font>申请工厂</td>
                                 <td style="width:292px;">
-                                    <asp:TextBox ID="domain"  runat="server" class="lineread" ReadOnly="true"  Width="210px" />
-                                    <input id="hd_domain" runat="server" type="text" hidden="hidden" />
+                                    <asp:TextBox ID="domain"  runat="server" class="linewrite" Width="210px" />
                                 </td> 
-                                <td style="width:100px;"><font color="red">&nbsp;</font></td>
+                                <td style="width:100px;"><font color="red">*</font>申请类型</td>
                                 <td style="width:292px;">
+                                    <asp:TextBox ID="typeno"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
                                 </td>                   
                             </tr>
                             <tr>                                
@@ -631,7 +638,7 @@
                                 </td>   
                                 <td style="width:130px;"><font color="red">*</font>显示客户物料号</td>
                                 <td>
-                                    <asp:TextBox ID="cust_partd"  runat="server" class="linewrite" Width="210px" />
+                                    <asp:TextBox ID="cust_partd"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
                                 </td>      
                                 <td style="width:100px;"></td>
                                 <td style="width:292px;">
@@ -881,6 +888,33 @@
 
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-container <% =ViewState["ApplyId_i"].ToString() != "" ? "i_show" : "i_hidden" %>">
+            <div class="panel panel-infos">
+                <div class="panel-headings" data-toggle="collapse" data-target="#qrXX">
+                    <strong>QAD确认完成</strong>
+                </div>
+                <div class="panel-body" id="qrXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
+                        <table style="width: 80%; height: 100px" border="0" id="Table1">
+                            <tr>
+                                <td style="width: 150px; color: Red;">
+                                    QAD存在，会默认选中 :
+                                </td>
+                                <td>
+                                    <asp:CheckBoxList ID="ddlopinion" runat="server" CssClass="form-control" RepeatDirection="Vertical" Width="200px" Height="130px">
+                                        <asp:ListItem Text="PGI_零件号" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="发货至" Value="2"></asp:ListItem>
+                                        <asp:ListItem Text="价目表" Value="3"></asp:ListItem>
+                                        <asp:ListItem Text="预测量" Value="4"></asp:ListItem>
+                                    </asp:CheckBoxList>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
