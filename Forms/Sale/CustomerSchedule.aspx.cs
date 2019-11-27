@@ -28,7 +28,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     string state = "";
     string m_sid = "";
 
-    string sql_TaxRate = @"SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
+    string sql_TaxRate = @"select '0' TaxRate,''TaxRate_Code 
+                        union SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
                             where tx2_exp_date is null and tx2_tax_type='VAT'and tx2_domain in('100','200') and [tx2_pt_taxc]<>'13'";
 
     LoginUser LogUserModel = null;
@@ -442,7 +443,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 	                                select '中转库发' [value],1 rownum
 	                                ) a
                                 order by rownum";
-            string sql_curr = @"select 'CNY' value union select 'USD' value union select 'EUR' value union select 'JPY' value union select 'THB' value union select 'GBP' value";
+            string sql_curr = @"select '' value union select 'CNY' value union select 'USD' value union select 'EUR' value union select 'JPY' value union select 'THB' value union select 'GBP' value";
 
             //模型年
             string sql_modelyr = @"select [value]
@@ -468,13 +469,15 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
             string sql_YN = @"select [value]
                                 from (
-	                                select 'yes' [value],0 rownum
+	                                select '' [value],0 rownum
 	                                union 
-	                                select 'no' [value],1 rownum
+	                                select 'yes' [value],1 rownum
+	                                union 
+	                                select 'no' [value],2 rownum
 	                                ) a
                                 order by rownum";
 
-            string sql_consignment_loc = @"select loc_loc as value from qad.dbo.qad_loc_mstr where loc_domain='" + domain_str + "' and loc_status='CUSTOMER'";
+            string sql_consignment_loc = @"select '' value union select loc_loc as value from qad.dbo.qad_loc_mstr where loc_domain='" + domain_str + "' and loc_status='CUSTOMER'";
 
             DataTable ldt_delivery_mode = DbHelperSQL.Query(sql_delivery_mode).Tables[0];
             DataTable ldt_curr = DbHelperSQL.Query(sql_curr).Tables[0];
@@ -644,6 +647,52 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
 
     [WebMethod]
+    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
+    {
+        string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
+
+        if (delivery_mode == "中转库发" && site == domain)
+        {
+            string sql_ship = @"select a.ad_bus_relation,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                              from (select ad_bus_relation from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
+                                inner join qad.dbo.qad_cm_mstr b on a.ad_bus_relation=b.cm_addr and b.cm_domain='{0}' ";
+            sql_ship = string.Format(sql_ship, domain, ship);
+            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+            if (ldt_ship.Rows.Count > 0)
+            {
+                bill = ldt_ship.Rows[0]["ad_bus_relation"].ToString();
+                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
+                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
+                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
+                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
+            }
+        }
+        else
+        {
+            string sql_ship = @"select a.BusinessRelationCode,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                        from (
+                            select BusinessRelationCode 
+                            from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
+                            ) a
+                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'";
+            sql_ship = string.Format(sql_ship, domain, ship);
+            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
+            if (ldt_ship.Rows.Count > 0)
+            {
+                bill = ldt_ship.Rows[0]["BusinessRelationCode"].ToString();
+                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
+                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
+                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
+                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
+            }
+        }
+
+        string result = "[{\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
+        return result;
+
+    }
+
+    [WebMethod]
     public static string CheckData(string applyid, string formno, string part, string domain, string cust_part, string typeno)
     {
         string manager_flag = ""; string zg_id = "";
@@ -678,6 +727,11 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         sql = string.Format(sql, part, domain, cust_part, formno, typeno);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
+        if (dt.Rows[0][0].ToString() == "Y0")
+        {
+            flag = "【PGI_零件号】" + part + "对应的项目不存在，不能申请!<br />";
+        }
+
         if (dt.Rows[0][0].ToString() == "Y1")
         {
             flag = "【PGI_零件号】" + part + "【申请工厂】" + domain + "【客户物料号】" + cust_part + "正在申请中，不能申请!<br />";
@@ -689,6 +743,37 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         return flag;
+    }
+
+    [WebMethod]
+    public static string CheckData_dtl(string formno, string part, string domain, string cust_part, string typeno
+                                    , string site, string ship, string bill, string curr
+                                    , string pr_list, string modelyr, string nbr,string delivery_mode
+                                    , string line, string index)
+    {
+        string flag = ""; 
+
+        string sql = @"exec Report_CS_CheckData '{0}','{1}','{2}','{3}','{4}'";
+        sql = string.Format(sql, part, domain, cust_part, formno, typeno);
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        if (dt.Rows[0][0].ToString() == "Y1") //若是中转库发，且 发货自等于域的话，发货至必须存在在地点表里    
+        {
+            flag = "第" + index + "行【发货至】" + ship + "，地点不存在，不能申请!<br />";
+        }
+        if (dt.Rows[0][0].ToString() == "Y2")//模型年的check:相同的 客户物料号，发货自，发货至，不同的PGI零件号，必须要有模型年，否则导入不进去qad          
+        {
+            flag = "第" + index + "行【申请工厂】" + domain + "【客户物料号】" + cust_part + "【发货自】" + site + "【发货至】" + ship + "【模型年】" + modelyr + "必须唯一!<br />";
+        }
+        if (dt.Rows[0][0].ToString() == "Y3")//销售订单，发货自，发货至，票据开往，物料号，客户项目号，模型年 必须唯一
+        {
+            flag = "第" + index + "行【申请工厂】" + domain  + "【发货自】" + site + "【发货至】" + ship + "【销售订单】" + nbr 
+                + "【票据开往】" + bill + "【物料号】" + part + "【客户物料号】" + cust_part + "【模型年】" + modelyr + "必须唯一!<br />";
+        }
+
+        string result = "[{\"flag\":\"" + flag + "\"}]";
+        return result;
+
     }
 
     private bool SaveData(string action)
@@ -787,28 +872,38 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             ldt.Rows[i]["numid"] = (i + 1);
         }
 
-        //---------------------------------------------------------根据表体数据与上一版本数据比较，更新IsNeedCloseWork---------------------------------------------------------------------
-        string IsSign_HQ = "";//修改申请时，决定是bom修改的条件：包材类别=E时，与上一版本比较，存在新增行，删除行，修改行（修改数量）
-
-        if (action == "submit")
+        //---------------------------------------------------------表体数据，申请人步骤的时候才更新---------------------------------------------------------------------
+        if (StepID.ToUpper() == "A" || StepID.ToUpper() == SQ_StepID.ToUpper())
         {
-            try
+            string IsSign_HQ = "";//判定是否存在加签
+            string SignEmp_id = "";
+            if (action == "submit")
             {
-                //PackSheme pack = new PackSheme();
-                //IsSign_HQ = pack.PackSheme_IsModifyByBom(ldt, lstypeno, this.m_sid, lspart, lsdomain, lssite, lsship).Rows[0][0].ToString();
+                try
+                {
+                    CustomerSchedule cs = new CustomerSchedule();
+                    DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
+                    IsSign_HQ = dt_IsSign.Rows[0][0].ToString();
+                    SignEmp_id = dt_IsSign.Rows[0][1].ToString();
+                }
+                catch (Exception ex)
+                {
+                    IsSign_HQ = "e";
+                }
             }
-            catch (Exception ex)
-            {
-                IsSign_HQ = "e";
-            }
+
+            Pgi.Auto.Common lcIsSign_HQ = new Pgi.Auto.Common();
+            lcIsSign_HQ.Code = "IsSign_HQ";
+            lcIsSign_HQ.Key = "";
+            lcIsSign_HQ.Value = IsSign_HQ;
+            ls.Add(lcIsSign_HQ);
+
+            Pgi.Auto.Common lcSignEmp_id = new Pgi.Auto.Common();
+            lcSignEmp_id.Code = "SignEmp_id";
+            lcSignEmp_id.Key = "";
+            lcSignEmp_id.Value = SignEmp_id;
+            ls.Add(lcSignEmp_id);
         }
-
-        Pgi.Auto.Common lcIsSign_HQ = new Pgi.Auto.Common();
-        lcIsSign_HQ.Code = "IsSign_HQ";
-        lcIsSign_HQ.Key = "";
-        lcIsSign_HQ.Value = IsSign_HQ;
-        ls.Add(lcIsSign_HQ);
-
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
         ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_CustomerSchedule_Main_Form"));
@@ -878,51 +973,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         return bflag;
     }
 
-    [WebMethod]
-    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
-    {
-        string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
-
-        if (delivery_mode == "中转库发" && site == domain)
-        {
-            string sql_ship = @"select a.ad_bus_relation,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
-                              from (select ad_bus_relation from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
-                                inner join qad.dbo.qad_cm_mstr b on a.ad_bus_relation=b.cm_addr and b.cm_domain='{0}' ";
-            sql_ship = string.Format(sql_ship, domain, ship);
-            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
-            if (ldt_ship.Rows.Count > 0)
-            {
-                bill = ldt_ship.Rows[0]["ad_bus_relation"].ToString();
-                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
-                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
-                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
-                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
-            }
-        }
-        else
-        {
-            string sql_ship = @"select a.BusinessRelationCode,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
-                        from (
-                            select BusinessRelationCode 
-                            from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
-                            ) a
-                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'";
-            sql_ship = string.Format(sql_ship, domain, ship);
-            DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
-            if (ldt_ship.Rows.Count > 0)
-            {
-                bill = ldt_ship.Rows[0]["BusinessRelationCode"].ToString();
-                curr = ldt_ship.Rows[0]["cm_curr"].ToString();
-                pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
-                taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
-                taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
-            }
-        }
-
-        string result = "[{\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
-        return result;
-
-    }
 
     #region "上传文件"
 

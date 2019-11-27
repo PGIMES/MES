@@ -11,6 +11,7 @@
     <link href="/Content/css/custom.css?t=20190516" rel="stylesheet" />
     <script type="text/javascript">
         var UserId = '<%=UserId%>';
+        var js_SQ_StepID='<%=SQ_StepID%>';
 
         function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -389,81 +390,189 @@
             var flag=true;var msg="";
             
             <%=ValidScript%>
-
-            if($("#DQXX input[id*='ApplyId']").val()=="" || $("#DQXX input[id*='ApplyName']").val()==""){
-                msg+="【申请人】不可为空.<br />";
-            }
-            if($("#DQXX input[id*='ApplyDeptId']").val()=="" || $("#DQXX input[id*='ApplyDeptName']").val()==""){
-                msg+="【申请人部门】不可为空.<br />";
-            }
-
-            if(msg!=""){  
-                flag=false;
-                layer.alert(msg);
-                return flag;
-            }
-
-            var typeno=$("#wlXX input[id*='typeno']").val();
-            var domain=$("#wlXX input[id*='domain']").val();
-            var part=$("#<%=part.ClientID%>").val();
-            var cust_part=$("#wlXX input[id*='cust_part']").val();
-
-            if(action=='submit'){   
-                if(typeno==""){
-                    msg+="【申请类型】不可为空.<br />";
-                }             
-                if (domain=="") {
-                    msg+="请选择【申请工厂】<br />";
-                }else if(domain!="100" && domain!="200"){
-                    msg+="【申请工厂】只能是100、200.<br />";                    
+                
+            //申请步骤验证
+            if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
+            
+                if($("#DQXX input[id*='ApplyId']").val()=="" || $("#DQXX input[id*='ApplyName']").val()==""){
+                    msg+="【申请人】不可为空.<br />";
                 }
-                if (part=="") {
-                    msg+="请选择【PGI_零件号】<br />";
+                if($("#DQXX input[id*='ApplyDeptId']").val()=="" || $("#DQXX input[id*='ApplyDeptName']").val()==""){
+                    msg+="【申请人部门】不可为空.<br />";
                 }
-                if (cust_part=="") {
-                    msg+="请输入【客户物料号】<br />";
+
+                if(msg!=""){  
+                    flag=false;
+                    layer.alert(msg);
+                    return flag;
                 }
-            }
 
-            if(msg!=""){  
-                flag=false;
-                layer.alert(msg);
-                return flag;
-            }
+                var typeno=$("#wlXX input[id*='typeno']").val();
+                var domain=$("#wlXX input[id*='domain']").val();
+                var part=$("#<%=part.ClientID%>").val();
+                var cust_part=$("#wlXX input[id*='cust_part']").val();
 
-            if(action=='submit'){
-                if(!parent.checkSign()){
-                    flag=false;return flag;
-                }
-            }
-
-            if(flag){
-                var applyid=$("#DQXX input[id*='ApplyId']").val();
-                var formno=$("#DQXX input[id*='FormNo']").val();
-
-                $.ajax({
-                    type: "post",
-                    url: "CustomerSchedule.aspx/CheckData",
-                    data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain 
-                            + "','cust_part':'" + cust_part + "','typeno':'" + typeno + "'}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
-                    success: function (data) {
-                        var obj=eval(data.d);
-
-                        if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
-                        if(obj[0].part_flag!=""){ msg+=obj[0].part_flag; }
-
-                        if(msg!=""){  
-                            flag=false;
-                            layer.alert(msg);
-                            return flag;
-                        }
+                if(action=='submit'){   
+                    if(typeno==""){
+                        msg+="【申请类型】不可为空.<br />";
+                    }             
+                    if (domain=="") {
+                        msg+="请选择【申请工厂】<br />";
+                    }else if(domain!="100" && domain!="200"){
+                        msg+="【申请工厂】只能是100、200.<br />";                    
+                    }
+                    if (part=="") {
+                        msg+="请选择【PGI_零件号】.<br />";
+                    }else if(part.length<=5){
+                        msg+="【PGI_零件号】长度必须大于5位.<br />";
+                    }
+                    if (cust_part=="") {
+                        msg+="请输入【客户物料号】.<br />";
+                    }
+                    
+                    if(msg!=""){  
+                        flag=false;
+                        layer.alert(msg);
+                        return flag;
                     }
 
-                });
+                    //----------------------------------------------------验证申请中的单子
+                    var applyid=$("#DQXX input[id*='ApplyId']").val();
+                    var formno=$("#DQXX input[id*='FormNo']").val();
+
+                    $.ajax({
+                        type: "post",
+                        url: "CustomerSchedule.aspx/CheckData",
+                        data: "{'applyid':'" + applyid + "','formno':'" + formno + "','part':'" + part + "','domain':'" + domain 
+                                + "','cust_part':'" + cust_part + "','typeno':'" + typeno + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                        success: function (data) {
+                            var obj=eval(data.d);
+
+                            if(obj[0].manager_flag!=""){ msg+=obj[0].manager_flag; }
+                            if(obj[0].part_flag!=""){ msg+=obj[0].part_flag; }
+
+                            if(msg!=""){  
+                                flag=false;
+                                layer.alert(msg);
+                                return flag;
+                            }
+                        }
+
+                    });
+
+                    //----------------------------------------------------验证明细
+                    if($("[id$=gv] input[type!=hidden][id*=delivery_mode]").length==0){
+                        msg+="【客户日程明细】不可为空.<br />";
+                    }else {
+                        $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                            var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
+                            var ship = eval('ship' + index);var nbr = eval('nbr' + index);
+                            var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
+                            var consignment = eval('consignment' + index);var consignment_loc = eval('consignment_loc' + index);
+                             
+                            if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货方式】不可为空.<br />"; }
+                            if (site.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货自】不可为空.<br />"; }
+                            if (ship.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货至】不可为空.<br />"; }
+                            if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【销售订单】不可为空.<br />"; }
+        
+                            if (taxable.GetText()=="") { 
+                                if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+index+"行【税率】必须为空.<br />"; }                
+                            }
+                            else if (taxable.GetText()=="no") { 
+                                if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+index+"行【税率】必须为0.<br />"; }                
+                            }
+                            else if (taxable.GetText()=="yes") { 
+                                if(taxc.GetText()==""){msg+="【客户日程明细】-第"+index+"行【税率】不可为空.<br />"; }                                    
+                            }
+
+                            if (consignment.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【寄售】不可为空.<br />"; }
+                            else if (consignment.GetText()=="no") { 
+                                if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+index+"行【寄售地点】不可有值.<br />"; }                                    
+                            }
+                            else if (consignment.GetText()=="yes") { 
+                                if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+index+"行【寄售地点】不可为空.<br />"; }                                    
+                            }
+
+                            if (msg!="") {
+                                return false;
+                            }
+                        });
+                        /*
+                        if(stepid!=null){
+                            if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
+                                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
+                                    if( $(this).val()==""){
+                                        msg+="【预定班次】不可为空.<br />";
+                                        return false;
+                                    }
+                                });
+                                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
+                                    if( $(this).val()==""){
+                                        msg+="【实际费用】不可为空.<br />";
+                                        return false;
+                                    }
+                                });
+                            }
+                        }*/
+                    }
+
+                    if(msg!=""){  
+                        flag=false;
+                        layer.alert(msg);
+                        return flag;
+                    }
+                        
+                    //若是中转库发，且 发货自等于域的话，发货至必须存在在地点表里    
+                    //模型年的check:相同的 客户物料号，发货自，发货至，不同的PGI零件号，必须要有模型年，否则导入不进去qad                    
+                    //销售订单，发货自，发货至，票据开往，物料号，客户项目号，模型年 必须唯一
+                    $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                        var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
+                        var ship = eval('ship' + index);var nbr = eval('nbr' + index);
+                        var bill = eval('bill' + index);
+                        var curr = eval('curr' + index);
+                        var pr_list = eval('pr_list' + index);var line = eval('line' + index);
+                        var modelyr = eval('modelyr' + index);
+                                
+                       $.ajax({
+                            type: "post",
+                            url: "CustomerSchedule.aspx/CheckData_dtl",
+                            data: "{'formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','cust_part':'" + cust_part + "','typeno':'" + typeno
+                                    + "','site':'" + site.GetText() + "','ship':'" + ship.GetText() + "','bill':'" + bill.GetText() + "','curr':'" + curr.GetText() 
+                                    + "','pr_list':'" + pr_list.GetText() + "','modelyr':'" + modelyr.GetText() + "','nbr':'" + nbr.GetText() + "','delivery_mode':'" + delivery_mode.GetText() 
+                                    + "','line':'" + line.GetText() + "','index':'" + index + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                            success: function (data) {
+                                var obj=eval(data.d);
+
+                                if(obj[0].flag!=""){ msg+=obj[0].flag; }
+
+                                if(msg!=""){  
+                                    flag=false;
+                                    layer.alert(msg);
+                                    return flag;
+                                }
+                            }
+
+                        });
+                    });
+                    
+                }
+
+                if(action=='submit'){
+                    if(!parent.checkSign()){
+                        flag=false;return flag;
+                    }
+                }
+
             }
+
+             
+            
 
             return flag;
         }
@@ -557,7 +666,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="col-md-12" >
 
         <div class="row row-container">
@@ -710,11 +819,12 @@
                                         <dx:GridViewDataTextColumn Caption="发货至" FieldName="ship" Width="80px" VisibleIndex="2">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
-                                                <dx:ASPxComboBox ID="ship" runat="server" ValueType="System.String" OnCallback="ship_Callback"
+                                                <dx:ASPxComboBox ID="ship" runat="server" ValueType="System.String" OnCallback="ship_Callback" 
                                                     Width="80px" ClientInstanceName='<%# "ship"+Container.VisibleIndex.ToString() %>'
                                                     ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnShipChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None"
+                                                    DropDownStyle="DropDown">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>                                       
@@ -815,6 +925,14 @@
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="行" FieldName="line" Width="30px" VisibleIndex="13"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="line" Width="30px" runat="server" Value='<%# Eval("line")%>' 
+                                                    ClientInstanceName='<%# "line"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn Caption="应收款地点" FieldName="ysk_site" Width="70px" VisibleIndex="13"> 
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
