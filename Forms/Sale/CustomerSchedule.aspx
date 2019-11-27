@@ -479,13 +479,14 @@
                     }else {
                         $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
                             var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
-                            var ship = eval('ship' + index);var nbr = eval('nbr' + index);
+                            var ship = eval('ship' + index);var shipname = eval('shipname' + index);var nbr = eval('nbr' + index);
                             var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
                             var consignment = eval('consignment' + index);var consignment_loc = eval('consignment_loc' + index);
                              
                             if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
                             if (site.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
                             if (ship.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
+                            if (shipname.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
                             if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
         
                             if (taxable.GetText()=="") { 
