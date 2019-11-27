@@ -274,82 +274,60 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         this.gv.DataSource = dt;
         this.gv.DataBind();
         GetGrid(dt);
-        //setGridIsRead(dt, typeno.Text);
+        setGridIsRead(dt, typeno.Text);
     }
 
     public void setGridIsRead(DataTable ldt_detail, string typeno)
     {
-        ////特殊处理，签核界面，明细的框框拿掉
-        //string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
-        //                where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
-        //                    and instanceid='{2}' and stepname='{3}'";
-        //string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "包装工程师申请");
-        //DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
+        //特殊处理，签核界面，明细的框框拿掉
+        string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
+                        where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
+                            and instanceid='{2}' and stepname='{3}'";
+        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "包装工程师申请");
+        DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
 
-        //for (int i = 0; i < ldt_detail.Rows.Count; i++)
-        //{
-        //    if (state == "edit" || typeno != "新增")
-        //    {
-        //        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).CssClass = "lineread";
-        //        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).Attributes.Remove("ondblclick");
-        //        //((TextBox)this.FindControl("ctl00$MainContent$projectno")).ReadOnly = true;
-
-        //        //((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).CssClass = "lineread";
-        //        //((TextBox)this.FindControl("ctl00$MainContent$pgi_no_t")).ReadOnly = true;
-
-        //        //((RadioButtonList)this.FindControl("ctl00$MainContent$typeno")).Enabled = false;
-
-        //        if (state != "edit" && typeno != "新增")
-        //        {
-        //            if (ldt_flow_pro.Rows.Count == 0)
-        //            {
-        //                this.btnflowSend.Text = "批准";
-        //            }
-        //            if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
-        //            {
-        //                setread(i);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (ldt_flow_pro.Rows.Count == 0)
-        //        {
-        //            this.btnflowSend.Text = "批准";
-        //        }
-        //        if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
-        //        {
-        //            setread(i);
-        //        }
-        //    }
-        //}
+        for (int i = 0; i < ldt_detail.Rows.Count; i++)
+        {
+            if (state == "edit" || typeno != "新增")
+            {
+                if (state != "edit" && typeno != "新增")
+                {
+                    if (ldt_flow_pro.Rows.Count == 0)
+                    {
+                        this.btnflowSend.Text = "批准";
+                    }
+                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    {
+                        setread(i);
+                    }
+                }
+            }
+            else
+            {
+                if (ldt_flow_pro.Rows.Count == 0)
+                {
+                    this.btnflowSend.Text = "批准";
+                }
+                if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                {
+                    setread(i);
+                }
+            }
+        }
     }
 
     public void setread(int i)
     {
-        //ver.Enabled = false; bzlb.Enabled = false;//包装类别
-        //ljcc_l.Enabled = false; ljcc_w.Enabled = false; ljcc_h.Enabled = false;
-        //gdsl_cp.Enabled = false; gdsl_bcp.Enabled = false; //klgx.Enabled = false;
-        //bzx_cc.CssClass = "lineread"; bzx_cc.ReadOnly = true;//箱尺寸(L*W*H)
-        //bzx_sl_c.Enabled = false; bzx_cs_x.Enabled = false;
-        //bzx_xs_c.Enabled = false; bzx_c_t.Enabled = false;
-        //bzx_dzcs.Enabled = false; bzx_jzcs.Enabled = false;
-        //bzx_t_l.Enabled = false; bzx_t_w.Enabled = false; bzx_t_h.Enabled = false;
-        //cbfx_mb_j.Enabled = false;
+        part.CssClass = "lineread"; part.ReadOnly = true;//PGI零件号
+        domain.CssClass = "lineread"; domain.ReadOnly = true;
+        cust_part.CssClass = "lineread"; cust_part.ReadOnly = true;
+        comment.CssClass = "lineread"; comment.ReadOnly = true;
 
-        //this.uploadcontrol.Visible = false;
-        //this.uploadcontrol_2.Visible = false;
-        //this.uploadcontrol_3.Visible = false;
+        this.uploadcontrol.Visible = false;
 
-        //ViewState["ApplyId_i"] = "Y";
+        ViewState["ApplyId_i"] = "Y";
 
-        //btnadd.Visible = false; btndel.Visible = false;
-
-        //if (i == 0)
-        //{
-        //    gv.Columns[gv.VisibleColumns.Count - 1].Visible = false;
-        //    gv.Columns[0].Visible = false;
-        //}
+        btnadd.Visible = false; btndel.Visible = false;
 
         setread_grid(i);
     }

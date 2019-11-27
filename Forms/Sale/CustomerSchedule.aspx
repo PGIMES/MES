@@ -1030,7 +1030,7 @@
                 </div>
                 <div class="panel-body" id="qrXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
-                        <table style="width: 80%; height: 100px" border="0" id="Table1">
+                        <table style="width: 100%; height: 100px" border="0" id="Table1">
                             <tr>
                                 <td style="width: 150px; color: Red;">
                                     QAD存在，会默认选中 :
