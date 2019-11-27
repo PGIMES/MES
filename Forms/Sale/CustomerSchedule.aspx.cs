@@ -28,7 +28,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     string state = "";
     string m_sid = "";
 
-    string sql_TaxRate = @"select '0' TaxRate,''TaxRate_Code 
+    string sql_TaxRate = @"select null TaxRate,''TaxRate_Code 
                         union SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
                             where tx2_exp_date is null and tx2_tax_type='VAT'and tx2_domain in('100','200') and [tx2_pt_taxc]<>'13'";
 
@@ -153,6 +153,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 if (ldt.Rows.Count > 0)
                 {
                     SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    hd_domain.Value = ldt.Rows[0]["domain"].ToString();
 
                     if (ldt.Rows[0]["files"].ToString() != "")
                     {
@@ -649,17 +650,18 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     [WebMethod]
     public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
     {
-        string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
+        string shipname = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
 
         if (delivery_mode == "中转库发" && site == domain)
         {
-            string sql_ship = @"select a.ad_bus_relation,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
-                              from (select ad_bus_relation from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
+            string sql_ship = @"select a.ad_bus_relation,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                              from (select ad_bus_relation,ad_name as shipname from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
                                 inner join qad.dbo.qad_cm_mstr b on a.ad_bus_relation=b.cm_addr and b.cm_domain='{0}' ";
             sql_ship = string.Format(sql_ship, domain, ship);
             DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
             if (ldt_ship.Rows.Count > 0)
             {
+                shipname = ldt_ship.Rows[0]["shipname"].ToString();
                 bill = ldt_ship.Rows[0]["ad_bus_relation"].ToString();
                 curr = ldt_ship.Rows[0]["cm_curr"].ToString();
                 pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
@@ -669,9 +671,9 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
         else
         {
-            string sql_ship = @"select a.BusinessRelationCode,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+            string sql_ship = @"select a.BusinessRelationCode,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
                         from (
-                            select BusinessRelationCode 
+                            select BusinessRelationCode,right(DebtorShipToName,len(DebtorShipToName)-CHARINDEX(' ',DebtorShipToName)) shipname 
                             from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
                             ) a
                                 inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'";
@@ -679,6 +681,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
             if (ldt_ship.Rows.Count > 0)
             {
+                shipname = ldt_ship.Rows[0]["shipname"].ToString();
                 bill = ldt_ship.Rows[0]["BusinessRelationCode"].ToString();
                 curr = ldt_ship.Rows[0]["cm_curr"].ToString();
                 pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
@@ -687,7 +690,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             }
         }
 
-        string result = "[{\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
+        string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
         return result;
 
     }

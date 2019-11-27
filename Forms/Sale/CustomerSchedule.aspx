@@ -58,6 +58,14 @@
                 $("#btntaskEnd").hide();
             }
 
+            $("#wlXX input[id*='domain']").change(function () {  
+                if($("[id$=gv] input[type!=hidden][id*=delivery_mode]").length>0){
+                    $("#wlXX input[id*='domain']").val($("#wlXX input[id*='hd_domain']").val());
+                    layer.alert("客户日程明细已存在，不可修改申请工厂");
+                    return flag;
+                }
+            });
+
             $("#wlXX input[id*='cust_part']").change(function () {  
                 var cust_part=$("#wlXX input[id*='cust_part']").val();
                 $("#wlXX input[id*='cust_partd']").val(cust_part);
@@ -323,6 +331,7 @@
             var delivery_mode = eval('delivery_mode' + vi); 
             var site = eval('site' + vi);
                         
+            var shipname = eval('shipname' + vi);
             var bill = eval('bill' + vi);
             var curr = eval('curr' + vi);
             var pr_list = eval('pr_list' + vi);
@@ -339,6 +348,7 @@
                     success: function (data) {
                         var obj=eval(data.d);
 
+                        shipname.SetText(obj[0].shipname);
                         bill.SetText(obj[0].bill);
                         curr.SetText(obj[0].curr);
                         pr_list.SetText(obj[0].pr_list);
@@ -479,21 +489,21 @@
                             if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
         
                             if (taxable.GetText()=="") { 
-                                if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【税率】必须为空.<br />"; }                
+                                if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为空,【税率】必须为空.<br />"; }                
                             }
                             else if (taxable.GetText()=="no") { 
-                                if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【税率】必须为0.<br />"; }                
+                                if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为no,【税率】必须为0.<br />"; }                
                             }
                             else if (taxable.GetText()=="yes") { 
-                                if(taxc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【税率】不可为空.<br />"; }                                    
+                                if(taxc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为yes,【税率】不可为空.<br />"; }                                    
                             }
 
                             if (consignment.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【寄售】不可为空.<br />"; }
                             else if (consignment.GetText()=="no") { 
-                                if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售地点】不可有值.<br />"; }                                    
+                                if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为no,【寄售地点】不可有值.<br />"; }                                    
                             }
                             else if (consignment.GetText()=="yes") { 
-                                if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售地点】不可为空.<br />"; }                                    
+                                if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为yes,【寄售地点】不可为空.<br />"; }                                    
                             }
 
                             if (msg!="") {
@@ -734,6 +744,7 @@
                                 <td style="width:100px;"><font color="red">*</font>申请工厂</td>
                                 <td style="width:292px;">
                                     <asp:TextBox ID="domain"  runat="server" class="linewrite" Width="210px" />
+                                    <input type="text" runat="server" hidden="hidden" id="hd_domain" />
                                 </td> 
                                 <td style="width:100px;"><font color="red">*</font>申请类型</td>
                                 <td style="width:292px;">
@@ -827,7 +838,15 @@
                                                     DropDownStyle="DropDown">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
-                                        </dx:GridViewDataTextColumn>                                       
+                                        </dx:GridViewDataTextColumn>                                           
+                                        <dx:GridViewDataTextColumn Caption="发货至名称" FieldName="shipname" Width="150px" VisibleIndex="2"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="shipname" Width="150px" runat="server" Value='<%# Eval("shipname")%>' 
+                                                    ClientInstanceName='<%# "shipname"+Container.VisibleIndex.ToString() %>'>
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>                                    
                                         <dx:GridViewDataTextColumn Caption="销售订单" FieldName="nbr" Width="80px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
@@ -949,14 +968,14 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <dx:GridViewDataTextColumn Caption="离岸价格" FieldName="lajg" Width="50px" VisibleIndex="15">
+                                        <%--<dx:GridViewDataTextColumn Caption="离岸价格" FieldName="lajg" Width="50px" VisibleIndex="15">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="lajg" Width="50px" runat="server" Value='<%# Eval("lajg")%>' 
                                                     ClientInstanceName='<%# "lajg"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>
+                                        </dx:GridViewDataTextColumn>--%>
                                         <dx:GridViewDataTextColumn Caption="渠道" FieldName="channel" Width="40px" VisibleIndex="16"> 
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
@@ -973,14 +992,6 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
-                                        <%--<dx:GridViewDataTextColumn Caption="行" FieldName="line" Width="40px" VisibleIndex="11">
-                                            <Settings AllowCellMerge="False"/>
-                                            <DataItemTemplate>
-                                                <dx:ASPxTextBox ID="line" Width="40px" runat="server" Value='<%# Eval("line")%>' 
-                                                    ClientInstanceName='<%# "line"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
-                                                </dx:ASPxTextBox>
-                                            </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>--%>
                                         <dx:GridViewDataTextColumn FieldName="id" Width="0px">
                                             <HeaderStyle CssClass="hidden" />
                                             <CellStyle CssClass="hidden"></CellStyle>
