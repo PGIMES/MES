@@ -473,27 +473,27 @@
                             var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
                             var consignment = eval('consignment' + index);var consignment_loc = eval('consignment_loc' + index);
                              
-                            if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货方式】不可为空.<br />"; }
-                            if (site.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货自】不可为空.<br />"; }
-                            if (ship.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【发货至】不可为空.<br />"; }
-                            if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【销售订单】不可为空.<br />"; }
+                            if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
+                            if (site.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
+                            if (ship.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
+                            if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
         
                             if (taxable.GetText()=="") { 
-                                if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+index+"行【税率】必须为空.<br />"; }                
+                                if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【税率】必须为空.<br />"; }                
                             }
                             else if (taxable.GetText()=="no") { 
-                                if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+index+"行【税率】必须为0.<br />"; }                
+                                if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【税率】必须为0.<br />"; }                
                             }
                             else if (taxable.GetText()=="yes") { 
-                                if(taxc.GetText()==""){msg+="【客户日程明细】-第"+index+"行【税率】不可为空.<br />"; }                                    
+                                if(taxc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【税率】不可为空.<br />"; }                                    
                             }
 
-                            if (consignment.GetText()=="") { msg+="【客户日程明细】-第"+index+"行【寄售】不可为空.<br />"; }
+                            if (consignment.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【寄售】不可为空.<br />"; }
                             else if (consignment.GetText()=="no") { 
-                                if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+index+"行【寄售地点】不可有值.<br />"; }                                    
+                                if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售地点】不可有值.<br />"; }                                    
                             }
                             else if (consignment.GetText()=="yes") { 
-                                if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+index+"行【寄售地点】不可为空.<br />"; }                                    
+                                if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售地点】不可为空.<br />"; }                                    
                             }
 
                             if (msg!="") {
@@ -542,7 +542,7 @@
                             data: "{'formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','cust_part':'" + cust_part + "','typeno':'" + typeno
                                     + "','site':'" + site.GetText() + "','ship':'" + ship.GetText() + "','bill':'" + bill.GetText() + "','curr':'" + curr.GetText() 
                                     + "','pr_list':'" + pr_list.GetText() + "','modelyr':'" + modelyr.GetText() + "','nbr':'" + nbr.GetText() + "','delivery_mode':'" + delivery_mode.GetText() 
-                                    + "','line':'" + line.GetText() + "','index':'" + index + "'}",
+                                    + "','line':'" + line.GetText() + "','index':'" + (index+1) + "'}",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
