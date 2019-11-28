@@ -806,25 +806,25 @@
                                     <Columns>
                                         <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
                                         <dx:GridViewDataTextColumn  Caption="#" FieldName="numid" Width="30px" VisibleIndex="0"></dx:GridViewDataTextColumn>  
-                                        <dx:GridViewDataTextColumn Caption="发货方式" FieldName="delivery_mode" Width="80px" VisibleIndex="1">
+                                        <dx:GridViewDataTextColumn Caption="发货方式" FieldName="delivery_mode" Width="70px" VisibleIndex="1">
                                             <Settings AllowCellMerge="False" />
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="delivery_mode" runat="server" ValueType="System.String"
-                                                    Width="80px" ClientInstanceName='<%# "delivery_mode"+Container.VisibleIndex.ToString() %>'
+                                                    Width="70px" ClientInstanceName='<%# "delivery_mode"+Container.VisibleIndex.ToString() %>'
                                                     ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){Ondelivery_modeChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>                                         
-                                        <dx:GridViewDataTextColumn Caption="发货自" FieldName="site" Width="80px" VisibleIndex="1">
+                                        <dx:GridViewDataTextColumn Caption="发货自" FieldName="site" Width="70px" VisibleIndex="1">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="site" runat="server" ValueType="System.String" OnCallback="site_Callback"
-                                                    Width="80px" ClientInstanceName='<%# "site"+Container.VisibleIndex.ToString() %>' 
+                                                    Width="70px" ClientInstanceName='<%# "site"+Container.VisibleIndex.ToString() %>' 
                                                     ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnSiteChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>  
@@ -835,7 +835,7 @@
                                                     Width="80px" ClientInstanceName='<%# "ship"+Container.VisibleIndex.ToString() %>'
                                                     ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnShipChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black"
                                                     DropDownStyle="DropDown">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
@@ -873,7 +873,7 @@
                                                 <dx:ASPxComboBox ID="curr" runat="server" ValueType="System.String"
                                                     Width="50px" ClientInstanceName='<%# "curr"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -891,7 +891,7 @@
                                                 <dx:ASPxComboBox ID="taxable" runat="server" ValueType="System.String"
                                                     Width="50px" ClientInstanceName='<%# "taxable"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
@@ -901,7 +901,7 @@
                                                 <dx:ASPxComboBox ID="taxc" runat="server" ValueType="System.String"
                                                     Width="50px" ClientInstanceName='<%# "taxc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>
@@ -911,7 +911,7 @@
                                                 <dx:ASPxComboBox ID="loc" runat="server" ValueType="System.String"
                                                     Width="55px" ClientInstanceName='<%# "loc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn>  
@@ -921,7 +921,7 @@
                                                 <dx:ASPxComboBox ID="consignment" runat="server" ValueType="System.String"
                                                     Width="50px" ClientInstanceName='<%# "consignment"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
@@ -931,7 +931,7 @@
                                                 <dx:ASPxComboBox ID="consignment_loc" runat="server" ValueType="System.String"
                                                     Width="60px" ClientInstanceName='<%# "consignment_loc"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>                                             
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -941,7 +941,7 @@
                                                 <dx:ASPxComboBox ID="modelyr" runat="server" ValueType="System.String"
                                                     Width="70px" ClientInstanceName='<%# "modelyr"+Container.VisibleIndex.ToString() %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
-                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 

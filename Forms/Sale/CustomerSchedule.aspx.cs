@@ -334,8 +334,29 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
     public void setread_grid(int i)
     {
-        //((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["sl"], "sl")).ReadOnly = true;
-        //((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["sl"], "sl")).BorderStyle = BorderStyle.None;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["curr"], "curr")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["taxable"], "taxable")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["taxc"], "taxc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["loc"], "loc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
+
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["remark"], "remark")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["remark"], "remark")).BorderStyle = BorderStyle.None;
     }
 
     //发货自
