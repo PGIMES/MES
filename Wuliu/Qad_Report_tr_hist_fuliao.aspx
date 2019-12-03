@@ -63,7 +63,7 @@
                         <asp:ListItem Value="01">1</asp:ListItem><asp:ListItem Value="02">2</asp:ListItem><asp:ListItem Value="03">3</asp:ListItem>   
                         <asp:ListItem Value="04">4</asp:ListItem><asp:ListItem Value="05">5</asp:ListItem><asp:ListItem Value="06">6</asp:ListItem>
                         <asp:ListItem Value="07">7</asp:ListItem><asp:ListItem Value="08">8</asp:ListItem><asp:ListItem Value="09">9</asp:ListItem>
-                        <asp:ListItem Value="10">10</asp:ListItem><asp:ListItem Value="11">12</asp:ListItem>
+                        <asp:ListItem Value="10">10</asp:ListItem><asp:ListItem Value="11">11</asp:ListItem><asp:ListItem Value="12">12</asp:ListItem>
                     </asp:DropDownList>
                 </td>
                 <td>&nbsp;&nbsp;域：</td>
