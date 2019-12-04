@@ -60,7 +60,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="sortby" AutoGenerateColumns="False" 
-                             OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1210px"><%--Width="1000px"--%>
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1250px"><%--Width="1000px"--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -80,6 +80,7 @@
                             <dx:GridViewDataDateColumn Caption="结束有效日" FieldName="enddate" Width="90px" VisibleIndex="11" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
+                            <dx:GridViewDataTextColumn Caption="行" FieldName="sod_line" Width="40px" VisibleIndex="12" /> 
                             <dx:GridViewDataTextColumn Caption="异常类别" FieldName="exctype" Width="150px" VisibleIndex="12" /> 
                             <dx:GridViewDataTextColumn Caption="计划员" FieldName="pt_buyer" Width="90px" VisibleIndex="12" /> 
                         </Columns>
