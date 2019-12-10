@@ -10,8 +10,11 @@
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
     <link href="/Content/css/custom.css?t=20190516" rel="stylesheet" />
     <script type="text/javascript">
-        var UserId = '<%=UserId%>';
         var js_SQ_StepID='<%=SQ_StepID%>';
+        var js_HQ_StepID='<%=HQ_StepID%>';
+        var js_UserId='<%=UserId%>';
+        var js_DeptName='<%=DeptName%>';
+
 
         function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -582,7 +585,44 @@
 
             }
 
-             
+           
+
+            //会签步骤验证js_HQ_StepID
+            if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){//js_DeptName
+                var part_qr=$("#MainContent_lbl_par_qrt").text();
+                var ship_qr=$("#MainContent_lbl_ship_qr").text();
+                var pr_list_qr=$("#MainContent_lbl_pr_list_qrt").text();
+                var rf_qr=$("#MainContent_lbl_rf_qr").text();
+
+                if(part_qr.indexOf(js_UserId)>0){
+                    if($("#MainContent_cb_part_qr").prop("checked")==false){                    
+                        msg+="PGI零件号，QAD还不存在，不能发送.<br />";
+                    }
+                }
+                if(ship_qr.indexOf(js_UserId)>0){
+                    if($("#MainContent_cb_ship_qr").prop("checked")==false){                    
+                        msg+="发货至，QAD还不存在，不能发送.<br />";
+                    }
+                }
+                if(pr_list_qr.indexOf(js_UserId)>0){
+                    if($("#MainContent_cb_pr_list_qr").prop("checked")==false){                    
+                        msg+="价目表，QAD还不存在，不能发送.<br />";
+                    }
+                }
+                if(rf_qr.indexOf(js_UserId)>0){
+                    if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
+                        msg+="预测量，QAD还不存在，不能发送.<br />";
+                    }
+                }
+
+                if(msg!=""){  
+                    flag=false;
+                    layer.alert(msg);
+                    return flag;
+                }
+
+                //flag=false;
+            }  
             
 
             return flag;
@@ -733,7 +773,7 @@
                 <div class="panel-body" id="wlXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
                         <table style="width: 100%; font-size: 12px;" border="0" >
-                             <tr>
+                            <tr>
                                 <td style="width:100px;"><font color="red">*</font>PGI_零件号</td>
                                 <td style="width:292px;">
                                     <div class="form-inline">
@@ -1030,7 +1070,7 @@
                 </div>
                 <div class="panel-body" id="qrXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
-                        <table style="width: 100%; height: 100px" border="0" id="Table1">
+                        <%--<table style="width: 100%; height: 100px" border="0" id="Table1">
                             <tr>
                                 <td style="width: 150px; color: Red;">
                                     QAD存在，会默认选中 :
@@ -1043,6 +1083,41 @@
                                         <asp:ListItem Text="预测量" Value="4"></asp:ListItem>
                                     </asp:CheckBoxList>
                                 </td>
+                            </tr>
+                        </table>--%>
+                        <table style="width: 40%; font-size: 12px;" border="0">
+                            <tr>
+                                <td style="width:100px;" rowspan="4"><font color="red"> QAD存在，会默认选中 :</font></td>
+                                <td style="width:110px;">
+                                    <asp:CheckBox ID="cb_part_qr" runat="server" />PGI_零件号
+                                </td>          
+                                <td style="width:80px;">
+                                    <asp:Label ID="lbl_par_qrt" runat="server" Text=""></asp:Label>
+                                </td>        
+                            </tr>
+                            <tr>
+                                <td style="width:110px;">
+                                    <asp:CheckBox ID="cb_ship_qr" runat="server" />发货至
+                                </td>        
+                                <td style="width:80px;">
+                                    <asp:Label ID="lbl_ship_qr" runat="server" Text="张荣新"></asp:Label>
+                                </td>        
+                            </tr>
+                            <tr>
+                                <td style="width:110px;">
+                                    <asp:CheckBox ID="cb_pr_list_qr" runat="server" />价目表
+                                </td>   
+                                <td style="width:80px;">
+                                    <asp:Label ID="lbl_pr_list_qr" runat="server" Text="吴玲玲"></asp:Label>
+                                </td>        
+                            </tr>
+                            <tr>
+                                <td style="width:110px;">
+                                    <asp:CheckBox ID="cb_rf_qr" runat="server" />预测量
+                                </td>          
+                                <td style="width:80px;">
+                                    <asp:Label ID="lbl_rf_qr" runat="server" Text="张荣新"></asp:Label>
+                                </td>        
                             </tr>
                         </table>
                     </div>

@@ -21,7 +21,9 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     public string fieldStatus;
 
     public string SQ_StepID = "12d2501c-d316-4edd-a43e-2c44d11d2ef6";
+    public string HQ_StepID = "1d00f84b-3e89-4daf-8d69-34ffd6ecfdf7";
     public string UserId = "";
+    public string DeptName = "";
 
     string FlowID = "A";
     string StepID = "A";
@@ -71,6 +73,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         Session["LogUser"] = LogUserModel;
         UserId = LogUserModel.UserId;
+        DeptName = LogUserModel.DepartName;
 
         if (!IsPostBack)
         {
@@ -176,28 +179,17 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             bindtab();
         }
 
+        //签核界面show
+        if (StepID.ToUpper() != SQ_StepID && StepID != "A")
+        {
+            bind_qad_qr();
+        }
+
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
         fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
     }
-
-
-
-    //setCheckBoxListSelectValue(ddlopinion, dtMst.Rows[0]["opinion"].ToString(), ';', true);
-    //public void setCheckBoxListSelectValue(CheckBoxList checkboxlist, string checkedValue, char splitChar, bool enabled)
-    //{
-    //    var list = checkedValue.Split(splitChar);
-    //    foreach (var value in list)
-    //    {
-    //        ListItem item = checkboxlist.Items.FindByValue(value);
-    //        if (item != null)
-    //        {
-    //            item.Selected = true;
-    //            item.Enabled = enabled;
-    //        }
-    //    }
-    //    checkboxlist.Enabled = enabled;
-    //}
+    
 
     void bindtab()
     {
@@ -269,6 +261,32 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         bindtab();
     }
 
+    void bind_qad_qr()
+    {
+        string lspart = part.Text; string lsdomain = domain.Text;
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+
+        CustomerSchedule cs = new CustomerSchedule();
+        DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
+        string IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
+        string workcode = dt_IsSign.Rows[0]["workcode"].ToString();
+
+        string[] IsSign_HQ_list = IsSign_HQ.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true;
+        foreach (var item in IsSign_HQ_list)
+        {
+            if (item == "Y_part") { part_yn = false; }
+            if (item == "Y_ship") { ship_yn = false; }
+            if (item == "Y_pr_list") { pr_list_yn = false; }
+            if (item == "Y_rf") { rf_yn = false; }
+        }
+        cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
+
+        string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        lbl_par_qrt.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text= "责任人【" + workcode_list[1] + "】";
+        lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
+    }
+
     public void bind_grid(DataTable dt)
     {
         this.gv.DataSource = dt;
@@ -329,21 +347,23 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         btnadd.Visible = false; btndel.Visible = false;
 
+        cb_part_qr.Enabled = false;cb_ship_qr.Enabled = false;cb_pr_list_qr.Enabled = false;cb_rf_qr.Enabled = false;
+
         setread_grid(i);
     }
 
     public void setread_grid(int i)
     {
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["curr"], "curr")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["taxable"], "taxable")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["taxc"], "taxc")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["loc"], "loc")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["curr"], "curr")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["taxable"], "taxable")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["taxc"], "taxc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["loc"], "loc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
 
 
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
@@ -670,12 +690,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
         else
         {
-            string sql_ship = @"select a.BusinessRelationCode,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+            string sql_ship = @"select top 1 a.BusinessRelationCode,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
                         from (
-                            select BusinessRelationCode,right(DebtorShipToName,len(DebtorShipToName)-CHARINDEX(' ',DebtorShipToName)) shipname 
+                            select BusinessRelationCode,right(DebtorShipToName,len(DebtorShipToName)-CHARINDEX(' ',DebtorShipToName)) shipname,updatedate 
                             from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
                             ) a
-                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'";
+                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'
+                        order by updatedate desc";
             sql_ship = string.Format(sql_ship, domain, ship);
             DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
             if (ldt_ship.Rows.Count > 0)
@@ -885,8 +906,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 {
                     CustomerSchedule cs = new CustomerSchedule();
                     DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
-                    IsSign_HQ = dt_IsSign.Rows[0][0].ToString();
-                    SignEmp_id = dt_IsSign.Rows[0][1].ToString();
+                    IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
+                    SignEmp_id = dt_IsSign.Rows[0]["SignEmp_id"].ToString();
                 }
                 catch (Exception ex)
                 {
