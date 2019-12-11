@@ -74,6 +74,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         Session["LogUser"] = LogUserModel;
         UserId = LogUserModel.UserId;
         DeptName = LogUserModel.DepartName;
+        //DeptName = "销售二部"; 
 
         if (!IsPostBack)
         {
@@ -180,7 +181,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         //签核界面show
-        if (StepID.ToUpper() != SQ_StepID && StepID != "A")
+        if (StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A")
         {
             bind_qad_qr();
         }
@@ -283,7 +284,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
 
         string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        lbl_par_qrt.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text= "责任人【" + workcode_list[1] + "】";
+        lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text= "责任人【" + workcode_list[1] + "】";
         lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
     }
 
@@ -301,7 +302,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string lssql = @"select * from [RoadFlowWebForm].[dbo].[WorkFlowTask] 
                         where cast(stepid as varchar(36))=cast('{0}' as varchar(36)) and cast(flowid as varchar(36))=cast('{1}' as varchar(36)) 
                             and instanceid='{2}' and stepname='{3}'";
-        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "包装工程师申请");
+        string sql_pro = string.Format(lssql, StepID, FlowID, m_sid, "申请人");
         DataTable ldt_flow_pro = DbHelperSQL.Query(sql_pro).Tables[0];
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
@@ -669,12 +670,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     [WebMethod]
     public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
     {
-        string shipname = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = "";
+        string shipname = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = ""; string addresstype = "";
 
         if (delivery_mode == "中转库发" && site == domain)
         {
-            string sql_ship = @"select a.ad_bus_relation,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
-                              from (select ad_bus_relation,ad_name as shipname from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
+            //string sql_ship = @"select a.ad_bus_relation,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+            string sql_ship = @"select a.ad_bus_relation,a.shipname,b.cm_curr,'Z'+a.ad_addr cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                              from (select ad_addr,ad_bus_relation,ad_name as shipname from qad_ad_mstr where ad_domain='{0}' and ad_addr='{1}') a
                                 inner join qad.dbo.qad_cm_mstr b on a.ad_bus_relation=b.cm_addr and b.cm_domain='{0}' ";
             sql_ship = string.Format(sql_ship, domain, ship);
             DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
@@ -690,13 +692,15 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
         else
         {
-            string sql_ship = @"select top 1 a.BusinessRelationCode,a.shipname,b.cm_curr,b.cm_pr_list,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
-                        from (
-                            select BusinessRelationCode,right(DebtorShipToName,len(DebtorShipToName)-CHARINDEX(' ',DebtorShipToName)) shipname,updatedate 
-                            from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
-                            ) a
-                                inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'
-                        order by updatedate desc";
+            string sql_ship = @"select top 1 a.BusinessRelationCode,a.shipname,a.AddressTypeCode,b.cm_curr
+                                    ,b.cm_pr_list+case when a.AddressTypeCode like '%售后%' then 'SP' else '' end cm_pr_list
+                                    ,case b.cm_taxable when 1 then 'yes' else 'no' end cm_taxable,b.cm_taxc
+                            from (
+                                select BusinessRelationCode,right(DebtorShipToName,len(DebtorShipToName)-CHARINDEX(' ',DebtorShipToName)) shipname,AddressTypeCode,updatedate 
+                                from form4_Customer_DebtorShipTo where IsEffective='有效' and charindex('{0}',Debtor_Domain)>0 and DebtorShipToCode='{1}'
+                                ) a
+                                    inner join qad.dbo.qad_cm_mstr b on a.BusinessRelationCode=b.cm_addr and b.cm_domain='{0}'
+                            order by updatedate desc";
             sql_ship = string.Format(sql_ship, domain, ship);
             DataTable ldt_ship = DbHelperSQL.Query(sql_ship).Tables[0];
             if (ldt_ship.Rows.Count > 0)
@@ -707,10 +711,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 pr_list = ldt_ship.Rows[0]["cm_pr_list"].ToString();
                 taxable = ldt_ship.Rows[0]["cm_taxable"].ToString();
                 taxc = ldt_ship.Rows[0]["cm_taxc"].ToString();
+                addresstype = ldt_ship.Rows[0]["AddressTypeCode"].ToString();
             }
         }
 
-        string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc + "\"}]";
+        string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr 
+                + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc 
+                + "\",\"addresstype\":\"" + addresstype + "\"}]";
         return result;
 
     }

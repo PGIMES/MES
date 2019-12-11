@@ -283,6 +283,12 @@
 
         function Get_part() 
         {
+            if($("[id$=gv] input[type!=hidden][id*=delivery_mode]").length>0){
+                $("#wlXX input[id*='domain']").val($("#wlXX input[id*='hd_domain']").val());
+                layer.alert("客户日程明细已存在，不可修改.");
+                return flag;
+            }
+
             var url = "/select/select_CustomerSchedule_part.aspx";
 
             layer.open({
@@ -335,6 +341,7 @@
             var site = eval('site' + vi);
                         
             var shipname = eval('shipname' + vi);
+            var addresstype = eval('addresstype' + vi);
             var bill = eval('bill' + vi);
             var curr = eval('curr' + vi);
             var pr_list = eval('pr_list' + vi);
@@ -352,6 +359,7 @@
                         var obj=eval(data.d);
 
                         shipname.SetText(obj[0].shipname);
+                        addresstype.SetText(obj[0].addresstype);
                         bill.SetText(obj[0].bill);
                         curr.SetText(obj[0].curr);
                         pr_list.SetText(obj[0].pr_list);
@@ -482,8 +490,8 @@
                     }else {
                         $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
                             var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
-                            var ship = eval('ship' + index);var shipname = eval('shipname' + index);var nbr = eval('nbr' + index);
-                            var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
+                            var ship = eval('ship' + index);var shipname = eval('shipname' + index);var addresstype = eval('addresstype' + index);var nbr = eval('nbr' + index);
+                            var curr = eval('curr' + index);var pr_list = eval('pr_list' + index);var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
                             var consignment = eval('consignment' + index);var consignment_loc = eval('consignment_loc' + index);
                              
                             if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
@@ -491,6 +499,7 @@
                             if (ship.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
                             if (shipname.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
                             if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
+                            if (curr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
         
                             if (taxable.GetText()=="") { 
                                 if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为空,【税率】必须为空.<br />"; }                
@@ -514,23 +523,6 @@
                                 return false;
                             }
                         });
-                        /*
-                        if(stepid!=null){
-                            if(stepid.toLowerCase()=="d2fa4155-af68-4dfa-8dee-cbc25d3d2bef"){
-                                $("[id$=gv_d_hr] input[id*=ScheduledFlight]").each(function (){
-                                    if( $(this).val()==""){
-                                        msg+="【预定班次】不可为空.<br />";
-                                        return false;
-                                    }
-                                });
-                                $("[id$=gv_d_hr] input[id*=ActualCost]").each(function (){
-                                    if( $(this).val()==""){
-                                        msg+="【实际费用】不可为空.<br />";
-                                        return false;
-                                    }
-                                });
-                            }
-                        }*/
                     }
 
                     if(msg!=""){  
@@ -548,7 +540,7 @@
                         var bill = eval('bill' + index);
                         var curr = eval('curr' + index);
                         var pr_list = eval('pr_list' + index);var line = eval('line' + index);
-                        var modelyr = eval('modelyr' + index);
+                        var modelyr = eval('modelyr' + index);    
                                 
                        $.ajax({
                             type: "post",
@@ -585,34 +577,39 @@
 
             }
 
-           
-
             //会签步骤验证js_HQ_StepID
-            if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){//js_DeptName
-                var part_qr=$("#MainContent_lbl_par_qrt").text();
+            if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){
+
+                var i=0;
+
+                var part_qr=$("#MainContent_lbl_par_qr").text();
                 var ship_qr=$("#MainContent_lbl_ship_qr").text();
-                var pr_list_qr=$("#MainContent_lbl_pr_list_qrt").text();
+                var pr_list_qr=$("#MainContent_lbl_pr_list_qr").text();
                 var rf_qr=$("#MainContent_lbl_rf_qr").text();
 
-                if(part_qr.indexOf(js_UserId)>0){
+                if(part_qr.indexOf(js_UserId)>0 || part_qr.indexOf(js_DeptName)>0){
                     if($("#MainContent_cb_part_qr").prop("checked")==false){                    
                         msg+="PGI零件号，QAD还不存在，不能发送.<br />";
                     }
+                    i++;
                 }
-                if(ship_qr.indexOf(js_UserId)>0){
+                if(ship_qr.indexOf(js_UserId)>0 || ship_qr.indexOf(js_DeptName)>0){
                     if($("#MainContent_cb_ship_qr").prop("checked")==false){                    
                         msg+="发货至，QAD还不存在，不能发送.<br />";
                     }
+                    i++;
                 }
-                if(pr_list_qr.indexOf(js_UserId)>0){
+                if(pr_list_qr.indexOf(js_UserId)>0 || pr_list_qr.indexOf(js_DeptName)>0){
                     if($("#MainContent_cb_pr_list_qr").prop("checked")==false){                    
                         msg+="价目表，QAD还不存在，不能发送.<br />";
                     }
+                    i++;
                 }
-                if(rf_qr.indexOf(js_UserId)>0){
+                if(rf_qr.indexOf(js_UserId)>0 || rf_qr.indexOf(js_DeptName)>0){
                     if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
                         msg+="预测量，QAD还不存在，不能发送.<br />";
                     }
+                    i++;
                 }
 
                 if(msg!=""){  
@@ -621,7 +618,54 @@
                     return flag;
                 }
 
-                //flag=false;
+                if (i==0) {
+                    flag=false;
+                    layer.alert("签核人不是会签单位部门，不能签核！");
+                    return flag;
+                }        
+                
+                /*
+                //发货至后补的，需要判定地点类型；价目表可能是后补的，需要判定是否SP的
+                $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
+                    var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
+                    var ship = eval('ship' + index);var addresstype = eval('addresstype' + index);var nbr = eval('nbr' + index);
+                    var bill = eval('bill' + index);
+                    var curr = eval('curr' + index);
+                    var pr_list = eval('pr_list' + index);var line = eval('line' + index);
+                    var modelyr = eval('modelyr' + index);
+
+                    if (bill.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【票据开往】不可为空.<br />"; }
+                        
+                    if(delivery_mode.GetText()=="直发" || (delivery_mode.GetText()=="中转库发" && site!=domain) ){
+                        if (addresstype.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至类型】不可为空.<br />"; }
+                        else {
+                            if((addresstype.GetText()).indexOf("售后")>0){
+                                if((pr_list.GetText()).length<2){ msg+="【客户日程明细】-第"+(index+1)+"行,售后件,【价目表】必须以SP开头.<br />"; }
+                                else if((pr_list.GetText()).substr(0,2)=="SP"){ msg+="【客户日程明细】-第"+(index+1)+"行,售后件,【价目表】必须以SP开头.<br />";}
+                            }  
+                        }
+                    }
+                    
+                    if (curr.GetText()==""){ msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
+
+                    if (taxable.GetText()=="") {
+                        msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />";
+                    }else if (taxable.GetText()=="no") { 
+                        if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为no,【税率】必须为0.<br />"; }                
+                    }
+                    else if (taxable.GetText()=="yes") { 
+                        if(taxc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为yes,【税率】不可为空.<br />"; }                                    
+                    }
+
+                    if (taxc.GetText()==""){ msg+="【客户日程明细】-第"+(index+1)+"行【税率】不可为空.<br />"; }
+                });
+
+                if(msg!=""){  
+                    flag=false;
+                    layer.alert(msg);
+                    return flag;
+                }
+                */
             }  
             
 
@@ -683,6 +727,9 @@
          .i_show{
             display:inline-block;
         } 
+         .i_show2{
+            display:block;
+        }
          .dxeTextBox_read{
             border:none !important ;
         }  
@@ -887,7 +934,15 @@
                                                     ClientInstanceName='<%# "shipname"+Container.VisibleIndex.ToString() %>'>
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
-                                        </dx:GridViewDataTextColumn>                                    
+                                        </dx:GridViewDataTextColumn>   
+                                        <dx:GridViewDataTextColumn Caption="发货至类型" FieldName="addresstype" Width="80px" VisibleIndex="2"> 
+                                            <Settings AllowCellMerge="False"/>
+                                            <DataItemTemplate>
+                                                <dx:ASPxTextBox ID="addresstype" Width="80px" runat="server" Value='<%# Eval("addresstype")%>' 
+                                                    ClientInstanceName='<%# "addresstype"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
+                                                </dx:ASPxTextBox>
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>                                  
                                         <dx:GridViewDataTextColumn Caption="销售订单" FieldName="nbr" Width="80px" VisibleIndex="3">
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
@@ -921,7 +976,7 @@
                                             <Settings AllowCellMerge="False"/>
                                             <DataItemTemplate>
                                                 <dx:ASPxTextBox ID="pr_list" Width="60px" runat="server" Value='<%# Eval("pr_list")%>' 
-                                                    ClientInstanceName='<%# "pr_list"+Container.VisibleIndex.ToString() %>'>
+                                                    ClientInstanceName='<%# "pr_list"+Container.VisibleIndex.ToString() %>' Border-BorderWidth="0" ReadOnly="true">
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
@@ -1063,7 +1118,7 @@
             </div>
         </div>
 
-        <div class="row row-container <% =ViewState["ApplyId_i"].ToString() != "" ? "i_show" : "i_hidden" %>">
+        <div class="row row-container <% =ViewState["ApplyId_i"].ToString() != "" ? "i_show2" : "i_hidden" %>">
             <div class="panel panel-infos">
                 <div class="panel-headings" data-toggle="collapse" data-target="#qrXX">
                     <strong>QAD确认完成</strong>
@@ -1092,7 +1147,7 @@
                                     <asp:CheckBox ID="cb_part_qr" runat="server" />PGI_零件号
                                 </td>          
                                 <td style="width:80px;">
-                                    <asp:Label ID="lbl_par_qrt" runat="server" Text=""></asp:Label>
+                                    <asp:Label ID="lbl_par_qr" runat="server" Text=""></asp:Label>
                                 </td>        
                             </tr>
                             <tr>
@@ -1100,7 +1155,7 @@
                                     <asp:CheckBox ID="cb_ship_qr" runat="server" />发货至
                                 </td>        
                                 <td style="width:80px;">
-                                    <asp:Label ID="lbl_ship_qr" runat="server" Text="张荣新"></asp:Label>
+                                    <asp:Label ID="lbl_ship_qr" runat="server" Text=""></asp:Label>
                                 </td>        
                             </tr>
                             <tr>
@@ -1108,7 +1163,7 @@
                                     <asp:CheckBox ID="cb_pr_list_qr" runat="server" />价目表
                                 </td>   
                                 <td style="width:80px;">
-                                    <asp:Label ID="lbl_pr_list_qr" runat="server" Text="吴玲玲"></asp:Label>
+                                    <asp:Label ID="lbl_pr_list_qr" runat="server" Text=""></asp:Label>
                                 </td>        
                             </tr>
                             <tr>
@@ -1116,7 +1171,7 @@
                                     <asp:CheckBox ID="cb_rf_qr" runat="server" />预测量
                                 </td>          
                                 <td style="width:80px;">
-                                    <asp:Label ID="lbl_rf_qr" runat="server" Text="张荣新"></asp:Label>
+                                    <asp:Label ID="lbl_rf_qr" runat="server" Text=""></asp:Label>
                                 </td>        
                             </tr>
                         </table>
