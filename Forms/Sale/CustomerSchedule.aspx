@@ -12,6 +12,7 @@
     <script type="text/javascript">
         var js_SQ_StepID='<%=SQ_StepID%>';
         var js_HQ_StepID='<%=HQ_StepID%>';
+        var js_SQ_QR_StepID='<%=SQ_QR_StepID%>';
         var js_UserId='<%=UserId%>';
         var js_DeptName='<%=DeptName%>';
 
@@ -412,8 +413,8 @@
             
             <%=ValidScript%>
                 
-            //申请步骤验证
-            if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
+            //申请步骤验证，申请人确认
+            if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase() || stepid.toLowerCase()==js_SQ_QR_StepID.toLowerCase()){
             
                 if($("#DQXX input[id*='ApplyId']").val()=="" || $("#DQXX input[id*='ApplyName']").val()==""){
                     msg+="【申请人】不可为空.<br />";
@@ -542,20 +543,31 @@
                         var pr_list = eval('pr_list' + index);var line = eval('line' + index);
                         var modelyr = eval('modelyr' + index);    
                                 
-                       $.ajax({
+                        $.ajax({
                             type: "post",
                             url: "CustomerSchedule.aspx/CheckData_dtl",
                             data: "{'formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','cust_part':'" + cust_part + "','typeno':'" + typeno
                                     + "','site':'" + site.GetText() + "','ship':'" + ship.GetText() + "','bill':'" + bill.GetText() + "','curr':'" + curr.GetText() 
                                     + "','pr_list':'" + pr_list.GetText() + "','modelyr':'" + modelyr.GetText() + "','nbr':'" + nbr.GetText() + "','delivery_mode':'" + delivery_mode.GetText() 
-                                    + "','line':'" + line.GetText() + "','index':'" + (index+1) + "'}",
+                                    + "','line':'" + line.GetText()+ "'}",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
                             success: function (data) {
                                 var obj=eval(data.d);
+                                var flag=obj[0].flag;
 
-                                if(obj[0].flag!=""){ msg+=obj[0].flag; }
+                                if (flag=="Y1") {
+                                    msg+="【客户日程明细】-第" + (index+1) + "行【发货至】" + ship + "，地点不存在，不能申请!<br />";
+                                }
+                                if (flag=="Y2") {
+                                    msg+="【客户日程明细】-第" + (index+1) + "行【申请工厂】" + domain + "【客户物料号】" + cust_part + "【发货自】" + site 
+                                        + "【发货至】" + ship + "【模型年】" + modelyr + "必须唯一!<br />";
+                                }
+                                if (flag=="Y3") {
+                                    msg+="【客户日程明细】-第" + (index+1) + "行【申请工厂】" + domain  + "【发货自】" + site + "【发货至】" + ship + "【销售订单】" + nbr 
+                                        + "【票据开往】" + bill + "【物料号】" + part + "【客户物料号】" + cust_part + "【模型年】" + modelyr + "必须唯一!<br />";
+                                }
 
                                 if(msg!=""){  
                                     flag=false;
@@ -566,13 +578,10 @@
 
                         });
                     });
-                    
-                }
+                   
 
-                if(action=='submit'){
-                    if(!parent.checkSign()){
-                        flag=false;return flag;
-                    }
+                    
+                    
                 }
 
             }
@@ -624,6 +633,11 @@
                     return flag;
                 }        
                 
+            }  
+            
+            //申请人确认步骤验证js_HQ_StepID
+            if(stepid.toLowerCase()==js_SQ_QR_StepID.toLowerCase()){
+                
                 /*
                 //发货至后补的，需要判定地点类型；价目表可能是后补的，需要判定是否SP的
                 $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
@@ -666,8 +680,14 @@
                     return flag;
                 }
                 */
-            }  
+            }
             
+
+            if(action=='submit'){
+                if(!parent.checkSign()){
+                    flag=false;return flag;
+                }
+            }
 
             return flag;
         }

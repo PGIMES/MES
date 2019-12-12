@@ -22,6 +22,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
     public string SQ_StepID = "12d2501c-d316-4edd-a43e-2c44d11d2ef6";
     public string HQ_StepID = "1d00f84b-3e89-4daf-8d69-34ffd6ecfdf7";
+    public string SQ_QR_StepID = "dbcfb77e-897b-4bb7-b20e-4509c136f280";
     public string UserId = "";
     public string DeptName = "";
 
@@ -315,7 +316,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     {
                         this.btnflowSend.Text = "批准";
                     }
-                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
                     {
                         setread(i);
                     }
@@ -327,7 +328,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 {
                     this.btnflowSend.Text = "批准";
                 }
-                if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
                 {
                     setread(i);
                 }
@@ -779,28 +780,14 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     public static string CheckData_dtl(string formno, string part, string domain, string cust_part, string typeno
                                     , string site, string ship, string bill, string curr
                                     , string pr_list, string modelyr, string nbr,string delivery_mode
-                                    , string line, string index)
+                                    , string line)
     {
         string flag = ""; 
 
         string sql = @"exec Report_CS_CheckData '{0}','{1}','{2}','{3}','{4}'";
         sql = string.Format(sql, part, domain, cust_part, formno, typeno);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
-
-        if (dt.Rows[0][0].ToString() == "Y1") //若是中转库发，且 发货自等于域的话，发货至必须存在在地点表里    
-        {
-            flag = "第" + index + "行【发货至】" + ship + "，地点不存在，不能申请!<br />";
-        }
-        if (dt.Rows[0][0].ToString() == "Y2")//模型年的check:相同的 客户物料号，发货自，发货至，不同的PGI零件号，必须要有模型年，否则导入不进去qad          
-        {
-            flag = "第" + index + "行【申请工厂】" + domain + "【客户物料号】" + cust_part + "【发货自】" + site + "【发货至】" + ship + "【模型年】" + modelyr + "必须唯一!<br />";
-        }
-        if (dt.Rows[0][0].ToString() == "Y3")//销售订单，发货自，发货至，票据开往，物料号，客户项目号，模型年 必须唯一
-        {
-            flag = "第" + index + "行【申请工厂】" + domain  + "【发货自】" + site + "【发货至】" + ship + "【销售订单】" + nbr 
-                + "【票据开往】" + bill + "【物料号】" + part + "【客户物料号】" + cust_part + "【模型年】" + modelyr + "必须唯一!<br />";
-        }
-
+        flag = dt.Rows[0][0].ToString();
         string result = "[{\"flag\":\"" + flag + "\"}]";
         return result;
 
