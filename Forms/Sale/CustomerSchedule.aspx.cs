@@ -316,7 +316,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     {
                         this.btnflowSend.Text = "批准";
                     }
-                    if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
+                    //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
+                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
                     {
                         setread(i);
                     }
@@ -328,7 +329,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 {
                     this.btnflowSend.Text = "批准";
                 }
-                if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
+                //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
+                if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
                 {
                     setread(i);
                 }
