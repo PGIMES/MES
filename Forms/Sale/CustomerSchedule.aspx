@@ -504,6 +504,7 @@
                             var loc = $(item).find("input[type!=hidden][id*=loc]").val();
                             var consignment = $(item).find("input[type!=hidden][id*=consignment]").val();
                             var consignment_loc = $(item).find("input[type!=hidden][id*=consignment_loc]").val();
+                            var isyn = $(item).find("input[type!=hidden][id*=isyn]").val();
 
                             if (delivery_mode=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
                             if (site=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
@@ -512,6 +513,11 @@
                             if (nbr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
                             if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
                             if (loc=="") { msg+="【客户日程明细】-第"+(index+1)+"行【库位】不可为空.<br />"; }
+
+                            if (isyn=="") { msg+="【客户日程明细】-第"+(index+1)+"行【有效】不可为空.<br />"; }
+                            else {
+                                if (typeno=="新增" && isyn=="no") {msg+="申请类别为新增，【客户日程明细】-第"+(index+1)+"行【有效】不可为no.<br />";}
+                            }
 
                             if (taxable=="") { 
                                 if(taxc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为空,【税率】必须为空.<br />"; }                
@@ -682,8 +688,19 @@
         }
         function con_sure(){
             if (gv.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
-            //询问框
-            return confirm('确认要删除吗？');
+
+            grid.GetSelectedFieldValues('line;numid', function GetVal(values) {
+                var line = values[0][0];
+                var numid = values[0][1];
+
+                if (line!="") {
+                    layer.alert("该笔记录QAD中已经存在，不可删除!"); return false;
+                }else {
+                    //询问框
+                    return confirm('确认要删除吗？');
+                }
+
+            });
         }
     </script>
 
@@ -1074,6 +1091,16 @@
                                                 </dx:ASPxTextBox>
                                             </DataItemTemplate>        
                                         </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn Caption="有效" FieldName="isyn" Width="50px" VisibleIndex="18">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>
+                                                <dx:ASPxComboBox ID="isyn" runat="server" ValueType="System.String"
+                                                    Width="50px" ClientInstanceName='<%# "isyn"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
+                                                </dx:ASPxComboBox>    
+                                            </DataItemTemplate>
+                                        </dx:GridViewDataTextColumn> 
                                         <dx:GridViewDataTextColumn FieldName="id" Width="0px">
                                             <HeaderStyle CssClass="hidden" />
                                             <CellStyle CssClass="hidden"></CellStyle>

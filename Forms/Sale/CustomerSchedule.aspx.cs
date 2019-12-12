@@ -373,6 +373,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
         ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
         ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["isyn"], "isyn")).Enabled = false;
 
 
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
@@ -460,6 +461,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             ASPxComboBox tb_taxc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["taxc"], "taxc"); 
             ASPxComboBox tb_consignment = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment"], "consignment");
             ASPxComboBox tb_consignment_loc = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["consignment_loc"], "consignment_loc");
+            ASPxComboBox tb_isyn = (ASPxComboBox)gv.FindRowCellTemplateControl(i, gv.DataColumns["isyn"], "isyn");
 
             FillsiteCombo(tb_site, domain_str, ldt.Rows[i]["delivery_mode"].ToString());
             FillshipCombo(tb_ship, domain_str, ldt.Rows[i]["delivery_mode"].ToString(), ldt.Rows[i]["site"].ToString());
@@ -582,6 +584,14 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             tb_consignment_loc.TextFormatString = "{0}";
             tb_consignment_loc.DataBind();
             tb_consignment_loc.Value = ldt.Rows[i]["consignment_loc"].ToString();
+            
+            tb_isyn.DataSource = ldt_YN;
+            tb_isyn.TextField = "value";
+            tb_isyn.ValueField = "value";
+            tb_isyn.Columns.Add("value", "有效", 15);
+            tb_isyn.TextFormatString = "{0}";
+            tb_isyn.DataBind();
+            tb_isyn.Value = ldt.Rows[i]["isyn"].ToString();
         }
     }
 
@@ -612,6 +622,14 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 else if (ldt.Columns[j].ColumnName == "channel")
                 {
                     ldr[ldt.Columns[j].ColumnName] = "101";
+                }
+                else if (ldt.Columns[j].ColumnName == "consignment")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "no";
+                }
+                else if (ldt.Columns[j].ColumnName == "isyn")
+                {
+                    ldr[ldt.Columns[j].ColumnName] = "yes";
                 }
                 else
                 {

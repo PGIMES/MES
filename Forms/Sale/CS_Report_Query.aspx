@@ -13,6 +13,43 @@
         $(document).ready(function () {
             $("#mestitle").text("【客户日程单浏览】");
 
+            $('#btn_add').click(function () {
+                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=')
+            });
+
+            $('#btn_edit').click(function () {
+                if (grid.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
+
+                grid.GetSelectedFieldValues('so_domain;so_nbr;sod_line;sod_part;sod_custpart', function GetVal(values) {
+                    var domain = values[0][0];
+                    var nbr = values[0][1];
+                    var line = values[0][2];
+                    var part = values[0][3];
+                    var cust_part = values[0][4];
+
+                    $.ajax({
+                        type: "post",
+                        url: "CS_Report_Query.aspx/CheckData",
+                        data: "{'domain':'" + domain + "','part':'" + part + "','cust_part':'" + cust_part + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                        success: function (data) {
+                            var obj = eval(data.d);
+
+                            if (obj[0].re_flag != "") {
+                                layer.alert(obj[0].re_flag);
+                            } else {
+                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=&state=edit&domain=' + domain + '&part=' + part + '&cust_part=' + cust_part);
+                            }
+                        }
+
+                    });
+
+                });
+
+            });
+
             setHeight();
             $(window).resize(function () {
                 setHeight();
@@ -23,9 +60,6 @@
 
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 250) + "px");
-
-            //$("#MainContent_GV_PART").css("width", ($(window).width() - 10) + "px")
-            //$("div[class=dxgvCSD]").css("width", ($(window).width() - 10) + "px");
         }
         	
     </script>
@@ -53,7 +87,8 @@
                     <td> 
                         &nbsp;
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Bt_select_Click" Width="70px" /> 
-                        &nbsp;
+                        <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button>
+                        <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;编辑</button> 
                         <asp:Button ID="Bt_Export" runat="server" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Text="导出" Width="70px" /> 
                     </td> 
                 </tr>
@@ -64,7 +99,7 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="tr_trnbr" AutoGenerateColumns="False"  
+                    <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="so_domain;so_nbr;sod_line" AutoGenerateColumns="False"  
                              OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1260px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
