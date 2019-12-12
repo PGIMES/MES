@@ -958,13 +958,16 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 ls_sum.Add(ls1[i]);
             }
 
-            //更新税率值
-            Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
-            ls_taxratecode.Sql = @"update PGI_CustomerSchedule_Dtl_Form set taxc_rate=a.TaxRate
+            if (action == "submit")
+            {
+                //更新税率值
+                Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
+                ls_taxratecode.Sql = @"update PGI_CustomerSchedule_Dtl_Form set taxc_rate=a.TaxRate
                                     from ({1}) a
                                     where PGI_CustomerSchedule_Dtl_Form.CSNo='{0}' and PGI_CustomerSchedule_Dtl_Form.taxc=a.TaxRate_Code";
-            ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
-            ls_sum.Add(ls_taxratecode);
+                ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
+                ls_sum.Add(ls_taxratecode);
+            }
         }
         else
         {

@@ -496,6 +496,7 @@
                             var shipname = (eval('shipname' + index)).GetText();
                             var addresstype = (eval('addresstype' + index)).GetText();
                             var nbr = (eval('nbr' + index)).GetText();
+                            var bill = (eval('bill' + index)).GetText();
                             var curr = $(item).find("input[type!=hidden][id*=curr]").val();
                             var pr_list = (eval('pr_list' + index)).GetText();
                             var taxable = $(item).find("input[type!=hidden][id*=taxable]").val();
@@ -529,6 +530,15 @@
                             else if (consignment=="yes") { 
                                 if(consignment_loc==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为yes,【寄售地点】不可为空.<br />"; }                                    
                             }
+
+                            if (stepid!=null) {
+                                if (stepid.toLowerCase()==js_SQ_QR_StepID.toLowerCase()) {//申请人确认
+                                    if (bill=="") { msg+="【客户日程明细】-第"+(index+1)+"行【票据开往】不可为空.<br />"; }
+                                    if (pr_list=="") { msg+="【客户日程明细】-第"+(index+1)+"行【价目表】不可为空.<br />"; }
+                                    if (taxable=="") { msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />"; }
+                                }
+                            }
+                            
 
                         });
                     }
@@ -591,55 +601,56 @@
                 }
 
             }
+            if (stepid!=null) {
+                //会签步骤验证js_HQ_StepID
+                if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){
 
-            //会签步骤验证js_HQ_StepID
-            if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){
+                    var i=0;
 
-                var i=0;
+                    var part_qr=$("#MainContent_lbl_par_qr").text();
+                    var ship_qr=$("#MainContent_lbl_ship_qr").text();
+                    var pr_list_qr=$("#MainContent_lbl_pr_list_qr").text();
+                    var rf_qr=$("#MainContent_lbl_rf_qr").text();
 
-                var part_qr=$("#MainContent_lbl_par_qr").text();
-                var ship_qr=$("#MainContent_lbl_ship_qr").text();
-                var pr_list_qr=$("#MainContent_lbl_pr_list_qr").text();
-                var rf_qr=$("#MainContent_lbl_rf_qr").text();
-
-                if(part_qr.indexOf(js_UserId)>0 || part_qr.indexOf(js_DeptName)>0){
-                    if($("#MainContent_cb_part_qr").prop("checked")==false){                    
-                        msg+="PGI零件号，QAD还不存在，不能发送.<br />";
+                    if(part_qr.indexOf(js_UserId)>0 || part_qr.indexOf(js_DeptName)>0){
+                        if($("#MainContent_cb_part_qr").prop("checked")==false){                    
+                            msg+="PGI零件号，QAD还不存在，不能发送.<br />";
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                if(ship_qr.indexOf(js_UserId)>0 || ship_qr.indexOf(js_DeptName)>0){
-                    if($("#MainContent_cb_ship_qr").prop("checked")==false){                    
-                        msg+="发货至，QAD还不存在，不能发送.<br />";
+                    if(ship_qr.indexOf(js_UserId)>0 || ship_qr.indexOf(js_DeptName)>0){
+                        if($("#MainContent_cb_ship_qr").prop("checked")==false){                    
+                            msg+="发货至，QAD还不存在，不能发送.<br />";
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                if(pr_list_qr.indexOf(js_UserId)>0 || pr_list_qr.indexOf(js_DeptName)>0){
-                    if($("#MainContent_cb_pr_list_qr").prop("checked")==false){                    
-                        msg+="价目表，QAD还不存在，不能发送.<br />";
+                    if(pr_list_qr.indexOf(js_UserId)>0 || pr_list_qr.indexOf(js_DeptName)>0){
+                        if($("#MainContent_cb_pr_list_qr").prop("checked")==false){                    
+                            msg+="价目表，QAD还不存在，不能发送.<br />";
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                if(rf_qr.indexOf(js_UserId)>0 || rf_qr.indexOf(js_DeptName)>0){
-                    if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
-                        msg+="预测量，QAD还不存在，不能发送.<br />";
+                    if(rf_qr.indexOf(js_UserId)>0 || rf_qr.indexOf(js_DeptName)>0){
+                        if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
+                            msg+="预测量，QAD还不存在，不能发送.<br />";
+                        }
+                        i++;
                     }
-                    i++;
-                }
 
-                if(msg!=""){  
-                    flag=false;
-                    layer.alert(msg);
-                    return flag;
-                }
+                    if(msg!=""){  
+                        flag=false;
+                        layer.alert(msg);
+                        return flag;
+                    }
 
-                if (i==0) {
-                    flag=false;
-                    layer.alert("签核人不是会签单位部门，不能签核！");
-                    return flag;
-                }        
+                    if (i==0) {
+                        flag=false;
+                        layer.alert("签核人不是会签单位部门，不能签核！");
+                        return flag;
+                    }        
                 
-            }              
+                }      
+            }
 
             if(!parent.checkSign()){
                 flag=false;return flag;
