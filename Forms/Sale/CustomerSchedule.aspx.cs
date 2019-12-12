@@ -187,7 +187,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         //签核界面show
-        if (StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A")
+        if ((StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A") || Request.QueryString["display"] != null)
         {
             bind_qad_qr();
         }
