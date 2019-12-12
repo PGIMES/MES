@@ -543,20 +543,23 @@
                     //模型年的check:相同的 客户物料号，发货自，发货至，不同的PGI零件号，必须要有模型年，否则导入不进去qad                    
                     //销售订单，发货自，发货至，票据开往，物料号，客户项目号，模型年 必须唯一
                     $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                        var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
-                        var ship = eval('ship' + index);var nbr = eval('nbr' + index);
-                        var bill = eval('bill' + index);
-                        var curr = eval('curr' + index);
-                        var pr_list = eval('pr_list' + index);var line = eval('line' + index);
-                        var modelyr = eval('modelyr' + index);    
+                        var delivery_mode = $(item).find("input[type!=hidden][id*=delivery_mode]").val();
+                        var site = $(item).find("input[type!=hidden][id*=site]").val();
+                        var ship = $(item).find("input[type!=hidden][id*=ship]").val();
+                        var nbr = (eval('nbr' + index)).GetText();
+                        var curr = $(item).find("input[type!=hidden][id*=curr]").val();
+                        var nbr = (eval('nbr' + index)).GetText();
+                        var bill = (eval('bill' + index)).GetText();
+                        var pr_list = (eval('pr_list' + index)).GetText();
+                        var line = (eval('line' + index)).GetText();
+                        var modelyr = (eval('modelyr' + index)).GetText();    
                                 
                         $.ajax({
                             type: "post",
                             url: "CustomerSchedule.aspx/CheckData_dtl",
                             data: "{'formno':'" + formno + "','part':'" + part + "','domain':'" + domain + "','cust_part':'" + cust_part + "','typeno':'" + typeno
-                                    + "','site':'" + site.GetText() + "','ship':'" + ship.GetText() + "','bill':'" + bill.GetText() + "','curr':'" + curr.GetText() 
-                                    + "','pr_list':'" + pr_list.GetText() + "','modelyr':'" + modelyr.GetText() + "','nbr':'" + nbr.GetText() + "','delivery_mode':'" + delivery_mode.GetText() 
-                                    + "','line':'" + line.GetText()+ "'}",
+                                    + "','site':'" + site + "','ship':'" + ship + "','bill':'" + bill + "','curr':'" + curr + "','pr_list':'" + pr_list 
+                                    + "','modelyr':'" + modelyr + "','nbr':'" + nbr + "','delivery_mode':'" + delivery_mode + "','line':'" + line+ "'}", 
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

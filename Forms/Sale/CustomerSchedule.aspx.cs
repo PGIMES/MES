@@ -172,6 +172,11 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 }
 
                 lssql += " where CSNo='" + this.m_sid + "' order by a.numid";
+
+                if (StepID.ToUpper() == SQ_QR_StepID.ToUpper())//申请人确认
+                {
+                    lssql = @"exec [Report_CS_GetData_Dtl] '"+ hd_domain.Value + "','"+ this.m_sid + "'";
+                }
                 ldt_detail = DbHelperSQL.Query(lssql).Tables[0];
             }
             bind_grid(ldt_detail);
@@ -1020,7 +1025,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         //保存数据
         bool flag = false;
-        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper())
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
         {
             flag = true;
         }
@@ -1040,7 +1045,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         //保存数据
         bool flag = false;
-        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper())
+        if (StepID.ToUpper() != "A" && StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
         {
             flag = true;
         }
