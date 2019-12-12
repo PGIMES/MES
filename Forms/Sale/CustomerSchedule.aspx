@@ -489,42 +489,6 @@
                     if($("[id$=gv] input[type!=hidden][id*=delivery_mode]").length==0){
                         msg+="【客户日程明细】不可为空.<br />";
                     }else {
-
-                        //$("[id$=gv] input[type!=hidden][id*=delivery_mode]").each(function (){
-                        //    if( $(this).val()==""){
-                        //        msg+="【发货方式】不可为空.<br />";
-                        //        return false;
-                        //    }
-                        //});
-
-                        //$("[id$=gv] input[type!=hidden][id*=site]").each(function (){
-                        //    if( $(this).val()==""){
-                        //        msg+="【发货自】不可为空.<br />";
-                        //        return false;
-                        //    }
-                        //});
-
-                        //$("[id$=gv] input[type!=hidden][id*=ship]").each(function (){
-                        //    if( $(this).val()==""){
-                        //        msg+="【发货至】不可为空.<br />";
-                        //        return false;
-                        //    }
-                        //});
-
-                        //$("[id$=gv] input[type!=hidden][id*=curr]").each(function (){
-                        //    if( $(this).val()==""){
-                        //        msg+="【货币】不可为空.<br />";
-                        //        return false;
-                        //    }
-                        //});
-
-                        //$("[id$=gv] input[type!=hidden][id*=loc]").each(function (){
-                        //    if( $(this).val()==""){
-                        //        msg+="【库位】不可为空2.<br />";
-                        //        return false;
-                        //    }
-                        //});
-
                         $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
                             var delivery_mode = $(item).find("input[type!=hidden][id*=delivery_mode]").val();
                             var site = $(item).find("input[type!=hidden][id*=site]").val();
@@ -567,43 +531,6 @@
                             }
 
                         });
-
-                        //$("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-                        //    var delivery_mode = eval('delivery_mode' + index);var site = eval('site' + index);
-                        //    var ship = eval('ship' + index);var shipname = eval('shipname' + index);var addresstype = eval('addresstype' + index);var nbr = eval('nbr' + index);
-                        //    var curr = eval('curr' + index);var pr_list = eval('pr_list' + index);var taxable = eval('taxable' + index);var taxc = eval('taxc' + index);     
-                        //    var loc = eval('loc' + index);var consignment = eval('consignment' + index);var consignment_loc = eval('consignment_loc' + index);
-                             
-                        //    if (delivery_mode.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
-                        //    if (site.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
-                        //    if (ship.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
-                        //    if (shipname.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
-                        //    if (nbr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
-                        //    if (curr.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
-                        //    if (loc.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【库位】不可为空.<br />"; }
-        
-                        //    if (taxable.GetText()=="") { 
-                        //        if(taxc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为空,【税率】必须为空.<br />"; }                
-                        //    }
-                        //    else if (taxable.GetText()=="no") { 
-                        //        if(taxc.GetText()!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为no,【税率】必须为0.<br />"; }                
-                        //    }
-                        //    else if (taxable.GetText()=="yes") { 
-                        //        if(taxc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为yes,【税率】不可为空.<br />"; }                                    
-                        //    }
-
-                        //    if (consignment.GetText()=="") { msg+="【客户日程明细】-第"+(index+1)+"行【寄售】不可为空.<br />"; }
-                        //    else if (consignment.GetText()=="no") { 
-                        //        if(consignment_loc.GetText()!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为no,【寄售地点】不可有值.<br />"; }                                    
-                        //    }
-                        //    else if (consignment.GetText()=="yes") { 
-                        //        if(consignment_loc.GetText()==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为yes,【寄售地点】不可为空.<br />"; }                                    
-                        //    }
-
-                        //    if (msg!="") {
-                        //        return false;
-                        //    }
-                        //});
                     }
 
                     if(msg!=""){  
