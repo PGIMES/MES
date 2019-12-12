@@ -5,6 +5,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
     <script src="/Content/js/jquery.min.js"  type="text/javascript"></script>
     <script src="/Content/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Content/js/jquery.cookie.min.js"></script>
+    <script src="/Content/js/layer/layer.js"></script>
     <script type="text/javascript">
         <%--var UserId = '<%=UserId%>';
         var UserName = '<%=UserName%>';
@@ -36,7 +38,7 @@
                         async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
                         success: function (data) {
                             var obj = eval(data.d);
-
+                            
                             if (obj[0].re_flag != "") {
                                 layer.alert(obj[0].re_flag);
                             } else {
