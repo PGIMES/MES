@@ -99,50 +99,32 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 //修改申请
                 if (Request.QueryString["formno"] != null && state == "edit")
                 {
-                    //        //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
-                    //        string sql_prd = @"select * from PGI_PackScheme_Main where formno='" + Request.QueryString["formno"] + "'";
-                    //        DataTable dt_prd = DbHelperSQL.Query(sql_prd).Tables[0];
+                    //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
+                    string re_sql = @" exec [Report_CS_edit_check] '" + Request.QueryString["domain"] + "','" + Request.QueryString["part"] + "','" + Request.QueryString["cust_part"] + "'";
+                    DataSet ds = DbHelperSQL.Query(re_sql);
+                    string dt_flag = ds.Tables[0].Rows[0][0].ToString();
+                    DataTable dt = ds.Tables[0];
 
-                    //        string part = dt_prd.Rows[0]["part"].ToString(); string domain = dt_prd.Rows[0]["domain"].ToString();
-                    //        string site = dt_prd.Rows[0]["site"].ToString(); string ship = dt_prd.Rows[0]["ship"].ToString();
+                    if (dt_flag == "Y1")
+                    {
+                        Pgi.Auto.Public.MsgBox(this, "alert", "【PGI_零件号】" + part + "【申请工厂】" + domain + "【客户物料号】" + cust_part
+                            + "正在<font color='red'>申请中</font>，不能修改(单号:" + dt.Rows[0]["formno"].ToString() + ",申请人:"
+                            + dt.Rows[0]["ApplyId"].ToString() + "-" + dt.Rows[0]["ApplyName"].ToString() + ")!");
+                    }
+                    else if (dt_flag == "Y2")
+                    {
+                        Pgi.Auto.Public.MsgBox(this, "alert", "【PGI_零件号】" + part + "【申请工厂】" + domain + ",物料状态已经DEAD，不可修改!");
+                    }
+                    else
+                    {
+                        string sql_con = @"exec Report_CS_edit '" + Request.QueryString["domain"] + "','" + Request.QueryString["part"] + "','" + Request.QueryString["cust_part"] 
+                                + "','" + Request.QueryString["ship"] + "','" + LogUserModel.UserId + "'";
+                        DataSet ds_con = DbHelperSQL.Query(sql_con);
+                        DataTable ldt_head = ds_con.Tables[0];
+                        ldt_detail = ds_con.Tables[1];
 
-                    //        //附件：编辑初次加载时候，使用后台绑定的，也是可以删除的
-                    //        string files_part = dt_prd.Rows[0]["files_part"].ToString();
-                    //        string files_bzx_nb = dt_prd.Rows[0]["files_bzx_nb"].ToString();
-                    //        string files_bzx_wg = dt_prd.Rows[0]["files_bzx_wg"].ToString();
-
-                    //        //解析附件，挪到临时目录
-                    //        string files_part_new = "";
-                    //        if (files_part != "") { files_part_new = jxfiles(files_part); }
-
-                    //        string files_bzx_nb_new = "";
-                    //        if (files_bzx_nb != "") { files_bzx_nb_new = jxfiles(files_bzx_nb); }
-
-                    //        string files_bzx_wg_new = "";
-                    //        if (files_bzx_wg != "") { files_bzx_wg_new = jxfiles(files_bzx_wg); }
-
-                    //        string re_sql = @"select * from PGI_PackScheme_Main_Form where isnull(iscomplete,'')='' and part='" + part + "' and domain='" + domain + "' and site='" + site + "' and ship='" + ship + "'";
-                    //        DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
-
-                    //        if (re_dt.Rows.Count > 0)
-                    //        {
-                    //            Pgi.Auto.Public.MsgBox(this, "alert", "PGI_零件号" + part + "申请工厂" + domain + "发自" + site + "发至" + ship
-                    //                + "正在申请中，不能修改(单号:" + re_dt.Rows[0]["InstanceID"].ToString()
-                    //                + ",申请人:" + re_dt.Rows[0]["ApplyId"].ToString() + "-" + re_dt.Rows[0]["ApplyName"].ToString() + ")!");
-                    //        }
-                    //        else
-                    //        {
-                    //            string sql_head_con = @"exec Report_Pack_edit '" + part + "','" + domain + "','" + site + "','" + ship + "','" + LogUserModel.UserId + "'";
-                    //            DataSet ds_head_con = DbHelperSQL.Query(sql_head_con);
-                    //            DataTable ldt_head = ds_head_con.Tables[0];
-                    //            ldt_detail = ds_head_con.Tables[1];
-
-                    //            SetControlValue("PGI_PackScheme_Main_Form", "HEAD", this.Page, ldt_head.Rows[0], "ctl00$MainContent$");
-                    //            //绑定上一张的附件
-                    //            this.ip_filelist.Value = files_part_new;
-                    //            this.ip_filelist_2.Value = files_bzx_nb_new;
-                    //            this.ip_filelist_3.Value = files_bzx_wg_new;
-                    //        }
+                        SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this.Page, ldt_head.Rows[0], "ctl00$MainContent$");
+                    }
 
                 }
                 else//新增申请

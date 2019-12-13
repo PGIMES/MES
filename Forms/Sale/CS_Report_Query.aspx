@@ -22,12 +22,11 @@
             $('#btn_edit').click(function () {
                 if (grid.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
 
-                grid.GetSelectedFieldValues('so_domain;so_nbr;sod_line;sod_part;sod_custpart', function GetVal(values) {
+                grid.GetSelectedFieldValues('so_domain;so_ship;sod_part;sod_custpart', function GetVal(values) {
                     var domain = values[0][0];
-                    var nbr = values[0][1];
-                    var line = values[0][2];
-                    var part = values[0][3];
-                    var cust_part = values[0][4];
+                    var ship = values[0][1];
+                    var part = values[0][2];
+                    var cust_part = values[0][3];
 
                     $.ajax({
                         type: "post",
@@ -42,7 +41,8 @@
                             if (obj[0].re_flag != "") {
                                 layer.alert(obj[0].re_flag);
                             } else {
-                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=&state=edit&domain=' + domain + '&part=' + part + '&cust_part=' + cust_part);
+                                window.open('/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=&state=edit&domain=' + domain + '&part='
+                                    + part + '&cust_part=' + cust_part + '&ship=' + ship);
                             }
                         }
 

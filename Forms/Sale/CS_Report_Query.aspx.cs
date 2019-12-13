@@ -63,7 +63,6 @@ public partial class Forms_Sale_CS_Report_Query : System.Web.UI.Page
         //------------------------------------------------------------------------------验证申请中
         string re_flag = "";
 
-        cust_part = cust_part.Replace("-", "").Replace(" ", "").Replace("_", "");
         string re_sql = @" exec [Report_CS_edit_check] '"+domain+ "','" + part + "','" + cust_part + "'";
         DataSet ds = DbHelperSQL.Query(re_sql);
         string dt_flag = ds.Tables[0].Rows[0][0].ToString();

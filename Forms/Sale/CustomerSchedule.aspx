@@ -321,6 +321,7 @@
             var ship = eval('ship' + vi);
             ship.PerformCallback(domain+'|'+cmbDelivery.GetValue().toString()+'|'+site.GetText());            
         }
+
         function OnSiteChanged(cmbSite,vi){  
             var domain=$("#wlXX input[id*='domain']").val();
 
@@ -332,6 +333,7 @@
             var ysk_site = eval('ysk_site' + vi);      
             ysk_site.SetText(cmbSite.GetValue().toString());
         }
+
         function OnShipChanged(cmbShip,vi){
             var nbr = eval('nbr' + vi);
             nbr.SetText(cmbShip.GetValue().toString());
@@ -370,6 +372,13 @@
 
                 });
             
+        }
+
+        function OnisynChanged(cmbisyn,vi){
+            if (cmbisyn.GetValue().toString()=="no") {//失效日程，需要清空库位
+                var loc = eval('loc' + vi);
+                loc.SetText("");
+            }
         }
     </script>
 
@@ -512,11 +521,15 @@
                             if (shipname=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
                             if (nbr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
                             if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
-                            if (loc=="") { msg+="【客户日程明细】-第"+(index+1)+"行【库位】不可为空.<br />"; }
+                            if (loc=="" && isyn=="yes") { msg+="【客户日程明细】-第"+(index+1)+"行【库位】不可为空.<br />"; }
 
                             if (isyn=="") { msg+="【客户日程明细】-第"+(index+1)+"行【有效】不可为空.<br />"; }
                             else {
                                 if (typeno=="新增" && isyn=="no") {msg+="申请类别为新增，【客户日程明细】-第"+(index+1)+"行【有效】不可为no.<br />";}
+                                if (typeno=="修改" && isyn=="no") {
+                                    if(loc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【有效】为no,【库位】必须为空.<br />";}
+                                }
+                        
                             }
 
                             if (taxable=="") { 
@@ -1096,6 +1109,7 @@
                                             <DataItemTemplate>
                                                 <dx:ASPxComboBox ID="isyn" runat="server" ValueType="System.String"
                                                     Width="50px" ClientInstanceName='<%# "isyn"+Container.VisibleIndex.ToString() %>'
+                                                    ClientSideEvents-SelectedIndexChanged='<%# "function(s,e){OnisynChanged(s,"+Container.VisibleIndex+");}" %>'
                                                     Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
                                                     DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None" DisabledStyle-ForeColor="black">
                                                 </dx:ASPxComboBox>    
