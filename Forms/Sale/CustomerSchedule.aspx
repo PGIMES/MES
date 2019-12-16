@@ -703,6 +703,8 @@
         function con_sure(){
             if (gv.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
 
+            return confirm('确认要删除吗？');
+
             //gv.GetSelectedFieldValues('line;numid', function GetVal(values) {
             //    var line = values[0][0];
             //    var numid = values[0][1];
