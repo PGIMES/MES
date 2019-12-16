@@ -514,6 +514,7 @@
                             var consignment = $(item).find("input[type!=hidden][id*=consignment]").val();
                             var consignment_loc = $(item).find("input[type!=hidden][id*=consignment_loc]").val();
                             var isyn = $(item).find("input[type!=hidden][id*=isyn]").val();
+                            var line = (eval('line' + index)).GetText();
 
                             if (delivery_mode=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
                             if (site=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
@@ -702,11 +703,11 @@
         function con_sure(){
             if (gv.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
 
-            grid.GetSelectedFieldValues('line;numid', function GetVal(values) {
+            gv.GetSelectedFieldValues('line;numid', function GetVal(values) {
                 var line = values[0][0];
                 var numid = values[0][1];
 
-                if (line!="") {
+                if (line!=null) {
                     layer.alert("该笔记录QAD中已经存在，不可删除!"); return false;
                 }else {
                     //询问框
@@ -1145,28 +1146,13 @@
             </div>
         </div>
 
-        <div class="row row-container <% =ViewState["ApplyId_i"].ToString() != "" ? "i_show2" : "i_hidden" %>">
+        <div class="row row-container <% =ViewState["qad_rq_i"].ToString() != "" ? "i_show2" : "i_hidden" %>">
             <div class="panel panel-infos">
                 <div class="panel-headings" data-toggle="collapse" data-target="#qrXX">
                     <strong>QAD确认完成</strong>
                 </div>
                 <div class="panel-body" id="qrXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
-                        <%--<table style="width: 100%; height: 100px" border="0" id="Table1">
-                            <tr>
-                                <td style="width: 150px; color: Red;">
-                                    QAD存在，会默认选中 :
-                                </td>
-                                <td>
-                                    <asp:CheckBoxList ID="ddlopinion" runat="server" CssClass="form-control" RepeatDirection="Vertical" Width="200px" Height="130px">
-                                        <asp:ListItem Text="PGI_零件号" Value="1"></asp:ListItem>
-                                        <asp:ListItem Text="发货至" Value="2"></asp:ListItem>
-                                        <asp:ListItem Text="价目表" Value="3"></asp:ListItem>
-                                        <asp:ListItem Text="预测量" Value="4"></asp:ListItem>
-                                    </asp:CheckBoxList>
-                                </td>
-                            </tr>
-                        </table>--%>
                         <table style="width: 40%; font-size: 12px;" border="0">
                             <tr>
                                 <td style="width:100px;" rowspan="4"><font color="red"> QAD存在，会默认选中 :</font></td>

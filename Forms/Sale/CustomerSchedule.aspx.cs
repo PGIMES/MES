@@ -40,6 +40,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (ViewState["ApplyId_i"] == null) { ViewState["ApplyId_i"] = ""; }
+        if (ViewState["qad_rq_i"] == null) { ViewState["qad_rq_i"] = ""; }
 
         //接收
         if (Request.QueryString["instanceid"] != null)
@@ -97,10 +98,15 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 }
 
                 //修改申请
-                if (Request.QueryString["formno"] != null && state == "edit")
+                if (state == "edit")
                 {
                     //----------------------------------------------------------------------------验证存在正在申请的项目:暂时不做，选择的时候，就剔除这些数据了
-                    string re_sql = @" exec [Report_CS_edit_check] '" + Request.QueryString["domain"] + "','" + Request.QueryString["part"] + "','" + Request.QueryString["cust_part"] + "'";
+                    string domain = Request.QueryString["domain"];
+                    string part = Request.QueryString["part"];
+                    string cust_part = Server.UrlDecode(Request.QueryString["cust_part"]);
+                    string ship = Request.QueryString["ship"];
+
+                    string re_sql = @" exec [Report_CS_edit_check] '" + domain + "','" + part + "','" + cust_part + "'";
                     DataSet ds = DbHelperSQL.Query(re_sql);
                     string dt_flag = ds.Tables[0].Rows[0][0].ToString();
                     DataTable dt = ds.Tables[0];
@@ -117,8 +123,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     }
                     else
                     {
-                        string sql_con = @"exec Report_CS_edit '" + Request.QueryString["domain"] + "','" + Request.QueryString["part"] + "','" + Request.QueryString["cust_part"] 
-                                + "','" + Request.QueryString["ship"] + "','" + LogUserModel.UserId + "'";
+                        string sql_con = @"exec Report_CS_edit '" + domain + "','" + part + "','" + cust_part + "','" + ship + "','" + LogUserModel.UserId + "'";
                         DataSet ds_con = DbHelperSQL.Query(sql_con);
                         DataTable ldt_head = ds_con.Tables[0];
                         ldt_detail = ds_con.Tables[1];
@@ -295,31 +300,33 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         for (int i = 0; i < ldt_detail.Rows.Count; i++)
         {
-            if (state == "edit" || typeno != "新增")
-            {
-                if (state != "edit" && typeno != "新增")
-                {
-                    if (ldt_flow_pro.Rows.Count == 0)
-                    {
-                        this.btnflowSend.Text = "批准";
-                    }
-                    //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
-                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
-                    {
-                        setread(i);
-                    }
-                }
-            }
-            else
+            if (typeno == "新增")
             {
                 if (ldt_flow_pro.Rows.Count == 0)
                 {
                     this.btnflowSend.Text = "批准";
                 }
-                //if ((ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null) && StepID.ToUpper() != SQ_QR_StepID.ToUpper())
                 if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
                 {
                     setread(i);
+                }
+            }
+            else if (typeno == "修改")
+            {
+                if (state == "edit" || ldt_flow_pro.Rows.Count != 0)//修改申请的时候
+                {
+                    setread_edit(i);
+                }
+                else
+                {
+                    if (ldt_flow_pro.Rows.Count == 0)
+                    {
+                        this.btnflowSend.Text = "批准";
+                    }
+                    if (ldt_flow_pro.Rows.Count == 0 || Request.QueryString["display"] != null)
+                    {
+                        setread(i);
+                    }
                 }
             }
         }
@@ -335,6 +342,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         this.uploadcontrol.Visible = false;
 
         ViewState["ApplyId_i"] = "Y";
+        ViewState["qad_rq_i"] = "Y";
 
         btnadd.Visible = false; btndel.Visible = false;
 
@@ -369,6 +377,39 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["remark"], "remark")).ReadOnly = true;
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["remark"], "remark")).BorderStyle = BorderStyle.None;
+    }
+
+    //编辑申请的时候
+    public void setread_edit(int i)
+    {
+        part.CssClass = "lineread"; part.ReadOnly = true;//PGI零件号
+        domain.CssClass = "lineread"; domain.ReadOnly = true;
+        cust_part.CssClass = "lineread"; cust_part.ReadOnly = true;
+        comment.CssClass = "lineread"; comment.ReadOnly = true;
+
+        ViewState["ApplyId_i"] = "Y";
+
+        setread_grid_edit(i);
+    }
+
+    public void setread_grid_edit(int i)
+    {
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
+        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).BorderStyle = BorderStyle.None;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = false;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).Border.BorderWidth = Unit.Pixel(1);
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = false;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).Border.BorderWidth = Unit.Pixel(1);
     }
 
     //发货自

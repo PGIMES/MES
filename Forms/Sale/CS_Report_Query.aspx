@@ -42,7 +42,7 @@
                                 layer.alert(obj[0].re_flag);
                             } else {
                                 window.open('/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=&state=edit&domain=' + domain + '&part='
-                                    + part + '&cust_part=' + cust_part + '&ship=' + ship);
+                                    + part + '&cust_part=' + encodeURI(cust_part) + '&ship=' + ship);
                             }
                         }
 
