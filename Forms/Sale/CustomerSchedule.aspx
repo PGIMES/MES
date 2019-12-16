@@ -467,7 +467,7 @@
                         return flag;
                     }
 
-                    //----------------------------------------------------验证申请中的单子
+                    //----------------------------------------------------验证申请中的单子,存在性判断
                     var applyid=$("#DQXX input[id*='ApplyId']").val();
                     var formno=$("#DQXX input[id*='FormNo']").val();
 
@@ -515,22 +515,28 @@
                             var consignment_loc = $(item).find("input[type!=hidden][id*=consignment_loc]").val();
                             var isyn = $(item).find("input[type!=hidden][id*=isyn]").val();
                             var line = (eval('line' + index)).GetText();
-
+                            
                             if (delivery_mode=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货方式】不可为空.<br />"; }
                             if (site=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
                             if (ship=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
                             if (shipname=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
                             if (nbr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
                             if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
-                            if (loc=="" && isyn=="yes") { msg+="【客户日程明细】-第"+(index+1)+"行【库位】不可为空.<br />"; }
 
+                            //库位，有效 列
                             if (isyn=="") { msg+="【客户日程明细】-第"+(index+1)+"行【有效】不可为空.<br />"; }
                             else {
-                                if (typeno=="新增" && isyn=="no") {msg+="申请类别为新增，【客户日程明细】-第"+(index+1)+"行【有效】不可为no.<br />";}
-                                if (typeno=="修改" && isyn=="no") {
-                                    if(loc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【有效】为no,【库位】必须为空.<br />";}
+                                if(line==""){
+                                    if(isyn=="no"){msg+="【客户日程明细】-第"+(index+1)+"行，新增行【有效】不可为no.<br />";}
+                                    if(loc==""){msg+="【客户日程明细】-第"+(index+1)+"行，新增行【库位】不可为空.<br />";}
+                                }else {
+                                    if (isyn=="no") {
+                                        if(loc!=""){msg+="【客户日程明细】-第"+(index+1)+"行,修改行【有效】为no,【库位】必须为空.<br />";}
+                                    }
+                                    if (isyn=="yes") {
+                                        if(loc==""){msg+="【客户日程明细】-第"+(index+1)+"行,修改行【有效】为yes,【库位】不可为空.<br />";}
+                                    }
                                 }
-                        
                             }
 
                             if (taxable=="") { 
@@ -558,8 +564,23 @@
                                     if (taxable=="") { msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />"; }
                                 }
                             }
-                            
+                            //编辑行
+                            if (line!="") {
+                                if (bill=="") { msg+="【客户日程明细】-第"+(index+1)+"行【票据开往】不可为空.<br />"; }
+                                if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
+                                if (pr_list=="") { msg+="【客户日程明细】-第"+(index+1)+"行【价目表】不可为空.<br />"; }
+                                if (taxable=="") { msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />"; }
 
+                                //判断价目表规则:QAD中生效的行，判断售后件是否加上SP
+                                if (line!="" && addresstype.indexOf("售后")!=-1) {// && isyn=="yes"
+                                    var d=pr_list.length - 2;
+                                    if(d >= 0 && pr_list.lastIndexOf("SP") == d){
+                                        
+                                    }else {
+                                        msg+="【客户日程明细】-第"+(index+1)+"行，售后件，【价目表】结尾必须是SP.<br />";
+                                    }
+                                }
+                            }
                         });
                     }
 
@@ -582,7 +603,7 @@
                         var bill = (eval('bill' + index)).GetText();
                         var pr_list = (eval('pr_list' + index)).GetText();
                         var line = (eval('line' + index)).GetText();
-                        var modelyr = (eval('modelyr' + index)).GetText();    
+                        var modelyr = $(item).find("input[type!=hidden][id*=modelyr]").val();
                                 
                         $.ajax({
                             type: "post",
@@ -607,6 +628,12 @@
                                 if (flag=="Y3") {
                                     msg+="【客户日程明细】-第" + (index+1) + "行【申请工厂】" + domain  + "【发货自】" + site + "【发货至】" + ship + "【销售订单】" + nbr 
                                         + "【票据开往】" + bill + "【物料号】" + part + "【客户物料号】" + cust_part + "【模型年】" + modelyr + "必须唯一!<br />";
+                                }
+                                if (flag=="Y4") {
+                                    msg+="【客户日程明细】-第" + (index+1) + "行【票据开往】" + bill  + "，不存在，不能申请!<br />";
+                                }
+                                if (flag=="Y5") {
+                                    msg+="【客户日程明细】-第" + (index+1) + "行【价目表】" + pr_list  + "【货币】" + curr  + "，不存在，不能申请!<br />";
                                 }
 
                                 if(msg!=""){  

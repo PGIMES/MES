@@ -119,7 +119,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     }
                     else if (dt_flag == "Y2")
                     {
-                        Pgi.Auto.Public.MsgBox(this, "alert", "【PGI_零件号】" + part + "【申请工厂】" + domain + ",物料状态已经DEAD，不可修改!");
+                        Pgi.Auto.Public.MsgBox(this, "alert", "【PGI_零件号】" + part + "【申请工厂】" + domain + ",物料状态DEAD或OBS，不可修改!");
                     }
                     else
                     {
@@ -408,10 +408,19 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
             ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
 
-            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = false;
-            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).Border.BorderWidth = Unit.Pixel(1);
-            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = false;
-            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).Border.BorderWidth = Unit.Pixel(1);
+            if (dr["shipname"].ToString() != "中转库")
+            {
+                ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = false;
+                ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).Border.BorderWidth = Unit.Pixel(1);
+                ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = false;
+                ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).Border.BorderWidth = Unit.Pixel(1);
+            }
+            else
+            {
+                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["curr"], "curr")).Enabled = false;
+                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["taxable"], "taxable")).Enabled = false;
+                ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["taxc"], "taxc")).Enabled = false;
+            }
         }
     }
 
@@ -851,13 +860,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     [WebMethod]
     public static string CheckData_dtl(string formno, string part, string domain, string cust_part, string typeno
                                     , string site, string ship, string bill, string curr
-                                    , string pr_list, string modelyr, string nbr,string delivery_mode
+                                    , string pr_list, string modelyr, string nbr, string delivery_mode
                                     , string line)
     {
-        string flag = ""; 
+        string flag = "";
 
-        string sql = @"exec Report_CS_CheckData '{0}','{1}','{2}','{3}','{4}'";
-        sql = string.Format(sql, part, domain, cust_part, formno, typeno);
+        string sql = @"exec Report_CS_CheckData_dtl '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}'";
+        sql = string.Format(sql, formno, part, domain, cust_part, typeno, site, ship, bill, curr, pr_list, modelyr, nbr, delivery_mode, line);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
         flag = dt.Rows[0][0].ToString();
         string result = "[{\"flag\":\"" + flag + "\"}]";
@@ -869,6 +878,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     {
         bool bflag = false;
 
+        return false;
         //定义总SQL LIST
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
