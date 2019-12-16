@@ -703,18 +703,18 @@
         function con_sure(){
             if (gv.GetSelectedRowCount() <= 0) { layer.alert("请选择要删除的记录!"); return false; }
 
-            gv.GetSelectedFieldValues('line;numid', function GetVal(values) {
-                var line = values[0][0];
-                var numid = values[0][1];
+            //gv.GetSelectedFieldValues('line;numid', function GetVal(values) {
+            //    var line = values[0][0];
+            //    var numid = values[0][1];
 
-                if (line!=null) {
-                    layer.alert("该笔记录QAD中已经存在，不可删除!"); return false;
-                }else {
-                    //询问框
-                    return confirm('确认要删除吗？');
-                }
+            //    if (line!=null) {
+            //        layer.alert("该笔记录QAD中已经存在，不可删除!"); return false;
+            //    }else {
+            //        //询问框
+            //        return confirm('确认要删除吗？');
+            //    }
 
-            });
+            //});
         }
     </script>
 

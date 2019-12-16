@@ -315,7 +315,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             {
                 if (state == "edit" || ldt_flow_pro.Rows.Count != 0)//修改申请的时候
                 {
-                    setread_edit(i);
+                    setread_edit(i, ldt_detail.Rows[i]);
                 }
                 else
                 {
@@ -380,7 +380,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
 
     //编辑申请的时候
-    public void setread_edit(int i)
+    public void setread_edit(int i,DataRow dr)
     {
         part.CssClass = "lineread"; part.ReadOnly = true;//PGI零件号
         domain.CssClass = "lineread"; domain.ReadOnly = true;
@@ -389,27 +389,30 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         ViewState["ApplyId_i"] = "Y";
 
-        setread_grid_edit(i);
+        setread_grid_edit(i, dr);
     }
 
-    public void setread_grid_edit(int i)
+    public void setread_grid_edit(int i, DataRow dr)
     {
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
-        ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
+        if (dr["line"].ToString() != "")//qad的  行 不为空，不可以编辑 KEY
+        {
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["delivery_mode"], "delivery_mode")).Enabled = false;
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["site"], "site")).Enabled = false;
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["ship"], "ship")).Enabled = false;
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment"], "consignment")).Enabled = false;
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["consignment_loc"], "consignment_loc")).Enabled = false;
+            ((ASPxComboBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["modelyr"], "modelyr")).Enabled = false;
 
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).BorderStyle = BorderStyle.None;
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).ReadOnly = true;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["shipname"], "shipname")).BorderStyle = BorderStyle.None;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
 
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = false;
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).Border.BorderWidth = Unit.Pixel(1);
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = false;
-        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).Border.BorderWidth = Unit.Pixel(1);
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = false;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).Border.BorderWidth = Unit.Pixel(1);
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = false;
+            ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).Border.BorderWidth = Unit.Pixel(1);
+        }
     }
 
     //发货自
@@ -664,29 +667,50 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         ldt.AcceptChanges();
-        this.gv.DataSource = ldt;
-        this.gv.DataBind();
-        GetGrid(ldt);
+        //this.gv.DataSource = ldt;
+        //this.gv.DataBind();
+        //GetGrid(ldt);
+        bind_grid(ldt);
     }
 
     protected void btndel_Click(object sender, EventArgs e)
     {
+        string msg = "";
         DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
         for (int i = ldt.Rows.Count - 1; i >= 0; i--)
         {
-            if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+            //if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() == "")
+            //{
+            //    ldt.Rows[i].Delete();
+            //}
+            //else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
+            //{
+            //    ldt.Rows[i].Delete();
+            //}
+            if (ldt.Rows[i]["flag"].ToString() == "1")
             {
-                ldt.Rows[i].Delete();
-            }
-            else if (ldt.Rows[i]["flag"].ToString() == "1" && ldt.Rows[i]["id"].ToString() != "")
-            {
-                ldt.Rows[i].Delete();
+                if (ldt.Rows[i]["line"].ToString() == "")
+                {
+                    ldt.Rows[i].Delete();
+                }
+                else
+                {
+                    msg += "第"+(i+1).ToString()+ "行，QAD订单行"+ ldt.Rows[i]["line"].ToString() + "已经存在，不可删除！<br />";
+                }
+               
             }
         }
+
+        if (msg != "")
+        {
+            Pgi.Auto.Public.MsgBox(this, "alert", msg);
+        }
+
         ldt.AcceptChanges();
-        gv.DataSource = ldt;
-        gv.DataBind();
-        GetGrid(ldt);
+        //gv.DataSource = ldt;
+        //gv.DataBind();
+        //GetGrid(ldt);
+        bind_grid(ldt);
     }
 
     //protected void gv_CustomCallback(object sender, DevExpress.Web.ASPxGridViewCustomCallbackEventArgs e)
