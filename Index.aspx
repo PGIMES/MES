@@ -488,13 +488,20 @@
                                                                               
                                         <li><a href="/sales/Sale_DetailQuery.aspx" target="_blank">产品销售查询</a></li>
                                         <li><a href="/sales/customer_Query.aspx" target="_blank">销售统计</a></li>
-										<li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=" target="_blank">客户日程申请单</a></li>
                                         <li class="divider"></li> 
                                         <li><a href="product/chanpin_saleforecast.aspx"  target="_blank">年销售预测</a></li> 
                                         <li><a href="product/Chanpin_ForcastByMonth.aspx"  target="_blank">月销售预测</a></li>   
-                                        <li><a href="/Forms/Sale/CS_Report_Query.aspx" target="_blank">客户日程浏览</a></li>
-                                        <li><a href="/Forms/Sale/CS_Report_flow_Query.aspx" target="_blank">客户日程单流程状态查询</a></li>
 
+                                        <li class="divider"></li> 
+										<li class="dropdown-submenu" >
+                                            <a href="javascript:void(0)">客户日程</a>
+                                            <ul class="dropdown-menu"> 
+                                                <li><a href="/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&appid=" target="_blank">客户日程申请单</a></li>
+                                                <li class="divider"></li>                       
+                                                <li><a href="/Forms/Sale/CS_Report_Query.aspx" target="_blank">客户日程浏览</a></li>
+												<li><a href="/Forms/Sale/CS_Report_flow_Query.aspx" target="_blank">客户日程单流程状态查询</a></li>            
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="area" id="div_XS">
