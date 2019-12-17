@@ -543,7 +543,8 @@
                                 if(taxc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为空,【税率】必须为空.<br />"; }                
                             }
                             else if (taxable=="no") { 
-                                if(taxc!="0"){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为no,【税率】必须为0.<br />"; }                
+                                //加上这个line==""，老的QAD的数据不规范，设置了未纳税，纳税级别不是0
+                                if(taxc!="0" && line==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为no,【税率】必须为0.<br />"; }                
                             }
                             else if (taxable=="yes") { 
                                 if(taxc==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为yes,【税率】不可为空.<br />"; }                                    
@@ -635,19 +636,20 @@
                                 if (flag=="Y5") {
                                     msg+="【客户日程明细】-第" + (index+1) + "行【价目表】" + pr_list  + "【货币】" + curr  + "，不存在，不能申请!<br />";
                                 }
-
-                                if(msg!=""){  
-                                    flag=false;
-                                    layer.alert(msg);
-                                    return flag;
-                                }
                             }
 
                         });
-                    });
-                }
+                    });                    
 
-            }
+                    if(msg!=""){  
+                        flag=false;
+                        layer.alert(msg);
+                        return flag;
+                    }
+                }//action=='submit' end 
+
+            }//申请人 end
+
             if (stepid!=null) {
                 //会签步骤验证js_HQ_StepID
                 if(stepid.toLowerCase()==js_HQ_StepID.toLowerCase()){
