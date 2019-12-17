@@ -66,7 +66,7 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="FormNo" AutoGenerateColumns="False"  
-                             OnPageIndexChanged="GV_PART_PageIndexChanged" Width="570px"><%--3030--%>
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" Width="770px"><%--3030--%>
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
@@ -80,12 +80,18 @@
                             <dx:GridViewDataTextColumn Caption="客户项目" FieldName="cust_part" Width="120px" VisibleIndex="3" />
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyId" Width="80px" VisibleIndex="3" />
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="80px" VisibleIndex="3" />
-                            <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="120px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="150px" VisibleIndex="3" />
                             <dx:GridViewDataDateColumn Caption="签核完成日" FieldName="ApproveDate" Width="90px" VisibleIndex="4" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
-                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="FormNo" Width="90px" VisibleIndex="5">
-                                <Settings AllowCellMerge="True" />
+                            <dx:GridViewDataTextColumn Caption="表单编号" FieldName="FormNo" Width="120px" VisibleIndex="5">
+                                <DataItemTemplate>
+                                    <dx:ASPxHyperLink ID="hpl_part" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "part"+Container.VisibleIndex.ToString() %>'
+                                        NavigateUrl='<%# "/Platform/WorkFlowRun/Default.aspx?flowid=3e31a6c8-b80e-4179-bacd-ba6be7a2afe2&instanceid="+ Eval("FormNo")+"&groupid="+ Eval("GroupID")+"&display=1" %>'
+                                         Target="_blank"
+                                        >                                        
+                                    </dx:ASPxHyperLink>
+                                </DataItemTemplate> 
                             </dx:GridViewDataTextColumn>
                         </Columns>
                         <Styles>
