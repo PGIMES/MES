@@ -493,6 +493,7 @@
                                         <li><a href="product/chanpin_saleforecast.aspx"  target="_blank">年销售预测</a></li> 
                                         <li><a href="product/Chanpin_ForcastByMonth.aspx"  target="_blank">月销售预测</a></li>   
                                         <li><a href="/Forms/Sale/CS_Report_Query.aspx" target="_blank">客户日程浏览</a></li>
+                                        <li><a href="/Forms/Sale/CS_Report_flow_Query.aspx" target="_blank">客户日程单流程状态查询</a></li>
 
                                     </ul>
                                 </div>
