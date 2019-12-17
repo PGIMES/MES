@@ -296,8 +296,11 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
 
         string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
-        lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
+        if (workcode_list.Length==4)
+        {
+            lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
+            lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
+        }
     }
 
     public void bind_grid(DataTable dt)
@@ -332,12 +335,28 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             }
             else if (typeno == "修改")
             {
-                if (state == "edit" || Request.QueryString["display"] == null)//修改申请的时候
+                if (state == "edit")//修改申请的时候
                 {
-                    setread_edit(i, ldt_detail.Rows[i]);
+                    if (ldt_flow_pro.Rows.Count != 0)//申请的时候
+                    {
+                        setread_edit(i, ldt_detail.Rows[i]);
+                    }
+                    if (Request.QueryString["display"] == null)
+                    {
+                        setread_edit(i, ldt_detail.Rows[i]);
+                    }
                 }
                 else
                 {
+                    if (ldt_flow_pro.Rows.Count != 0)//申请的时候
+                    {
+                        setread_edit(i, ldt_detail.Rows[i]);
+                    }
+                    if (Request.QueryString["display"] == null)
+                    {
+                        setread_edit(i, ldt_detail.Rows[i]);
+                    }
+
                     if (ldt_flow_pro.Rows.Count == 0)
                     {
                         this.btnflowSend.Text = "批准";
@@ -390,6 +409,9 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).ReadOnly = true;
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["nbr"], "nbr")).BorderStyle = BorderStyle.None;
+
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).ReadOnly = true;
+        ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["bill"], "bill")).BorderStyle = BorderStyle.None;
 
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).ReadOnly = true;
         ((ASPxTextBox)this.gv.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gv.Columns["pr_list"], "pr_list")).BorderStyle = BorderStyle.None;
@@ -904,7 +926,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         List<Pgi.Auto.Common> ls = GetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
 
         string applyid = ApplyId.Text; string applyname = ApplyName.Text;
-        string lspart = part.Text; string lsdomain = domain.Text;
+        string lspart = part.Text; string lscust_part = cust_part.Text; string lsdomain = domain.Text;
         string lstypeno = typeno.Text;
 
         string manager_flag = ""; string zg_id = "";
@@ -1087,7 +1109,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             bflag = true;
 
             var titletype = lstypeno == "新增" ? "客户日程申请" : "客户日程修改";
-            string title = titletype + "[" + this.m_sid + "][" + applyname + "][" + lspart + "][" + lsdomain + "]";
+            string title = titletype + "[" + this.m_sid + "][" + applyname + "][" + lspart + "][" + lscust_part + "][" + lsdomain + "]";
 
             script = "$('#instanceid',parent.document).val('" + this.m_sid + "');" +
                  "$('#customformtitle',parent.document).val('" + title + "');";
