@@ -32,7 +32,7 @@ public partial class select_CustomerSchedule_part : System.Web.UI.Page
     private void GetData()
     {
         DataTable dt = new DataTable();
-        string sql = @"exec [z_select_customerschedule_part] '" + txtPart .Text+ "'"; 
+        string sql = @"exec [z_select_customerschedule_part] '" + txtPart.Text+ "'"; 
         dt = DbHelperSQL.Query(sql).Tables[0];
 
         if (dt == null || dt.Rows.Count <= 0)
@@ -62,8 +62,9 @@ public partial class select_CustomerSchedule_part : System.Web.UI.Page
         string domain = GridView1.SelectedRow.Cells[1].Text.Trim().Replace("&nbsp;", "");
         string part = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
         string wlmc = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
+        string ms = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
 
-        string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + wlmc + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + wlmc + "','" + ms + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
 
         Response.Write(temp.Trim());
     }

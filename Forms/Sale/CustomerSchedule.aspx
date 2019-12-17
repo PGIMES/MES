@@ -302,7 +302,7 @@
             }); 
         }
 
-        function setvalue_part(domain, part, wlmc) 
+        function setvalue_part(domain, part, wlmc, ms) 
         {    
             $("#wlXX input[id*='typeno']").val('新增');
 
@@ -311,6 +311,7 @@
             //$("#<%=part.ClientID%>").val(part);
             $("#wlXX input[id*='cust_part']").val(wlmc);
             $("#wlXX input[id*='cust_partd']").val(wlmc);
+            $("#wlXX input[id*='comment']").val(ms);
         }
         function Ondelivery_modeChanged(cmbDelivery,vi){
             var domain=$("#wlXX input[id*='domain']").val();
