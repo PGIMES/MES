@@ -1152,6 +1152,11 @@
                                                 </dx:ASPxComboBox>    
                                             </DataItemTemplate>
                                         </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn FieldName="modify_flag" Width="0px">
+                                            <HeaderStyle CssClass="hidden" />
+                                            <CellStyle CssClass="hidden"></CellStyle>
+                                            <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
                                         <dx:GridViewDataTextColumn FieldName="id" Width="0px">
                                             <HeaderStyle CssClass="hidden" />
                                             <CellStyle CssClass="hidden"></CellStyle>

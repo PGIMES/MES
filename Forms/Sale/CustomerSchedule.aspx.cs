@@ -159,7 +159,16 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                lssql += " where CSNo='" + this.m_sid + "'  order by a.isyn desc";
+                lssql += " where CSNo='" + this.m_sid + "'";
+
+                if (StepID.ToUpper() == SQ_StepID.ToUpper() || StepID.ToUpper() == "A")//申请人
+                {
+                    lssql += " order by a.numid ";
+                }
+                else
+                {
+                    lssql += " order by a.isyn desc";
+                }
 
                 if (StepID.ToUpper() == SQ_QR_StepID.ToUpper())//申请人确认
                 {
@@ -796,6 +805,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         {
             return;
         }
+
+        string CSNo = e.GetValue("CSNo").ToString();
+        if (CSNo == "") { return; }
+
+        // 停留在申请人步骤不加色彩，
+        string stepname = DbHelperSQL.Query("select top 1 stepname from RoadFlowWebForm.dbo.WorkFlowTask where flowid='3e31a6c8-b80e-4179-bacd-ba6be7a2afe2' and InstanceID='" + CSNo + "' order by sort desc").Tables[0].Rows[0][0].ToString();
+        if (stepname == "申请人") { return; }
 
         string backcolor = "";
         if (e.GetValue("modify_flag").ToString() == "add")//新增行
