@@ -794,11 +794,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
     //}
 
-    protected void gv_DataBound(object sender, EventArgs e)
-    {
-        ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);
-    }
-
     protected void gv_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
     {
         if (e.RowType != GridViewRowType.Data)

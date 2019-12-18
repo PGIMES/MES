@@ -82,102 +82,6 @@
             $('#comment', parent.document).val(val);
         }
 
-        function gv_SelectionChanged(s, e) {
-            //gv_color();
-        }
-        function gv_color(){
-            $("[id$=gv] tr[class*=DataRow]").each(function (index, item) { 
-
-                var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FDF7D9");
-
-                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FDF7D9");
-                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FDF7D9");
-                }else {
-                    $(item).find("table[id*=domain_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=domain_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=bm_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=bm_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=mc_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=mc_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=bclb_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=djyl_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=cl_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=cl_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=cc_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=cc_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=dz_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=dz_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=zz_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=zz_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=dj_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=dj_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=zj_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=zj_"+index+"]").css("background-color","#FFFFFF");
-
-                    $(item).find("table[id*=gys_"+index+"]").css("background-color","#FFFFFF");
-                    $(item).find("input[id*=gys_"+index+"]").css("background-color","#FFFFFF");
-                }
-
-                if($(item).find("input[id*=sl_"+index+"]").attr("readOnly")){
-                    var class_checked=$.trim($(item).find("td:eq(0) span:first").attr("class"));                        
-                    if(class_checked.indexOf("CheckBoxChecked")>-1){                    
-                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FDF7D9");
-                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FDF7D9");
-                    }else {
-                        $(item).find("table[id*=sl_"+index+"]").css("background-color","#FFFFFF");
-                        $(item).find("input[id*=sl_"+index+"]").css("background-color","#FFFFFF");
-                    }
-                }else {
-                    
-                }
-            });
-        }
-
         //设定表字段状态（可编辑性）
         var tabName="pgi_customerschedule_main_form";//表名
         function SetControlStatus(fieldStatus)
@@ -938,8 +842,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound" OnHtmlRowCreated="gv_HtmlRowCreated">
-                                    <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
+                                     ClientInstanceName="gv"  EnableTheming="True" OnHtmlRowCreated="gv_HtmlRowCreated">
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
                                     <SettingsBehavior AllowSelectByRowClick="false" AllowDragDrop="False" AllowSort="False" />
