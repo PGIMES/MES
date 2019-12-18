@@ -522,7 +522,9 @@
                             if (ship=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
                             if (shipname=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
                             if (nbr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
-                            if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
+                            if (pr_list!="") { 
+                                if(curr==""){msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
+                            }
 
                             //库位，有效 列
                             if (isyn=="") { msg+="【客户日程明细】-第"+(index+1)+"行【有效】不可为空.<br />"; }
@@ -562,6 +564,7 @@
                             if (stepid!=null) {
                                 if (stepid.toLowerCase()==js_SQ_QR_StepID.toLowerCase()) {//申请人确认
                                     if (bill=="") { msg+="【客户日程明细】-第"+(index+1)+"行【票据开往】不可为空.<br />"; }
+                                    if (curr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
                                     if (pr_list=="") { msg+="【客户日程明细】-第"+(index+1)+"行【价目表】不可为空.<br />"; }
                                     if (taxable=="") { msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />"; }
                                 }
