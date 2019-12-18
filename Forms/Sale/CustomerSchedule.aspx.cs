@@ -159,7 +159,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                     Pgi.Auto.Public.MsgBox(this, "alert", "该单号" + this.m_sid + "不存在!");
                 }
 
-                lssql += " where CSNo='" + this.m_sid + "' order by a.numid";
+                lssql += " where CSNo='" + this.m_sid + "'  order by a.isyn desc";
 
                 if (StepID.ToUpper() == SQ_QR_StepID.ToUpper())//申请人确认
                 {
@@ -788,6 +788,43 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     protected void gv_DataBound(object sender, EventArgs e)
     {
         ScriptManager.RegisterStartupScript(this, e.GetType(), "gridcolor", "gv_color();", true);
+    }
+
+    protected void gv_HtmlRowCreated(object sender, ASPxGridViewTableRowEventArgs e)
+    {
+        if (e.RowType != GridViewRowType.Data)
+        {
+            return;
+        }
+
+        string backcolor = "";
+        if (e.GetValue("modify_flag").ToString() == "add")//新增行
+        {
+            backcolor = "#FA8072";
+        }
+        if (e.GetValue("modify_flag").ToString() == "update")//修改行，包含修改为失效的
+        {
+            backcolor = "#EEEE00";
+        }
+        if (e.GetValue("isyn").ToString() == "no" && e.GetValue("modify_flag").ToString() == "")//无动作 ，本身就是失效的
+        {
+            backcolor = "#DCDCDC";
+        }
+
+        if (backcolor!="")
+        {
+            e.Row.Style.Add("background-color", backcolor);
+            for (int i = 0; i < this.gv.DataColumns.Count; i++)
+            {
+                if (this.gv.FindRowCellTemplateControl(e.VisibleIndex, (GridViewDataColumn)this.gv.Columns[gv.DataColumns[i].FieldName], gv.DataColumns[i].FieldName) is ASPxTextBox)
+                {
+                    ((ASPxTextBox)this.gv.FindRowCellTemplateControl(e.VisibleIndex
+                       , (GridViewDataColumn)this.gv.Columns[gv.DataColumns[i].FieldName], gv.DataColumns[i].FieldName)).BackColor = System.Drawing.ColorTranslator.FromHtml(backcolor);
+                }
+            }
+            return;
+        }
+
     }
 
     [WebMethod]

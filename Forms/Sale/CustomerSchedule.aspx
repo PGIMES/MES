@@ -937,7 +937,7 @@
                                 <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-sm"  OnClick="btndel_Click" OnClientClick="return con_sure()" />
 
                                  <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False" KeyFieldName="numid" Theme="MetropolisBlue" 
-                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound">
+                                     ClientInstanceName="gv"  EnableTheming="True" OnDataBound="gv_DataBound" OnHtmlRowCreated="gv_HtmlRowCreated">
                                     <ClientSideEvents SelectionChanged="gv_SelectionChanged" />
                                     <SettingsPager PageSize="1000"></SettingsPager>
                                     <Settings ShowFooter="True" />
