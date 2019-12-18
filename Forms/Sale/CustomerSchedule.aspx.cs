@@ -811,7 +811,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             backcolor = "#DCDCDC";
         }
 
-        if (backcolor!="")
+        if (backcolor != "")
         {
             e.Row.Style.Add("background-color", backcolor);
             for (int i = 0; i < this.gv.DataColumns.Count; i++)
