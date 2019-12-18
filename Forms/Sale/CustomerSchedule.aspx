@@ -924,6 +924,7 @@
             <div class="panel panel-infos">
                 <div class="panel-headings" data-toggle="collapse" data-target="#bzclXX">
                     <strong>客户日程信息</strong>
+                    &nbsp;&nbsp;<font style="color:red; font-size:9px;">提示：新增行（红色），修改行（黄色），无效行（灰色）</font>
                 </div>
                 <div class="panel-body" id="bzclXX">
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
