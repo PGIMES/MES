@@ -161,13 +161,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
                 lssql += " where CSNo='" + this.m_sid + "'";
 
-                if (StepID.ToUpper() == SQ_StepID.ToUpper() || StepID.ToUpper() == "A")//申请人
+                if ((StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A") || Request.QueryString["display"] != null)
+                {
+                    lssql += " order by a.isyn desc"; 
+                }
+                else//申请人
                 {
                     lssql += " order by a.numid ";
-                }
-                else
-                {
-                    lssql += " order by a.isyn desc";
                 }
 
                 if (StepID.ToUpper() == SQ_QR_StepID.ToUpper())//申请人确认
