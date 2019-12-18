@@ -1090,6 +1090,26 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                                     where PGI_CustomerSchedule_Dtl_Form.CSNo='{0}' and PGI_CustomerSchedule_Dtl_Form.taxc=a.TaxRate_Code";
                 ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
                 ls_sum.Add(ls_taxratecode);
+
+                //更新修改标记字段modify_flag：与qad的数据作比较，新增行add，修改行update
+                Pgi.Auto.Common ls_modify_flag_a = new Pgi.Auto.Common();
+                ls_modify_flag_a.Sql = @"update PGI_CustomerSchedule_Dtl_Form set modify_flag='add' where CSNo='{0}' and isnull(line,'')=''";
+                ls_modify_flag_a.Sql = string.Format(ls_modify_flag_a.Sql, m_sid);
+                ls_sum.Add(ls_modify_flag_a);
+
+                Pgi.Auto.Common ls_modify_flag_u = new Pgi.Auto.Common();
+                ls_modify_flag_u.Sql = @"update PGI_CustomerSchedule_Dtl_Form set modify_flag='update' 
+                                        from (select so_domain,so_nbr,sod_line,so_bill,so_curr,sod_pr_list
+	                                            ,case sod_taxable when 1 then 'yes' else 'no' end sod_taxable,sod_taxc,sod_loc
+	                                            ,case when [sod_end_eff[1]]] is null or [sod_end_eff[1]]] >= convert(datetime,CONVERT(VARCHAR(10), GETDATE(), 120)) then 'yes' else 'no' end sod_isyn	
+                                            from qad.dbo.qad_so_mstr so
+	                                            inner join qad.dbo.qad_sod_det sod on so.so_nbr=sod.sod_nbr and so.so_domain=sod.sod_domain and so.so_site=sod.sod_site
+                                            where so.so_sched='1' and so.so_domain='{1}') a
+                                        where CSNo='{0}' and isnull(line,'')<>'' and nbr=so_nbr and isnull(line,'')=sod_line
+                                            and (bill<>so_bill or curr<>so_curr or pr_list<>sod_pr_list or taxable<>sod_taxable or taxc<>sod_taxc or loc<>sod_loc or isyn<>sod_isyn)";
+                ls_modify_flag_u.Sql = string.Format(ls_modify_flag_u.Sql, m_sid, lsdomain);
+                ls_sum.Add(ls_modify_flag_u);
+
             }
         }
         else
