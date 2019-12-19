@@ -152,7 +152,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                         this.ip_filelist_db.Value = ldt.Rows[0]["files"].ToString();
                         bindtab();
                     }
-                    bind_qad_qr(ldt.Rows[0]["IsSign_HQ"].ToString(), ldt.Rows[0]["sign_name_show"].ToString());
+                    //bind_qad_qr(ldt.Rows[0]["IsSign_HQ"].ToString(), ldt.Rows[0]["sign_name_show"].ToString());
                 }
                 else
                 {
@@ -184,10 +184,10 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         //签核界面show：取消了，不要每次加载的时候 都绑定
-        //if ((StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A") || Request.QueryString["display"] != null)
-        //{
-        //    bind_qad_qr();
-        //}
+        if ((StepID.ToUpper() != SQ_StepID.ToUpper() && StepID.ToUpper() != "A") || Request.QueryString["display"] != null)
+        {
+            bind_qad_qr_load();
+        }
 
         DisplayModel = Request.QueryString["display"] ?? "0";
         RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
@@ -265,34 +265,16 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         bindtab();
     }
 
-    //void bind_qad_qr()
-    //{
-    //    string lspart = part.Text; string lsdomain = domain.Text;
-    //    DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
-
-    //    CustomerSchedule cs = new CustomerSchedule();
-    //    DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
-    //    string IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
-    //    string workcode = dt_IsSign.Rows[0]["workcode"].ToString();
-
-    //    string[] IsSign_HQ_list = IsSign_HQ.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-    //    bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true;
-    //    foreach (var item in IsSign_HQ_list)
-    //    {
-    //        if (item == "Y_part") { part_yn = false; }
-    //        if (item == "Y_ship") { ship_yn = false; }
-    //        if (item == "Y_pr_list") { pr_list_yn = false; }
-    //        if (item == "Y_rf") { rf_yn = false; }
-    //    }
-    //    cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
-
-    //    string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-    //    lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text= "责任人【" + workcode_list[1] + "】";
-    //    lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
-    //}
-
-    void bind_qad_qr(string IsSign_HQ,string workcode)
+    void bind_qad_qr_load()
     {
+        string lspart = part.Text; string lsdomain = domain.Text;
+        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+
+        CustomerSchedule cs = new CustomerSchedule();
+        DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
+        string IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
+        string workcode = dt_IsSign.Rows[0]["workcode"].ToString();
+
         string[] IsSign_HQ_list = IsSign_HQ.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
         bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true;
         foreach (var item in IsSign_HQ_list)
@@ -305,12 +287,30 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
 
         string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        if (workcode_list.Length==4)
-        {
-            lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
-            lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
-        }
+        lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
+        lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
     }
+
+    //void bind_qad_qr(string IsSign_HQ,string workcode)
+    //{
+    //    string[] IsSign_HQ_list = IsSign_HQ.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+    //    bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true;
+    //    foreach (var item in IsSign_HQ_list)
+    //    {
+    //        if (item == "Y_part") { part_yn = false; }
+    //        if (item == "Y_ship") { ship_yn = false; }
+    //        if (item == "Y_pr_list") { pr_list_yn = false; }
+    //        if (item == "Y_rf") { rf_yn = false; }
+    //    }
+    //    cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
+
+    //    string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+    //    if (workcode_list.Length==4)
+    //    {
+    //        lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
+    //        lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
+    //    }
+    //}
 
     public void bind_grid(DataTable dt)
     {
