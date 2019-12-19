@@ -839,9 +839,9 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain)
+    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain, string part)
     {
-        string shipname = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = ""; string addresstype = "";
+        string shipname = ""; string nbr = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = ""; string addresstype = "";
 
         if (delivery_mode == "中转库发" && site == domain)
         {
@@ -886,9 +886,25 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             }
         }
 
+        //销售订单产生规则，根据PGI零件号，按照发货至自增
+        string sql_nbr = @"select so_domain,sod_part,so_ship,so_nbr
+                        from qad.dbo.qad_so_mstr so
+	                        inner join qad.dbo.qad_sod_det sod on so.so_nbr=sod.sod_nbr and so.so_domain=sod.sod_domain and so.so_site=sod.sod_site
+                        where so.so_sched='1' and so_domain='{0}' and sod_part='{1}' and so_ship='{2}'";
+        sql_nbr = string.Format(sql_nbr, domain, part, ship);
+        DataTable ldt_nbr = DbHelperSQL.Query(sql_nbr).Tables[0];
+
+        string nbr_num = "";
+        if (ldt_nbr.Rows.Count > 0)
+        {
+            nbr_num = DbHelperSQL.Query("select nchar(ascii('A')+" + ldt_nbr.Rows.Count.ToString() + ")").Tables[0].Rows[0][0].ToString();
+        }
+        nbr = ship + nbr_num;
+
+
         string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr 
                 + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc 
-                + "\",\"addresstype\":\"" + addresstype + "\"}]";
+                + "\",\"addresstype\":\"" + addresstype + "\",\"nbr\":\"" + nbr + "\"}]";
         return result;
 
     }

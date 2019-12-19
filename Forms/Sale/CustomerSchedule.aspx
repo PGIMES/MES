@@ -241,8 +241,9 @@
 
         function OnShipChanged(cmbShip,vi){
             var nbr = eval('nbr' + vi);
-            nbr.SetText(cmbShip.GetValue().toString());
-
+            //nbr.SetText(cmbShip.GetValue().toString());
+            
+            var part=$("#wlXX input[id*='part']").val();//alert(part);
             var domain=$("#wlXX input[id*='domain']").val();
 
             var delivery_mode = eval('delivery_mode' + vi); 
@@ -259,7 +260,7 @@
             $.ajax({
                     type: "post",
                     url: "CustomerSchedule.aspx/GetDataByShip",
-                    data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain + "'}",
+                    data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain + "','part':'" + part + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
@@ -268,6 +269,7 @@
 
                         shipname.SetText(obj[0].shipname);
                         addresstype.SetText(obj[0].addresstype);
+                        nbr.SetText(obj[0].nbr);
                         bill.SetText(obj[0].bill);
                         curr.SetText(obj[0].curr);
                         pr_list.SetText(obj[0].pr_list);
@@ -425,7 +427,10 @@
                             if (site=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货自】不可为空.<br />"; }
                             if (ship=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至】不可为空.<br />"; }
                             if (shipname=="") { msg+="【客户日程明细】-第"+(index+1)+"行【发货至名称】不可为空.<br />"; }
+
                             if (nbr=="") { msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】不可为空.<br />"; }
+                            else if(nbr.length>8){msg+="【客户日程明细】-第"+(index+1)+"行【销售订单】长度不可超过8位.<br />";}
+
                             if (pr_list!="") { 
                                 if(curr==""){msg+="【客户日程明细】-第"+(index+1)+"行【货币】不可为空.<br />"; }
                             }
