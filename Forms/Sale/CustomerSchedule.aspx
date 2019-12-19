@@ -481,7 +481,7 @@
                                 if (taxable=="") { msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】不可为空.<br />"; }
 
                                 //判断价目表规则:QAD中生效的行，判断售后件是否加上SP
-                                if (line!="" && addresstype.indexOf("售后")!=-1) {// && isyn=="yes"
+                                if (line!="" && addresstype.indexOf("售后")!=-1 && isyn=="yes") {// && isyn=="yes"
                                     var d=pr_list.length - 2;
                                     if(d >= 0 && pr_list.lastIndexOf("SP") == d){
                                         
