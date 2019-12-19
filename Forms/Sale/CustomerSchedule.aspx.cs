@@ -1131,14 +1131,6 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
             if (action == "submit")
             {
-                //更新税率值
-                Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
-                ls_taxratecode.Sql = @"update PGI_CustomerSchedule_Dtl_Form set taxc_rate=a.TaxRate
-                                    from ({1}) a
-                                    where PGI_CustomerSchedule_Dtl_Form.CSNo='{0}' and PGI_CustomerSchedule_Dtl_Form.taxc=a.TaxRate_Code";
-                ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
-                ls_sum.Add(ls_taxratecode);
-
                 //更新修改标记字段modify_flag：与qad的数据作比较，新增行add，修改行update
                 Pgi.Auto.Common ls_modify_flag_a = new Pgi.Auto.Common();
                 ls_modify_flag_a.Sql = @"update PGI_CustomerSchedule_Dtl_Form set modify_flag='add' where CSNo='{0}' and isnull(line,'')=''";
@@ -1157,6 +1149,14 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                                             and (bill<>so_bill or curr<>so_curr or pr_list<>sod_pr_list or taxable<>sod_taxable or taxc<>sod_taxc or loc<>sod_loc or isyn<>sod_isyn)";
                 ls_modify_flag_u.Sql = string.Format(ls_modify_flag_u.Sql, m_sid, lsdomain);
                 ls_sum.Add(ls_modify_flag_u);
+
+                //更新税率值
+                Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
+                ls_taxratecode.Sql = @"update PGI_CustomerSchedule_Dtl_Form set taxc_rate=a.TaxRate
+                                    from ({1}) a
+                                    where PGI_CustomerSchedule_Dtl_Form.CSNo='{0}' and PGI_CustomerSchedule_Dtl_Form.taxc=a.TaxRate_Code";
+                ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
+                ls_sum.Add(ls_taxratecode);
 
             }
         }
