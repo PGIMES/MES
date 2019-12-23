@@ -49,7 +49,8 @@
                     <td style="width:85px;"> 
                         <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
                             <asp:ListItem Value="">ALL</asp:ListItem>
-                            <asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>
+                            <asp:ListItem Value="申请中" Selected="True">申请中</asp:ListItem>
+                            <%--<asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>--%>
                         </asp:DropDownList>
                     </td>
                     <td> 
