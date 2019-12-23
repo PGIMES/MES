@@ -887,17 +887,21 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         //销售订单产生规则，根据PGI零件号，按照发货至自增
-        string sql_nbr = @"select so_domain,sod_part,so_ship,so_nbr
+        /*string sql_nbr = @"select so_domain,sod_part,so_ship,so_nbr
                         from qad.dbo.qad_so_mstr so
 	                        inner join qad.dbo.qad_sod_det sod on so.so_nbr=sod.sod_nbr and so.so_domain=sod.sod_domain and so.so_site=sod.sod_site
                         where so.so_sched='1' and so_domain='{0}' and sod_part='{1}' and so_ship='{2}'";
-        sql_nbr = string.Format(sql_nbr, domain, part, ship);
+        sql_nbr = string.Format(sql_nbr, domain, part, ship);*/
+        string sql_nbr = @"select so_domain,so_ship,so_nbr
+                        from qad.dbo.qad_so_mstr so
+                        where so.so_sched='1' and so_domain='{0}' and so_ship='{1}'";
+        sql_nbr = string.Format(sql_nbr, domain, ship);
         DataTable ldt_nbr = DbHelperSQL.Query(sql_nbr).Tables[0];
 
         string nbr_num = "";
         if (ldt_nbr.Rows.Count > 0)
         {
-            nbr_num = DbHelperSQL.Query("select nchar(ascii('A')+" + ldt_nbr.Rows.Count.ToString() + ")").Tables[0].Rows[0][0].ToString();
+            nbr_num = DbHelperSQL.Query("select nchar(ascii('A')+" + (ldt_nbr.Rows.Count - 1).ToString() + ")").Tables[0].Rows[0][0].ToString();
         }
         nbr = ship + nbr_num;
 
