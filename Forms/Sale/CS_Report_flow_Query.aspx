@@ -46,8 +46,8 @@
                         <asp:TextBox ID="txt_cust_part" class="form-control input-s-md " runat="server"></asp:TextBox>
                     </td>  
                     <td style="width:30px;">版本</td>
-                    <td style="width:85px;"> 
-                        <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="80px">
+                    <td style="width:95px;"> 
+                        <asp:DropDownList ID="ddl_ver" runat="server" class="form-control input-s-md " Width="90px">
                             <asp:ListItem Value="">ALL</asp:ListItem>
                             <asp:ListItem Value="申请中" Selected="True">申请中</asp:ListItem>
                             <%--<asp:ListItem Value="当前" Selected="True">当前</asp:ListItem>--%>
