@@ -574,25 +574,25 @@
                     var pr_list_qr=$("#MainContent_lbl_pr_list_qr").text();
                     var rf_qr=$("#MainContent_lbl_rf_qr").text();
 
-                    if(part_qr.indexOf(js_UserId)>0 || part_qr.indexOf(js_DeptName)>0){
+                    if(part_qr.indexOf(js_UserId)>0){// || part_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_part_qr").prop("checked")==false){                    
                             msg+="PGI零件号，QAD还不存在，不能发送.<br />";
                         }
                         i++;
                     }
-                    if(ship_qr.indexOf(js_UserId)>0 || ship_qr.indexOf(js_DeptName)>0){
+                    if(ship_qr.indexOf(js_UserId)>0){// || ship_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_ship_qr").prop("checked")==false){                    
                             msg+="发货至，QAD还不存在，不能发送.<br />";
                         }
                         i++;
                     }
-                    if(pr_list_qr.indexOf(js_UserId)>0 || pr_list_qr.indexOf(js_DeptName)>0){
+                    if(pr_list_qr.indexOf(js_UserId)>0){// || pr_list_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_pr_list_qr").prop("checked")==false){                    
                             msg+="价目表，QAD还不存在，不能发送.<br />";
                         }
                         i++;
                     }
-                    if(rf_qr.indexOf(js_UserId)>0 || rf_qr.indexOf(js_DeptName)>0){
+                    if(rf_qr.indexOf(js_UserId)>0){// || rf_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
                             msg+="预测量，QAD还不存在，不能发送.<br />";
                         }
