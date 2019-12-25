@@ -82,9 +82,7 @@
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyId" Width="80px" VisibleIndex="3" />
                             <dx:GridViewDataTextColumn Caption="申请人" FieldName="ApplyName" Width="80px" VisibleIndex="3" />
                             <dx:GridViewDataTextColumn Caption="审批状态" FieldName="GoSatus" Width="150px" VisibleIndex="3" />
-                            <dx:GridViewDataDateColumn Caption="签核完成日" FieldName="ApproveDate" Width="90px" VisibleIndex="4" >
-                                <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
-                            </dx:GridViewDataDateColumn>
+                            <dx:GridViewDataTextColumn Caption="签核完成日" FieldName="ApproveDate" Width="90px" VisibleIndex="4" />
                             <dx:GridViewDataTextColumn Caption="表单编号" FieldName="FormNo" Width="120px" VisibleIndex="5">
                                 <DataItemTemplate>
                                     <dx:ASPxHyperLink ID="hpl_part" runat="server" Text='<%# Eval("FormNo")%>' Cursor="pointer" ClientInstanceName='<%# "part"+Container.VisibleIndex.ToString() %>'
