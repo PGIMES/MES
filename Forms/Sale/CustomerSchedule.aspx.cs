@@ -1196,7 +1196,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
 
-        //---------------------------------------------------------表体数据，申请人步骤的时候才更新---------------------------------------------------------------------
+        //---------------------------------------------------------表体数据，申请人步骤的时候才更新:判断是否会签的时候，新增行，以及修改的行，所以需要在判断了哪些行修改了在做这个---------------------------
         if (StepID.ToUpper() == "A" || StepID.ToUpper() == SQ_StepID.ToUpper())
         {
             string IsSign_HQ = "";//判定是否存在加签
