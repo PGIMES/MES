@@ -268,10 +268,13 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     void bind_qad_qr_load()
     {
         string lspart = part.Text; string lsdomain = domain.Text;
-        DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
 
-        CustomerSchedule cs = new CustomerSchedule();
-        DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
+        //DataTable ldt = Pgi.Auto.Control.AgvToDt(this.gv);
+        //CustomerSchedule cs = new CustomerSchedule();
+        //DataTable dt_IsSign = cs.CS_IsModifyByBom(ldt, lspart, lsdomain);//, lstypeno, this.m_sid            
+
+        DataTable dt_IsSign = DbHelperSQL.Query("exec usp_CS_IsSign_HQ_again '" + lspart + "','" + lsdomain + "','" + m_sid + "'").Tables[0];
+
         string IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
         string workcode = dt_IsSign.Rows[0]["workcode"].ToString();
 
@@ -1078,7 +1081,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             ldt.Rows[i]["CSNo"] = m_sid;
             ldt.Rows[i]["numid"] = (i + 1);
         }
-
+        /*
         //---------------------------------------------------------表体数据，申请人步骤的时候才更新---------------------------------------------------------------------
         if (StepID.ToUpper() == "A" || StepID.ToUpper() == SQ_StepID.ToUpper())
         {
@@ -1118,7 +1121,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             lcsign_name_show.Key = "";
             lcsign_name_show.Value = sign_name_show;
             ls.Add(lcsign_name_show);
-        }
+        }*/
+
         //--------------------------------------------------------------------------产生sql------------------------------------------------------------------------------------------------
         //获取的表头信息，自动生成SQL，增加到SUM中
         ls_sum.Add(Pgi.Auto.Control.GetList(ls, "PGI_CustomerSchedule_Main_Form"));
@@ -1191,6 +1195,32 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         //批量提交
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
+
+        //---------------------------------------------------------表体数据，申请人步骤的时候才更新---------------------------------------------------------------------
+        if (StepID.ToUpper() == "A" || StepID.ToUpper() == SQ_StepID.ToUpper())
+        {
+            string IsSign_HQ = "";//判定是否存在加签
+            string SignEmp_id = "";//加签人员
+            string sign_name_show = "";//不管是否会签，显示所有会签负责人
+            if (action == "submit")
+            {
+                try
+                {
+                    CustomerSchedule cs = new CustomerSchedule();
+                    DataTable dt_IsSign = DbHelperSQL.Query("exec usp_CS_IsSign_HQ_again '" + lspart + "','" + lsdomain + "','" + m_sid + "'").Tables[0];
+                    IsSign_HQ = dt_IsSign.Rows[0]["IsSign_HQ"].ToString();
+                    SignEmp_id = dt_IsSign.Rows[0]["SignEmp_id"].ToString();
+                    sign_name_show = dt_IsSign.Rows[0]["workcode"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    IsSign_HQ = "e";
+                }
+
+                DbHelperSQL.ExecuteSql(@"update PGI_CustomerSchedule_Main_Form set IsSign_HQ='" + IsSign_HQ + "',SignEmp_id='" + SignEmp_id + "',sign_name_show='" + sign_name_show
+                    + "' where formno='" + m_sid + "'");
+            }
+        }
 
         if (ln > 0)
         {
