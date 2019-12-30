@@ -69,6 +69,7 @@
                 <td style="width:100px;">
                     <asp:DropDownList ID="ddl_year" runat="server" class="form-control input-s-md " Width="90px">
                         <asp:ListItem Value="2019">2019</asp:ListItem>
+                        <asp:ListItem Value="2020">2020</asp:ListItem>
                     </asp:DropDownList>
                 </td>
                 <%--<td style="width:30px;">域</td>
