@@ -731,7 +731,8 @@
                                          <li><a href="http://172.16.5.6:8080/wms/shipment_report.aspx"  target="_blank">出货量统计报表</a></li> 
                                            <li class="divider"></li>
                                         <li><a href="/wuliu/wuliu_container_rate_report.aspx"  target="_blank">集装箱利用率</a></li> 
-                                        <li><a href="/wuliu/FH_Query.aspx"  target="_blank">发运记录查询</a></li>  
+                                        <li><a href="/wuliu/FH_Query.aspx"  target="_blank">发运记录查询</a></li>
+                                        <li><a href="/wuliu/WLYF.aspx" target="_blank">物流运费查询</a></li>  
                                         <li><a href="/wuliu/Report_abs_mstr.aspx"  target="_blank">货运单浏览</a></li>                                        
                                     </ul>
                                 </div>
