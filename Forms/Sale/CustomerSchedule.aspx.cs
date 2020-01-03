@@ -897,7 +897,12 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         sql_nbr = string.Format(sql_nbr, domain, part, ship);*/
         string sql_nbr = @"select so_domain,so_ship,so_nbr
                         from qad.dbo.qad_so_mstr so
-                        where so.so_sched='1' and so_domain='{0}' and so_ship='{1}'";
+                        where so.so_sched='1' and so_domain='{0}' and so_ship='{1}'
+                        union 
+                        select b.domain so_domain,a.ship so_ship,a.nbr so_nbr
+                        from PGI_CustomerSchedule_Dtl_Form a
+	                        inner join PGI_CustomerSchedule_Main_Form b on a.CSNo=b.FormNo
+                        where (isnull(b.iscomplete,'')='' or isnull(b.iscomplete,'')='1') and b.domain='{0}' and ship='{1}' ";
         sql_nbr = string.Format(sql_nbr, domain, ship);
         DataTable ldt_nbr = DbHelperSQL.Query(sql_nbr).Tables[0];
 
