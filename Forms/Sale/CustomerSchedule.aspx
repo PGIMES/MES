@@ -243,8 +243,10 @@
             var nbr = eval('nbr' + vi);
             //nbr.SetText(cmbShip.GetValue().toString());
             
-            var part=$("#wlXX input[id*='part']").val();//alert(part);
+            //var part=$("#wlXX input[id*='part']").val();//alert(part);
             var domain=$("#wlXX input[id*='domain']").val();
+            var part=$("#<%=part.ClientID%>").val();
+            var cust_part=$("#wlXX input[id*='cust_part']").val();
 
             var delivery_mode = eval('delivery_mode' + vi); 
             var site = eval('site' + vi);
@@ -260,7 +262,8 @@
             $.ajax({
                     type: "post",
                     url: "CustomerSchedule.aspx/GetDataByShip",
-                    data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain + "','part':'" + part + "'}",
+                    data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain 
+                                + "','part':'" + part + "' + "','cust_part':'" + cust_part + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

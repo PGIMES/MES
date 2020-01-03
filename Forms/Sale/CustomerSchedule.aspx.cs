@@ -842,7 +842,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain, string part)
+    public static string GetDataByShip(string delivery_mode, string site, string ship, string domain, string part,string cust_part)
     {
         string shipname = ""; string nbr = ""; string bill = ""; string curr = ""; string pr_list = ""; string taxable = ""; string taxc = ""; string addresstype = "";
 
@@ -895,15 +895,14 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 	                        inner join qad.dbo.qad_sod_det sod on so.so_nbr=sod.sod_nbr and so.so_domain=sod.sod_domain and so.so_site=sod.sod_site
                         where so.so_sched='1' and so_domain='{0}' and sod_part='{1}' and so_ship='{2}'";
         sql_nbr = string.Format(sql_nbr, domain, part, ship);*/
-        string sql_nbr = @"select so_domain,so_ship,so_nbr
+        /*string sql_nbr = @"select so_domain,so_ship,so_nbr
                         from qad.dbo.qad_so_mstr so
-                        where so.so_sched='1' and so_domain='{0}' and so_ship='{1}'
-                        union 
-                        select b.domain so_domain,a.ship so_ship,a.nbr so_nbr
-                        from PGI_CustomerSchedule_Dtl_Form a
-	                        inner join PGI_CustomerSchedule_Main_Form b on a.CSNo=b.FormNo
-                        where (isnull(b.iscomplete,'')='' or isnull(b.iscomplete,'')='1') and b.domain='{0}' and ship='{1}' ";
-        sql_nbr = string.Format(sql_nbr, domain, ship);
+                        where so.so_sched='1' and so_domain='{0}' and so_ship='{1}'";*/
+        string sql_nbr = @"select so_domain,sod_part,so_ship,so_nbr
+                        from qad.dbo.qad_so_mstr so
+	                        inner join qad.dbo.qad_sod_det sod on so.so_nbr=sod.sod_nbr and so.so_domain=sod.sod_domain and so.so_site=sod.sod_site
+                        where so.so_sched='1' and so_domain='{0}' and (sod_part='{2}' or sod_custpart='{3}') and so_ship='{1}'";
+        sql_nbr = string.Format(sql_nbr, domain, ship, part, cust_part);
         DataTable ldt_nbr = DbHelperSQL.Query(sql_nbr).Tables[0];
 
         string nbr_num = "";
