@@ -263,7 +263,7 @@
                     type: "post",
                     url: "CustomerSchedule.aspx/GetDataByShip",
                     data: "{'delivery_mode':'" + delivery_mode.GetText() + "','site':'" + site.GetText() + "','ship':'" + cmbShip.GetValue().toString() + "','domain':'" + domain 
-                                + "','part':'" + part + "' + "','cust_part':'" + cust_part + "'}",
+                                + "','part':'" + part + "','cust_part':'" + cust_part + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
