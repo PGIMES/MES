@@ -2,6 +2,7 @@
 using System.Data;
 using Maticsoft.DBUtility;
 using System.Web.UI;
+using System.Web.Services;
 
 public partial class Wuliu_WLYF : System.Web.UI.Page
 {
@@ -54,4 +55,26 @@ public partial class Wuliu_WLYF : System.Web.UI.Page
         QueryASPxGridView();
         ASPxGridViewExporter1.WriteXlsToResponse("物流运费" + System.DateTime.Now.ToShortDateString());//导出到Excel
     }
+
+    [WebMethod]
+    public static string deal(string ids)
+    {
+        string re_flag = "";
+
+        string sql = @"update WLYF_upload set status='已付款',sure_date=getdate() where id in(" + ids + ")";
+        int i = DbHelperSQL.ExecuteSql(sql);
+        if (i > 0)
+        {
+            re_flag = "确认成功！";
+        }
+        else
+        {
+            re_flag = "确认失败！";
+        }
+
+        string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
+        return result;
+
+    }
+
 }

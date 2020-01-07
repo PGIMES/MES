@@ -8,9 +8,18 @@
     <script src="/Content/js/layer/layer.js"></script>
     <script src="/Content/js/plugins/layer/laydate/laydate.js"></script>
     <script type="text/javascript">
+        var UserId = '<%=UserId%>';
+        var UserName = '<%=UserName%>';
+        var DeptName = '<%=DeptName%>';
 
         $(document).ready(function () {
             $("#mestitle").text("【物流运费查询】");
+
+            if (DeptName.indexOf("财务") != -1 || DeptName.indexOf("IT") != -1) {
+                $('#btn_sure').show();
+            } else {
+                $('#btn_sure').hide();
+            }
 
              setHeight();
             $(window).resize(function () {
@@ -32,9 +41,9 @@
             });
 
             $('#btn_sure').click(function () {
-                if (grid_DK.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
+                if (grid_part.GetSelectedRowCount() <= 0) { layer.alert("请选择一条记录!"); return; }
 
-                grid_DK.GetSelectedFieldValues('id;ih_inv_nbr;ih_ship;idh_part', function GetVal(values) {
+                grid_part.GetSelectedFieldValues('id;ship_to', function GetVal(values) {
 
                     var ls_ids = "";
                     for (var i = 0; i < values.length; i++) {
@@ -45,7 +54,7 @@
 
                     $.ajax({
                         type: "post",
-                        url: "Fin_idh_invoice_Report.aspx/deal",
+                        url: "WLYF.aspx/deal",
                         data: "{'ids':'" + ls_ids + "'}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -64,7 +73,7 @@
         });
 
         function setHeight() {
-             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 220) + "px");
+            $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 220) + "px");
 
             $("#MainContent_GV_PART").css("width", ($(window).width() - 10) + "px");
             $("div[class=dxgvCSD]").css("width", ($(window).width() - 10) + "px");
@@ -122,13 +131,15 @@
         <table>
             <tr>
                 <td>
-                     <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="tr_part" AutoGenerateColumns="False" 
-                         OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1000px">
+                     <dx:ASPxGridView ID="GV_PART" runat="server" KeyFieldName="id" AutoGenerateColumns="False" 
+                         OnPageIndexChanged="GV_PART_PageIndexChanged" Width="1000px" ClientInstanceName="grid_part">
+                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
                         <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
                         <SettingsPager PageSize="100"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True"   VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
                                  ShowFilterRowMenuLikeItem="True"  ShowFooter="True"  HorizontalScrollBarMode="Auto" />
                         <Columns>
+                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  />
                             <dx:GridViewDataDateColumn Caption="发运日期" FieldName="tr_effdate" Width="90px" VisibleIndex="1" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>
@@ -171,6 +182,8 @@
                                 <Settings AllowAutoFilterTextInputTimer="False" />
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="id" FieldName="id" VisibleIndex="99" Width="0px"                                
+                                 HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>
                         </Columns>
                         <TotalSummary>
                             <dx:ASPxSummaryItem DisplayFormat="{0:N2}" FieldName="USD_amount"  SummaryType="Sum" />
