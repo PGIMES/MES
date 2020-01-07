@@ -53,7 +53,7 @@ public partial class Wuliu_WLYF : System.Web.UI.Page
     protected void Bt_Export_Click(object sender, EventArgs e)
     {
         QueryASPxGridView();
-        ASPxGridViewExporter1.WriteXlsToResponse("物流运费" + System.DateTime.Now.ToShortDateString());//导出到Excel
+        GV_PART.ExportXlsxToResponse("物流运费" + System.DateTime.Now.ToString("yyyyMMdd"), new DevExpress.XtraPrinting.XlsxExportOptionsEx { ExportType = DevExpress.Export.ExportType.WYSIWYG });//导出到Excel
     }
 
     [WebMethod]

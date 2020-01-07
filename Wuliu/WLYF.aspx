@@ -199,8 +199,6 @@
                             <Footer HorizontalAlign="Right" ForeColor="Red"></Footer>
                         </Styles>
                     </dx:ASPxGridView>
-                    <dx:ASPxGridViewExporter ID="ASPxGridViewExporter1" runat="server">
-                    </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>
