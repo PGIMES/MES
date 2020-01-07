@@ -38,12 +38,9 @@ public partial class Wuliu_WLYF : System.Web.UI.Page
     }
     public void QueryASPxGridView()
     {
-        DataTable dt = DbHelperSQL.Query("exec qad.dbo.PGI_QAD_WLYF  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "'").Tables[0];
-        Pgi.Auto.Control.SetGrid(this.GV_PART, dt, 100);
-        this.GV_PART.Columns[3].Width = 150;
-        this.GV_PART.Columns[4].Width = 150;
-        this.GV_PART.Columns[8].Width = 110;
-        GV_PART.Width = 1100;
+        DataTable dt = DbHelperSQL.Query("exec qad.dbo.PGI_QAD_WLYF_NEW  '" + ddl_comp.SelectedValue + "','" + txtDateFrom.Text + "','" + txtDateTo.Text + "','" + ddl_status.SelectedValue + "'").Tables[0];
+        GV_PART.DataSource = dt;
+        GV_PART.DataBind();
     }
 
     protected void GV_PART_PageIndexChanged(object sender, EventArgs e)
