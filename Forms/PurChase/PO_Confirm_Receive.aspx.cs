@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -120,6 +121,7 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
             }
             sql = string.Format(sql, domain, syscontractno, txt_qty.Text, ActualReceiveDate.Text, filepath, LogUserModel.UserId, pono, rowid);
             i = DbHelperSQL.ExecuteSql(sql);
+            
         }
         catch (Exception ex)
         {
@@ -130,6 +132,37 @@ public partial class Select_select_pt_mstr : System.Web.UI.Page
         if (i > 0)
         {
             msg = "确认成功！";
+
+            //包材合同,邮件CC给财务 吴燕蓝
+            if (syscontractno.StartsWith("108"))
+            {
+                string body = "Dear all:<br />【包材合同】,合同号" + syscontractno + ",采购订单号" + pono + "采购行号" + rowid + ",到货确认完毕，请知悉.";
+                string to_add = "yanlan.wu@pgi.cn";
+
+                SmtpClient mail = new SmtpClient();
+                mail.DeliveryMethod = SmtpDeliveryMethod.Network; //发送方式           
+                mail.Host = "mail.pgi.cn"; //smtp服务器                                
+                mail.Credentials = new System.Net.NetworkCredential("oa@pgi.cn", "pgi_1234");//用户名凭证  
+
+                MailMessage message = new MailMessage();//邮件信息            
+                message.From = new MailAddress("oa@pgi.cn");//发件人           
+                message.To.Add(to_add); //收件人
+                //message.CC.Add(to_cc);//抄送收件人
+                message.Bcc.Add("guiqin.he@pgi.cn");//,angela.xu@pgi.cn
+
+                message.Subject = "【包材合同】,合同号" + syscontractno + ",到货确认通知";//主题            
+                message.Body = body;//内容           
+                message.BodyEncoding = System.Text.Encoding.UTF8; //正文编码            
+                message.IsBodyHtml = true;//设置为HTML格式            
+                message.Priority = MailPriority.Normal;//优先级
+                message.Attachments.Clear();
+
+                //Attachment attach = new Attachment(resultFilePath);
+                //message.Attachments.Add(attach);
+
+                mail.Send(message);
+
+            }
         }
         else
         {
