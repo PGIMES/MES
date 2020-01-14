@@ -542,6 +542,12 @@
                                     msg+="【物料类别】不可为空.<br />";
                                     flag=false;
                                     return false;
+                                }else if (wlType.val()=="4040-自动化项目类") {
+                                    if($("#applydept").val().indexOf("设备") == -1){
+                                        msg+="【归属部门】不是设备部，【物料类别】不可选择 4040-自动化项目类.<br />";
+                                        flag=false;
+                                        return false;
+                                    }      
                                 }
                             }
                             if($("#prtype").val()=="刀具类" ){
