@@ -128,6 +128,7 @@
                     ToolTip="差异=实际产出计划-入库数量；">
                     <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
                 </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn Caption="铸件来源" FieldName="vendor" Width="150px" VisibleIndex="13"></dx:GridViewDataTextColumn>
             </Columns>    
             <TotalSummary>
                 <dx:aspxsummaryitem DisplayFormat="<font color='red'>{0:N0}</font>" FieldName="kaishi_qty" ShowInColumn="kaishi_qty" ShowInGroupFooterColumn="kaishi_qty" SummaryType="Sum" />
