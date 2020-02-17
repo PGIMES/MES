@@ -465,12 +465,14 @@
                                 if(taxc==""){msg+="【客户日程明细】-第"+(index+1)+"行【应纳税】为yes,【税率】不可为空.<br />"; }                                    
                             }
 
-                            if (consignment=="") { msg+="【客户日程明细】-第"+(index+1)+"行【寄售】不可为空.<br />"; }
-                            else if (consignment=="no") { 
-                                if(consignment_loc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为no,【寄售地点】不可有值.<br />"; }                                    
-                            }
-                            else if (consignment=="yes") { 
-                                if(consignment_loc==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为yes,【寄售地点】不可为空.<br />"; }                                    
+                            if (line=="") {//加上这个line==""，老的QAD的数据不规范
+                                if (consignment=="") { msg+="【客户日程明细】-第"+(index+1)+"行【寄售】不可为空.<br />"; }
+                                else if (consignment=="no") { 
+                                    if(consignment_loc!=""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为no,【寄售地点】不可有值.<br />"; }                                    
+                                }
+                                else if (consignment=="yes") { 
+                                    if(consignment_loc==""){msg+="【客户日程明细】-第"+(index+1)+"行【寄售】为yes,【寄售地点】不可为空.<br />"; }                                    
+                                }
                             }
 
                             if (stepid!=null) {
