@@ -63,8 +63,9 @@ public partial class select_CustomerSchedule_part : System.Web.UI.Page
         string part = GridView1.SelectedRow.Cells[2].Text.Trim().Replace("&nbsp;", "");
         string wlmc = GridView1.SelectedRow.Cells[3].Text.Trim().Replace("&nbsp;", "");
         string ms = GridView1.SelectedRow.Cells[4].Text.Trim().Replace("&nbsp;", "");
+        string cust_eco = GridView1.SelectedRow.Cells[5].Text.Trim().Replace("&nbsp;", "");
 
-        string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + wlmc + "','" + ms + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+        string temp = @"<script>parent.setvalue_part('" + domain + "','" + part + "','" + wlmc + "','" + ms + "','" + cust_eco + "'); var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
 
         Response.Write(temp.Trim());
     }

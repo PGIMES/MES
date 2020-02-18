@@ -70,6 +70,13 @@
                 }
             });
 
+            $("#<%=part.ClientID%>").change(function () {  
+                $("#wlXX input[id*='cust_eco']").val('无');
+            });
+            $("#wlXX input[id*='domain']").change(function () {  
+                $("#wlXX input[id*='cust_eco']").val('无');
+            });
+
             $("#wlXX input[id*='cust_part']").change(function () {  
                 var cust_part=$("#wlXX input[id*='cust_part']").val();
                 $("#wlXX input[id*='cust_partd']").val(cust_part);
@@ -199,14 +206,14 @@
             layer.open({
                 title:'PGI零件号选择',
                 type: 2,
-                area: ['650px', '500px'],
+                area: ['750px', '500px'],
                 fixed: false, //不固定
                 maxmin: true,
                 content: url
             }); 
         }
 
-        function setvalue_part(domain, part, wlmc, ms) 
+        function setvalue_part(domain, part, wlmc, ms, cust_eco) 
         {    
             $("#wlXX input[id*='typeno']").val('新增');
 
@@ -216,6 +223,7 @@
             $("#wlXX input[id*='cust_part']").val(wlmc);
             $("#wlXX input[id*='cust_partd']").val(wlmc);
             $("#wlXX input[id*='comment']").val(ms);
+            $("#wlXX input[id*='cust_eco']").val(cust_eco);
         }
         function Ondelivery_modeChanged(cmbDelivery,vi){
             var domain=$("#wlXX input[id*='domain']").val();
@@ -818,8 +826,9 @@
                                 <td>
                                     <asp:TextBox ID="cust_partd"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
                                 </td>      
-                                <td style="width:100px;"></td>
+                                <td style="width:100px;"><font color="red">*</font>安全特性</td>
                                 <td style="width:292px;">
+                                    <asp:TextBox ID="cust_eco"  runat="server" class="lineread" ReadOnly="true" Width="210px" />
                                 </td>                   
                             </tr>
                             <tr> 

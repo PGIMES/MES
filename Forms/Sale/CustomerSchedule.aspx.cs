@@ -128,7 +128,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                         DataTable ldt_head = ds_con.Tables[0];
                         ldt_detail = ds_con.Tables[1];
 
-                        SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this.Page, ldt_head.Rows[0], "ctl00$MainContent$");
+                        SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD_NEW", this.Page, ldt_head.Rows[0], "ctl00$MainContent$");
                     }
 
                 }
@@ -144,7 +144,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
                 DataTable ldt = DbHelperSQL.Query("select * from PGI_CustomerSchedule_Main_Form where formno='" + this.m_sid + "'").Tables[0];
                 if (ldt.Rows.Count > 0)
                 {
-                    SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this.Page, ldt.Rows[0], "ctl00$MainContent$");
+                    SetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD_NEW", this.Page, ldt.Rows[0], "ctl00$MainContent$");
                     hd_domain.Value = ldt.Rows[0]["domain"].ToString();
 
                     if (ldt.Rows[0]["files"].ToString() != "")
@@ -998,7 +998,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         List<Pgi.Auto.Common> ls_sum = new List<Pgi.Auto.Common>();
 
         //---------------------------------------------------------------------------------------获取表头数据----------------------------------------------------------------------------------------
-        List<Pgi.Auto.Common> ls = GetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD", this, "ctl00$MainContent${0}");
+        List<Pgi.Auto.Common> ls = GetControlValue("PGI_CustomerSchedule_Main_Form", "HEAD_NEW", this, "ctl00$MainContent${0}");
 
         string applyid = ApplyId.Text; string applyname = ApplyName.Text;
         string lspart = part.Text; string lscust_part = cust_part.Text; string lsdomain = domain.Text;

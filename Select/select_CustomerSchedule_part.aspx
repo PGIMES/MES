@@ -21,7 +21,7 @@
                     <td align="center" colspan="2">
 
                         <asp:Label ID="lb_msg" runat="server" Text="" ForeColor="Red"></asp:Label>
-                        <asp:GridView ID="GridView1" Width="630px"
+                        <asp:GridView ID="GridView1" Width="730px"
                             AllowMultiColumnSorting="True" AllowPaging="True"
                             AllowSorting="True" AutoGenerateColumns="False"
                             OnPageIndexChanging="GridView1_PageIndexChanging"
@@ -51,6 +51,9 @@
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField>  
                                 <asp:BoundField DataField="ms" HeaderText="描述" ReadOnly="True">
+                                    <HeaderStyle Wrap="True" />
+                                </asp:BoundField> 
+                                <asp:BoundField DataField="cust_eco" HeaderText="安全特性" ReadOnly="True">
                                     <HeaderStyle Wrap="True" />
                                 </asp:BoundField> 
                                 <asp:BoundField DataField="status" HeaderText="状态" ReadOnly="True">
