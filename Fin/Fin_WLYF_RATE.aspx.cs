@@ -16,7 +16,7 @@ public partial class Fin_Fin_WLYF_RATE : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            //ddl_year.SelectedValue = DateTime.Now.Year.ToString(); //获取上月年份
+            ddl_year.SelectedValue = DateTime.Now.Year.ToString(); //获取上月年份
         }
         QueryASPxGridView();
     }
