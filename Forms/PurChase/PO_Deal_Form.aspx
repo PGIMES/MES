@@ -13,7 +13,7 @@
         var DeptName = '<%=DeptName%>';
 
         $(document).ready(function () {
-            $("#mestitle").html("【签核完成的采购单处理】");//<span class='h5' style='color:red'>10122 > 60天显示黄，> 75天显示红色 其他 > 30显示黄，> 45天显示红色</span>
+            $("#mestitle").html("【签核完成的采购单处理】");
 
             if (DeptName.indexOf("采购") != -1 || DeptName.indexOf("IT") != -1) {
                 $('#btn_del').show();

@@ -120,11 +120,36 @@ public partial class Forms_PurChase_PO_Deal_Form : System.Web.UI.Page
         string sql_update_po_main = @"update PUR_PO_Main_Form set TotalPay=a.TotalPrice
                                     from (select pono,sum(TotalPrice) TotalPrice from PUR_PO_Dtl_Form where pono in({0}) and id not in({1}) group by pono) a 
                                     where PUR_PO_Main_Form.pono=a.pono";
-        sql_update_po_main = string.Format(sql_update_po, ponos, ids);
+        sql_update_po_main = string.Format(sql_update_po_main, ponos, ids);
         ls_update_po_main.Sql = sql_update_po_main;
         ls_sum.Add(ls_update_po_main);
 
-        //若包含合同，更新合同付款比例
+        //若包含合同，更新合同付款比例：先修改历史修改最新记录表里，不存在这表里的，再去修改表单的表
+        Pgi.Auto.Common ls_update_ht_his = new Pgi.Auto.Common();
+        string sql_update_ht_his = @"update PUR_PO_ContractPay_Plan_His set PayMoney=a.TotalPrice*(PayRate/100)
+                                    from (select dtl.pono,main.SysContractNo,TotalPrice 
+                                        from (select pono,sum(TotalPrice) TotalPrice from PUR_PO_Dtl_Form where pono in({0}) and id not in({1}) group by pono)dtl
+	                                        inner join pur_po_main_form main on dtl.PONo=main.PoNo
+                                        where main.SysContractNo is not null and main.PoType='合同'
+                                        ) a 
+                                    where ContractLine is not null and b_flag=1 and PUR_PO_ContractPay_Plan_His.SysContractNo=a.SysContractNo";
+        sql_update_ht_his = string.Format(sql_update_ht_his, ponos, ids);
+        ls_update_ht_his.Sql = sql_update_ht_his;
+        ls_sum.Add(ls_update_ht_his);
+
+        Pgi.Auto.Common ls_update_ht = new Pgi.Auto.Common();
+        string sql_update_ht = @"update PUR_PO_ContractPay_Form set PayMoney=a.TotalPrice*(PayRate/100)
+                                from (select dtl.pono,main.SysContractNo,TotalPrice 
+                                    from (select pono,sum(TotalPrice) TotalPrice from PUR_PO_Dtl_Form where pono in({0}) and id not in({1}) group by pono)dtl
+	                                    inner join pur_po_main_form main on dtl.PONo=main.PoNo
+                                    where main.SysContractNo is not null and main.PoType='合同'
+                                        and main.SysContractNo not in(select SysContractNo from PUR_PO_ContractPay_Plan_His where ContractLine is not null and b_flag=1)
+                                    ) a 
+                                where PUR_PO_ContractPay_Form.PONo=a.PONo";
+        sql_update_ht = string.Format(sql_update_ht, ponos, ids);
+        ls_update_ht.Sql = sql_update_ht;
+        ls_sum.Add(ls_update_ht);
+
 
         int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
         if (ln > 0)
