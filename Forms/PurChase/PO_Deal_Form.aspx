@@ -97,6 +97,10 @@
                         <asp:TextBox ID="EndDate" runat="server" class="form-control" Width="120px"
                             onclick="laydate({type: 'date',format: 'YYYY/MM/DD',choose: function(dates){}});" />
                     </td>    
+                    <td style="text-align:right;">&nbsp;&nbsp;采购单号</td>
+                    <td>
+                        <asp:TextBox ID="txt_pono" runat="server" class="form-control" Width="120px"></asp:TextBox>
+                    </td>
                     <td> 
                         &nbsp;
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Bt_select_Click" Width="70px" />                     

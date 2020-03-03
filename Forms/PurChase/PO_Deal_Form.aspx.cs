@@ -43,8 +43,8 @@ public partial class Forms_PurChase_PO_Deal_Form : System.Web.UI.Page
 
     public void QueryASPxGridView()
     {
-        string sql = @"exec Pur_PO_Deal '{0}','{1}','{2}'";
-        sql = string.Format(sql, UserName, StartDate.Text, EndDate.Text);
+        string sql = @"exec Pur_PO_Deal '{0}','{1}','{2}','{3}'";
+        sql = string.Format(sql, UserName, StartDate.Text, EndDate.Text, txt_pono.Text);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
 
         GV_PART_DK.DataSource = dt;
