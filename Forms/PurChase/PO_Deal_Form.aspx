@@ -35,9 +35,10 @@
                     var ls_ids = "", ls_ponos = "";
                     for (var i = 0; i < values.length; i++) {
                         var ls_id = values[i][0];//== null ? "" : values[0][0];
-                        var ls_pono = values[i][1];//== null ? "" : values[0][0];
+                        var ls_pono = values[i][1];
                         ls_ids = ls_ids + ls_id + ",";
-                        ls_ponos = ls_ids + "'" + ls_id + "',";
+                        ls_ponos = ls_ponos + ls_pono + ",";
+                        //ls_ponos = ls_ponos + "'" + ls_pono + "',";
                     }
                     ls_ids = ls_ids.substr(0, ls_ids.length - 1);
                     ls_ponos = ls_ponos.substr(0, ls_ponos.length - 1);
