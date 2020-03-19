@@ -164,6 +164,12 @@
                             <dx:GridViewDataTextColumn Caption="CNY不固定金额" FieldName="CNY_no_fixed_amount" Width="90px" VisibleIndex="14">
                                 <HeaderStyle BackColor="#F0E68C" />
                             </dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="实际集装箱" FieldName="jzx_sj" Width="90px" VisibleIndex="14" >
+                                <HeaderStyle BackColor="#F0E68C" />
+                            </dx:GridViewDataTextColumn> 
+                            <dx:GridViewDataTextColumn Caption="备注" FieldName="remark" Width="150px" VisibleIndex="14">
+                                <HeaderStyle BackColor="#F0E68C" />
+                            </dx:GridViewDataTextColumn> 
                              <dx:GridViewDataDateColumn Caption="上传日期" FieldName="uploadtime" Width="90px" VisibleIndex="15" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                                 <HeaderStyle BackColor="#F0E68C" />

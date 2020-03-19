@@ -107,8 +107,8 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                                         and convert(datetime,WLYF_upload.fyrq)=convert(datetime,a.fyrq) and WLYF_upload.jzx=a.jzx and WLYF_upload.site=a.site 
 		                                and WLYF_upload.hyd=a.hyd and WLYF_upload.gh=a.gh and WLYF_upload.shipto=a.shipto;                              
                                 insert into WLYF_upload 
-                                  (fyrq, jzx, site, hyd, gh, shipto, USD_fixed_amount, CNY_fixed_amount, USD_no_fixed_amount, CNY_no_fixed_amount, ori_filename, new_filename, uploadtime, CreateById, status, line)
-                                 select fyrq, jzx, site, hyd, gh, shipto, USD_fixed_amount, CNY_fixed_amount, USD_no_fixed_amount, CNY_no_fixed_amount, ori_filename, new_filename, uploadtime, CreateById, status, line
+                                  (fyrq, jzx, site, hyd, gh, shipto, USD_fixed_amount, CNY_fixed_amount, USD_no_fixed_amount, CNY_no_fixed_amount, jzx_sj, remark, ori_filename, new_filename, uploadtime, CreateById, status, line)
+                                 select fyrq, jzx, site, hyd, gh, shipto, USD_fixed_amount, CNY_fixed_amount, USD_no_fixed_amount, CNY_no_fixed_amount, jzx_sj, remark, ori_filename, new_filename, uploadtime, CreateById, status, line
                                  from WLYF_upload_temp";
             int j = DbHelperSQL.ExecuteSql(sql_prd);
 
@@ -133,7 +133,7 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
         try
         {
             DataTable dtExcel = GetExcelData_Table(fileName, 0);
-            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 10)
+            if (dtExcel == null || dtExcel.Rows.Count <= 0 || dtExcel.Columns.Count != 12)
             {
                 result = "No Data";
             }
@@ -150,6 +150,8 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                 DataColumn col_7 = new DataColumn("CNY_fixed_amount", typeof(decimal));
                 DataColumn col_8 = new DataColumn("USD_no_fixed_amount", typeof(decimal));
                 DataColumn col_9 = new DataColumn("CNY_no_fixed_amount", typeof(decimal));
+                DataColumn col_9_1 = new DataColumn("jzx_sj", typeof(string));
+                DataColumn col_9_2 = new DataColumn("remark", typeof(string));
                 DataColumn col_10 = new DataColumn("ori_filename", typeof(string));
                 DataColumn col_11 = new DataColumn("new_filename", typeof(string));
                 DataColumn col_12 = new DataColumn("uploadtime", typeof(DateTime));
@@ -157,7 +159,7 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                 DataColumn col_14 = new DataColumn("status", typeof(string));
                 DataColumn col_15 = new DataColumn("line", typeof(int));
                 dt.Columns.Add(col_0); dt.Columns.Add(col_1); dt.Columns.Add(col_2); dt.Columns.Add(col_3); dt.Columns.Add(col_4); dt.Columns.Add(col_5);
-                dt.Columns.Add(col_6); dt.Columns.Add(col_7); dt.Columns.Add(col_8); dt.Columns.Add(col_9); dt.Columns.Add(col_10);
+                dt.Columns.Add(col_6); dt.Columns.Add(col_7); dt.Columns.Add(col_8); dt.Columns.Add(col_9); dt.Columns.Add(col_9_1); dt.Columns.Add(col_9_2); dt.Columns.Add(col_10);
                 dt.Columns.Add(col_11); dt.Columns.Add(col_12); dt.Columns.Add(col_13); dt.Columns.Add(col_14); dt.Columns.Add(col_15);
 
                 for (int k = 0; k < dtExcel.Rows.Count; k++)
@@ -174,6 +176,8 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                     //decimal CNY_fixed_amount = Convert.ToDecimal(dr["CNY固定金额"].ToString().Trim() == "" ? "0" : dr["CNY固定金额"].ToString().Trim());
                     //decimal USD_no_fixed_amount = Convert.ToDecimal(dr["USD不固定金额"].ToString().Trim() == "" ? "0" : dr["USD不固定金额"].ToString().Trim());
                     //decimal CNY_no_fixed_amount = Convert.ToDecimal(dr["CNY不固定金额"].ToString().Trim() == "" ? "0" : dr["CNY不固定金额"].ToString().Trim());
+                    string jzx_sj = dr["实际集装箱"].ToString().Trim();
+                    string remark = dr["备注"].ToString().Trim();
 
                     //过滤key值为空行
                     if (fyrq == "" || jzx == "" || site == "" || hyd == "" || gh == "" || shipto == "")
@@ -222,6 +226,8 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                     dt_r["CNY_fixed_amount"] = CNY_fixed_amount;
                     dt_r["USD_no_fixed_amount"] = USD_no_fixed_amount;
                     dt_r["CNY_no_fixed_amount"] = CNY_no_fixed_amount;
+                    dt_r["jzx_sj"] = jzx_sj;
+                    dt_r["remark"] = remark;
                     dt_r["ori_filename"] = ori_filename;
                     dt_r["new_filename"] = new_filename;
                     dt_r["uploadtime"] = DateTime.Now;
@@ -291,6 +297,8 @@ public partial class Fin_WLYF_upload_multi : System.Web.UI.Page
                     bulkCopy.ColumnMappings.Add("CNY_fixed_amount", "CNY_fixed_amount");
                     bulkCopy.ColumnMappings.Add("USD_no_fixed_amount", "USD_no_fixed_amount");
                     bulkCopy.ColumnMappings.Add("CNY_no_fixed_amount", "CNY_no_fixed_amount");
+                    bulkCopy.ColumnMappings.Add("jzx_sj", "jzx_sj");
+                    bulkCopy.ColumnMappings.Add("remark", "remark");
                     bulkCopy.ColumnMappings.Add("ori_filename", "ori_filename");
                     bulkCopy.ColumnMappings.Add("new_filename", "new_filename");
                     bulkCopy.ColumnMappings.Add("uploadtime", "uploadtime");
