@@ -60,7 +60,7 @@ public partial class Fin_Fin_WLYF_RATE : System.Web.UI.Page
             for (int row = 0; row < dt_1.Rows.Count - 1; row++)//最后一行合计排除
             {
                 Series seriesA = new Series(dt_1.Rows[row]["part_hx"].ToString(), DevExpress.XtraCharts.ViewType.Bar);
-                for (int i = 8; i < dt_1.Columns.Count; i++)
+                for (int i = 7; i < dt_1.Columns.Count; i++)
                 {
                     string argument = dt_1.Columns[i].ColumnName;//参数名称 
                     decimal value = Convert.ToDecimal(dt_1.Rows[row][i].ToString() == "" ? "0" : dt_1.Rows[row][i].ToString());//参数值
