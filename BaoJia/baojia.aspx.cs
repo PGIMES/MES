@@ -36,7 +36,7 @@ public partial class baojia : System.Web.UI.Page
         if (!IsPostBack)
         {
             Session["lv"] = "";
-           
+
             ViewState["job"] = Session["job"];
             ViewState["empid"] = Session["empid"];
             //测试数据
@@ -46,17 +46,18 @@ public partial class baojia : System.Web.UI.Page
             //ViewState["empid"] = "01613";
             if (Session["empid"] == null || Session["empid"] == "")
             {
-                ViewState["empid"] = "01745";
-
+                ViewState["empid"] = "01920";
+                //ViewState["empid"] = "02146";
             }
             else
             {
                 ViewState["empid"] = Session["empid"];
+
             }
             DDL();
             if (ViewState["empid"] != null)
             {
-                if (Request["requestid"] != null&& Request["update"] != null)//创建新一轮报价
+                if (Request["requestid"] != null && Request["update"] != null)//创建新一轮报价
                 {
                     //this.txt_create_date.Value = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     //txt_baojia_no.Value = "BJ" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -65,13 +66,14 @@ public partial class baojia : System.Web.UI.Page
                     DDL_turns.Enabled = false;
                     txt_baojia_start_date.Disabled = true;
                     txt_create_date.Disabled = true;
+      
                     DDL_domain.Enabled = false;
                     Getstatus();
                     //gvbangding();
                     gvbangding_update();
                     button();
                     //报价明细
-                    
+
                     //BindGridBjMX((DataTable)ViewState["dt"], this.gv_bjmx);
                     if (txt_create_by_dept.Value != "销售二部")
                     {
@@ -83,7 +85,7 @@ public partial class baojia : System.Web.UI.Page
                         BTN_Sales_sub.Visible = true;
                         BTN_Sales_sub.Text = "提交";
                     }
-                       
+
                     DDL_is_stop.Enabled = false;
                     DDL_liuchengyizhuan.Enabled = false;
                     ViewState["lv"] = "BJJD";
@@ -103,20 +105,23 @@ public partial class baojia : System.Web.UI.Page
                         gvbangding();
                         button();
                         button_zhidu();
-                        if(ViewState["empid"].ToString() == txt_sales_empid.Value && DDL_baojia_status.SelectedValue == "已报出")
+                        DataTable dtagent = BJ_CLASS.GetAgent(txt_sales_empid.Value, ViewState["empid"].ToString());
+                        //if (ViewState["empid"].ToString() == txt_sales_empid.Value && DDL_baojia_status.SelectedValue == "已报出")
+                        if ((ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0) && DDL_baojia_status.SelectedValue == "已报出")
                         {
                             gvjz();
                             DDL_liuchengyizhuan.Visible = false;
                             BTN_Sales_yizhuan.Visible = false;
                         }
                         customer_project_all();
+                        update_level();
                     }
                     else
                     {
                         int requestid = Convert.ToInt32(Request["requestid"]);
                         DataTable dt = BJ_CLASS.BJ_Query_PRO(requestid);
                         string isyizhuan = dt.Rows[0]["is_yizhuan"].ToString();
-                        if(isyizhuan=="1")
+                        if (isyizhuan == "1")
                         {
                             InitTable_bjmx();
                             gvbangding_update();
@@ -139,6 +144,20 @@ public partial class baojia : System.Web.UI.Page
                             //取消修改20171115
                             //BTN_Sales_sub_update.Visible = true;
                             //button_write();
+                        }
+                        //销售工程师在分析价格之后，还未报出的情况下，不在当前节点也可以修改价格
+                        DataTable dt_BTN_Sales_5 = BJ_CLASS.BJ_BTN_Sales_5(requestid);
+                        int COUNT = dt_BTN_Sales_5.Rows.Count;
+                        if (ViewState["empid"].ToString() == txt_sales_empid.Value && DDL_baojia_status.SelectedValue == "报价中" && COUNT > 0)
+                        {
+
+                            BTN_Sales_5.Visible = true;
+
+                        }
+                        else
+                        {
+
+                            BTN_Sales_5.Visible = false;
                         }
                         customer_project_all();
                         //修改争取级别权限
@@ -168,10 +187,10 @@ public partial class baojia : System.Web.UI.Page
                     txt_sales_empid.Value = ViewState["empid"].ToString();
                     txt_sales_name.Value = dtemp.Rows[0]["lastname"].ToString();
                     txt_sales_ad.Value = dtemp.Rows[0]["ADAccount"].ToString();
-                    txt_ZG_empid.Value= dtemp.Rows[0]["zg_workcode"].ToString();
+                    txt_ZG_empid.Value = dtemp.Rows[0]["zg_workcode"].ToString();
                     txt_status_id.Text = "100";
                     txt_status_name.Text = "报价中";
-           
+
                     DDL_baojia_status.SelectedValue = "报价中";
                     DDL_is_stop.SelectedValue = "否";
                     txt_update_user.Value = ViewState["empid"].ToString();
@@ -183,9 +202,9 @@ public partial class baojia : System.Web.UI.Page
                     //报价明细
                     InitTable_bjmx();
                     //BindGridBjMX((DataTable)ViewState["dt"], this.gv_bjmx);
-                  
+
                     BTN_Sales_sub.Text = "提交";
-          
+
                     BTN_Sales_2.Enabled = false;
                     BTN_Sales_4.Enabled = false;
                     txt_hetong_complet_date_qr.Disabled = true;
@@ -195,14 +214,14 @@ public partial class baojia : System.Web.UI.Page
                     DDL_is_stop.Enabled = false;
                     DDL_liuchengyizhuan.Enabled = false;
 
-                   
+
                 }
             }
         }
 
         Panel1.GroupingText = "当前轮：第" + DDL_turns.SelectedValue + "轮--报价记录";
         Panel2.GroupingText = "当前轮：第" + DDL_turns.SelectedValue + "轮--报价进度控制(点击展开)";
-        
+
         //string baojia_no = Request.QueryString["Baojia_no"];
         string baojia_no = this.txt_baojia_no.Value;
         bindMst(baojia_no, this.DataMst);
@@ -228,7 +247,8 @@ public partial class baojia : System.Web.UI.Page
     }
     public void update_level()
     {
-        if (ViewState["empid"].ToString() == txt_sales_empid.Value & Request["requestid"] != null)
+        DataTable dtagent = BJ_CLASS.GetAgent(txt_sales_empid.Value, ViewState["empid"].ToString());
+        if ((ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0) & Request["requestid"] != null)
         {
             DDL_project_level.Enabled = true;
             DDL_project_level.BackColor = System.Drawing.Color.White;
@@ -282,7 +302,7 @@ public partial class baojia : System.Web.UI.Page
         txt_baojia_no.Disabled = true;
         DDL_turns.Enabled = false;
         DDL_wl_tk.Enabled = false;
-        DDL_wl_tk.BackColor =System.Drawing.Color.WhiteSmoke;
+        DDL_wl_tk.BackColor = System.Drawing.Color.WhiteSmoke;
         DDL_bz_tk.Enabled = false;
         DDL_bz_tk.BackColor = System.Drawing.Color.WhiteSmoke;
         DDL_jijia_tk.Enabled = false;
@@ -293,7 +313,10 @@ public partial class baojia : System.Web.UI.Page
         DDL_sfxj_cg.BackColor = System.Drawing.Color.WhiteSmoke;
         txt_content.Disabled = true;
         txt_baojia_desc.Disabled = true;
-       
+        txt_cusRequestDate.Disabled = true;
+        txt_Sj_baochuDate.Disabled = true;
+
+
     }
     public void button_write()
     {
@@ -367,9 +390,9 @@ public partial class baojia : System.Web.UI.Page
     }
     public void gv_htgz_write()
     {
-               for (int i = 0; i<gv_htgz.Rows.Count; i++)
+        for (int i = 0; i < gv_htgz.Rows.Count; i++)
         {
-         
+
 
             ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Enabled = true;
             ((TextBox)this.gv_htgz.Rows[i].FindControl("pc_date")).Enabled = true;
@@ -418,7 +441,7 @@ public partial class baojia : System.Web.UI.Page
         BTN_Sales_2.Enabled = false;
         BTN_Sales_4.Enabled = false;
         txt_hetong_complet_date_qr.Disabled = true;
-      
+
     }
     public void ddl_htgz()
     {
@@ -513,8 +536,8 @@ public partial class baojia : System.Web.UI.Page
             //        ((DropDownList)gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Enabled = false;
             //    }
             //}
-           
-            
+
+
         }
 
     }
@@ -550,13 +573,13 @@ public partial class baojia : System.Web.UI.Page
     }
     public void gvbangding_update()
     {
-       
+
         //加载报价明细
         DataTable dt_bjmx = BJ_CLASS.Getgv(Request["requestid"], "bjmx_update");
         //ViewState["dt"] = dt_bjmx;
         gv_bjmx.DataSource = dt_bjmx;
         gv_bjmx.DataBind();
-       
+
         ////加载进度明细
         //DataTable dt_bjjd = BJ_CLASS.Getgv(Request["requestid"], "bjjd");
         //gv_bjjd.DataSource = dt_bjjd;
@@ -568,19 +591,19 @@ public partial class baojia : System.Web.UI.Page
         ViewState["dtht"] = dt_htgz;
         gv_htgz.DataSource = dt_htgz;
         gv_htgz.DataBind();
-        
+
         //下拉框
         ddl_htgz();
         ddl_ljztgz();
         ddl_bjmx();
 
-        if (txt_create_by_dept.Value != "销售二部" )
+        if (txt_create_by_dept.Value != "销售二部")
         {
-           
+
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('销售部才可申请报价流程！')", true);
             DDL_project_size.SelectedValue = "";
             BTN_Sales_sub.Visible = false;
-            
+
         }
         else
         {
@@ -611,7 +634,7 @@ public partial class baojia : System.Web.UI.Page
                     ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Enabled = false;
                     ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Style.Add("BackColor", "black");
                 }
-                if ((js == "(指派)机加经理" && stepid == "10") || (js == "(指派)压铸经理" && stepid == "10"))
+                if ((js == "(指派)机加经理" && stepid == "10") || (js == "(指派)压铸经理" && stepid == "10") )
                 {
                     ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Enabled = true;
                     //((TextBox)gv_bjjd.Rows[i].FindControl("step")).ForeColor = System.Drawing.Color.Red;
@@ -632,7 +655,7 @@ public partial class baojia : System.Web.UI.Page
                     ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).DataBind();
                     ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Items.Insert(0, new ListItem("", ""));
                 }
-                 
+
             }
             //gridview报价进度只读
             gv_bjjd_zhidu();
@@ -755,42 +778,48 @@ public partial class baojia : System.Web.UI.Page
         //}
 
     }
-    public void gvjz()
-    {     
-        //销售300时维护零件价格等信息
-        if (ViewState["empid"].ToString() == txt_sales_empid.Value && txt_status_id.Text == "300")
+    public void baojiamingxi()
+    {
+        for (int i = 0; i < gv_bjmx.Rows.Count; i++)
         {
-            for (int i = 0; i < gv_bjmx.Rows.Count; i++)
-            {
-                ((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_customer_project")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_from")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Enabled = false;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Enabled = false;
-                //((Button)this.gv_bjmx.Rows[i].FindControl("btnAdd")).Visible = false;
-                //((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = false;
-                ((Button)this.gv_bjmx.FooterRow.FindControl("btnAdd")).Visible = false;
-                ((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = false;
+            ((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_customer_project")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_from")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Enabled = false;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Enabled = false;
+            //((Button)this.gv_bjmx.Rows[i].FindControl("btnAdd")).Visible = false;
+            //((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = false;
+            ((Button)this.gv_bjmx.FooterRow.FindControl("btnAdd")).Visible = false;
+            ((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = false;
 
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Enabled = true;
-            }
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Enabled = true;
+        }
+    }
+    public void gvjz()
+    {
+        //销售300时维护零件价格等信息
+        DataTable dtagent = BJ_CLASS.GetAgent(txt_sales_empid.Value, ViewState["empid"].ToString());
+        
+        if ((ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0 )&& txt_status_id.Text == "300")
+        {
+            baojiamingxi();
             //BTN_Sales_3.Visible = true;
 
         }
         //报价中根据待签核流程判断
         for (int i = 0; i < gv_bjjd.Rows.Count; i++)
         {
-                     
-            if (DDL_baojia_status.SelectedValue == "报价中" )
+
+            if (DDL_baojia_status.SelectedValue == "报价中")
             {
                 DataTable dtbtn = BJ_CLASS.GetBTN(Request["requestid"], ViewState["empid"].ToString());
                 if (dtbtn == null)
@@ -810,9 +839,9 @@ public partial class baojia : System.Web.UI.Page
                                 ((Button)this.gv_bjjd.Rows[i].FindControl("btncomit")).Visible = true;
                                 ((Button)this.gv_bjjd.Rows[i].FindControl("btncomit")).Enabled = true;
                                 ((TextBox)this.gv_bjjd.Rows[i].FindControl("txt_sign_desc")).Enabled = true;
-                                ((TextBox)this.gv_bjjd.Rows[i].FindControl("txt_sign_desc")).BackColor= System.Drawing.Color.Yellow;
+                                ((TextBox)this.gv_bjjd.Rows[i].FindControl("txt_sign_desc")).BackColor = System.Drawing.Color.Yellow;
                                 //gv_bjjd.Rows[i].BackColor = System.Drawing.Color.Yellow;
-                             
+                                //baojiamingxi();
 
                             }
                             if (dtbtn.Rows[j]["stepid"].ToString() == "10" && dtbtn.Rows[j]["big_flowid"].ToString() == "200")
@@ -827,10 +856,10 @@ public partial class baojia : System.Web.UI.Page
                                 {
                                     ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Enabled = false;
                                 }
-                               
+
                             }
                         }
-                        if(dtbtn.Rows[0]["flowid"].ToString()=="50"&&(((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "包装" || ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "仓储" || ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "运输" )&& Convert.ToInt32(((TextBox)gv_bjjd.Rows[i].FindControl("stepid")).Text) < 40 && Convert.ToInt32(((TextBox)gv_bjjd.Rows[i].FindControl("stepid")).Text) > 10)
+                        if (dtbtn.Rows[0]["flowid"].ToString() == "50" && (((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "包装" || ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "仓储" || ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text == "运输") && Convert.ToInt32(((TextBox)gv_bjjd.Rows[i].FindControl("stepid")).Text) < 40 && Convert.ToInt32(((TextBox)gv_bjjd.Rows[i].FindControl("stepid")).Text) > 10)
                         {
                             if (dtbtn.Rows[0]["step"].ToString() == "(指派)物流经理")
                             {
@@ -854,7 +883,7 @@ public partial class baojia : System.Web.UI.Page
                             }
                         }
                         ViewState["lv"] = "BJJD";
-                
+
                     }
                     else
                     {
@@ -869,7 +898,8 @@ public partial class baojia : System.Web.UI.Page
         //销售维护合同跟踪
         if (gv_htgz.Rows.Count <= 0)//没维护过时
         {
-            if (ViewState["empid"].ToString() == txt_sales_empid.Value && DDL_is_stop.SelectedValue == "否" && DDL_liuchengyizhuan.SelectedValue=="")
+            //DataTable dtagent = BJ_CLASS.GetAgent(txt_sales_empid.Value, ViewState["empid"].ToString());
+            if ((ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0 )&& DDL_is_stop.SelectedValue == "否" && DDL_liuchengyizhuan.SelectedValue == "")
             {
                 //合同追踪
                 InitTable_htgz();
@@ -895,7 +925,7 @@ public partial class baojia : System.Web.UI.Page
         }
         else//已经维护过时
         {
-            if (ViewState["empid"].ToString() == txt_sales_empid.Value)
+            if (ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0)
             {
                 //gv_htgz.Columns[1].Visible = true;//销售维护时显示
                 BTN_Sales_2.Enabled = true;
@@ -907,7 +937,7 @@ public partial class baojia : System.Web.UI.Page
                 //DDL_liuchengyizhuan.Enabled = true;
                 for (int i = 0; i < gv_htgz.Rows.Count; i++)
                 {
-                    ((Button)this.gv_htgz.FooterRow.FindControl("btnAddht")).Visible = true;
+                    //((Button)this.gv_htgz.FooterRow.FindControl("btnAddht")).Visible = true;
                     //((Button)this.gv_htgz.Rows[i].FindControl("btnDelht")).Visible = true;
                 }
                 gv_htgz_write();
@@ -922,12 +952,12 @@ public partial class baojia : System.Web.UI.Page
                 gv_htgz.Columns[1].Visible = false;//其他隐藏
             }
         }
-        if (ViewState["empid"].ToString() == txt_sales_empid.Value)
+        if (ViewState["empid"].ToString() == txt_sales_empid.Value || dtagent.Rows.Count > 0)
         {
             gv_ljztgz_write();
         }
     }
-   
+
     public void Query()
     {
 
@@ -969,9 +999,10 @@ public partial class baojia : System.Web.UI.Page
         }
         txt_baojia_desc.Value = dt.Rows[0]["baojia_desc"].ToString();
         txt_baojia_file_path.Text = dt.Rows[0]["baojia_file_path"].ToString();
+     
         //link_baojia_file_path.Text = "file"+dt.Rows[0]["baojia_file_path"].ToString();
         //Session["fileurl"] = "file:" + dt.Rows[0]["baojia_file_path"].ToString();
-   
+
         txt_baojia_file_path.ReadOnly = true;
         //txt_baojia_file_path.Visible = false;
         txt_status_id.Text = dt.Rows[0]["Big_FlowID"].ToString();
@@ -994,6 +1025,15 @@ public partial class baojia : System.Web.UI.Page
         {
             txt_baojia_end_date.Value = Convert.ToDateTime(dt.Rows[0]["baojia_end_date"].ToString()).ToString("yyyy-MM-dd");
         }
+        if (dt.Rows[0]["cusRequestDate"].ToString() != "")
+        {
+            txt_cusRequestDate.Value = Convert.ToDateTime(dt.Rows[0]["cusRequestDate"].ToString()).ToString("yyyy-MM-dd");
+        }
+        if (dt.Rows[0]["Sj_baochuDate"].ToString() != "")
+        {
+            txt_Sj_baochuDate.Value = Convert.ToDateTime(dt.Rows[0]["Sj_baochuDate"].ToString()).ToString("yyyy-MM-dd");
+        }
+
         if (dt.Rows[0]["dingdian_date"].ToString() != "")
         {
             txt_dingdian_date.Value = Convert.ToDateTime(dt.Rows[0]["dingdian_date"].ToString()).ToString("yyyy-MM-dd");
@@ -1016,7 +1056,7 @@ public partial class baojia : System.Web.UI.Page
             if (dt_pc_date.Rows[0]["pc_date"].ToString() != "")
             {
                 txt_pc_date.Value = Convert.ToDateTime(dt_pc_date.Rows[0]["pc_date"].ToString()).ToString("yyyy-MM-dd");
-            }          
+            }
         }
         DataTable dt_pc_quantity_year = BJ_CLASS.Get_year_heji(txt_baojia_no.Value, "quantity_year");
         if (dt_pc_quantity_year.Rows.Count > 0)
@@ -1090,6 +1130,8 @@ public partial class baojia : System.Web.UI.Page
         //DDL_project_size.SelectedValue = dt.Rows[0]["project_size"].ToString();
         DDL_project_level.SelectedValue = dt.Rows[0]["project_level"].ToString();
         txt_baojia_desc.Value = dt.Rows[0]["baojia_desc"].ToString();
+        txt_cusRequestDate.Value = dt.Rows[0]["cusRequestDate"].ToString();
+        txt_Sj_baochuDate.Value = dt.Rows[0]["Sj_baochuDate"].ToString();
         txt_baojia_file_path.Text = dt.Rows[0]["baojia_file_path"].ToString();
         //Session["fileurl"] = "" ;
         if (dt.Rows[0]["baojia_start_date"].ToString() != "")
@@ -1100,7 +1142,7 @@ public partial class baojia : System.Web.UI.Page
         if (dt.Rows[0]["create_date"].ToString() != "")
         {
             //txt_create_date.Value = dt.Rows[0]["create_date"].ToString();
-            txt_create_date.Value  = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            txt_create_date.Value = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
         if (dt.Rows[0]["dingdian_date"].ToString() != "")
         {
@@ -1217,7 +1259,7 @@ public partial class baojia : System.Web.UI.Page
             gv_rz2.DataBind();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                if (dt.Rows[i]["状态"].ToString() == "争取" && dt.Rows[i]["完成日期"].ToString()!= "")
+                if (dt.Rows[i]["状态"].ToString() == "争取" && dt.Rows[i]["完成日期"].ToString() != "")
                 {
                     Lab_htzt.Text = "争取";
                 }
@@ -1226,7 +1268,7 @@ public partial class baojia : System.Web.UI.Page
                     Lab_htzt.Text = "合同跟踪";
                 }
                 if (dt.Rows[i]["状态"].ToString() == "合同已完成" && dt.Rows[i]["完成日期"].ToString() != "")
-                   
+
                 {
                     Lab_htzt.Text = "合同已完成";
                 }
@@ -1236,7 +1278,7 @@ public partial class baojia : System.Web.UI.Page
                 }
             }
         }
-    
+
     }
     //protected void Image2_Click(object sender, ImageClickEventArgs e)
     //{
@@ -1257,7 +1299,7 @@ public partial class baojia : System.Web.UI.Page
     //        ViewState["lv"] = gv_rz3.Rows[lnindex].Cells[6].Text.ToString();
     //    }
     //}
-   
+
     protected void BTN_Sales_sub_Click(object sender, EventArgs e)
     {
         using (TransactionScope ts = new TransactionScope())
@@ -1268,368 +1310,368 @@ public partial class baojia : System.Web.UI.Page
             //}
 
             //验证报价明细是否填写完成
-            if (gv_bjmx.Rows.Count>0)
-        {
-            for (int i = 0; i < gv_bjmx.Rows.Count; i++)
+            if (gv_bjmx.Rows.Count > 0)
             {
-                //第一行零件号都没有维护的情况下
-                if (((TextBox)this.gv_bjmx.Rows[0].FindControl("txt_ljh")).Text == "")
+                for (int i = 0; i < gv_bjmx.Rows.Count; i++)
                 {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('零件号不能为空！')", true);
-                    return;
+                    //第一行零件号都没有维护的情况下
+                    if (((TextBox)this.gv_bjmx.Rows[0].FindControl("txt_ljh")).Text == "")
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('零件号不能为空！')", true);
+                        return;
+                    }
+                    //维护了零件号没有维护其他信息的
+                    if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text != "" && (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text == ""))
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请维护完整报价明细！')", true);
+                        return;
+                    }
+
                 }
-                //维护了零件号没有维护其他信息的
-                if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text != "" && (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text == "" || ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text == ""))
-                {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请维护完整报价明细！')", true);
-                    return;
-                }
-
-            }
-        }
-        else
-        {
-        
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少维护一项报价明细！')", true);
-            return;
-        }
-        //验证签核中压铸经理和工程经理是否填写
-        string empid_jj = "";
-        string empid_yz = "";
-        string empid_xszg = "";
-        string empid_xsjl = "";
-        for (int i = 0; i < gv_bjjd.Rows.Count; i++)
-        {
-
-            if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "(指派)机加经理" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text == "10")
-            {
-
-                empid_jj = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
-            }
-            if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "(指派)压铸经理" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text == "10")
-            {
-
-                empid_yz = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
-            }
-            if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "销售主管")
-            {
-
-                empid_xszg = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
-            }
-            //if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "销售经理")
-            //{
-
-            //    empid_xsjl = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
-            //}
-        }
-        //机加和压铸的至少有一个部门需要会签
-        if (empid_jj == "" && empid_yz == "" && DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析" && DDL_jijia_tk.SelectedValue == "需要" && DDL_yz_tk.SelectedValue == "需要")
-        {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少维护一个压铸经理或机加经理')", true);
-            ViewState["lv"] = "BJJD";
-            return;
-          
-        }
-        //销售主管和销售经理必须选择
-        if ((empid_xszg == "" )&& (DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析" ||  DDL_sfxy_bjfx.SelectedValue == "仅需价格核实"))
-        {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('销售主管和销售经理不能为空')", true);
-            ViewState["lv"] = "BJJD";
-            return;
-
-        }
-        if (BTN_Sales_sub.Text=="提交")
-        {
-            //新增一轮的时候报价号不需要变更
-            if (Request["update"] != null)
-            {
-
             }
             else
             {
-                if (DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析")
+
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少维护一项报价明细！')", true);
+                return;
+            }
+            //验证签核中压铸经理和工程经理是否填写
+            string empid_jj = "";
+            string empid_yz = "";
+            string empid_xszg = "";
+            string empid_xsjl = "";
+            for (int i = 0; i < gv_bjjd.Rows.Count; i++)
+            {
+
+                if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "(指派)机加经理" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text == "10")
                 {
-                    DataTable dtbaojia_no = BJ_CLASS.BJ_baojia_no(System.DateTime.Now.ToString("yyyy"));
+
+                    empid_jj = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
+                }
+                if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "(指派)压铸经理" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text == "10")
+                {
+
+                    empid_yz = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
+                }
+                if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "销售主管")
+                {
+
+                    empid_xszg = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
+                }
+                //if (((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text == "销售经理")
+                //{
+
+                //    empid_xsjl = ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
+                //}
+            }
+            //机加和压铸的至少有一个部门需要会签
+            if (empid_jj == "" && empid_yz == "" && DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析" && DDL_jijia_tk.SelectedValue == "需要" && DDL_yz_tk.SelectedValue == "需要")
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少维护一个压铸经理或机加经理')", true);
+                ViewState["lv"] = "BJJD";
+                return;
+
+            }
+            //销售主管和销售经理必须选择
+            if ((empid_xszg == "") && (DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析" || DDL_sfxy_bjfx.SelectedValue == "仅需价格核实"))
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('销售主管和销售经理不能为空')", true);
+                ViewState["lv"] = "BJJD";
+                return;
+
+            }
+            if (BTN_Sales_sub.Text == "提交")
+            {
+                //新增一轮的时候报价号不需要变更
+                if (Request["update"] != null)
+                {
+
+                }
+                else
+                {
+                    if (DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析")
+                    {
+                        DataTable dtbaojia_no = BJ_CLASS.BJ_baojia_no(System.DateTime.Now.ToString("yyyy"));
                         if (dtbaojia_no.Rows.Count > 0)
                         {
                             string maxno = dtbaojia_no.Rows[0]["xh"].ToString();
                             int max_no = Convert.ToInt32(maxno) + 1;
                             txt_baojia_no.Value = System.DateTime.Now.ToString("yyyy") + "-" + max_no.ToString().PadLeft(4, '0');
                         }
-                   
-                }
-                else
-                {
-                    DataTable dtbaojia_no_all = BJ_CLASS.BJ_baojia_no_all(txt_baojia_no.Value,DDL_turns.SelectedValue);
-                    if(dtbaojia_no_all.Rows.Count>0)
+
+                    }
+                    else
                     {
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('不能提交重复的报价号和轮次')", true);
+                        DataTable dtbaojia_no_all = BJ_CLASS.BJ_baojia_no_all(txt_baojia_no.Value, DDL_turns.SelectedValue);
+                        if (dtbaojia_no_all.Rows.Count > 0)
+                        {
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('不能提交重复的报价号和轮次')", true);
+                        }
+
                     }
 
                 }
 
-            }
-
-            //新增的表单产生序列号requestid
-            string sql = "Select next value for  [dbo].[Baojia_requestid_sqc]";
-            int requestid_sq = Convert.ToInt16(DbHelperSQL.Query(sql).Tables[0].Rows[0][0].ToString());
-            int update = -1;
-            update = BJ_CLASS.BTN_Sales_sub(requestid_sq, txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue,txt_create_date.Value,DDL_wl_tk.SelectedValue,DDL_bz_tk.SelectedValue,DDL_jijia_tk.SelectedValue,DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue, BTN_Sales_sub.Text);
-            if (update > 0)
-            {
-                string date = System.DateTime.Now.ToString();
-                //保存报价明细
-                for (int i = 0; i < gv_bjmx.Rows.Count; i++)
+                //新增的表单产生序列号requestid
+                string sql = "Select next value for  [dbo].[Baojia_requestid_sqc]";
+                int requestid_sq = Convert.ToInt16(DbHelperSQL.Query(sql).Tables[0].Rows[0][0].ToString());
+                int update = -1;
+                update = BJ_CLASS.BTN_Sales_sub(requestid_sq, txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue, txt_create_date.Value, DDL_wl_tk.SelectedValue, DDL_bz_tk.SelectedValue, DDL_jijia_tk.SelectedValue, DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue,txt_cusRequestDate.Value, BTN_Sales_sub.Text);
+                if (update > 0)
                 {
-                    if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text != "")
-                    {
-                        //string strsql = " insert into Baojia_dtl(requestId,baojia_no,turns,ljh,lj_name,quantity_year,material,pc_date)  VALUES('" + requestid_sq + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text + "','" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "')";
-                        //DbHelperSQL.ExecuteSql(strsql);
-
-                        System.Text.StringBuilder strsql = new StringBuilder();
-                        strsql.Append("insert into Baojia_dtl(requestId,baojia_no,turns,ljh,xz_ljh,old_ljh,lj_name,customer_project,ship_from,ship_to,back_up,quantity_year,material,pc_date,pc_per_price,price_year,pc_mj_price,yj_per_price,yj_mj_price)");
-                        strsql.Append("VALUES  ('" + requestid_sq + "', ");
-                        strsql.Append(" '" + txt_baojia_no.Value + "',");
-                        strsql.Append(" '" + DDL_turns.SelectedValue + "', ");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim() + "',");
-                        //不变更零件号的，存现零件号
-                        if (((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() != "")
-                        {
-                            strsql.Append(" '" + ((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() + "',");
-                        }
-                        else
-                        {
-                            //strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim() + "',");
-                            strsql.Append(" '',");
-                        }
-                        //不变更零件号的，存现零件号
-                        if (((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() != "")
-                        {
-                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_old_ljh")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        }
-                        else
-                        {
-                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        }
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_customer_project")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_from")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Text.Trim().Replace("@[/n/r]", "") + "',");
-                        string quantity_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "");
-                        strsql.Append(quantity_year == "" ? "null" : quantity_year);
-
-                        strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
-                        strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
-
-                        string txt_pc_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
-                        strsql.Append(txt_pc_per_price == "" ? "null" : txt_pc_per_price);
-
-                        string txt_price_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
-                        strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
-
-                        string txt_pc_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
-                        strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
-
-                        string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
-                        strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
-
-                        string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
-                        strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
-                        strsql.Append(")");
-                        //DbHelperSQL.ExecuteSql(strsql.ToString());
-                        int updateaa = -1;
-                        updateaa = DbHelperSQL.ExecuteSql(strsql.ToString());
-                        if (update > 0)
-                        {
-                            string strsql_update_mst = " update Baojia_dtl set  price_year =quantity_year* pc_per_price  where requestid='" + requestid_sq + "'";
-                            DbHelperSQL.ExecuteSql(strsql_update_mst);
-                            BJ_CLASS.Baojia_Dtl2Agreement(requestid_sq);
-                        }
-                        else
-                        {
-                            //主表插入，明细表有执行不成功的，删除主表信息
-                            string strsql_update_mst = " delete Baojia_mst  where requestid='" + requestid_sq + "'";
-                            DbHelperSQL.ExecuteSql(strsql_update_mst);
-                            string strsql_update_dtl = " delete Baojia_dtl  where requestid='" + requestid_sq + "'";
-                            DbHelperSQL.ExecuteSql(strsql_update_dtl);
-                            Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再提交或联系管理员！')", true);
-
-                            return;
-                        }
-
-
-                    }
-
-
-                }
-                //保存报价进度
-                for (int i = 0; i < gv_bjjd.Rows.Count; i++)
-                {
-                    //删除无人员选择
-                    //if (((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text == "")
-                    //{
-
-                    //}
-                    //else
-                    //{
-                    //    //string receive_date = System.DateTime.Now.ToString();
-                    string strsql = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date)  VALUES('" + requestid_sq + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flowid")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("big_flowid")).Text + "','" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("Step")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text + "', '" + ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text + "', iif('" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'='',null,'" + date + "'), '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("require_date")).Text + "')";
-                    DbHelperSQL.ExecuteSql(strsql);
-                    //}
-                }
-                //插入申请人log
-                //string date = System.DateTime.Now.ToString();
-                string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + requestid_sq + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(申请)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
-                DbHelperSQL.ExecuteSql(strsql_xs);
-                //新增一轮的时候需要把第一轮的合同及状态复制过来
-                if (Request["update"] != null)
-                {
-                    //UPDATE_Baojia_agreement_flow();
-                    //    for (int i = 0; i < gv_htgz.Rows.Count; i++)
-                    //    {
-                    //    //string strsql = " insert into Baojia_agreement_flow(requestid,baojia_no,turns,description,ljh,dingdian_date,sdxx,create_by_empid)  VALUES('" + requestid_sq + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text + "','" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_ljh")).Text + "', '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "', '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text + "', '" + txt_update_user_name.Value + "')";
-                    //    //DbHelperSQL.ExecuteSql(strsql);
-
-                    //    System.Text.StringBuilder strsql = new StringBuilder();
-                    //    strsql.Append("insert into Baojia_agreement_flow(requestId,baojia_no,turns,description,ljh,ship_from,ship_to,dingdian_date,sdxx,lj_status,create_by_empid,quantity_year,pc_per_price,price_year,pc_mj_price,currency,exchange_rate)");
-                    //    strsql.Append("VALUES  ('" + requestid_sq + "', ");
-                    //    strsql.Append(" '" + txt_baojia_no.Value + "',");
-                    //    strsql.Append(" '" + DDL_turns.SelectedValue + "', ");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text + "',");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text + "',");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_from")).Text + "',");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_to")).Text + "',");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "',");
-                    //    strsql.Append(" '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text + "',");
-                    //    strsql.Append(" '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).Text + "',");
-                    //    strsql.Append(" '" + txt_update_user_name.Value + "',");
-
-                    //    string quantity_year = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "");
-                    //    strsql.Append(quantity_year == "" ? "null" : quantity_year + ",");
-
-                    //    //strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
-                    //    //strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
-
-                    //    string txt_pc_per_price = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
-                    //    strsql.Append("," + txt_pc_per_price == "" ? "null" : txt_pc_per_price);
-
-                    //    string txt_price_year = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
-                    //    strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
-
-                    //    string txt_pc_mj_price = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
-                    //    strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
-
-                    //    strsql.Append(", '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_currency")).Text + "',");
-                    //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text + "'");
-                    //    //string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
-                    //    //strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
-
-                    //    //string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
-                    //    //strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
-                    //    strsql.Append(")");
-
-                    //    DbHelperSQL.ExecuteSql(strsql.ToString());
-
-
-
-                    //    //获取定点日期
-                    //    string strsql_update_dingdian = " update Baojia_mst set hetong_status='合同跟踪', dingdian_date= '" + ((TextBox)this.gv_htgz.Rows[0].FindControl("dingdian_date")).Text + "' where requestid='" + requestid_sq + "'";
-                    //        DbHelperSQL.ExecuteSql(strsql_update_dingdian);
-                    //        ////获取合同完成日期
-                    //        //if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text == "已收到全部定点文件")
-                    //        //{
-                    //        //    string strsql_update = " update Baojia_mst set hetong_status='合同已完成', hetong_complet_date= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "' where requestid='" + requestid_sq + "'";
-                    //        //    DbHelperSQL.ExecuteSql(strsql_update);
-                    //        //}
-                    //}
-
-                }
-                //删除未选择的机加或者压铸的人员行
-                int update_delete = -1;
-                update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(requestid_sq);
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 提交成功！')", true);
-                BTN_Sales_sub.Enabled = false;
-                BJ_CLASS.SendMail(requestid_sq);
-
-                ValidateUser connect = new ValidateUser();
-                string user = "it";
-                string client_ip = "ks-server";
-                string password = "pgi_1234";
-                string year = txt_baojia_no.Value.Substring(0, 4);
-                bool isImpersonated = false;
-
-                try
-                {
-                    if (connect.impersonateValidUser(user, client_ip, password))
-                    {
-                        isImpersonated = true;
-                        if (DDL_turns.SelectedValue == "1")
-                        {
-                            string sourcePath = @"\\172.16.5.50\销售部\02 报价产品和开发\" + year + "报价产品和开发\\";
-                            sourcePath = sourcePath + txt_baojia_no.Value;
-                            if (!Directory.Exists(sourcePath))
-                            {
-                                Directory.CreateDirectory(sourcePath);
-
-                            }
-
-
-                        }
-
-                    }
-                }
-                catch
-                {
-                    //    BLL.path_config.path_configUpdate(client_ip, "异常");
-
-                }
-                finally
-                {
-                    if (isImpersonated)
-                        connect.undoImpersonation();
-                }
-
-
-            }
-
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后提交！')", true);
-                ViewState["lv"] = "BJJD";
-            }
-    
-        }
-        else if(BTN_Sales_sub.Text == "修改")
-        {
-            int update = -1;
-            update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue,txt_create_date.Value,DDL_wl_tk.SelectedValue,DDL_bz_tk.SelectedValue,DDL_jijia_tk.SelectedValue,DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue, BTN_Sales_sub.Text);
-            if (update > 0)
-            {
-                int update_Baojia_dtl = -1;
-                update_Baojia_dtl = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_dtl");
-                int update_Baojia_sign_flow = -1;
-                update_Baojia_sign_flow = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_sign_flow");
-                if (update_Baojia_dtl > 0)
-                {
-                    //插入申请人log
-                    string date = System.DateTime.Now.ToString("yyyy-MM-dd");
-                    string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','"+ txt_content.Value+"')";
-                    DbHelperSQL.ExecuteSql(strsql_xs);
+                    string date = System.DateTime.Now.ToString();
                     //保存报价明细
                     for (int i = 0; i < gv_bjmx.Rows.Count; i++)
                     {
                         if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text != "")
                         {
-                            //string strsql = " insert into Baojia_dtl(requestId,baojia_no,turns,ljh,lj_name,quantity_year,material,pc_date)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text + "','" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "')";
+                            //string strsql = " insert into Baojia_dtl(requestId,baojia_no,turns,ljh,lj_name,quantity_year,material,pc_date)  VALUES('" + requestid_sq + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text + "','" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "')";
                             //DbHelperSQL.ExecuteSql(strsql);
 
                             System.Text.StringBuilder strsql = new StringBuilder();
                             strsql.Append("insert into Baojia_dtl(requestId,baojia_no,turns,ljh,xz_ljh,old_ljh,lj_name,customer_project,ship_from,ship_to,back_up,quantity_year,material,pc_date,pc_per_price,price_year,pc_mj_price,yj_per_price,yj_mj_price)");
-                            strsql.Append("VALUES  ('" + Convert.ToInt32(Request["requestid"]) + "', ");
+                            strsql.Append("VALUES  ('" + requestid_sq + "', ");
                             strsql.Append(" '" + txt_baojia_no.Value + "',");
                             strsql.Append(" '" + DDL_turns.SelectedValue + "', ");
                             strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim() + "',");
+                            //不变更零件号的，存现零件号
+                            if (((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() != "")
+                            {
+                                strsql.Append(" '" + ((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() + "',");
+                            }
+                            else
+                            {
+                                //strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim() + "',");
+                                strsql.Append(" '',");
+                            }
+                            //不变更零件号的，存现零件号
+                            if (((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() != "")
+                            {
+                                strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_old_ljh")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            }
+                            else
+                            {
+                                strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            }
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_customer_project")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_from")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Text.Trim().Replace("@[/n/r]", "") + "',");
+                            string quantity_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "");
+                            strsql.Append(quantity_year == "" ? "null" : quantity_year);
+
+                            strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
+                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
+
+                            string txt_pc_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
+                            strsql.Append(txt_pc_per_price == "" ? "null" : txt_pc_per_price);
+
+                            string txt_price_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
+                            strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
+
+                            string txt_pc_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
+                            strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
+
+                            string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
+                            strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
+
+                            string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
+                            strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
+                            strsql.Append(")");
+                            //DbHelperSQL.ExecuteSql(strsql.ToString());
+                            int updateaa = -1;
+                            updateaa = DbHelperSQL.ExecuteSql(strsql.ToString());
+                            if (update > 0)
+                            {
+                                string strsql_update_mst = " update Baojia_dtl set  price_year =quantity_year* pc_per_price  where requestid='" + requestid_sq + "'";
+                                DbHelperSQL.ExecuteSql(strsql_update_mst);
+                                BJ_CLASS.Baojia_Dtl2Agreement(requestid_sq);
+                            }
+                            else
+                            {
+                                //主表插入，明细表有执行不成功的，删除主表信息
+                                string strsql_update_mst = " delete Baojia_mst  where requestid='" + requestid_sq + "'";
+                                DbHelperSQL.ExecuteSql(strsql_update_mst);
+                                string strsql_update_dtl = " delete Baojia_dtl  where requestid='" + requestid_sq + "'";
+                                DbHelperSQL.ExecuteSql(strsql_update_dtl);
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再提交或联系管理员！')", true);
+
+                                return;
+                            }
+
+
+                        }
+
+
+                    }
+                    //保存报价进度
+                    for (int i = 0; i < gv_bjjd.Rows.Count; i++)
+                    {
+                        //删除无人员选择
+                        //if (((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text == "")
+                        //{
+
+                        //}
+                        //else
+                        //{
+                        //    //string receive_date = System.DateTime.Now.ToString();
+                        string strsql = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date)  VALUES('" + requestid_sq + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flowid")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("big_flowid")).Text + "','" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("Step")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text + "', '" + ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text + "', iif('" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'='',null,'" + date + "'), '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("require_date")).Text + "')";
+                        DbHelperSQL.ExecuteSql(strsql);
+                        //}
+                    }
+                    //插入申请人log
+                    //string date = System.DateTime.Now.ToString();
+                    string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + requestid_sq + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(申请)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
+                    DbHelperSQL.ExecuteSql(strsql_xs);
+                    //新增一轮的时候需要把第一轮的合同及状态复制过来
+                    if (Request["update"] != null)
+                    {
+                        //UPDATE_Baojia_agreement_flow();
+                        //    for (int i = 0; i < gv_htgz.Rows.Count; i++)
+                        //    {
+                        //    //string strsql = " insert into Baojia_agreement_flow(requestid,baojia_no,turns,description,ljh,dingdian_date,sdxx,create_by_empid)  VALUES('" + requestid_sq + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text + "','" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_ljh")).Text + "', '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "', '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text + "', '" + txt_update_user_name.Value + "')";
+                        //    //DbHelperSQL.ExecuteSql(strsql);
+
+                        //    System.Text.StringBuilder strsql = new StringBuilder();
+                        //    strsql.Append("insert into Baojia_agreement_flow(requestId,baojia_no,turns,description,ljh,ship_from,ship_to,dingdian_date,sdxx,lj_status,create_by_empid,quantity_year,pc_per_price,price_year,pc_mj_price,currency,exchange_rate)");
+                        //    strsql.Append("VALUES  ('" + requestid_sq + "', ");
+                        //    strsql.Append(" '" + txt_baojia_no.Value + "',");
+                        //    strsql.Append(" '" + DDL_turns.SelectedValue + "', ");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text + "',");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text + "',");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_from")).Text + "',");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_to")).Text + "',");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "',");
+                        //    strsql.Append(" '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text + "',");
+                        //    strsql.Append(" '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).Text + "',");
+                        //    strsql.Append(" '" + txt_update_user_name.Value + "',");
+
+                        //    string quantity_year = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "");
+                        //    strsql.Append(quantity_year == "" ? "null" : quantity_year + ",");
+
+                        //    //strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
+                        //    //strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
+
+                        //    string txt_pc_per_price = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
+                        //    strsql.Append("," + txt_pc_per_price == "" ? "null" : txt_pc_per_price);
+
+                        //    string txt_price_year = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
+                        //    strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
+
+                        //    string txt_pc_mj_price = ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
+                        //    strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
+
+                        //    strsql.Append(", '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_currency")).Text + "',");
+                        //    strsql.Append(" '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text + "'");
+                        //    //string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
+                        //    //strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
+
+                        //    //string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
+                        //    //strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
+                        //    strsql.Append(")");
+
+                        //    DbHelperSQL.ExecuteSql(strsql.ToString());
+
+
+
+                        //    //获取定点日期
+                        //    string strsql_update_dingdian = " update Baojia_mst set hetong_status='合同跟踪', dingdian_date= '" + ((TextBox)this.gv_htgz.Rows[0].FindControl("dingdian_date")).Text + "' where requestid='" + requestid_sq + "'";
+                        //        DbHelperSQL.ExecuteSql(strsql_update_dingdian);
+                        //        ////获取合同完成日期
+                        //        //if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text == "已收到全部定点文件")
+                        //        //{
+                        //        //    string strsql_update = " update Baojia_mst set hetong_status='合同已完成', hetong_complet_date= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "' where requestid='" + requestid_sq + "'";
+                        //        //    DbHelperSQL.ExecuteSql(strsql_update);
+                        //        //}
+                        //}
+
+                    }
+                    //删除未选择的机加或者压铸的人员行
+                    int update_delete = -1;
+                    update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(requestid_sq);
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 提交成功！')", true);
+                    BTN_Sales_sub.Enabled = false;
+                    BJ_CLASS.SendMail(requestid_sq);
+
+                    ValidateUser connect = new ValidateUser();
+                    string user = "it";
+                    string client_ip = "ks-server";
+                    string password = "pgi_1234";
+                    string year = txt_baojia_no.Value.Substring(0, 4);
+                    bool isImpersonated = false;
+
+                    try
+                    {
+                        if (connect.impersonateValidUser(user, client_ip, password))
+                        {
+                            isImpersonated = true;
+                            if (DDL_turns.SelectedValue == "1")
+                            {
+                                string sourcePath = @"\\172.16.5.50\销售部\02 报价产品和开发\" + year + "报价产品和开发\\";
+                                sourcePath = sourcePath + txt_baojia_no.Value;
+                                if (!Directory.Exists(sourcePath))
+                                {
+                                    Directory.CreateDirectory(sourcePath);
+
+                                }
+
+
+                            }
+
+                        }
+                    }
+                    catch
+                    {
+                        //    BLL.path_config.path_configUpdate(client_ip, "异常");
+
+                    }
+                    finally
+                    {
+                        if (isImpersonated)
+                            connect.undoImpersonation();
+                    }
+
+
+                }
+
+                else
+                {
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后提交！')", true);
+                    ViewState["lv"] = "BJJD";
+                }
+
+            }
+            else if (BTN_Sales_sub.Text == "修改")
+            {
+                int update = -1;
+                update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue, txt_create_date.Value, DDL_wl_tk.SelectedValue, DDL_bz_tk.SelectedValue, DDL_jijia_tk.SelectedValue, DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue,txt_cusRequestDate.Value, BTN_Sales_sub.Text);
+                if (update > 0)
+                {
+                    int update_Baojia_dtl = -1;
+                    update_Baojia_dtl = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_dtl");
+                    int update_Baojia_sign_flow = -1;
+                    update_Baojia_sign_flow = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_sign_flow");
+                    if (update_Baojia_dtl > 0)
+                    {
+                        //插入申请人log
+                        string date = System.DateTime.Now.ToString("yyyy-MM-dd");
+                        string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
+                        DbHelperSQL.ExecuteSql(strsql_xs);
+                        //保存报价明细
+                        for (int i = 0; i < gv_bjmx.Rows.Count; i++)
+                        {
+                            if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text != "")
+                            {
+                                //string strsql = " insert into Baojia_dtl(requestId,baojia_no,turns,ljh,lj_name,quantity_year,material,pc_date)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "', '" + txt_baojia_no.Value + "', '" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text + "','" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "', '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "')";
+                                //DbHelperSQL.ExecuteSql(strsql);
+
+                                System.Text.StringBuilder strsql = new StringBuilder();
+                                strsql.Append("insert into Baojia_dtl(requestId,baojia_no,turns,ljh,xz_ljh,old_ljh,lj_name,customer_project,ship_from,ship_to,back_up,quantity_year,material,pc_date,pc_per_price,price_year,pc_mj_price,yj_per_price,yj_mj_price)");
+                                strsql.Append("VALUES  ('" + Convert.ToInt32(Request["requestid"]) + "', ");
+                                strsql.Append(" '" + txt_baojia_no.Value + "',");
+                                strsql.Append(" '" + DDL_turns.SelectedValue + "', ");
+                                strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Text.Trim() + "',");
                                 //不变更零件号的，存现零件号
                                 if (((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Text.Trim() != "")
                                 {
@@ -1655,72 +1697,72 @@ public partial class baojia : System.Web.UI.Page
                                 strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Text.Trim().Replace("@[/n/r]", "") + "',");
                                 strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Text.Trim().Replace("@[/n/r]", "") + "',");
                                 string quantity_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "");
-                            strsql.Append(quantity_year == "" ? "null" : quantity_year);
+                                strsql.Append(quantity_year == "" ? "null" : quantity_year);
 
-                            strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
-                            strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
+                                strsql.Append(", '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Text + "',");
+                                strsql.Append(" '" + ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Text + "',");
 
-                            string txt_pc_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
-                            strsql.Append(txt_pc_per_price == "" ? "null" : txt_pc_per_price);
+                                string txt_pc_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "");
+                                strsql.Append(txt_pc_per_price == "" ? "null" : txt_pc_per_price);
 
-                            string txt_price_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
-                            strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
+                                string txt_price_year = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "");
+                                strsql.Append("," + (txt_price_year == "" ? "null" : txt_price_year));
 
-                            string txt_pc_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
-                            strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
+                                string txt_pc_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "");
+                                strsql.Append("," + (txt_pc_mj_price == "" ? "null" : txt_pc_mj_price));
 
-                            string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
-                            strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
+                                string txt_yj_per_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text.Replace(",", "");
+                                strsql.Append("," + (txt_yj_per_price == "" ? "null" : txt_yj_per_price));
 
-                            string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
-                            strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
-                            strsql.Append(")");
-                            DbHelperSQL.ExecuteSql(strsql.ToString());
+                                string txt_yj_mj_price = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text.Replace(",", "");
+                                strsql.Append("," + (txt_yj_mj_price == "" ? "null" : txt_yj_mj_price));
+                                strsql.Append(")");
+                                DbHelperSQL.ExecuteSql(strsql.ToString());
+                            }
+
                         }
-                       
-                    }
-                    BJ_CLASS.Baojia_Dtl2Agreement(Convert.ToInt32(Request["requestid"]));
+                        BJ_CLASS.Baojia_Dtl2Agreement(Convert.ToInt32(Request["requestid"]));
 
-                    //保存报价进度
-                    for (int i = 0; i < gv_bjjd.Rows.Count; i++)
-                    {
-                        //删除无人员选择
-                        //if (((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text == "" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text== "(指派)压铸经理")
-                        //{
+                        //保存报价进度
+                        for (int i = 0; i < gv_bjjd.Rows.Count; i++)
+                        {
+                            //删除无人员选择
+                            //if (((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text == "" && ((TextBox)this.gv_bjjd.Rows[i].FindControl("step")).Text== "(指派)压铸经理")
+                            //{
 
-                        //}
-                        //else
-                        //{
+                            //}
+                            //else
+                            //{
                             //string receive_date = System.DateTime.Now.ToString();
                             string strsql = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flowid")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("big_flowid")).Text + "','" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("Step")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text + "', '" + ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text + "', iif('" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'='',null,'" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'), '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("require_date")).Text + "')";
                             DbHelperSQL.ExecuteSql(strsql);
-                        //}
-                    
+                            //}
+
+                        }
+                        //移转取消
+                        //string date = System.DateTime.Now.ToString();
+                        string strsql_update = " update Baojia_mst set yizhuan_date= '" + date + "',yizhuan_empid='" + txt_update_user.Value + "',yizhuan_name='" + txt_update_user_name.Value + "',is_yizhuan='0' where requestid='" + Convert.ToInt32(Request["requestid"]) + "'";
+                        DbHelperSQL.ExecuteSql(strsql_update);
+                        //删除未选择列表的人员
+                        int update_delete = -1;
+                        update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(Convert.ToInt32(Request["requestid"]));
+
+
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
+                        BTN_Sales_sub.Enabled = false;
+                        BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]));
+                        //BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]), Convert.ToInt32(txt_status_id.Text), txt_baojia_no.Value);
                     }
-                    //移转取消
-                    //string date = System.DateTime.Now.ToString();
-                    string strsql_update = " update Baojia_mst set yizhuan_date= '" + date + "',yizhuan_empid='" + txt_update_user.Value + "',yizhuan_name='" + txt_update_user_name.Value + "',is_yizhuan='0' where requestid='" + Convert.ToInt32(Request["requestid"]) + "'";
-                    DbHelperSQL.ExecuteSql(strsql_update);
-                    //删除未选择列表的人员
-                    int update_delete = -1;
-                    update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(Convert.ToInt32(Request["requestid"]));
-
-
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
-                    BTN_Sales_sub.Enabled = false;
-                    BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]));
-                    //BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]), Convert.ToInt32(txt_status_id.Text), txt_baojia_no.Value);
+                    else
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
+                    }
                 }
                 else
                 {
                     Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
                 }
             }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
-            }
-        }
             ts.Complete();
         }
         ViewState["lv"] = "BJJD";
@@ -1797,7 +1839,7 @@ public partial class baojia : System.Web.UI.Page
                 ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Enabled = false;
                 ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Enabled = false;
                 ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_old_ljh")).Enabled = false;
-                if(Request["requestid"] == null)
+                if (Request["requestid"] == null)
                 {
                     //((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Visible = false;
                     gv_bjmx.Columns[0].Visible = false;
@@ -1820,26 +1862,26 @@ public partial class baojia : System.Web.UI.Page
     private void gv_bjmx_csh_bsp()
     {
         //DataTable dtbtn = BJ_CLASS.GetBTN(Request["requestid"], ViewState["empid"].ToString());
-       
-            for (int i = 0; i < gv_bjmx.Rows.Count; i++)
-            {
+
+        for (int i = 0; i < gv_bjmx.Rows.Count; i++)
+        {
             ((DropDownList)this.gv_bjmx.Rows[i].FindControl("ddl_ljh_dt")).Enabled = true;
             ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ljh")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_lj_name")).Enabled = true;
             ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_customer_project")).Enabled = true;
             ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_from")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Enabled = true;
-                ((Button)this.gv_bjmx.FooterRow.FindControl("btnAdd")).Visible = true;
-                ((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_ship_to")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_material")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_date")).Enabled = true;
+            ((Button)this.gv_bjmx.FooterRow.FindControl("btnAdd")).Visible = true;
+            ((Button)this.gv_bjmx.Rows[i].FindControl("btnDel")).Visible = true;
 
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Enabled = true;
-                ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Enabled = true;
+            ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Enabled = true;
             ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_back_up")).Enabled = true;
             ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_old_ljh")).Enabled = false;
 
@@ -1888,7 +1930,7 @@ public partial class baojia : System.Web.UI.Page
             ((DropDownList)gv_htgz.Rows[i].FindControl("ddl_lj_status")).DataValueField = "lookup_desc";
             ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).DataBind();
             ((DropDownList)gv_htgz.Rows[i].FindControl("ddl_lj_status")).Items.Insert(0, new ListItem("", ""));
-        
+
 
             DataTable dtqq = BJ_CLASS.BJ_ljh(txt_baojia_no.Value, "xz_ljh");
             //dtqq.Rows.Add("");
@@ -1985,7 +2027,7 @@ public partial class baojia : System.Web.UI.Page
         dtht.Columns.Add(new DataColumn("Description"));
         dtht.Columns.Add(new DataColumn("create_by_empid"));
 
-       
+
         ViewState["dtht"] = dtht;
         int lnht = gv_htgz.Rows.Count;
         for (int i = lnht; i < 1; i++)
@@ -2005,12 +2047,12 @@ public partial class baojia : System.Web.UI.Page
         }
 
 
-     
-
-        
 
 
-      
+
+
+
+
 
 
 
@@ -2034,7 +2076,7 @@ public partial class baojia : System.Web.UI.Page
                     if (((TextBox)gv.Rows[j].Cells[i].Controls[1]).Text != "")
                     {
                         dr[i] = ((TextBox)gv.Rows[j].Cells[i].Controls[1]).Text.Trim();
-                        
+
                     }
                     else
                     {
@@ -2119,7 +2161,7 @@ public partial class baojia : System.Web.UI.Page
     protected void DDL_project_size_SelectedIndexChanged(object sender, EventArgs e)
     {
 
-        if (txt_create_by_dept.Value != "销售二部" )
+        if (txt_create_by_dept.Value != "销售二部")
         {
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('销售部才可申请报价流程！')", true);
             DDL_project_size.SelectedValue = "";
@@ -2139,7 +2181,7 @@ public partial class baojia : System.Web.UI.Page
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请先选择直接顾客！')", true);
                 return;
             }
-            if (DDL_wl_tk.SelectedValue== "")
+            if (DDL_wl_tk.SelectedValue == "")
             {
                 DDL_project_size.SelectedValue = "";
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请先选择物流条款！')", true);
@@ -2263,7 +2305,7 @@ public partial class baojia : System.Web.UI.Page
                 if (DDL_project_size.SelectedValue != "")
                 {
 
-                    DataTable dt = BJ_CLASS.BJ_GetSPR(DDL_project_size.Text, txt_sales_empid.Value, DDL_domain.SelectedValue, DDL_sfxy_bjfx.SelectedValue, DDL_customer_name.SelectedValue, DDL_wl_tk.SelectedValue, DDL_sfxj_cg.SelectedValue,DDL_bz_tk.SelectedValue,DDL_jijia_tk.SelectedValue,DDL_yz_tk.SelectedValue, txt_ZG_empid.Value);
+                    DataTable dt = BJ_CLASS.BJ_GetSPR(DDL_project_size.Text, txt_sales_empid.Value, DDL_domain.SelectedValue, DDL_sfxy_bjfx.SelectedValue, DDL_customer_name.SelectedValue, DDL_wl_tk.SelectedValue, DDL_sfxj_cg.SelectedValue, DDL_bz_tk.SelectedValue, DDL_jijia_tk.SelectedValue, DDL_yz_tk.SelectedValue, txt_ZG_empid.Value);
                     ViewState["detail"] = dt;
                     gv_bjjd.DataSource = dt;
                     gv_bjjd.DataBind();
@@ -2285,7 +2327,7 @@ public partial class baojia : System.Web.UI.Page
                         //((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text = dt.Rows[i]["empid"].ToString();
                         string js = dt.Rows[i]["step"].ToString();
                         string stepid = dt.Rows[i]["stepid"].ToString();
-                        if (js.Substring(js.Length - 3) == "工程师" || js.Substring(js.Length - 2) == "副总" || js.Substring(js.Length - 2) == "经理" || js.Substring(js.Length - 2) == "主管")
+                        if (js == "销售工程师(实际报出)" || js.Substring(js.Length - 3) == "工程师" || js.Substring(js.Length - 2) == "副总" || js.Substring(js.Length - 2) == "经理" || js.Substring(js.Length - 2) == "主管")
                         {
                             ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Enabled = false;
                             ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Style.Add("BackColor", "black");
@@ -2351,7 +2393,7 @@ public partial class baojia : System.Web.UI.Page
             dr["pc_per_price"] = 0;
             dr["price_year"] = 0;
             dr["pc_mj_price"] = 0;
-            
+
             //dr["sdxx"] = (row.FindControl("ddl_sdxx") as DropDownList).Text;
             //dr["Description"] = (row.FindControl("Description") as TextBox).Text;
             dr["create_by_empid"] = txt_update_user_name.Value;
@@ -2470,7 +2512,7 @@ public partial class baojia : System.Web.UI.Page
             ((TextBox)gv_bjjd.Rows[index].FindControl("txt")).Text = "";
             ViewState["lv"] = "BJJD";
         }
-            if (e.CommandName == "comit")
+        if (e.CommandName == "comit")
         {
             object obj = e.CommandArgument;
             int index = Convert.ToInt32(e.CommandArgument);
@@ -2501,7 +2543,7 @@ public partial class baojia : System.Web.UI.Page
             }
             if (((TextBox)gv_bjjd.Rows[index].FindControl("stepid")).Text == "10" && ((TextBox)gv_bjjd.Rows[index].FindControl("big_flowid")).Text == "200")
             {
-               
+
 
                 if (((DropDownList)gv_bjjd.Rows[index].FindControl("ddl_empid")).Text == "")
                 {
@@ -2513,7 +2555,7 @@ public partial class baojia : System.Web.UI.Page
                 {
 
                     JL = ((DropDownList)gv_bjjd.Rows[index].FindControl("ddl_empid")).Text;
-                   
+
                     JL_ID = ((TextBox)gv_bjjd.Rows[index + 3].FindControl("ID")).Text;
                     //JL_ID_ZP = ((TextBox)gv_bjjd.Rows[index].FindControl("ID")).Text;
 
@@ -2531,7 +2573,7 @@ public partial class baojia : System.Web.UI.Page
                             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请选择包装工程师！')", true);
                             return;
                         }
-                        
+
                         if (((TextBox)gv_bjjd.Rows[i].FindControl("step")).Text == "包装工程师" && ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Text != "")
                         {
                             WL = ((DropDownList)gv_bjjd.Rows[i].FindControl("ddl_empid")).Text;
@@ -2609,13 +2651,13 @@ public partial class baojia : System.Web.UI.Page
                             string strSqlGCS = "update Baojia_sign_flow set empid='" + WL + "' where ID='" + WL_ID + "' and requestid='" + Convert.ToInt32(Request["requestid"]) + "' ";
                             DbHelperSQL.ExecuteSql(strSqlGCS);
                         }
-                       
+
                     }
 
-            
-                
+
+
                 }
-               
+
                 else
                 {
 
@@ -2654,7 +2696,7 @@ public partial class baojia : System.Web.UI.Page
                         {
                             string strSqlJL = "update Baojia_sign_flow set empid='" + JL + "' where ID='" + JL_ID + "' and requestid='" + Convert.ToInt32(Request["requestid"]) + "' ";
                             DbHelperSQL.ExecuteSql(strSqlJL);
-                        }                    
+                        }
                         if (((TextBox)gv_bjjd.Rows[index].FindControl("flow")).Text == "机加" && ((TextBox)gv_bjjd.Rows[index].FindControl("step")).Text == "(指派)机加经理")
                         {
                             int requestid = Convert.ToInt32(Request["requestid"]);
@@ -2672,7 +2714,7 @@ public partial class baojia : System.Web.UI.Page
                             }
                             //遍历选择工程师
                             string GCS_2 = ((TextBox)gv_bjjd.Rows[index + 1].FindControl("txt")).Text;//从文本框读取
-                           
+
                             string[] str = GCS_2.Split(',');//调用Split方法，定义string[]类型的变量
                             if (str.Length > 1)
                             {
@@ -2691,7 +2733,7 @@ public partial class baojia : System.Web.UI.Page
                                     {
                                         string empid = str[i];
                                         //string strSqlGCS_2 = "insert into Baojia_sign_flow select * from Baojia_sign_flow where ID='" + GCS_ID + "' and requestid='" + Convert.ToInt32(Request["requestid"]) + "' ";       
-                                        string strSqlGCS_2 = "INSERT INTO Baojia_sign_flow(requestid, baojia_no, turns, Flow, FlowID, Big_FlowID, Step, StepID, empid, require_date)VALUES('"+ requestid + "','"+ txt_baojia_no.Value+ "','"+ DDL_turns.SelectedValue+ "','"+ Flow + "','"+ FlowID + "','"+ Big_FlowID + "','"+ Step + "','"+ StepID + "','"+ empid + "','"+ require_date + "') ";
+                                        string strSqlGCS_2 = "INSERT INTO Baojia_sign_flow(requestid, baojia_no, turns, Flow, FlowID, Big_FlowID, Step, StepID, empid, require_date)VALUES('" + requestid + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "','" + Flow + "','" + FlowID + "','" + Big_FlowID + "','" + Step + "','" + StepID + "','" + empid + "','" + require_date + "') ";
                                         DbHelperSQL.ExecuteSql(strSqlGCS_2);
                                     }
 
@@ -2727,7 +2769,7 @@ public partial class baojia : System.Web.UI.Page
                             else
                             {
                                 string strSqlGCS = "update Baojia_sign_flow set empid='" + GCS + "' where ID='" + GCS_ID + "' and requestid='" + Convert.ToInt32(Request["requestid"]) + "' ";
-                                DbHelperSQL.ExecuteSql(strSqlGCS);                          
+                                DbHelperSQL.ExecuteSql(strSqlGCS);
                             }
                             //遍历选择主管
                             string ZG_2 = ((TextBox)gv_bjjd.Rows[index + 2].FindControl("txt")).Text;//从文本框读取
@@ -2799,7 +2841,7 @@ public partial class baojia : System.Web.UI.Page
                     }
 
                 }
-          
+
             }
             //如果销售工程师填写时
             if (((TextBox)gv_bjjd.Rows[index].FindControl("flow")).Text == "销售" && ((TextBox)gv_bjjd.Rows[index].FindControl("step")).Text == "销售工程师")
@@ -2886,18 +2928,18 @@ public partial class baojia : System.Web.UI.Page
         {
 
             System.Text.StringBuilder strsql = new StringBuilder();
-         
-                strsql.Append("update Baojia_agreement_flow set ");
-                //string strSql = "
-                strsql.Append("ljh='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text + "',");
-                strsql.Append("customer_project='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_customer_project")).Text + "',");
-                strsql.Append("ship_from='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_from")).Text + "',");
-                strsql.Append("ship_to='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_to")).Text + "',");
-                //strsql.Append("dingdian_date='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "',");
-                string txt_dingdian_date = ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text;
-                txt_dingdian_date = txt_dingdian_date == "" ? "null" : "'" + txt_dingdian_date + "'";
-                strsql.Append("dingdian_date= "+ txt_dingdian_date + ",");
-                //strsql.Append("pc_date='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("pc_date")).Text + "',");
+
+            strsql.Append("update Baojia_agreement_flow set ");
+            //string strSql = "
+            strsql.Append("ljh='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text + "',");
+            strsql.Append("customer_project='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_customer_project")).Text + "',");
+            strsql.Append("ship_from='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_from")).Text + "',");
+            strsql.Append("ship_to='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("ship_to")).Text + "',");
+            //strsql.Append("dingdian_date='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text + "',");
+            string txt_dingdian_date = ((TextBox)this.gv_htgz.Rows[i].FindControl("dingdian_date")).Text;
+            txt_dingdian_date = txt_dingdian_date == "" ? "null" : "'" + txt_dingdian_date + "'";
+            strsql.Append("dingdian_date= " + txt_dingdian_date + ",");
+            //strsql.Append("pc_date='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("pc_date")).Text + "',");
             string txt_pc_date = ((TextBox)this.gv_htgz.Rows[i].FindControl("pc_date")).Text;
             txt_pc_date = txt_pc_date == "" ? "null" : "'" + txt_pc_date + "'";
             strsql.Append("pc_date= " + txt_pc_date + ",");
@@ -2906,16 +2948,16 @@ public partial class baojia : System.Web.UI.Page
             txt_end_date = txt_end_date == "" ? "null" : "'" + txt_end_date + "'";
             strsql.Append("end_date= " + txt_end_date + ",");
             strsql.Append("quantity_year='" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", "") + "',");
-                strsql.Append("pc_per_price= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "") + "',");
-                strsql.Append("price_year= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "") + "',");
-                strsql.Append("pc_mj_price= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "") + "',");
-                strsql.Append("currency= '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_currency")).Text + "',");
-                strsql.Append("lj_status= '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).Text + "',");
-                strsql.Append("exchange_rate= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text + "',");
-                strsql.Append("Description= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text.Replace(",", "") + "'");
-                //strsql.Append(",lj_status= '已定点合同跟踪'");
-                strsql.Append(" where id= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("id")).Text + "' ");
-            
+            strsql.Append("pc_per_price= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(",", "") + "',");
+            strsql.Append("price_year= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text.Replace(",", "") + "',");
+            strsql.Append("pc_mj_price= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_mj_price")).Text.Replace(",", "") + "',");
+            strsql.Append("currency= '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_currency")).Text + "',");
+            strsql.Append("lj_status= '" + ((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).Text + "',");
+            strsql.Append("exchange_rate= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text + "',");
+            strsql.Append("Description= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("Description")).Text.Replace(",", "") + "'");
+            //strsql.Append(",lj_status= '已定点合同跟踪'");
+            strsql.Append(" where id= '" + ((TextBox)this.gv_htgz.Rows[i].FindControl("id")).Text + "' ");
+
 
             DbHelperSQL.ExecuteSql(strsql.ToString());
 
@@ -3050,12 +3092,12 @@ public partial class baojia : System.Web.UI.Page
             //}
             //else
             //{
-                if (((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text == ""  || ((TextBox)this.gv_htgz.Rows[i].FindControl("create_by_empid")).Text == "")
-                {
-                    ViewState["lv"] = "htgz";
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请维护完整合同信息！如行数多余请删除行')", true);
-                    return;
-                }
+            if (((TextBox)this.gv_htgz.Rows[i].FindControl("ljh")).Text == "" || ((TextBox)this.gv_htgz.Rows[i].FindControl("create_by_empid")).Text == "")
+            {
+                ViewState["lv"] = "htgz";
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请维护完整合同信息！如行数多余请删除行')", true);
+                return;
+            }
 
             //增加保存时防呆
             if (((TextBox)this.gv_htgz.Rows[i].FindControl("end_date")).Text == "" &&
@@ -3094,9 +3136,9 @@ public partial class baojia : System.Web.UI.Page
 
             if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_lj_status")).Text == "放弃跟踪")
             {
-                           
+
             }
-            if(((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text=="" )
+            if (((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text == "")
             {
                 ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text = "0";
             }
@@ -3120,10 +3162,10 @@ public partial class baojia : System.Web.UI.Page
             //}
 
         }
-       
+
         //保存合同跟踪
         int update = -1;
-        update = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]),"Baojia_agreement_flow");
+        update = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_agreement_flow");
         if (update >= 0)
         {
             if (gv_htgz.Rows.Count <= 0)
@@ -3189,7 +3231,7 @@ public partial class baojia : System.Web.UI.Page
 
 
 
-            
+
                 //获取合同完成日期
                 //if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_sdxx")).Text == "已收到全部定点文件")
                 //{
@@ -3203,7 +3245,7 @@ public partial class baojia : System.Web.UI.Page
             BTN_Sales_2.Enabled = false;
             //刷新以下零件状态
             //ddl_ljztgz();
-            DataTable dt_ljztgz = BJ_CLASS.Getgv(txt_baojia_no.Value, "ljztgz");            
+            DataTable dt_ljztgz = BJ_CLASS.Getgv(txt_baojia_no.Value, "ljztgz");
             gv_ljztgz.DataSource = dt_ljztgz;
             gv_ljztgz.DataBind();
             ddl_ljztgz();
@@ -3281,7 +3323,7 @@ public partial class baojia : System.Web.UI.Page
         //验证报价明细是否填写完成
         for (int i = 0; i < gv_bjmx.Rows.Count; i++)
         {
-            if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text == "" &&   ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text == "")
+            if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text == "")
             {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少填写一样价格')", true);
                 return;
@@ -3372,7 +3414,7 @@ public partial class baojia : System.Web.UI.Page
                 string strsql_update = " update Baojia_mst set yizhuan_date= '" + date + "',yizhuan_empid='" + txt_update_user.Value + "',yizhuan_name='" + txt_update_user_name.Value + "',is_yizhuan='1' where requestid='" + Convert.ToInt32(Request["requestid"]) + "'";
                 DbHelperSQL.ExecuteSql(strsql_update);
 
-          
+
                 //插入申请人log
 
                 string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','')";
@@ -3384,7 +3426,7 @@ public partial class baojia : System.Web.UI.Page
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('移转不成功。请联系管理员！')", true);
             }
 
-               
+
         }
     }
     #region BindHistory
@@ -3434,7 +3476,7 @@ public partial class baojia : System.Web.UI.Page
         sql.Append("    from [Baojia_dtl] where requestid='" + requestid + "'");
         DataTable dt = DbHelperSQL.Query(sql.ToString()).Tables[0];
         gvdetail.DataSource = dt;
-        gvdetail.DataBind();     
+        gvdetail.DataBind();
     }
 
     protected void DataMst_ItemDataBound(object sender, DataListItemEventArgs e)
@@ -3541,19 +3583,19 @@ public partial class baojia : System.Web.UI.Page
         Gridview_hetong_log.DataBind();
     }
     //零件状态
-   
-        public void bind_gv_ljzt(string txt_baojia_no)
+
+    public void bind_gv_ljzt(string txt_baojia_no)
     {
         DataSet ds = DbHelperSQL.Query("exec [dbo].[Baojia_Get_Lingjian_detail]  '" + txt_baojia_no + "' ");
 
-        DataTable dt =ds.Tables[0];
+        DataTable dt = ds.Tables[0];
         gv_ljzt.DataSource = dt;
         gv_ljzt.DataBind();
 
     }
 
 
-   
+
     #endregion
 
     private decimal num_quantity_year = 0;
@@ -3565,9 +3607,9 @@ public partial class baojia : System.Web.UI.Page
             DataRowView dr = e.Row.DataItem as DataRowView;
             if (dr.Row["quantity_year"].ToString() != "")
             {
-               
-                num_quantity_year += Convert.ToDecimal(dr.Row["quantity_year"].ToString().Replace(",",""));
-               
+
+                num_quantity_year += Convert.ToDecimal(dr.Row["quantity_year"].ToString().Replace(",", ""));
+
             }
             else
             {
@@ -3576,7 +3618,8 @@ public partial class baojia : System.Web.UI.Page
             if (dr.Row["price_year"].ToString() != "")
             {
                 num_price_year += Convert.ToDecimal(dr.Row["price_year"].ToString().Replace(",", ""));
-            }else
+            }
+            else
             {
                 num_price_year = 0;
 
@@ -3595,8 +3638,8 @@ public partial class baojia : System.Web.UI.Page
                 {
                     //Lab_quantity_year.Text += num_quantity_year.ToString();//"计算的总数
                     Lab_quantity_year.Text += String.Format("{0:N0}", num_quantity_year);
-                
-                }              
+
+                }
             }
             TextBox Lab_price_year = e.Row.FindControl("Lab_price_year") as TextBox;
             if (Lab_price_year != null)
@@ -3611,14 +3654,14 @@ public partial class baojia : System.Web.UI.Page
                     Lab_price_year.Text += String.Format("{0:N0}", num_price_year);
                 }
             }
-            
+
         }
     }
 
     private decimal num_quantity_year_ht = 0;
     private decimal num_price_year_ht = 0;
     private decimal num_pc_mj_price_ht = 0;
-    
+
     protected void gv_htgz_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -3647,7 +3690,7 @@ public partial class baojia : System.Web.UI.Page
             {
                 decimal yb = Convert.ToDecimal(dr.Row["pc_mj_price"].ToString().Replace(",", ""));
                 decimal hl = Convert.ToDecimal(dr.Row["exchange_rate"].ToString().Replace(",", ""));
-                num_pc_mj_price_ht += Convert.ToDecimal(yb*hl);
+                num_pc_mj_price_ht += Convert.ToDecimal(yb * hl);
             }
             else
             {
@@ -3709,10 +3752,10 @@ public partial class baojia : System.Web.UI.Page
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             DataRowView dr = e.Row.DataItem as DataRowView;
-          
+
             if (dr.Row["年用量"].ToString() != "")
             {
-              
+
                 num_quantity_year_ls += Convert.ToInt32(dr["年用量"].ToString());
             }
             else
@@ -3735,7 +3778,7 @@ public partial class baojia : System.Web.UI.Page
                 }
             }
 
-            
+
         }
         else if (e.Row.RowType == DataControlRowType.Footer)
         {
@@ -3743,11 +3786,11 @@ public partial class baojia : System.Web.UI.Page
             e.Row.Cells[0].ForeColor = System.Drawing.Color.Red;
             if (num_quantity_year_ls == 0)
             {
-                
+
             }
             else
             {
-                e.Row.Cells[5].Text = String.Format("{0:N0}",num_quantity_year_ls);
+                e.Row.Cells[5].Text = String.Format("{0:N0}", num_quantity_year_ls);
                 e.Row.Cells[5].ForeColor = System.Drawing.Color.Red;
             }
             if (num_price_year_ls == 0)
@@ -3779,12 +3822,12 @@ public partial class baojia : System.Web.UI.Page
             else
             {
                 if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text != "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text != "")
-                {                    
-                        decimal dj = Convert.ToDecimal(((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text);
-                        int sl = Convert.ToInt32(((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", ""));
-                        ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text = Convert.ToInt32(dj * sl).ToString();
-                    
-                  
+                {
+                    decimal dj = Convert.ToDecimal(((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text);
+                    int sl = Convert.ToInt32(((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(",", ""));
+                    ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text = Convert.ToInt32(dj * sl).ToString();
+
+
                     ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text.Replace(" ", "");
                     ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text = ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text.Replace(" ", "");
                 }
@@ -3793,14 +3836,14 @@ public partial class baojia : System.Web.UI.Page
                     ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text = "";
                     ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_price_year")).Text = "";
                 }
-                else if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text == ""&&((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text != "")
+                else if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_quantity_year")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text != "")
                 {
                     ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text = "";
                     Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请先填写年用量！')", true);
 
                 }
             }
-          
+
         }
         ViewState["lv"] = "BJJD";
     }
@@ -3831,7 +3874,7 @@ public partial class baojia : System.Web.UI.Page
                     ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text = "";
                     ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_price_year")).Text = "";
                 }
-                else if ((((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text == "" || ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text == "") && ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text != "" )
+                else if ((((TextBox)this.gv_htgz.Rows[i].FindControl("txt_quantity_year")).Text == "" || ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_exchange_rate")).Text == "") && ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text != "")
                 {
                     ((TextBox)this.gv_htgz.Rows[i].FindControl("txt_pc_per_price")).Text = "";
                     Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请先填写年用量和汇率！')", true);
@@ -3864,25 +3907,25 @@ public partial class baojia : System.Web.UI.Page
     protected void BTN_Sales_sub_update_Click(object sender, EventArgs e)
     {
         //销售在报出前任何阶段都可以修改
-      
-            DataTable dt = BJ_CLASS.BJ_Query_PRO(Convert.ToInt32(Request["requestid"]));
-            string project_size = dt.Rows[0]["project_size"].ToString();
-            int update = -1;
-            if (DDL_project_size.SelectedValue== project_size)
-            {              
-                update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue,txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue,txt_create_date.Value,DDL_wl_tk.SelectedValue,DDL_bz_tk.SelectedValue,DDL_jijia_tk.SelectedValue,DDL_yz_tk.SelectedValue,DDL_sfxj_cg.SelectedValue, BTN_Sales_sub.Text);
+
+        DataTable dt = BJ_CLASS.BJ_Query_PRO(Convert.ToInt32(Request["requestid"]));
+        string project_size = dt.Rows[0]["project_size"].ToString();
+        int update = -1;
+        if (DDL_project_size.SelectedValue == project_size)
+        {
+            update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue, txt_create_date.Value, DDL_wl_tk.SelectedValue, DDL_bz_tk.SelectedValue, DDL_jijia_tk.SelectedValue, DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue,txt_cusRequestDate.Value,  BTN_Sales_sub.Text);
             if (update > 0)
-                {
-                    //插入申请人log
-                    string date = System.DateTime.Now.ToString("yyyy-MM-dd");
-                    string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
-                    DbHelperSQL.ExecuteSql(strsql_xs);
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
-                    BTN_Sales_sub_update.Enabled = false;
-                }
-            }
-            else
             {
+                //插入申请人log
+                string date = System.DateTime.Now.ToString("yyyy-MM-dd");
+                string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
+                DbHelperSQL.ExecuteSql(strsql_xs);
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
+                BTN_Sales_sub_update.Enabled = false;
+            }
+        }
+        else
+        {
             //验证签核中压铸经理和工程经理是否填写
             string empid_jj = "";
             string empid_yz = "";
@@ -3913,7 +3956,7 @@ public partial class baojia : System.Web.UI.Page
                 }
             }
             //机加和压铸的至少有一个部门需要会签
-            if (empid_jj == "" && empid_yz == "" && DDL_jijia_tk.SelectedValue=="需要"&& DDL_yz_tk.SelectedValue=="需要")
+            if (empid_jj == "" && empid_yz == "" && DDL_jijia_tk.SelectedValue == "需要" && DDL_yz_tk.SelectedValue == "需要")
             {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少维护一个压铸经理或机加经理')", true);
                 ViewState["lv"] = "BJJD";
@@ -3927,51 +3970,51 @@ public partial class baojia : System.Web.UI.Page
                 ViewState["lv"] = "BJJD";
                 return;
             }
-            update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue,txt_create_date.Value,DDL_wl_tk.SelectedValue,DDL_bz_tk.SelectedValue,DDL_jijia_tk.SelectedValue,DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue, BTN_Sales_sub.Text);
+            update = BJ_CLASS.BTN_Sales_sub(Convert.ToInt32(Request["requestid"]), txt_baojia_no.Value, Convert.ToInt32(DDL_turns.SelectedValue), txt_sales_empid.Value, txt_sales_name.Value, txt_sales_ad.Value, DDL_customer_name.SelectedValue, DDL_end_customer_name.SelectedValue, txt_customer_project.Value, DDL_project_size.SelectedValue, DDL_project_level.SelectedValue, DDL_is_stop.SelectedValue, txt_create_by_empid.Value, txt_create_by_name.Value, txt_create_by_ad.Value, txt_create_by_dept.Value, txt_managerid.Value, txt_manager.Value, txt_manager_AD.Value, txt_baojia_file_path.Text, txt_baojia_desc.Value, DDL_domain.SelectedValue, txt_baojia_start_date.Value, DDL_sfxy_bjfx.SelectedValue, txt_create_date.Value, DDL_wl_tk.SelectedValue, DDL_bz_tk.SelectedValue, DDL_jijia_tk.SelectedValue, DDL_yz_tk.SelectedValue, DDL_sfxj_cg.SelectedValue,txt_cusRequestDate.Value, BTN_Sales_sub.Text);
 
             if (update > 0)
+            {
+
+                int update_Baojia_sign_flow = -1;
+                update_Baojia_sign_flow = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_sign_flow");
+                if (update_Baojia_sign_flow > 0)
                 {
 
-                    int update_Baojia_sign_flow = -1;
-                    update_Baojia_sign_flow = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_sign_flow");
-                    if (update_Baojia_sign_flow > 0)
+                    //保存报价进度
+                    for (int i = 0; i < gv_bjjd.Rows.Count; i++)
                     {
-
-                        //保存报价进度
-                        for (int i = 0; i < gv_bjjd.Rows.Count; i++)
-                        {
-                            string strsql = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flowid")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("big_flowid")).Text + "','" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("Step")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text + "', '" + ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text + "', iif('" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'='',null,'" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'), '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("require_date")).Text + "')";
-                            DbHelperSQL.ExecuteSql(strsql);
-                        }
-
-                        //删除未选择列表的人员
-                        int update_delete = -1;
-                        update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(Convert.ToInt32(Request["requestid"]));
-
-                        //插入申请人log
-                        string date = System.DateTime.Now.ToString("yyyy-MM-dd");
-                        string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
-                        DbHelperSQL.ExecuteSql(strsql_xs);
-
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
-                        BTN_Sales_sub_update.Enabled = false;
-                        BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]));
-                        //BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]), Convert.ToInt32(txt_status_id.Text), txt_baojia_no.Value);
+                        string strsql = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flow")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("flowid")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("big_flowid")).Text + "','" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("Step")).Text + "', '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("stepid")).Text + "', '" + ((DropDownList)this.gv_bjjd.Rows[i].FindControl("ddl_empid")).Text + "', iif('" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'='',null,'" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("receive_date")).Text + "'), '" + ((TextBox)this.gv_bjjd.Rows[i].FindControl("require_date")).Text + "')";
+                        DbHelperSQL.ExecuteSql(strsql);
                     }
-                    else
-                    {
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
-                    }
+
+                    //删除未选择列表的人员
+                    int update_delete = -1;
+                    update_delete = BJ_CLASS.Baojia_YZ_JJ_DELETE(Convert.ToInt32(Request["requestid"]));
+
+                    //插入申请人log
+                    string date = System.DateTime.Now.ToString("yyyy-MM-dd");
+                    string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','" + txt_content.Value + "')";
+                    DbHelperSQL.ExecuteSql(strsql_xs);
+
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('恭喜您(⊙o⊙) 修改成功！')", true);
+                    BTN_Sales_sub_update.Enabled = false;
+                    BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]));
+                    //BJ_CLASS.SendMail(Convert.ToInt32(Request["requestid"]), Convert.ToInt32(txt_status_id.Text), txt_baojia_no.Value);
                 }
                 else
                 {
                     Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
                 }
             }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请核对后再修改！')", true);
+            }
+        }
 
-           
-       
-       
+
+
+
         ViewState["lv"] = "BJJD";
     }
     protected void DDL_sfxy_bjfx_SelectedIndexChanged(object sender, EventArgs e)
@@ -3981,7 +4024,7 @@ public partial class baojia : System.Web.UI.Page
         {
             Label3.Text = "需要会签各部门审批";
         }
-        else if(DDL_sfxy_bjfx.SelectedValue == "仅需价格核实")
+        else if (DDL_sfxy_bjfx.SelectedValue == "仅需价格核实")
         {
             Label3.Text = "需要内部审批";
         }
@@ -4006,7 +4049,7 @@ public partial class baojia : System.Web.UI.Page
 
         //if (DDL_sfxy_bjfx.SelectedValue == "需要详细价格分析")
         //{
-           
+
         //    txt_baojia_no.Disabled = true;
         //    DDL_turns.Enabled = false;
         //    txt_baojia_start_date.Disabled = true;
@@ -4020,7 +4063,7 @@ public partial class baojia : System.Web.UI.Page
         //        DDL_turns.SelectedValue = "1";
         //        txt_content.Value = "首次报价";
         //    }
-            
+
         //    gv_bjmx_csh();
         //}
         //else
@@ -4067,21 +4110,21 @@ public partial class baojia : System.Web.UI.Page
         //string v_OpenFolderPath = @path;
         string path = txt_baojia_file_path.Text;
         string v_OpenFolderPath = @path;
-        
+
         System.Diagnostics.Process.Start("explorer.exe", v_OpenFolderPath);
 
     }
 
     protected void BTN_Sales_4_Click(object sender, EventArgs e)
     {
-        if(txt_hetong_complet_date_qr.Value!="")
+        if (txt_hetong_complet_date_qr.Value != "")
         {
-            if(gv_htgz.Rows.Count>0)
-            {          
+            if (gv_htgz.Rows.Count > 0)
+            {
                 ////获取合同完成日期
                 //string strsql_update = " update Baojia_mst set hetong_status='合同已完成',hetong_complet_date= '" + txt_hetong_complet_date_qr.Value + "' where requestid='" + Convert.ToInt32(Request["requestid"]) + "'";
                 //DbHelperSQL.ExecuteSql(strsql_update);
-               
+
                 //插入申请人log
                 string date = System.DateTime.Now.ToString("yyyy-MM-dd");
                 string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(合同维护)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','保存合同记录')";
@@ -4109,10 +4152,10 @@ public partial class baojia : System.Web.UI.Page
     protected void ddl_ljh_SelectedIndexChanged(object sender, EventArgs e)
     {
         string xz_ljh = "";
-        
+
         for (int i = 0; i < gv_htgz.Rows.Count; i++)
         {
-            if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_ljh")).Text=="")
+            if (((DropDownList)this.gv_htgz.Rows[i].FindControl("ddl_ljh")).Text == "")
             {
 
             }
@@ -4251,7 +4294,7 @@ public partial class baojia : System.Web.UI.Page
             //获取保存按钮发生的行号
             int i = Convert.ToInt32(e.CommandArgument);
             if (((TextBox)this.gv_ljztgz.Rows[i].FindControl("txt_jieshu_date")).Text == "" &&
-                (((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text== "合同完成停止跟踪" ||
+                (((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "合同完成停止跟踪" ||
                 ((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "定点取消合同跟踪" ||
                 ((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "放弃跟踪"
                 ))
@@ -4272,10 +4315,10 @@ public partial class baojia : System.Web.UI.Page
 
             if (((TextBox)this.gv_ljztgz.Rows[i].FindControl("txt_jieshu_date")).Text != "" &&
               (((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "争取" ||
-              ((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "已定点合同跟踪" 
+              ((DropDownList)this.gv_ljztgz.Rows[i].FindControl("ddl_lj_status")).Text == "已定点合同跟踪"
               ))
             {
-              
+
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('（争取&已定点合同跟踪）这两种状态不可以维护结束日期！')", true);
                 ViewState["lv"] = "htgz";
                 return;
@@ -4320,6 +4363,44 @@ public partial class baojia : System.Web.UI.Page
         {
             Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('争取级别不能为空！')", true);
         }
+    }
+
+    protected void BTN_Sales_5_Click(object sender, EventArgs e)
+    {
+        //验证报价明细是否填写完成
+        for (int i = 0; i < gv_bjmx.Rows.Count; i++)
+        {
+            if (((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_per_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_pc_mj_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_per_price")).Text == "" && ((TextBox)this.gv_bjmx.Rows[i].FindControl("txt_yj_mj_price")).Text == "")
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('请至少填写一样价格')", true);
+                return;
+            }
+
+        }
+
+        using (TransactionScope ts = new TransactionScope())
+        {
+            //报价明细保存
+            int update = -1;
+            update = BJ_CLASS.Baojia_Reback_Modify_Flow(Convert.ToInt32(Request["requestid"]), "Baojia_dtl");
+            if (update > 0)
+            {
+                //插入零件明细
+                insert_Baojia_dtl();
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('零件信息维护成功！')", true);
+                //插入销售保存合同信息记录
+                string date = System.DateTime.Now.ToString();
+                string strsql_xs = " insert into Baojia_sign_flow(requestId,baojia_no,turns,Flow,FlowID,Big_FlowID,Step,StepID,empid,receive_date,require_date,sign_date,Operation_time,sign_desc)  VALUES('" + Convert.ToInt32(Request["requestid"]) + "','" + txt_baojia_no.Value + "','" + DDL_turns.SelectedValue + "', '销售', '10', '100','销售工程师(报价修改)', '10', '" + txt_sales_empid.Value + "', '" + date + "', '" + date + "','" + date + "','0','报价记录修改')";
+                DbHelperSQL.ExecuteSql(strsql_xs);
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "layer.alert('保存不成功，请检查或联系管理员！')", true);
+
+            }
+            ts.Complete();
+        }
+
     }
 }
 

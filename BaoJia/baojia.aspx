@@ -523,13 +523,13 @@
                                 <table style="width: 100%">
                                      
                                     <tr>
-                                        <td colspan="8">
+                                        <td>
                                             <asp:Panel ID="Panel1" runat="server" GroupingText="第一轮报价">
                                       
                                                 <div class="form-inline" style="margin-top: 10px">
                                                     <table class="auto-style3">
                                                         <tr>
-                                                            <td colspan="11">             <div class="form-inline" style="margin-top: 10px">
+                                                            <td colspan="14">             <div class="form-inline" style="margin-top: 10px">
                                     <label>本轮报价原因</label>
                                     <input id="txt_content" class="form-control input-s-sm" style="width:90%" runat="server" /><asp:RequiredFieldValidator ID="yz47" runat="server" ControlToValidate="txt_content" ErrorMessage="报价原因不能为空" ValidationGroup="request" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div></td>
@@ -545,9 +545,30 @@
                                                                 <input id="txt_baojia_end_date" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server"   readonly="True" />
                                                             </td>
                                                             <td>报价负责人：</td>
-                                                            <td colspan="5">        <div class="form-inline">
+                                                            <td colspan="2">        <div class="form-inline">
                                                     <input id="txt_sales_empid" class="form-control input-s-sm" style="height: 35px; width: 80px" runat="server" readonly="True" />/<input id="txt_sales_name" class="form-control input-s-sm" style="height: 35px; width: 80px" runat="server" readonly="True" />/<input id="txt_sales_ad" class="form-control input-s-sm" style="height: 35px; width: 90px" runat="server" readonly="True" />
                                                 </div></td>
+                                                            <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                                                            <td colspan="2">
+                      
+                                                            </td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2">客户要求报价日期：</td>
+                                                            <td>
+                                                                <input id="txt_cusRequestDate" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server"  onclick="laydate()" />
+                                                                <asp:RequiredFieldValidator ID="yz77" runat="server" ControlToValidate="txt_cusRequestDate" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
+                                                                &nbsp;</td>
+                                                            <td>实际提交客户的报价日期：</td>
+                                                            <td>
+                                                                <input id="txt_Sj_baochuDate" class="form-control input-s-sm" style="height: 35px; width: 150px" runat="server"   readonly="True" />
+                                                            </td>
+                                                            <td>&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
                                                         </tr>
                                                         <tr>
                                                             <td>报价分析要求：</td>
@@ -575,31 +596,51 @@
                                                                 </asp:DropDownList>
                                                                 <asp:RequiredFieldValidator ID="yz72" runat="server" ControlToValidate="DDL_sfxj_cg" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
                                                             </td>
-                                                            <td>机加报价：</td>
-                                                            <td>
-                                                                <asp:DropDownList ID="DDL_jijia_tk" runat="server" AutoPostBack="True" class="form-control input-s-sm" OnSelectedIndexChanged="DDL_wl_tk_SelectedIndexChanged" style="height: 35px; width: 150px">
-                                                                    <asp:ListItem></asp:ListItem>
-                                                                    <asp:ListItem>需要</asp:ListItem>
-                                                                    <asp:ListItem Value="不需要">不需要</asp:ListItem>
-                                                                </asp:DropDownList>
-                                                                <asp:RequiredFieldValidator ID="yz74" runat="server" ControlToValidate="DDL_jijia_tk" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">
+                                      
                                                                 &nbsp;</td>
-                                                            <td>压铸报价</td>
+                                                            <td colspan="2">&nbsp;</td>
                                                             <td>
-                                                                <asp:DropDownList ID="DDL_yz_tk" runat="server" AutoPostBack="True" class="form-control input-s-sm" OnSelectedIndexChanged="DDL_wl_tk_SelectedIndexChanged" style="height: 35px; width: 150px">
-                                                                    <asp:ListItem></asp:ListItem>
-                                                                    <asp:ListItem>需要</asp:ListItem>
-                                                                    <asp:ListItem Value="不需要">不需要</asp:ListItem>
-                                                                </asp:DropDownList>
-                                                                <asp:RequiredFieldValidator ID="yz75" runat="server" ControlToValidate="DDL_yz_tk" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
+                                                               
                                                             </td>
                                                         </tr>
                                                       
                                                      
                                                      
                                                         <tr>
+                                                            <td></td>
+                                                            <td> 压铸报价
+                                                            </td>
+                                                            <td><asp:DropDownList ID="DDL_yz_tk" runat="server" AutoPostBack="True" class="form-control input-s-sm" OnSelectedIndexChanged="DDL_wl_tk_SelectedIndexChanged" style="height: 35px; width: 150px">
+                                                                    <asp:ListItem></asp:ListItem>
+                                                                    <asp:ListItem>需要</asp:ListItem>
+                                                                    <asp:ListItem Value="不需要">不需要</asp:ListItem>
+                                                                </asp:DropDownList>
+                                                                <asp:RequiredFieldValidator ID="yz75" runat="server" ControlToValidate="DDL_yz_tk" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
+</td>
+                                                            <td>   机加报价：                     
+                                                            </td>
+                                                            <td>  <asp:DropDownList ID="DDL_jijia_tk" runat="server" AutoPostBack="True" class="form-control input-s-sm" OnSelectedIndexChanged="DDL_wl_tk_SelectedIndexChanged" style="height: 35px; width: 150px">
+                                                                    <asp:ListItem></asp:ListItem>
+                                                                    <asp:ListItem>需要</asp:ListItem>
+                                                                    <asp:ListItem Value="不需要">不需要</asp:ListItem>
+                                                                </asp:DropDownList>
+                                                                <asp:RequiredFieldValidator ID="yz74" runat="server" ControlToValidate="DDL_jijia_tk" ErrorMessage="不能为空" ForeColor="Red" ValidationGroup="request"></asp:RequiredFieldValidator>
+</td>
                                                             <td>&nbsp;</td>
-                                                            <td colspan="10"  align="right">
+                                                            <td>                                          &nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                        </tr>
+                                                      
+                                                     
+                                                     
+                                                        <tr>
+                                                            <td>&nbsp;</td>
+                                                            <td colspan="13"  align="right">
                                                                 <asp:Button ID="BTN_Sales_sub_update" runat="server" class="btn btn-primary " OnClick="BTN_Sales_sub_update_Click" Style="height: 10px; width: 130px" Text="修改" ValidationGroup="request" Visible="False" />
                                                             </td>
                                                         </tr>
@@ -745,7 +786,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="8">
+                                          <td align="right">
+                                            <asp:Button ID="BTN_Sales_5" runat="server" class="btn btn-primary" Style="height: 35px; width: 130px" Text="修改报价" OnClick="BTN_Sales_5_Click" Visible="False" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
 
                                             <asp:Panel ID="Panel2" runat="server" GroupingText="报价进度控制(点击展开)" data-toggle="collapse" data-target="#ProControl">
                                             </asp:Panel>
@@ -780,7 +826,7 @@
                                                         </asp:TemplateField>
                                                         <asp:TemplateField HeaderText="角色">
                                                             <ItemTemplate>
-                                                                <asp:TextBox ID="step" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.step") %>' Width="100px"></asp:TextBox>
+                                                                <asp:TextBox ID="step" runat="server" Text='<%#DataBinder.Eval(Container,"DataItem.step") %>' Width="120px"></asp:TextBox>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
                                                         <asp:TemplateField HeaderText="姓名">
@@ -840,12 +886,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="8" align="right">
-                                            <asp:Button ID="BTN_Sales_3" runat="server" class="btn btn-primary" Style="height: 35px; width: 130px" Text="保存" OnClick="BTN_Sales_3_Click" />
+                                        <td align="right">
+                                            <asp:Button ID="BTN_Sales_3" runat="server" class="btn btn-primary" Style="height: 35px; width: 130px" Text="保存" OnClick="BTN_Sales_3_Click" Visible="False" />
                                         </td>
                                     </tr>
                                     <tr>
-                                       <td colspan="8" align="right">
+                                       <td align="right">
                                             <asp:Button ID="BTN_Sales_sub" runat="server" class="btn btn-primary " Style="height: 35px; width: 130px" Text="提交" ValidationGroup="request" OnClick="BTN_Sales_sub_Click" />
                                         </td>
                                     </tr>

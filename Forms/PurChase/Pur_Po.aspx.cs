@@ -733,7 +733,7 @@ public partial class Pur_Po : System.Web.UI.Page
                 sql_pr_exist += " union";
             }
             sql_pr_exist += @" select PONo, rowid, PRNo, PRRowId," + (i + 1).ToString()+" as line" 
-                            + @" from PUR_PO_Dtl_Form where PRNo = '" + ldt.Rows[i]["prno"].ToString() + "' and PRRowId = '" + ldt.Rows[i]["prrowid"].ToString() + "'";
+                            + @" from PUR_PO_Dtl_Form where status=0 and PRNo = '" + ldt.Rows[i]["prno"].ToString() + "' and PRRowId = '" + ldt.Rows[i]["prrowid"].ToString() + "'";
         }
         if (sql_pr_exist != "")
         {
