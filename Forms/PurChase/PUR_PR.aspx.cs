@@ -483,6 +483,7 @@ protected void Page_Load(object sender, EventArgs e)
                                 union select '原材料' as type  ,3 as sort
                                 union select '费用服务类' as type  ,4 as sort
                                 union select '合同类' as type ,5 as sort
+                                union select '办公用品类' as type ,6 as sort
                                             ) a order by sort";
         var tbltype = DbHelperSQL.Query(tbltype_sql).Tables[0];
         DataRow dr = tbltype.NewRow(); dr["type"] = ""; tbltype.Rows.InsertAt(dr, 0);
@@ -1376,7 +1377,7 @@ protected void Page_Load(object sender, EventArgs e)
 
         string formdiv = "dtl_daoju";
         if (formtype == "刀具类") { formdiv = "dtl_daoju"; }
-        else if (formtype == "非刀具辅料类" || formtype == "原材料") { formdiv = "dtl_ndj_ycl"; }
+        else if (formtype == "非刀具辅料类" || formtype == "原材料" || formtype == "办公用品类") { formdiv = "dtl_ndj_ycl"; }
         else if (formtype == "费用服务类") { formdiv = "dtl_fw"; }
         else if (formtype == "合同类") { formdiv = "dtl_ht"; }
 
@@ -1461,6 +1462,12 @@ protected void Page_Load(object sender, EventArgs e)
         dr["rowid"] = (Convert.ToInt16(maxObject) + 1).ToString();
 
         dr["attachments_name"] = prtype.SelectedValue == "刀具类" ? "查看" : "无";
+        if (prtype.SelectedValue == "办公用品类")
+        {
+            dr["usefor"] = "无";
+            dr["wltype"] = "6010-办公用品类";
+            dr["currency"] = "CNY";
+        }
         dtl.Rows.Add(dr);
         var sortrowid = 0;
         for (int row = 0; row < dtl.Rows.Count; row++)

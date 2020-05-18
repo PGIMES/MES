@@ -320,7 +320,10 @@
                                     wlms.css("background-color","Transparent");
 
                                     if(p3=="刀具类"){wlsubtype.removeAttr("onclick");wlsubtype.css("border","none");wlsubtype.css("background-color","Transparent");}
-                                    if(p3!="刀具类"){wltype.removeAttr("onclick");wltype.css("border","none");wltype.css("background-color","Transparent");}
+                                    //if(p3!="刀具类"){
+                                    if(p3=="非刀具辅料类" || p3=="原材料"){
+                                        wltype.removeAttr("onclick");wltype.css("border","none");wltype.css("background-color","Transparent");
+                                    }
                                 }else{                            
                                     wlmc.removeAttr("readonly");                 
                                     wlmc.css("border-style","inset");   
@@ -330,8 +333,11 @@
                                     wlms.css("border-style","inset");   
                                     wlms.css("background-color","white"); 
 
-                                    if(p3=="刀具类"){wlsubtype.attr("onclick","Getwltype(this);");wlsubtype.css("border",""); wlsubtype.css("background-color","white");}
-                                    if(p3!="刀具类"){wltype.attr("onclick","Getwltype(this);");wltype.css("border","");wltype.css("background-color","white"); }
+                                    if(p3=="刀具类"){wlsubtype.attr("onclick","Getwltype(this);");wlsubtype.css("border",""); wlsubtype.css("background-color","white");}    
+                                    //p3!="刀具类"
+                                    if(p3=="非刀具辅料类" || p3=="原材料"){
+                                        wltype.attr("onclick","Getwltype(this);");wltype.css("border","");wltype.css("background-color","white");
+                                    }
 
                                     //add 提示文字
                                     wlmc.attr("placeholder","品名含中文");
@@ -752,7 +758,10 @@
                     $(wlms).css("background-color","Transparent");
 
                     if(p3=="刀具类"){$(wlsubtype).removeAttr("onclick");wlsubtype.css("border","none");wlsubtype.css("background-color","Transparent");}
-                    if(p3!="刀具类"){$(wltype).removeAttr("onclick");wltype.css("border","none");wltype.css("background-color","Transparent");}
+                    //if(p3!="刀具类"){
+                    if(p3=="非刀具辅料类"|| p3=="原材料"){
+                        $(wltype).removeAttr("onclick");wltype.css("border","none");wltype.css("background-color","Transparent");
+                    }
                 },
                 error: function (err) {
                     layer.alert(err);
@@ -867,7 +876,10 @@
                 wlms.css("background-color","white"); 
 
                 if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
-                if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+                //if(p3!="刀具类"){
+                if(p3=="非刀具辅料类" || p3=="原材料"){
+                    wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");
+                }
 
                 //add 提示文字
                 wlmc.attr("placeholder","品名含中文");
@@ -1031,7 +1043,10 @@
                                 wlms.css("background-color","white");
 
                                 if(p3=="刀具类"){wlSubType.attr("onclick","Getwltype(this);");wlSubType.css("border",""); wlSubType.css("background-color","white");wlSubType.val("");}
-                                if(p3!="刀具类"){wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");}
+                                //if(p3!="刀具类"){
+                                if(p3=="非刀具辅料类" || p3=="原材料"){
+                                    wlType.attr("onclick","Getwltype(this);");wlType.css("border",""); wlType.css("background-color","white");wlType.val("");
+                                }
                                 
                                 //add 提示文字
                                 wlmc.attr("placeholder","品名含中文");
