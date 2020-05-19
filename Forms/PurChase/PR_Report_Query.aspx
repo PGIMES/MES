@@ -127,6 +127,7 @@
                             <asp:ListItem>原材料</asp:ListItem>
                             <asp:ListItem>费用服务类</asp:ListItem>
                             <asp:ListItem>合同类</asp:ListItem>
+                            <asp:ListItem>办公用品类</asp:ListItem>
                         </asp:DropDownList>
                     </td>
                     <td>创建日期:</td>
