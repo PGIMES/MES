@@ -1467,6 +1467,7 @@ protected void Page_Load(object sender, EventArgs e)
             dr["usefor"] = "无";
             dr["wltype"] = "6010-办公用品类";
             dr["currency"] = "CNY";
+            dr["unit"] = "EA";
         }
         dtl.Rows.Add(dr);
         var sortrowid = 0;
@@ -1573,7 +1574,7 @@ protected void Page_Load(object sender, EventArgs e)
         }
         sql_usefor += @" union all SELECT replace(pgino+[version]+'/'+productcode,' ','')   FROM [dbo].[form3_Sale_Product_DetailTable]";
 
-        if (prtype_v == "非刀具辅料类" || prtype_v == "合同类")
+        if (prtype_v == "非刀具辅料类" || prtype_v == "合同类" || prtype_v == "费用服务类")
         {
             sql_usefor += @" union all select replace(XMBH+'/'+XMMS,' ','') from [dbo].[formtable_main_55_ZDHXM]";
         }
