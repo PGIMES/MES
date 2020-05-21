@@ -94,6 +94,7 @@
                         <SettingsFilterControl AllowHierarchicalColumns="True"></SettingsFilterControl>
                         <Columns></Columns>
                         <TotalSummary>
+                            <dx:ASPxSummaryItem DisplayFormat="{0:N0}" FieldName="PurQty" SummaryType="Sum" />   
                             <dx:ASPxSummaryItem DisplayFormat="{0:N4}" FieldName="TotalPrice" SummaryType="Sum" />             
                         </TotalSummary>
                         <Styles>
