@@ -923,8 +923,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
     [WebMethod]
     public static string CheckData(string applyid, string formno, string part, string domain, string cust_part, string typeno)
     {
-        string manager_flag = ""; string zg_id = "";
-        CheckData_manager(applyid, out manager_flag, out zg_id);
+        string manager_flag = ""; //string zg_id = "";
+        //CheckData_manager(applyid, out manager_flag, out zg_id);
 
         string part_flag = CheckVer_data(part, domain, cust_part, typeno, formno);
 
@@ -933,19 +933,19 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
     }
 
-    public static void CheckData_manager(string applyid, out string manager_flag, out string zg_id)
-    {
-        //------------------------------------------------------------------------------验证工程师对应主管是否为空
-        manager_flag = "";
+    //public static void CheckData_manager(string applyid, out string manager_flag, out string zg_id)
+    //{
+    //    //------------------------------------------------------------------------------验证工程师对应主管是否为空
+    //    manager_flag = "";
 
-        DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + applyid + "')").Tables[0];
-        zg_id = dt_manager.Rows[0]["zg_id"].ToString();
+    //    DataTable dt_manager = DbHelperSQL.Query(@"select * from [fn_Get_Managers]('" + applyid + "')").Tables[0];
+    //    zg_id = dt_manager.Rows[0]["zg_id"].ToString();
 
-        if (zg_id == "")
-        {
-            manager_flag += "工程师(" + applyid + ")的直属主管不存在，不能提交!<br />";
-        }
-    }
+    //    if (zg_id == "")
+    //    {
+    //        manager_flag += "工程师(" + applyid + ")的直属主管不存在，不能提交!<br />";
+    //    }
+    //}
 
     public static string CheckVer_data(string part, string domain, string cust_part, string typeno, string formno)
     {
@@ -1004,8 +1004,8 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string lspart = part.Text; string lscust_part = cust_part.Text; string lsdomain = domain.Text;
         string lstypeno = typeno.Text;
 
-        string manager_flag = ""; string zg_id = "";
-        CheckData_manager(applyid, out manager_flag, out zg_id);
+        //string manager_flag = ""; string zg_id = "";
+        //CheckData_manager(applyid, out manager_flag, out zg_id);
 
         if (this.m_sid == "")
         {
@@ -1027,11 +1027,11 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
 
         //主管
-        Pgi.Auto.Common lczg_id = new Pgi.Auto.Common();
-        lczg_id.Code = "zg_id";
-        lczg_id.Key = "";
-        lczg_id.Value = "u_" + zg_id;
-        ls.Add(lczg_id);
+        //Pgi.Auto.Common lczg_id = new Pgi.Auto.Common();
+        //lczg_id.Code = "zg_id";
+        //lczg_id.Key = "";
+        //lczg_id.Value = "u_" + zg_id;
+        //ls.Add(lczg_id);
 
         //自定义，上传文件
         string savepath_new = @"\" + savepath + @"\";
