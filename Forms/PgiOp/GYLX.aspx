@@ -416,6 +416,7 @@
             var pgi_no_t=$("#CPXX input[id*='pgi_no_t']").val();
             var ver=$("#CPXX input[id*='ver']").val();
             var formno=$("#CPXX input[id*='formno']").val();
+            var domain=$("#CPXX input[id*='domain']").val();
 
             if(pgi_no!=pgi_no_t){
                 if(pgi_no_t.substr(pgi_no_t.length-3,3)!="-X1" && pgi_no_t.substr(pgi_no_t.length-3,3)!="-X2" && pgi_no_t.substr(pgi_no_t.length-3,3)!="-X3"
@@ -429,7 +430,7 @@
             $.ajax({
                 type: "post",
                 url: "GYLX.aspx/CheckVer",
-                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver+ "','formno':'" + formno+ "'}",
+                data: "{'pgi_no':'" + pgi_no + "','pgi_no_t':'" + pgi_no_t + "','ver':'" + ver+ "','formno':'" + formno+ "','domain':'" + domain+ "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码

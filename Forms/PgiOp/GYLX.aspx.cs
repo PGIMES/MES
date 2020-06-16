@@ -1735,21 +1735,21 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     
 
     [WebMethod]
-    public static string CheckVer(string pgi_no, string pgi_no_t, string ver, string formno)
+    public static string CheckVer(string pgi_no, string pgi_no_t, string ver, string formno, string domain)
     {
-        string flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
+        string flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno, domain);
         string result = "[{\"flag\":\"" + flag + "\"}]";
         return result;
     }
 
-    public static string CheckVer_data(string pgi_no, string pgi_no_t, string ver, string formno)
+    public static string CheckVer_data(string pgi_no, string pgi_no_t, string ver, string formno, string domain)
     {
         string flag = "";
 
         string sql = @"select b.projectno,b.pgi_no_t
                     from (select InstanceID from RoadFlowWebForm.dbo.WorkFlowTask where FlowID = 'ee59e0b3-d6a1-4a30-a3b4-65d188323134' and status in(0, 1))  a 
                         inner join PGI_GYLX_Main_Form b on a.InstanceID = b.formno
-                    where b.projectno='" + pgi_no + "' and b.pgi_no_t='" + pgi_no_t + "'";
+                    where b.projectno='" + pgi_no + "' and b.pgi_no_t='" + pgi_no_t + "' and b.domain='" + domain + "'";
         if (formno != "") { sql = sql + " and a.InstanceID<>'" + formno + "'"; }
 
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
@@ -1760,7 +1760,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         if (flag == "")
         {
-            sql = @"select projectno,pgi_no_t,ascii(max(ver)) ver_db,ascii('" + ver + "') ver_page from [dbo].[PGI_GYLX_Main] where projectno='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' group by projectno,pgi_no_t";
+            sql = @"select projectno,pgi_no_t,ascii(max(ver)) ver_db,ascii('" + ver + "') ver_page from [dbo].[PGI_GYLX_Main] where projectno='" + pgi_no + "' and pgi_no_t='" + pgi_no_t + "' and domain='" + domain + "'  group by projectno,pgi_no_t,domain";
             DataTable dt2 = DbHelperSQL.Query(sql).Tables[0];
 
             if (ver == "A")
@@ -1796,7 +1796,7 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = "";// DataTable dt_vg_manager = null;
         CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag,out zl_id);//,out dt_vg_manager
 
-        string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno);
+        string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno, domain);
 
         string result = "[{\"manager_flag\":\"" + manager_flag + "\",\"pgino_flag\":\"" + pgino_flag + "\"}]";
         return result;
