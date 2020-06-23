@@ -919,7 +919,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string sql_nbr_a = @" select a.scx_order
                              from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
 	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
-                        where b.so_sched='1' and scx_domain='{0}'and scx_shipfrom='{1}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
+                        where b.so_sched='1' and scx_domain='{0}'and scx_shipfrom='{1}' and scx_shipto='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
         sql_nbr_a = string.Format(sql_nbr_a, domain, site, ship, bill, curr);
         DataTable ldt_nbr_a = DbHelperSQL.Query(sql_nbr_a).Tables[0];
         if (ldt_nbr_a.Rows.Count > 0)
@@ -931,7 +931,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
             string sql_nbr_a_n = @" select max(a.scx_order)scx_order
                              from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
 	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
-                        where so.so_sched='1' and scx_domain='{0}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
+                        where so.so_sched='1' and scx_domain='{0}' and scx_shipto='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
             sql_nbr_a_n = string.Format(sql_nbr_a_n, domain, site, ship, bill, curr);
             DataTable ldt_nbr_a_n = DbHelperSQL.Query(sql_nbr_a_n).Tables[0];
             if (ldt_nbr_a.Rows.Count > 0)
