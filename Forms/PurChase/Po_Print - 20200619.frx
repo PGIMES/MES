@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="03/15/2019 10:51:39" ReportInfo.Modified="06/19/2020 10:39:11" ReportInfo.CreatorVersion="2016.1.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="03/15/2019 10:51:39" ReportInfo.Modified="05/23/2019 08:57:03" ReportInfo.CreatorVersion="2016.1.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+XH54GmyjXEP8NjFIgds8ajQ==">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+Xt9+9W2nG3RRYEDN2CXj/uQ==">
       <TableDataSource Name="main" DataType="System.Int32" PropName="Table" Enabled="true" TableName="main" SelectCommand="exec rpt_Po_Print 'K9030015','main'">
         <Column Name="VName" DataType="System.String"/>
         <Column Name="VAdress" DataType="System.String"/>
@@ -176,7 +176,7 @@
         <TextObject Name="Text25" Left="274.05" Width="66.15" Height="26.46" Text="[dtl.截止日期]" Format="Date" Format.Format="d" Font="宋体, 9pt"/>
         <TextObject Name="Text27" Left="378" Width="71.82" Height="26.46" Text="[dtl.单价(未税)]" HorzAlign="Right" Font="宋体, 9pt"/>
         <TextObject Name="Text28" Left="453.6" Width="79.38" Height="26.46" Text="[dtl.采购金额(未税)]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="4" Format.DecimalSeparator="." Format.GroupSeparator="," Format.NegativePattern="1" HorzAlign="Right" Font="宋体, 9pt"/>
-        <TextObject Name="Text29" Left="699.3" Width="66.15" Height="26.46" Text="[dtl.QAD单号]" Font="微软雅黑, 8pt, style=Bold" TextFill.Color="Red"/>
+        <TextObject Name="Text29" Left="699.3" Width="66.15" Height="26.46" Text="[dtl.QAD单号]" Font="宋体, 9pt"/>
         <TextObject Name="Text34" Left="538.65" Width="75.6" Height="26.46" Text="[dtl.税金价]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="4" Format.DecimalSeparator="." Format.GroupSeparator="," Format.NegativePattern="1" HorzAlign="Right" Font="宋体, 9pt"/>
         <TextObject Name="Text35" Left="614.25" Width="79.38" Height="26.46" Text="[dtl.采购金额(含税)]" Format="Number" Format.UseLocale="false" Format.DecimalDigits="4" Format.DecimalSeparator="." Format.GroupSeparator="," Format.NegativePattern="1" HorzAlign="Right" Font="宋体, 9pt"/>
       </DataBand>

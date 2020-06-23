@@ -444,6 +444,7 @@
             $("#zxXX input[id*='bzx_jz_t']").val(jz_t);
 
             Refresh_Main_Row();
+            RefreshRow();
         }
 
         function Refresh_Main_Row(){
