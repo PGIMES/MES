@@ -916,33 +916,49 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         nbr = ship + nbr_num;
 
         //add 2020/6/23 09:42
-        //string sql_nbr_a = @"select max(so_nbr) so_nbr
-        //                from qad.dbo.qad_so_mstr so
-        //                where so.so_sched='1' and so_domain='{0}'and so_site='{1}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
-        //sql_nbr_a = string.Format(sql_nbr_a, domain, site, ship, bill, curr);
-        //DataTable ldt_nbr_a = DbHelperSQL.Query(sql_nbr_a).Tables[0];
-        //if (ldt_nbr_a.Rows.Count > 0)
-        //{
-        //    string _last_str = ldt_nbr_a.Rows[0]["so_nbr"].ToString().Right(1);
-        //    if (Regex.Matches(_last_str, "[A-Z]").Count <= 0)
-        //    {
-        //        nbr_num = "A";
-        //    }
-        //    else if (_last_str == "Z")
-        //    {
-        //        nbr_num = ldt_nbr_a.Rows[0]["so_nbr"].ToString().Replace(ship, "") + "A";
-        //    }
-        //    else
-        //    {
-        //        nbr_num = _last_str; //DbHelperSQL.Query("select nchar(ascii('" + _last_str + "')+1)").Tables[0].Rows[0][0].ToString();
-        //    }
-        //}
-        //else
-        //{
-        //    nbr_num = "A";
-        //}
-        //nbr = ship + nbr_num;
-        ////end
+        string sql_nbr_a = @" select a.scx_order
+                             from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
+	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
+                        where b.so_sched='1' and scx_domain='{0}'and scx_shipfrom='{1}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
+        sql_nbr_a = string.Format(sql_nbr_a, domain, site, ship, bill, curr);
+        DataTable ldt_nbr_a = DbHelperSQL.Query(sql_nbr_a).Tables[0];
+        if (ldt_nbr_a.Rows.Count > 0)
+        {
+            nbr = ldt_nbr_a.Rows[0]["scx_order"].ToString();
+        }
+        else
+        {
+            string sql_nbr_a_n = @" select max(a.scx_order)scx_order
+                             from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
+	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
+                        where so.so_sched='1' and scx_domain='{0}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
+            sql_nbr_a_n = string.Format(sql_nbr_a_n, domain, site, ship, bill, curr);
+            DataTable ldt_nbr_a_n = DbHelperSQL.Query(sql_nbr_a_n).Tables[0];
+            if (ldt_nbr_a.Rows.Count > 0)
+            {
+                string scx_order = ldt_nbr_a.Rows[0]["scx_order"].ToString();
+                string _last_str = scx_order.Right(1);
+                if (Regex.Matches(_last_str, "[A-Z]").Count <= 0)
+                {
+                    nbr = ship + "A";
+                }
+                else if (_last_str == "Z")
+                {
+                    nbr = scx_order + "A";
+                }
+                else
+                {
+                    nbr_num = DbHelperSQL.Query("select nchar(ascii('" + _last_str + "')+1)").Tables[0].Rows[0][0].ToString();
+                    nbr = scx_order.Left(scx_order.Length - 1)+ nbr_num;
+                }
+            }
+            else
+            {
+
+                nbr = ship + "A";
+            }
+        }
+        //end
 
         string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr 
                 + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc 
