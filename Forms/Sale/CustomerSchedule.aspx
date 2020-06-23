@@ -590,6 +590,7 @@
                     var ship_qr=$("#MainContent_lbl_ship_qr").text();
                     var pr_list_qr=$("#MainContent_lbl_pr_list_qr").text();
                     var rf_qr=$("#MainContent_lbl_rf_qr").text();
+                    var site_qr=$("#MainContent_lbl_site_qr").text();
 
                     if(part_qr.indexOf(js_UserId)>0){// || part_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_part_qr").prop("checked")==false){                    
@@ -612,6 +613,12 @@
                     if(rf_qr.indexOf(js_UserId)>0){// || rf_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_rf_qr").prop("checked")==false){                    
                             msg+="预测量，QAD还不存在，不能发送.<br />";
+                        }
+                        i++;
+                    }
+                    if(site_qr.indexOf(js_UserId)>0){// || site_qr.indexOf(js_DeptName)>0
+                        if($("#MainContent_cb_site_qr").prop("checked")==false){                    
+                            msg+="地点，QAD还不存在，不能发送.<br />";
                         }
                         i++;
                     }
@@ -1122,7 +1129,7 @@
                     <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:1200px;">
                         <table style="width: 40%; font-size: 12px;" border="0">
                             <tr>
-                                <td style="width:100px;" rowspan="4"><font color="red"> QAD存在，会默认选中 :</font></td>
+                                <td style="width:100px;" rowspan="5"><font color="red"> QAD存在，会默认选中 :</font></td>
                                 <td style="width:110px;">
                                     <asp:CheckBox ID="cb_part_qr" runat="server" />PGI_零件号
                                 </td>          
@@ -1152,6 +1159,14 @@
                                 </td>          
                                 <td style="width:80px;">
                                     <asp:Label ID="lbl_rf_qr" runat="server" Text=""></asp:Label>
+                                </td>        
+                            </tr>
+                            <tr>
+                                <td style="width:110px;">
+                                    <asp:CheckBox ID="cb_site_qr" runat="server" />地点
+                                </td>          
+                                <td style="width:80px;">
+                                    <asp:Label ID="lbl_site_qr" runat="server" Text=""></asp:Label>
                                 </td>        
                             </tr>
                         </table>

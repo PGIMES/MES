@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -279,19 +280,21 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         string workcode = dt_IsSign.Rows[0]["workcode"].ToString();
 
         string[] IsSign_HQ_list = IsSign_HQ.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true;
+        bool part_yn = true, ship_yn = true, pr_list_yn = true, rf_yn = true, site_yn = true;
         foreach (var item in IsSign_HQ_list)
         {
             if (item == "Y_part") { part_yn = false; }
             if (item == "Y_ship") { ship_yn = false; }
             if (item == "Y_pr_list") { pr_list_yn = false; }
             if (item == "Y_rf") { rf_yn = false; }
+            if (item == "Y_site") { site_yn = false; }
         }
-        cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn;
+        cb_part_qr.Checked = part_yn; cb_ship_qr.Checked = ship_yn; cb_pr_list_qr.Checked = pr_list_yn; cb_rf_qr.Checked = rf_yn; cb_site_qr.Checked = site_yn;
 
         string[] workcode_list = workcode.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
         lbl_par_qr.Text = "责任人【" + workcode_list[0] + "】"; lbl_ship_qr.Text = "责任人【" + workcode_list[1] + "】";
         lbl_pr_list_qr.Text = "责任人【" + workcode_list[2] + "】"; lbl_rf_qr.Text = "责任人【" + workcode_list[3] + "】";
+        lbl_site_qr.Text = "责任人【" + workcode_list[4] + "】";
     }
 
     //void bind_qad_qr(string IsSign_HQ,string workcode)
@@ -396,7 +399,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         btnadd.Visible = false; btndel.Visible = false;
 
-        cb_part_qr.Enabled = false;cb_ship_qr.Enabled = false;cb_pr_list_qr.Enabled = false;cb_rf_qr.Enabled = false;
+        cb_part_qr.Enabled = false;cb_ship_qr.Enabled = false;cb_pr_list_qr.Enabled = false;cb_rf_qr.Enabled = false; cb_site_qr.Enabled = false;
 
         setread_grid(i);
     }
@@ -912,6 +915,34 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         }
         nbr = ship + nbr_num;
 
+        //add 2020/6/23 09:42
+        //string sql_nbr_a = @"select max(so_nbr) so_nbr
+        //                from qad.dbo.qad_so_mstr so
+        //                where so.so_sched='1' and so_domain='{0}'and so_site='{1}' and so_ship='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
+        //sql_nbr_a = string.Format(sql_nbr_a, domain, site, ship, bill, curr);
+        //DataTable ldt_nbr_a = DbHelperSQL.Query(sql_nbr_a).Tables[0];
+        //if (ldt_nbr_a.Rows.Count > 0)
+        //{
+        //    string _last_str = ldt_nbr_a.Rows[0]["so_nbr"].ToString().Right(1);
+        //    if (Regex.Matches(_last_str, "[A-Z]").Count <= 0)
+        //    {
+        //        nbr_num = "A";
+        //    }
+        //    else if (_last_str == "Z")
+        //    {
+        //        nbr_num = ldt_nbr_a.Rows[0]["so_nbr"].ToString().Replace(ship, "") + "A";
+        //    }
+        //    else
+        //    {
+        //        nbr_num = _last_str; //DbHelperSQL.Query("select nchar(ascii('" + _last_str + "')+1)").Tables[0].Rows[0][0].ToString();
+        //    }
+        //}
+        //else
+        //{
+        //    nbr_num = "A";
+        //}
+        //nbr = ship + nbr_num;
+        ////end
 
         string result = "[{\"shipname\":\"" + shipname + "\",\"bill\":\"" + bill + "\",\"curr\":\"" + curr 
                 + "\",\"pr_list\":\"" + pr_list + "\",\"taxable\":\"" + taxable + "\",\"taxc\":\"" + taxc 
