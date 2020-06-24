@@ -917,7 +917,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
 
         //add 2020/6/23 09:42
         string sql_nbr_a = @" select a.scx_order
-                             from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
+                             from (select distinct scx_domain,scx_order,scx_shipfrom,scx_shipto from qad.dbo.qad_scx_ref ) a
 	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
                         where b.so_sched='1' and scx_domain='{0}'and scx_shipfrom='{1}' and scx_shipto='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
         sql_nbr_a = string.Format(sql_nbr_a, domain, site, ship, bill, curr);
@@ -929,7 +929,7 @@ public partial class Forms_Sale_CustomerSchedule : System.Web.UI.Page
         else
         {
             string sql_nbr_a_n = @" select max(a.scx_order)scx_order
-                             from (select distinct scx_domain,scx_order,scx_shipfrom from qad.dbo.qad_scx_ref ) a
+                             from (select distinct scx_domain,scx_order,scx_shipfrom,scx_shipto from qad.dbo.qad_scx_ref ) a
 	                            left join qad.dbo.qad_so_mstr b on a.scx_domain=b.so_domain and a.scx_order=b.so_nbr
                         where so.so_sched='1' and scx_domain='{0}' and scx_shipto='{2}'  and so_bill='{3}'  and so_curr='{4}' ";
             sql_nbr_a_n = string.Format(sql_nbr_a_n, domain, site, ship, bill, curr);
