@@ -122,9 +122,9 @@ public partial class Forms_PurChase_PUR_PR_Upload_dj_x : System.Web.UI.Page
 
                     //过滤key值为空行
                     if (wlh == "") { continue; }
-                    else if (wlh.Right(1).ToUpper() != "X")
+                    else if (wlh.Right(1).ToUpper() != "X" && wlh.Right(1).ToUpper() != "H")
                     {
-                        result = "【物料号】必须为修磨刀！" + "<br />";
+                        result = "【物料号】必须为修磨刀/换刀！" + "<br />";
                         break;
                     }
 
