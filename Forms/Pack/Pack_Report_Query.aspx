@@ -137,6 +137,12 @@
                             <dx:GridViewDataTextColumn Caption="单件重量" FieldName="ljzl" Width="60px" VisibleIndex="2">
                                 <PropertiesTextEdit DisplayFormatString="{0:N3}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工单数量(成品)" FieldName="gdsl_cp" Width="90px" VisibleIndex="2">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="工单数量(半成品)" FieldName="gdsl_bcp" Width="100px" VisibleIndex="2">
+                                <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
                             <dx:GridViewDataTextColumn Caption="整托数量" FieldName="bzx_sl_t" Width="70px" VisibleIndex="3"/>
                             <dx:GridViewDataTextColumn Caption="整托尺寸(L)" FieldName="bzx_t_l" Width="80px" VisibleIndex="4">
                                 <PropertiesTextEdit DisplayFormatString="{0:N0}"></PropertiesTextEdit>

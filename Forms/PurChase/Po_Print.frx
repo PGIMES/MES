@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="03/15/2019 10:51:39" ReportInfo.Modified="06/19/2020 10:39:11" ReportInfo.CreatorVersion="2016.1.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="03/15/2019 10:51:39" ReportInfo.Modified="07/01/2020 15:15:49" ReportInfo.CreatorVersion="2016.1.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+XH54GmyjXEP8NjFIgds8ajQ==">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqxfki+t8jnSxof6qn6ng9vRLm+cpt1NGzmGW2ORl5w+G1WLTfSI8joBuizkY0+sRWLj0OTsGrhav32x2P2xa9MWCyqzjZ5+m+1OAIUkwbI3Fo7g7rzko6s1CiXDYnG8uVzFaDeQOe9pcxI+kVs7bvkZRiz0RAn+DXqBNG0FKATTDxiSB2Kz0lzeYWEa6nTb+XMYUoNBNKME2p2WNNIPqEhQ==">
       <TableDataSource Name="main" DataType="System.Int32" PropName="Table" Enabled="true" TableName="main" SelectCommand="exec rpt_Po_Print 'K9030015','main'">
         <Column Name="VName" DataType="System.String"/>
         <Column Name="VAdress" DataType="System.String"/>
@@ -163,7 +163,7 @@
       <TextObject Name="Text15" Left="274.05" Top="330.75" Width="66.15" Height="26.46" Text="截止日期" Font="宋体, 9pt"/>
       <TextObject Name="Text17" Left="378" Top="330.75" Width="71.82" Height="26.46" Text="单价(未税)" HorzAlign="Right" Font="宋体, 9pt"/>
       <TextObject Name="Text18" Left="453.6" Top="330.75" Width="79.38" Height="26.46" Text="采购金额&#13;&#10;(未税)" HorzAlign="Right" Font="宋体, 9pt"/>
-      <TextObject Name="Text19" Left="699.3" Top="330.75" Width="66.15" Height="26.46" Text="QAD单号" Font="宋体, 9pt"/>
+      <TextObject Name="Text19" Left="699.3" Top="330.75" Width="66.15" Height="26.46" Text="QAD单号" Font="微软雅黑, 8pt, style=Bold" TextFill.Color="Red"/>
       <TextObject Name="Text32" Left="538.65" Top="330.75" Width="75.6" Height="26.46" Text="税金价" HorzAlign="Right" Font="宋体, 9pt"/>
       <TextObject Name="Text33" Left="614.25" Top="330.75" Width="79.38" Height="26.46" Text="采购金额&#13;&#10;(含税)" HorzAlign="Right" Font="宋体, 9pt"/>
       <TextObject Name="Text37" Left="-9450" Top="-9450" Width="75.6" Height="18.9" Text="税金合计：" Padding="2, 0, 0, 0" Font="宋体, 9pt"/>
