@@ -734,6 +734,7 @@
                                 $(notax_historyprice).val("");
                                 return false;
                             }else{
+                                $(wlh).val(item.wlh); 
                                 $(wltype).val(item.class);    
                                 $(wlsubtype).val(item.type);
                                 $(wlmc).val(item.wlmc);
