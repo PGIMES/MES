@@ -1794,8 +1794,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
     [WebMethod]
     public static string CheckData(string typeno, string product_user, string yz_user, string bz_user, string pgi_no, string pgi_no_t, string ver,string formno,string domain,string createid, string zl_user)
     {
-        DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = "";// DataTable dt_vg_manager = null;
-        CheckData_manager(typeno, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag,out zl_id);//,out dt_vg_manager
+        DataTable dt_manager = null; DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = ""; string plan_id = "";// DataTable dt_vg_manager = null;
+        CheckData_manager(typeno, pgi_no, product_user, yz_user, bz_user, domain, createid, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag,out zl_id, out plan_id);//,out dt_vg_manager
 
         string pgino_flag = CheckVer_data(pgi_no, pgi_no_t, ver, formno, domain);
 
@@ -1804,11 +1804,11 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
     }
     
-    public static void CheckData_manager(string typeno, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user, string ver
-        , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag, out string zl_id)//, out DataTable dt_vg_manager
+    public static void CheckData_manager(string typeno,string pgi_no, string product_user, string yz_user, string bz_user, string domain, string createid,string zl_user, string ver
+        , out DataTable dt_manager, out DataTable dt_bz_id, out string manager_flag, out string zl_id, out string plan_id)//, out DataTable dt_vg_manager
     {
         //------------------------------------------------------------------------------验证工程师对应主管是否为空
-        manager_flag = ""; zl_id = "";
+        manager_flag = ""; zl_id = ""; plan_id = "";
 
         string appuserid = "";
         if (typeno == "机加")
@@ -1913,6 +1913,20 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
 
         */
 
+        if (manager_flag == "")
+        {
+            var value_wl = DbHelperSQL.GetSingle(@"select wl_user from form3_Sale_Product_MainTable where pgino='"+ pgi_no.Left(5)+ "'");
+            string wl_user = value_wl == null ? "" : value_wl.ToString();
+            if (wl_user.Length >= 5) { wl_user = wl_user.Left(5); }
+
+            var value = DbHelperSQL.GetSingle(@"select id from RoadFlowWebForm.dbo.Users a where account='" + wl_user + "'");
+            plan_id = value == null ? "" : value.ToString();
+            if (plan_id == "")
+            {
+                manager_flag += "计划员不存在，不能提交!<br />";
+            }
+        }
+
         //-------------------------------------------包装工程师
         dt_bz_id = null;
         if (bz_user != "")
@@ -1962,8 +1976,8 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         string bz_user = ((TextBox)this.FindControl("ctl00$MainContent$bz_user")).Text.Trim();
         string zl_user = ((TextBox)this.FindControl("ctl00$MainContent$zl_user")).Text.Trim();
         string ver = ((TextBox)this.FindControl("ctl00$MainContent$ver")).Text.Trim();
-        DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = "";//DataTable dt_vg_manager = null; 
-        CheckData_manager(lstypeno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag, out zl_id);//, out dt_vg_manager
+        DataTable dt_manager = null;DataTable dt_bz_id = null; string manager_flag = ""; string zl_id = ""; string plan_id = "";//DataTable dt_vg_manager = null; 
+        CheckData_manager(lstypeno, projectno, product_user, yz_user, bz_user, txt_domain.Text, txt_CreateById.Value, zl_user, ver, out dt_manager, out dt_bz_id, out manager_flag, out zl_id, out plan_id);//, out dt_vg_manager
 
         string modifygp = ((RadioButtonList)this.FindControl("ctl00$MainContent$modifygp")).SelectedValue;
 
@@ -2056,6 +2070,12 @@ public partial class Forms_PgiOp_GYLX : System.Web.UI.Page
         lcvg_manager_id.Key = "";
         lcvg_manager_id.Value = "u_" + dt_manager.Rows[0]["fz_id"].ToString();
         ls.Add(lcvg_manager_id);
+
+        Pgi.Auto.Common lcplan_id = new Pgi.Auto.Common();
+        lcplan_id.Code = "plan_id";
+        lcplan_id.Key = "";
+        lcplan_id.Value = "u_" + plan_id;
+        ls.Add(lcplan_id);
 
         /*
 
