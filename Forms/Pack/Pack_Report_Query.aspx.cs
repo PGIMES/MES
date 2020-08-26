@@ -87,9 +87,11 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
 	                            --WHERE ([sod_end_eff[1]]] IS NULL OR [sod_end_eff[1]]] >= CONVERT(VARCHAR(10), GETDATE(), 120)) AND (sod_pr_list <> '')
 	                            ) sod
 	                            left join (
-		                            select so.*,ad.ad_sort, ad.ad_name 
+		                            select so.*--,ad.ad_sort, ad.ad_name 
+			                            ,ad.cm_addr ad_sort,ad.DebtorShipToName ad_name  
 		                            from qad.dbo.qad_so_mstr so 
-			                            INNER JOIN dbo.qad_ad_mstr ad ON ad.ad_domain = so.so_domain AND ad.ad_addr = so.so_ship AND ad.ad_bus_relation = so.so_bill
+			                            --INNER JOIN dbo.qad_ad_mstr ad ON ad.ad_domain = so.so_domain AND ad.ad_addr = so.so_ship AND ad.ad_bus_relation = so.so_bill
+			                            inner join [form4_Customer_DebtorShipTo] ad on charindex(so.so_domain,ad.Debtor_Domain)>0 and ad.DebtorShipToCode=so.so_ship and ad.BusinessRelationCode=so.so_bill
 		                            ) so ON so.so_domain = sod.sod_domain AND so.so_nbr = sod.sod_nbr AND so.so_site = sod.sod_site
                             where sod.sod_domain='{0}' and sod.sod_part='{1}' and sod.sod_site='{2}' and so.so_ship='{3}'
                             ";
