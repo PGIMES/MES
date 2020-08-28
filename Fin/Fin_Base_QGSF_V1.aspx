@@ -45,6 +45,86 @@
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
 
-    开发中
+    <div class="panel-body" id="div_p">
+        <div class="col-sm-12">
+            <table style="line-height:40px">
+                <tr>                    
+                    <td style="text-align:right;">项目号：</td>
+                    <td>
+                        <asp:TextBox ID="txt_wlh" class="form-control input-s-md " runat="server"></asp:TextBox>
+                    </td>
+                    <td> 
+                        &nbsp;
+                        <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Bt_select_Click" Width="70px" />
+                        &nbsp;
+                        <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button> 
+                        &nbsp;
+                        <asp:Button ID="Bt_Export" runat="server" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Text="导出" Width="70px" /> 
+                    </td> 
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div runat="server" id="DIV1" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px">
+        <table>
+            <tr>
+                <td>
+                    <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="domain;wlh" AutoGenerateColumns="False"  
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnCustomCellMerge="GV_PART_CustomCellMerge" >
+                        <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
+                        <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
+                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <Settings ShowFilterRow="True" ShowFilterRowMenu="True"   VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
+                                 ShowFilterRowMenuLikeItem="True"  ShowFooter="True" />
+                        <Columns>
+                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  >
+                            </dx:GridViewCommandColumn> 
+                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="1"  >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="90px" VisibleIndex="2"  >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="零件号" FieldName="productcode" Width="200px" VisibleIndex="3" >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="HTS" FieldName="com_comm_code" Width="150px" VisibleIndex="4"  >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="HTS描述" FieldName="com_desc" Width="150px" VisibleIndex="5"  >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="基础税率" FieldName="BaseRate" Width="80px" VisibleIndex="6" >
+                                <Settings AllowCellMerge="True" />
+                                <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="301 Code" FieldName="301code" Width="90px" VisibleIndex="7" >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="301关税" FieldName="301Rate" Width="80px" VisibleIndex="8" >
+                                <Settings AllowCellMerge="True" />
+                                <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="是否豁免" FieldName="immunity" Width="70px" VisibleIndex="9"  >
+                                <Settings AllowCellMerge="True" />
+                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataDateColumn Caption="生效日期" FieldName="Effective_date" Width="90px" VisibleIndex="10" >
+                                <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
+                            </dx:GridViewDataDateColumn>     
+                            <dx:GridViewDataDateColumn Caption="截至日期" FieldName="End_date" Width="90px" VisibleIndex="11" >
+                                <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
+                            </dx:GridViewDataDateColumn>     
+                        </Columns>
+                        <Styles>
+                            <Header BackColor="#99CCFF"></Header>
+                            <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                            <Footer HorizontalAlign="Right"></Footer>
+                            <AlternatingRow Enabled="true" />
+                        </Styles>
+                    </dx:ASPxGridView>
+                </td>
+            </tr>
+        </table>
+    </div>
 </asp:Content>
 
