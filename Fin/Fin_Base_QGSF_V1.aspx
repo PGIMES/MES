@@ -70,44 +70,29 @@
             <tr>
                 <td>
                     <dx:ASPxGridView ID="GV_PART" ClientInstanceName="grid" runat="server" KeyFieldName="domain;wlh" AutoGenerateColumns="False"  
-                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnCustomCellMerge="GV_PART_CustomCellMerge" >
+                             OnPageIndexChanged="GV_PART_PageIndexChanged" OnCustomCellMerge="GV_PART_CustomCellMerge" Width="1190px" >
                         <ClientSideEvents EndCallback="function(s, e) { setHeight(); }" />
-                        <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" />
-                        <SettingsPager PageSize="1000"></SettingsPager>
+                        <SettingsBehavior AllowDragDrop="TRUE" AllowFocusedRow="false" AllowSelectByRowClick="false" ColumnResizeMode="Control" AutoExpandAllGroups="true" MergeGroupsMode="Always" SortMode="Value" 
+                                     AllowCellMerge="true"/>
+                        <SettingsPager PageSize="100"></SettingsPager>
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True"   VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
                                  ShowFilterRowMenuLikeItem="True"  ShowFooter="True" />
                         <Columns>
                             <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  >
                             </dx:GridViewCommandColumn> 
-                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="1"  >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="90px" VisibleIndex="2"  >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="零件号" FieldName="productcode" Width="200px" VisibleIndex="3" >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="HTS" FieldName="com_comm_code" Width="150px" VisibleIndex="4"  >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="HTS描述" FieldName="com_desc" Width="150px" VisibleIndex="5"  >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="1"  />
+                            <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="90px" VisibleIndex="2"  />
+                            <dx:GridViewDataTextColumn Caption="零件号" FieldName="productcode" Width="200px" VisibleIndex="3" />
+                            <dx:GridViewDataTextColumn Caption="HTS" FieldName="com_comm_code" Width="150px" VisibleIndex="4"  />
+                            <dx:GridViewDataTextColumn Caption="HTS描述" FieldName="com_desc" Width="150px" VisibleIndex="5"/>
                             <dx:GridViewDataTextColumn Caption="基础税率" FieldName="BaseRate" Width="80px" VisibleIndex="6" >
-                                <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="301 Code" FieldName="301code" Width="90px" VisibleIndex="7" >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="301 Code" FieldName="301code" Width="90px" VisibleIndex="7" />
                             <dx:GridViewDataTextColumn Caption="301关税" FieldName="301Rate" Width="80px" VisibleIndex="8" >
-                                <Settings AllowCellMerge="True" />
                                 <PropertiesTextEdit DisplayFormatString="{0:P1}"></PropertiesTextEdit>
                             </dx:GridViewDataTextColumn>
-                            <dx:GridViewDataTextColumn Caption="是否豁免" FieldName="immunity" Width="70px" VisibleIndex="9"  >
-                                <Settings AllowCellMerge="True" />
-                            </dx:GridViewDataTextColumn>
+                            <dx:GridViewDataTextColumn Caption="是否豁免" FieldName="immunity" Width="70px" VisibleIndex="9"  />
                             <dx:GridViewDataDateColumn Caption="生效日期" FieldName="Effective_date" Width="90px" VisibleIndex="10" >
                                 <PropertiesDateEdit DisplayFormatString="yyyy/MM/dd"></PropertiesDateEdit>
                             </dx:GridViewDataDateColumn>     
