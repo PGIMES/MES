@@ -15,30 +15,30 @@
                 setHeight();
             });
 
-            $('#btn_add').click(function () {
-                //var url = '/Fin/Fin_Base_QGSF_Add.aspx';
-                //layer.open({
-                //    title: '新增基率&清关税<font color="red">【Base Rate】【301 Rate】请填写小数.</font>',
-                //    closeBtn: 2,
-                //    type: 2,
-                //    area: ['750px', '300px'],
-                //    fixed: false, //不固定
-                //    maxmin: true, //开启最大化最小化按钮
-                //    content: url,
-                //    cancel: function (index, layero) {//取消事件
-                //    },
-                //    end: function () {//无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。layer.open关闭事件
-                //        location.reload();　　//layer.open关闭刷新
-                //    }
+            $('#btn_edit').click(function () {
+                var url = '/Fin/Fin_Base_QGSF_V1_Maintain.aspx';
+                layer.open({
+                    title: '新增&修改：基率&清关税<font color="red">【Base Rate】【301 Rate】请填写小数.</font>',
+                    closeBtn: 2,
+                    type: 2,
+                    area: ['750px', '300px'],
+                    fixed: false, //不固定
+                    maxmin: true, //开启最大化最小化按钮
+                    content: url,
+                    cancel: function (index, layero) {//取消事件
+                    },
+                    end: function () {//无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。layer.open关闭事件
+                        location.reload();　　//layer.open关闭刷新
+                    }
 
-                //});
+                });
             });
         });
 
         function setHeight() {
             $("div[class=dxgvCSD]").css("height", ($(window).height() - $("#div_p").height() - 200) + "px");
         }
-        	
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" Runat="Server">
@@ -57,7 +57,7 @@
                         &nbsp;
                         <asp:Button ID="Bt_select" runat="server" Text="查询" class="btn btn-large btn-primary" OnClick="Bt_select_Click" Width="70px" />
                         &nbsp;
-                        <button id="btn_add" type="button" class="btn btn-primary btn-large"><i class="fa fa-plus fa-fw"></i>&nbsp;新增</button> 
+                        <button id="btn_edit" type="button" class="btn btn-primary btn-large"><i class="fa fa-pencil-square-o fa-fw"></i>&nbsp;维护</button> 
                         &nbsp;
                         <asp:Button ID="Bt_Export" runat="server" class="btn btn-large btn-primary" OnClick="Bt_Export_Click" Text="导出" Width="70px" /> 
                     </td> 
@@ -78,8 +78,6 @@
                         <Settings ShowFilterRow="True" ShowFilterRowMenu="True"   VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="500"
                                  ShowFilterRowMenuLikeItem="True"  ShowFooter="True" />
                         <Columns>
-                            <dx:GridViewCommandColumn   ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="40" VisibleIndex="0"  SelectAllCheckboxMode="Page"  >
-                            </dx:GridViewCommandColumn> 
                             <dx:GridViewDataTextColumn Caption="域" FieldName="domain" Width="40px" VisibleIndex="1"  />
                             <dx:GridViewDataTextColumn Caption="项目号" FieldName="wlh" Width="90px" VisibleIndex="2"  />
                             <dx:GridViewDataTextColumn Caption="零件号" FieldName="productcode" Width="200px" VisibleIndex="3" />
