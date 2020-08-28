@@ -22,7 +22,7 @@
         function wlh_change(s) {
             $.ajax({
                 type: "post",
-                url: "Fin_Base_QGSF_Add.aspx/GetData_ByWlh",
+                url: "Fin_Base_QGSF_V1_Maintain.aspx/GetData_ByWlh",
                 data: "{'wlh_domain':'" + s.GetValue()+ "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -219,11 +219,6 @@
             <td><dx:ASPxTextBox ID="txt_com_comm_code" ClientInstanceName="hscode" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
         </tr>
         <tr>
-            <td>301 Code</td>
-            <td>
-                <dx:ASPxTextBox ID="txt_301code" ClientInstanceName="qgcode" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
-                </dx:ASPxTextBox>
-            </td>
             <td>Base Rate</td>
             <td>
                 <dx:ASPxTextBox ID="txt_BaseRate" ClientInstanceName="baserate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
@@ -232,6 +227,11 @@
                     </ValidationSettings>
                 </dx:ASPxTextBox>
 
+            </td>
+            <td>301 Code</td>
+            <td>
+                <dx:ASPxTextBox ID="txt_301code" ClientInstanceName="qgcode" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
+                </dx:ASPxTextBox>
             </td>
             <td>301 Rate</td>
             <td>
