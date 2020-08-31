@@ -21,7 +21,7 @@
                     title: '新增&修改：基率&清关税<font color="red">【Base Rate】【301 Rate】请填写小数.</font>',
                     closeBtn: 2,
                     type: 2,
-                    area: ['750px', '300px'],
+                    area: ['750px', '580px'],
                     fixed: false, //不固定
                     maxmin: true, //开启最大化最小化按钮
                     content: url,

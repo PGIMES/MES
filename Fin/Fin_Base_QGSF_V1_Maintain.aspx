@@ -31,6 +31,11 @@
                     var obj = eval(data.d);
                     comdesc.SetValue(obj[0].comdesc);
                     hscode.SetValue(obj[0].hscode);
+
+                    baserate.SetValue(obj[0].baserate);
+                    qgcode.SetValue(obj[0].qgcode);
+                    qgrate.SetValue(obj[0].qgrate);
+                    immunity.SetValue(obj[0].immunity);
                 }
 
             });
@@ -41,16 +46,20 @@
                 layer.alert("【物料号】不可为空！");
                 return false;
             }
-            if (qgcode.GetValue() == "") {
-                layer.alert("【301 Code】不可为空！");
-                return false;
-            }
             if (baserate.GetValue() == "") {
                 layer.alert("【Base Rate】不可为空！");
                 return false;
             }
+            if (qgcode.GetValue() == "") {
+                layer.alert("【301 Code】不可为空！");
+                return false;
+            }
             if (qgrate.GetValue() == "") {
                 layer.alert("【301 Rate】不可为空！");
+                return false;
+            }
+            if (immunity.GetValue() == "") {
+                layer.alert("【是否豁免】不可为空！");
                 return false;
             }
             if (!ASPxClientEdit.ValidateGroup("ValueValidationGroup")) {
@@ -213,17 +222,17 @@
                     <ClientSideEvents ValueChanged="function(s, e) {wlh_change(s);}" />
                 </dx:ASPxComboBox>
             </td>
-            <td>描述</td>
-            <td><dx:ASPxTextBox ID="txt_com_desc" ClientInstanceName="comdesc" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
-            <td>HS Code_US</td>
+            <td>HTS</td>
             <td><dx:ASPxTextBox ID="txt_com_comm_code" ClientInstanceName="hscode" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
+            <td>HTS描述</td>
+            <td><dx:ASPxTextBox ID="txt_com_desc" ClientInstanceName="comdesc" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
         </tr>
         <tr>
             <td>Base Rate</td>
             <td>
                 <dx:ASPxTextBox ID="txt_BaseRate" ClientInstanceName="baserate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
                     <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                        <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" /><%--^-?(0\.\d*[1-9]+\d*)--%>
+                        <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" />
                     </ValidationSettings>
                 </dx:ASPxTextBox>
 
@@ -241,6 +250,17 @@
                     </ValidationSettings>
                 </dx:ASPxTextBox>
             </td>
+        </tr>
+        <tr>
+            <td>是否豁免</td>
+            <td>
+                <dx:ASPxComboBox ID="cmb_immunity" ClientInstanceName="immunity" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
+                </dx:ASPxComboBox>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td colspan="6" style="text-align:center;">

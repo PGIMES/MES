@@ -15,7 +15,7 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
     {
         LogUserModel = InitUser.GetLoginUserInfo("", Request.ServerVariables["LOGON_USER"]);
 
-        SetWlh();
+        SetWlh(); Setimmunity();
     }
 
     //物料号
@@ -24,38 +24,60 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         wlh.Columns.Clear();
 
         //新增没有维护税率的 物料号
-        string lssql = @"select com.com_domain,com.com_comm_code,com_desc,comd_part,comd_part+'|'+ com_domain as V
-                        from qad.dbo.qad_com_mstr com 
-	                        inner join qad.dbo.qad_comd_det comd on com.com_domain=comd.comd_domain and com.com_comm_code=comd.comd_comm_code 
-	                        left join Fin_Base_QGSF QGSF on comd.comd_domain=QGSF.domain and comd.comd_part=QGSF.wlh
-                        where QGSF.domain is null or QGSF.wlh is null
-                        order by comd_part";
+        string lssql = @"exec usp_Fin_Base_QGSF_maintain_init '',''";
         DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
 
         wlh.ValueField = "V";
-        wlh.Columns.Add("comd_part", "物料号", 80);
+        wlh.Columns.Add("comd_pgino", "物料号", 80);
         wlh.Columns.Add("com_domain", "域", 50);
         wlh.TextFormatString = "{0}|{1}";
         wlh.DataSource = ldt;
         wlh.DataBind();
     }
 
+    //物料号
+    private void Setimmunity()
+    {
+        cmb_immunity.Columns.Clear();
+
+        string lssql = @"select 'Y' YN union select 'N' YN";
+        DataTable ldt = DbHelperSQL.Query(lssql).Tables[0];
+
+        cmb_immunity.ValueField = "YN";
+        cmb_immunity.Columns.Add("YN", "是否豁免", 80);
+        cmb_immunity.DataSource = ldt;
+        cmb_immunity.DataBind();
+    }
 
     [WebMethod]
     public static string GetData_ByWlh(string wlh_domain)
     {
+        string re_domain="", re_hscode = "", re_comdesc = "", baserate = "", qgcode = "", qgrate = "", immunity="";
+
         string[] wlh_domain_arr = wlh_domain.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
         string domain = wlh_domain_arr[1]; string wlhno = wlh_domain_arr[0];
 
-        string lssql = @"select com.com_domain,com.com_comm_code,com_desc,comd_part 
-                        from qad.dbo.qad_com_mstr com 
-	                        inner join qad.dbo.qad_comd_det comd on com.com_domain=comd.comd_domain and com.com_comm_code=comd.comd_comm_code 
-                        where comd_part='" + wlhno + "' and com_domain='" + domain + "'";
-        DataTable dt = DbHelperSQL.Query(lssql).Tables[0];
+        string lssql = @"exec usp_Fin_Base_QGSF_maintain_init '" + wlhno + "','" + domain + "'";
+        DataSet ds = DbHelperSQL.Query(lssql);
 
-        string result = "[{\"domain\":\"" + dt.Rows[0]["com_domain"].ToString() 
-            + "\",\"hscode\":\"" + dt.Rows[0]["com_comm_code"].ToString() 
-            + "\",\"comdesc\":\"" + dt.Rows[0]["com_desc"].ToString() + "\"}]";
+        DataTable dt = ds.Tables[0];
+        re_domain = dt.Rows[0]["com_domain"].ToString();
+        re_hscode = dt.Rows[0]["com_comm_code"].ToString();
+        re_comdesc = dt.Rows[0]["com_desc"].ToString();
+
+        if (ds.Tables[1].Rows.Count > 0)
+        {
+            DataTable dt_2 = ds.Tables[1];
+
+            baserate = dt_2.Rows[0]["BaseRate"].ToString();
+            qgcode = dt_2.Rows[0]["301code"].ToString();
+            qgrate = dt_2.Rows[0]["301Rate"].ToString();
+            immunity = dt_2.Rows[0]["immunity"].ToString();
+        }
+
+        string result = "[{\"domain\":\"" + re_domain + "\",\"hscode\":\"" + re_hscode + "\",\"comdesc\":\"" + re_comdesc 
+            + "\",\"baserate\":\"" + baserate + "\",\"qgcode\":\"" + qgcode + "\",\"qgrate\":\"" + qgrate
+            + "\",\"immunity\":\"" + immunity + "\"}]";
         return result;
 
     }
