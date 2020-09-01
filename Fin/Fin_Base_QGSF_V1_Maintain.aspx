@@ -16,7 +16,6 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            
         });
 
         function wlh_change(s) {
@@ -36,9 +35,16 @@
                     qgcode.SetValue(obj[0].qgcode);
                     qgrate.SetValue(obj[0].qgrate);
                     immunity.SetValue(obj[0].immunity);
+                    if (obj[0].immunity == "Y") {
+                        $("#div_grid").css("display", "");
+                        grid.PerformCallback("init");
+                    } else {
+                        $("#div_grid").css("display","none");
+                    }
                 }
-
             });
+
+            
         }
 
         function validate() {
@@ -214,62 +220,213 @@
     <form id="form1" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
-    <table style="width:100%; font-size:12px; line-height:35px;" border="0" id="tblWLLeibie">
-        <tr>
-            <td>物料号</td>
-            <td>
-                <dx:ASPxComboBox ID="wlh" ClientInstanceName="wlh_i" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
-                    <ClientSideEvents ValueChanged="function(s, e) {wlh_change(s);}" />
-                </dx:ASPxComboBox>
-            </td>
-            <td>HTS</td>
-            <td><dx:ASPxTextBox ID="txt_com_comm_code" ClientInstanceName="hscode" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
-            <td>HTS描述</td>
-            <td><dx:ASPxTextBox ID="txt_com_desc" ClientInstanceName="comdesc" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
-        </tr>
-        <tr>
-            <td>Base Rate</td>
-            <td>
-                <dx:ASPxTextBox ID="txt_BaseRate" ClientInstanceName="baserate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
-                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                        <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" />
-                    </ValidationSettings>
-                </dx:ASPxTextBox>
 
-            </td>
-            <td>301 Code</td>
-            <td>
-                <dx:ASPxTextBox ID="txt_301code" ClientInstanceName="qgcode" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
-                </dx:ASPxTextBox>
-            </td>
-            <td>301 Rate</td>
-            <td>
-                <dx:ASPxTextBox ID="txt_301Rate" ClientInstanceName="qgrate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
-                    <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
-                        <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" />
-                    </ValidationSettings>
-                </dx:ASPxTextBox>
-            </td>
-        </tr>
-        <tr>
-            <td>是否豁免</td>
-            <td>
-                <dx:ASPxComboBox ID="cmb_immunity" ClientInstanceName="immunity" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
-                </dx:ASPxComboBox>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="6" style="text-align:center;">
-                <asp:Button ID="btn_save" runat="server" Text="保存" class="btn btn-large btn-primary" OnClientClick="if(validate()==false)return false;" Width="50px"
-                   OnClick="btn_save_Click" /> 
-            </td>
-        </tr>
-    </table>
-    
+        
+    <div class="col-md-12" >
+
+        <div class="row  row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#CPXX">
+                    <strong>税率</strong>
+                </div>
+                <div class="panel-body" id="CPXX">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12" style="width:490px;">
+                        <div>
+                            <table style="width:100%; font-size:12px; line-height:35px;" border="0" id="tblWLLeibie">
+                                <tr>
+                                    <td>物料号</td>
+                                    <td>
+                                        <dx:ASPxComboBox ID="wlh" ClientInstanceName="wlh_i" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
+                                            <ClientSideEvents ValueChanged="function(s, e) {wlh_change(s);}" />
+                                        </dx:ASPxComboBox>
+                                    </td>
+                                    <td>HTS</td>
+                                    <td><dx:ASPxTextBox ID="txt_com_comm_code" ClientInstanceName="hscode" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
+                                    <td>HTS描述</td>
+                                    <td><dx:ASPxTextBox ID="txt_com_desc" ClientInstanceName="comdesc" runat="server" ReadOnly="true" CssClass="lineread" Width="100px" Height="27px"></dx:ASPxTextBox></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Base Rate</td>
+                                    <td>
+                                        <dx:ASPxTextBox ID="txt_BaseRate" ClientInstanceName="baserate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
+                                            <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" />
+                                            </ValidationSettings>
+                                        </dx:ASPxTextBox>
+
+                                    </td>
+                                    <td>301 Code</td>
+                                    <td>
+                                        <dx:ASPxTextBox ID="txt_301code" ClientInstanceName="qgcode" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
+                                        </dx:ASPxTextBox>
+                                    </td>
+                                    <td>301 Rate</td>
+                                    <td>
+                                        <dx:ASPxTextBox ID="txt_301Rate" ClientInstanceName="qgrate" runat="server" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9">
+                                            <ValidationSettings ValidationGroup="ValueValidationGroup" Display="Dynamic" ErrorTextPosition="Bottom">
+                                                <RegularExpression ErrorText="请输入0~1之间的小数！" ValidationExpression="^([01](\.0+)?|0\.[0-9]+)$" />
+                                            </ValidationSettings>
+                                        </dx:ASPxTextBox>
+                                    </td>
+                                    <td>是否豁免</td>
+                                    <td>
+                                        <dx:ASPxComboBox ID="cmb_immunity" ClientInstanceName="immunity" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
+                                        </dx:ASPxComboBox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" style="text-align:center;">
+                                        <asp:Button ID="btn_save" runat="server" Text="保存" class="btn btn-large btn-primary" OnClientClick="if(validate()==false)return false;" Width="50px"
+                                           OnClick="btn_save_Click" /> 
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%--<div class="row  row-container">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#CPXX1">
+                    <strong>生效日期</strong>
+                </div>
+                <div class="panel-body " id="CPXX1">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                        <asp:UpdatePanel runat="server" ID="p1" UpdateMode="Conditional" >
+                            <ContentTemplate>
+
+                                <asp:Button ID="btnadd" runat="server" Text="新增" class="btn btn-default btn-primary" Width="50px" OnClick="btnadd_Click" />
+                                <asp:Button ID="btndel" runat="server" Text="删除" class="btn btn-default btn-primary" Width="50px"  OnClick="btndel_Click" />
+
+                                <dx:aspxgridview ID="gv" runat="server" AutoGenerateColumns="False"  KeyFieldName="numid"  Theme="MetropolisBlue"
+                                    ClientInstanceName="gv"  EnableTheming="True" Border-BorderColor="#DCDCDC">
+                                    <SettingsPager PageSize="1000" />
+                                    <Settings ShowFooter="True"/>
+                                    <SettingsBehavior AllowSelectByRowClick="True" AllowDragDrop="False" AllowSort="False" />
+                                    <Columns>
+                                        <dx:GridViewCommandColumn SelectAllCheckboxMode="Page" ShowClearFilterButton="true" ShowSelectCheckbox="true" Name="Sel" Width="30" VisibleIndex="0"></dx:GridViewCommandColumn>
+                                        <dx:GridViewDataTextColumn Caption="生效日期" FieldName="Effective_date" Width="100px" VisibleIndex="1">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxDateEdit ID="Effective_date" runat="server" EditFormat="Custom" Width="110px"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd"
+                                                    ClientInstanceName='<%# "Effective_date"+Container.VisibleIndex.ToString() %>' 
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9"
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    <CalendarProperties><FastNavProperties DisplayMode="Inline" /></CalendarProperties>
+                                                </dx:ASPxDateEdit>          
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn> 
+                                        <dx:GridViewDataTextColumn Caption="截止日期" FieldName="End_date" Width="100px" VisibleIndex="2">
+                                            <Settings AllowCellMerge="False" />
+                                            <DataItemTemplate>                
+                                                <dx:ASPxDateEdit ID="End_date" runat="server" EditFormat="Custom" Width="110px"  UseMaskBehavior="true" EditFormatString="yyyy/MM/dd"
+                                                    ClientInstanceName='<%# "End_date"+Container.VisibleIndex.ToString() %>'
+                                                    Border-BorderStyle="None" BorderBottom-BorderStyle="Solid" ButtonStyle-BorderBottom-BorderColor="#ccc" BackColor="#FDF7D9" 
+                                                    DisabledStyle-BackColor="Transparent" DisabledStyle-BorderBottom-BorderStyle="None">
+                                                    <CalendarProperties><FastNavProperties DisplayMode="Inline" /></CalendarProperties>
+                                                </dx:ASPxDateEdit>          
+                                            </DataItemTemplate>        
+                                        </dx:GridViewDataTextColumn>
+                                                                                
+                                        <dx:GridViewDataTextColumn FieldName="numid" Width="0px" >
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                        <dx:GridViewDataTextColumn FieldName="id" Width="0px">
+                                             <HeaderStyle CssClass="hidden" />
+                                             <CellStyle CssClass="hidden"></CellStyle>
+                                             <FooterCellStyle CssClass="hidden"></FooterCellStyle>
+                                        </dx:GridViewDataTextColumn>
+                                    </Columns>
+                                    <Styles>
+                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
+                                        <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
+                                        <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0"></Cell>
+                                        <CommandColumn Border-BorderColor="#DCDCDC" BorderRight-BorderStyle="None"></CommandColumn>
+                                    </Styles>
+                                </dx:aspxgridview>
+                               
+                             </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>--%>
+
+        <div class="row  row-container" id="div_grid" style="display:none;">
+            <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-target="#CPXX1">
+                    <strong>生效日期</strong>
+                </div>
+                <div class="panel-body " id="CPXX1">
+                    <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12">
+                        <%--<asp:UpdatePanel runat="server" ID="p1" UpdateMode="Conditional" >
+                            <ContentTemplate>--%>
+
+                                <dx:aspxgridview ID="gv" runat="server"  ClientInstanceName="grid" AutoGenerateColumns="False"  KeyFieldName="id"  Theme="MetropolisBlue"
+                                    OnCustomCallback="gv_CustomCallback" Width="730px"
+                                    OnRowValidating="gv_RowValidating" OnRowUpdating="gv_RowUpdating" OnRowInserting="gv_RowInserting" OnRowDeleting="gv_RowDeleting" 
+                                    EnableTheming="True" Border-BorderColor="#DCDCDC" >
+                                    <SettingsPager PageSize="1000" />
+                                    <Toolbars>
+                                        <dx:GridViewToolbar ItemAlign="Right" EnableAdaptivity="true">
+                                            <Items>
+                                                <dx:GridViewToolbarItem Command="New" Text="新增" />
+                                                <dx:GridViewToolbarItem Command="Edit" Text="修改"  />
+                                                <dx:GridViewToolbarItem Command="Delete" Text="删除" />
+                                            </Items>
+                                        </dx:GridViewToolbar>
+                                    </Toolbars>
+                                    <Settings ShowFilterRow="false" ShowGroupPanel="false"
+                                        VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Standard" VerticalScrollableHeight="200" ShowFooter="True" />
+                                    <SettingsBehavior AllowFocusedRow="True" ColumnResizeMode="Control"  />
+                                    <Columns> 
+                                        <dx:GridViewDataDateColumn Caption="生效日期" FieldName="Effective_date" VisibleIndex="1" Width="210px">
+                                            <PropertiesDateEdit Width="150px">
+                                            </PropertiesDateEdit>
+                                        </dx:GridViewDataDateColumn>
+                                        <dx:GridViewDataDateColumn Caption="截止日期" FieldName="End_date" VisibleIndex="2" Width="210px">
+                                             <PropertiesDateEdit Width="150px">
+                                            </PropertiesDateEdit>
+                                        </dx:GridViewDataDateColumn>
+                                        <dx:GridViewDataTextColumn Caption="id" FieldName="id" Width="0px" VisibleIndex="99"                          
+                                            HeaderStyle-CssClass="hidden" CellStyle-CssClass="hidden" FooterCellStyle-CssClass="hidden"></dx:GridViewDataTextColumn>  
+                                    </Columns>
+                                    <EditFormLayoutProperties ColCount="2">
+                                        <Items>
+                                            <dx:GridViewColumnLayoutItem ColumnName="Effective_date" />
+                                            <dx:GridViewColumnLayoutItem ColumnName="End_date" />
+                                            <dx:EditModeCommandLayoutItem ColSpan="2" HorizontalAlign="right" />
+                                        </Items>
+                                    </EditFormLayoutProperties>
+                                    <Styles>
+                                        <Header BackColor="#E4EFFA" Border-BorderColor="#DCDCDC" HorizontalAlign="Left" VerticalAlign="Top"></Header>   
+                                        <SelectedRow BackColor="#FDF7D9"></SelectedRow>   
+                                        <AlternatingRow BackColor="#f2f3f2"></AlternatingRow>
+                                        <Cell Border-BorderColor="#DCDCDC" BorderLeft-BorderWidth="0"  BorderRight-BorderWidth="0" BorderTop-BorderWidth="0">
+                                            <BorderLeft BorderWidth="0px" />
+                                            <BorderTop BorderWidth="0px" />
+                                            <BorderRight BorderWidth="0px" />
+                                        </Cell>
+                                        <FocusedRow BackColor="#99CCFF" ForeColor="#0000CC"></FocusedRow>
+                                        <Footer HorizontalAlign="Right"></Footer>
+                                    </Styles>
+                                    <Border BorderColor="Gainsboro" />
+                                </dx:aspxgridview>
+                               
+                             <%--</ContentTemplate>
+                        </asp:UpdatePanel>--%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </form>
 </body>
 </html>
