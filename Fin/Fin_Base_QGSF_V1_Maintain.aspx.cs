@@ -277,10 +277,6 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         {
             msg = "确认成功！";
         }
-        else if (dt.Rows[0][0].ToString() == "Y")
-        {
-            msg = wlh.Value.ToString() + "已经存在，不可重复维护！";
-        }
         else
         {
             msg = "确认失败！";
