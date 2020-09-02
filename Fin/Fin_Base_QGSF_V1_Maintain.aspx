@@ -48,23 +48,23 @@
         }
 
         function validate() {
-            if (wlh_i.GetValue() == "") {
+            if (wlh_i.GetValue() == null || wlh_i.GetValue() == "") {
                 layer.alert("【物料号】不可为空！");
                 return false;
             }
-            if (baserate.GetValue() == "") {
+            if (baserate.GetValue() == null || baserate.GetValue() == "") {
                 layer.alert("【Base Rate】不可为空！");
                 return false;
             }
-            if (qgcode.GetValue() == "") {
+            if (qgcode.GetValue() == null || qgcode.GetValue() == "") {
                 layer.alert("【301 Code】不可为空！");
                 return false;
             }
-            if (qgrate.GetValue() == "") {
+            if (qgrate.GetValue() == null || qgrate.GetValue() == "") {
                 layer.alert("【301 Rate】不可为空！");
                 return false;
             }
-            if (immunity.GetValue() == "") {
+            if (immunity.GetValue() == null || immunity.GetValue() == "") {
                 layer.alert("【是否豁免】不可为空！");
                 return false;
             }
