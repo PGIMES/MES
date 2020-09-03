@@ -301,17 +301,19 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         string sql = @"exec [usp_Fin_Base_QGSF_maintain_save] '{0}','{1}','{2}',{3},{4},'{5}','{6}','{7}'";
         sql = string.Format(sql, domain, wlhno, txt_301code.Text, Convert.ToSingle(txt_BaseRate.Text), Convert.ToSingle(txt_301Rate.Text), cmb_immunity.Value, LogUserModel.UserId, LogUserModel.UserName);
         DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        string flag = dt.Rows[0][0].ToString();
+        string msg = dt.Rows[0][1].ToString();
 
-        string msg = "";
-        if (dt.Rows[0][0].ToString() == "N")
+        string lsstr = "";
+        if (flag == "N")
         {
-            msg = "确认成功！";
+            lsstr = "layer.alert('确认成功',function(index) {layer.close(index);load_grid();})";
+
         }
         else
         {
-            msg = "确认失败！";
+            lsstr = "layer.alert('" + msg + "')";
         }
-        string lsstr = "layer.alert('" + msg + "',function(index) {layer.close(index);load_grid();})";
         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
     }
 }
