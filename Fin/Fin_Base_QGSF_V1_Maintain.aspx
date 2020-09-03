@@ -35,16 +35,20 @@
                     qgcode.SetValue(obj[0].qgcode);
                     qgrate.SetValue(obj[0].qgrate);
                     immunity.SetValue(obj[0].immunity);
-                    if (obj[0].immunity == "Y") {
-                        $("#div_grid").css("display", "");
-                        grid.PerformCallback("init");
-                    } else {
-                        $("#div_grid").css("display","none");
-                    }
+                    load_grid();
                 }
             });
 
             
+        }
+
+        function load_grid() {
+            if (immunity.GetValue() == "Y") {
+                $("#div_grid").css("display", "");
+                grid.PerformCallback("init");
+            } else {
+                $("#div_grid").css("display", "none");
+            }
         }
 
         function validate() {

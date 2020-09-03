@@ -198,11 +198,19 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
             int id = 0;
             if (e.IsNewRow == false) { id = Convert.ToInt32(e.Keys["id"]); }
 
-            string re_sql = @"exec usp_Fin_Base_QGSF_maintain_check '" + wlhno + "','" + domain + "','" + Effective_date + "','" + End_date + "'," + id + "";
-            DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
-            string flag = re_dt.Rows[0][0].ToString();
-            string msg = re_dt.Rows[0][1].ToString();
-            if (flag == "Y") { err = msg; }
+            if (Convert.ToDateTime(Effective_date) > Convert.ToDateTime(End_date))
+            {
+                err = "生效日期不可大于截止日期";
+            }
+
+            if (err == "")
+            {
+                string re_sql = @"exec usp_Fin_Base_QGSF_maintain_check '" + wlhno + "','" + domain + "','" + Effective_date + "','" + End_date + "'," + id + "";
+                DataTable re_dt = DbHelperSQL.Query(re_sql).Tables[0];
+                string flag = re_dt.Rows[0][0].ToString();
+                string msg = re_dt.Rows[0][1].ToString();
+                if (flag == "Y") { err = msg; }
+            }
         }
 
         //if (e.Errors.Count > 0) e.RowError = "Please, fill all fields.";
@@ -215,7 +223,7 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         string End_date = e.NewValues["End_date"].ToString();
         int id = Convert.ToInt32(e.Keys["id"]);
 
-        string sql_update = @"update Fin_Base_QGSF set [Effective_date]='{1}',[End_date]='{2}' where and id={0}";
+        string sql_update = @"update Fin_Base_QGSF set [Effective_date]='{1}',[End_date]='{2}' where id={0}";
         sql_update = string.Format(sql_update, id, Effective_date, End_date);
         DbHelperSQL.ExecuteSql(sql_update);
 
@@ -235,10 +243,23 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         string Effective_date = e.NewValues["Effective_date"].ToString();
         string End_date = e.NewValues["End_date"].ToString();
 
-        string sql_insert = @"insert into Fin_Base_QGSF(domain, wlh, 301code, BaseRate, 301Rate, immunity, Effective_date, End_date, UpdateId, UpdateName, UpdateTime)
-                            values('{0}','{1}','{2}',{3},{4},'{5}','{6}','{7}',getdate())";
-        sql_insert = string.Format(sql_insert, domain, wlhno, txt_301code.Text, Convert.ToSingle(txt_BaseRate.Text), Convert.ToSingle(txt_301Rate.Text), cmb_immunity.Value, LogUserModel.UserId, LogUserModel.UserName);
-        DbHelperSQL.ExecuteSql(sql_insert);
+        string sql = @"select id,Effective_date,End_date from [dbo].[Fin_Base_QGSF] where wlh='" + wlhno + "' and domain='" + domain + "' order by Effective_date";
+        DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+        if (dt.Rows.Count == 1 && dt.Rows[0]["Effective_date"].ToString() == "")
+        {
+            string sql_update = @"update Fin_Base_QGSF set [Effective_date]='{1}',[End_date]='{2}',immunity='Y' where id={0}";
+            sql_update = string.Format(sql_update, Convert.ToInt32(dt.Rows[0]["id"]), Effective_date, End_date);
+            DbHelperSQL.ExecuteSql(sql_update);
+        }
+        else
+        {
+            string sql_insert = @"insert into Fin_Base_QGSF(domain, wlh, [301code], BaseRate, [301Rate], immunity
+                                , Effective_date, End_date, UpdateId, UpdateName, UpdateTime)
+                            values('{0}','{1}','{2}',{3},{4},'{5}','{6}','{7}','{8}','{9}',getdate())";
+            sql_insert = string.Format(sql_insert, domain, wlhno, txt_301code.Text, Convert.ToSingle(txt_BaseRate.Text), Convert.ToSingle(txt_301Rate.Text), cmb_immunity.Value
+                                    , Effective_date, End_date, LogUserModel.UserId, LogUserModel.UserName);
+            DbHelperSQL.ExecuteSql(sql_insert);
+        }
 
         gv_bind("");
 
@@ -261,6 +282,15 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         gv.CancelEdit();
         e.Cancel = true;
 
+        //string sql = @"select id,Effective_date,End_date,immunity from [dbo].[Fin_Base_QGSF] where wlh='" + wlhno + "' and domain='" + domain + "' order by Effective_date";
+        //DataTable dt = DbHelperSQL.Query(sql).Tables[0];
+
+        //if (dt.Rows.Count == 1 && dt.Rows[0]["immunity"].ToString() == "N")
+        //{
+        //    string lsstr = "layer.alert('删除成功',function(index) {layer.close(index);parent.location.reload();})";
+        //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
+        //}
+
     }
 
     protected void btn_save_Click(object sender, EventArgs e)
@@ -281,8 +311,7 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         {
             msg = "确认失败！";
         }
-        string lsstr = "layer.alert('" + msg + "',function(index) {layer.close(index);})";
+        string lsstr = "layer.alert('" + msg + "',function(index) {layer.close(index);load_grid();})";
         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
     }
-
 }
