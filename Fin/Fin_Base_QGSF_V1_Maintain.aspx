@@ -16,6 +16,20 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $('#btn_del').click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "Fin_Base_QGSF_V1_Maintain.aspx/del_data",
+                    data: "{'wlh_domain':'" + wlh_i.GetValue() + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,//默认是true，异步；false为同步，此方法执行完在执行下面代码
+                    success: function (data) {
+                        var obj = eval(data.d);
+                        layer.alert(obj[0].re_flag, function (index) { layer.close(index); parent.location.reload(); });
+                    }
+                });
+            });
         });
 
         function wlh_change(s) {
@@ -285,6 +299,8 @@
                                     <td colspan="8" style="text-align:center;">
                                         <asp:Button ID="btn_save" runat="server" Text="保存" class="btn btn-large btn-primary" OnClientClick="if(validate()==false)return false;" Width="50px"
                                            OnClick="btn_save_Click" /> 
+                                        &nbsp;
+                                        <button id="btn_del" type="button" class="btn btn-primary btn-large"><i class="fa fa-remove fa-fw"></i>&nbsp;删除</button> 
                                     </td>
                                 </tr>
                             </table>

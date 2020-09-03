@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -91,4 +92,5 @@ public partial class Fin_Fin_Base_QGSF_V1 : System.Web.UI.Page
 
         e.Handled = true;//关键代码：此句负责执行上面的合并，刷新客户端的表格中的合并情况
     }
+
 }

@@ -316,4 +316,37 @@ public partial class Fin_Fin_Base_QGSF_V1_Maintain : System.Web.UI.Page
         }
         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", lsstr, true);
     }
+
+
+    [WebMethod]
+    public static string del_data(string wlh_domain)
+    {
+        string re_flag = "";
+        if (wlh_domain == "")
+        {
+            re_flag = "请选择要删除的物料号！";
+        }
+        else
+        {
+            string[] wlh_domain_arr = wlh_domain.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            string domain = wlh_domain_arr[1]; string wlhno = wlh_domain_arr[0];
+
+            string sql = @"delete Fin_Base_QGSF where wlh='{1}' and domain='{0}'";
+            sql = string.Format(sql, domain, wlhno);
+            int ln = DbHelperSQL.ExecuteSql(sql);
+
+            if (ln > 0)
+            {
+                re_flag = "删除成功！";
+            }
+            else
+            {
+                re_flag = "删除失败！";
+            }
+        }
+        
+        string result = "[{\"re_flag\":\"" + re_flag + "\"}]";
+        return result;
+    }
+
 }
