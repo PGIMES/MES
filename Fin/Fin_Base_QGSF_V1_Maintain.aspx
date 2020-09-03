@@ -17,6 +17,10 @@
 
         $(document).ready(function () {
             $('#btn_del').click(function () {
+                if (wlh_i.GetValue() == null || wlh_i.GetValue() == "") {
+                    layer.alert("请选择要删除的物料号！");
+                    return false;
+                }
                 $.ajax({
                     type: "post",
                     url: "Fin_Base_QGSF_V1_Maintain.aspx/del_data",
