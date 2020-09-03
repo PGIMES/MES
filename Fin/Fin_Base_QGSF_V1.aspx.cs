@@ -63,7 +63,7 @@ public partial class Fin_Fin_Base_QGSF_V1 : System.Web.UI.Page
         string sFiledName = "";//当前单元格所在列的列名定义
         sFiledName = e.Column.FieldName;// ((GridViewEditDataColumn)e.Column).FieldName;//由于e.Column继承GridViewEditDataColumn父类，所以强转成父类然后调用FieldName即可获取列名
 
-        if (lMergeFileds.Contains(sFiledName) == true || sFiledName == "")//lMergeFileds:List集合,即需要合并列的列名集合，sFiledName：当前单元格所在列名
+        if (lMergeFileds.Contains(sFiledName) == true)//lMergeFileds:List集合,即需要合并列的列名集合，sFiledName：当前单元格所在列名
         {
             int iFirst_Row = e.RowVisibleIndex1;//当前行的行号
             int iSecond_Row = e.RowVisibleIndex2;//下一行的行号
