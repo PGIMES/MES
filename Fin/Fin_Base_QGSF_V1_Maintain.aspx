@@ -277,6 +277,7 @@
                                     <td>是否豁免</td>
                                     <td>
                                         <dx:ASPxComboBox ID="cmb_immunity" ClientInstanceName="immunity" runat="server" ValueType="System.String" CssClass="linewrite" Width="100px" Height="27px" BackColor="#FDF7D9" ForeColor="#31708f">
+                                            <ClientSideEvents ValueChanged="function(s, e) {load_grid();}" />
                                         </dx:ASPxComboBox>
                                     </td>
                                 </tr>
