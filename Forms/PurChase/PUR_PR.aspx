@@ -597,9 +597,23 @@
                         return false;
                     }
                 });
+                $("#gvdtl input[id*=pr_targetprice]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【目标单价(含税)】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
                 $("#gvdtl input[id*=notax_targetprice]").each(function (){
                     if( $(this).val()==""){
-                        msg+="【目标价】不可为空.<br />";
+                        msg+="【目标单价(未税)】不可为空.<br />";
+                        flag=false;
+                        return false;
+                    }
+                });
+                $("#gvdtl input[id*=pr_TaxRate]").each(function (){
+                    if( $(this).val()==""){
+                        msg+="【税率】不可为空.<br />";
                         flag=false;
                         return false;
                     }
@@ -933,20 +947,60 @@
 
             wlType.val(typedesc);note.val(typedesc2);
         }
+
+        function TaxRate_change(s){
+            //alert(s.GetValue());         
+            //grid.PerformCallback("taxrate");
+            
+
+            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=notax_targetprice]").each(function () { 
+                var price = $(this).parent().parent().find("input[id*=targetprice]").val();  
+                var taxrate = $(this).parent().parent().find("input[type!=hidden][id*=pr_TaxRate]").val();   
+                var qty = $(this).parent().parent().find("input[id*=qty]").val();  
+                price= (price==""||price=="NaN")? 0 : price;
+                taxrate= (taxrate==""||qty=="NaN")? 0 : taxrate;
+                qty= (qty==""||qty=="NaN")? 0 : qty;
+                if(price!=null&&qty!="")
+                {   
+                    var result = (parseFloat(price) * parseFloat(qty)) ; 
+                    var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
+                    var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
+                    $(this).parent().parent().find("input[id*=targettotal]").val(result); 
+                    $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
+                    $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
+                }else{  
+                    $(this).parent().parent().find("input[id*=targettotal]").val("");
+                    $(this).parent().parent().find("input[id*=notax_targetprice]").val(""); 
+                    $(this).parent().parent().find("input[id*=notax_targettotal]").val("");
+                }
+            });
+
+            
+            //计算所有明细总价                                 
+            get_notax_TotalMoney();
+        }
         
         //计算总价 
         function getTotalPrice(){                                                      
             $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=notax_targetprice]").each(function () { 
-                $(this).bind("change", function () {                                                          
-                    var price = $(this).parent().parent().find("input[id*=notax_targetprice]").val(); 
+                $(this).bind("change", function () {            
+                    var price = $(this).parent().parent().find("input[id*=targetprice]").val();  
+                    var taxrate = $(this).parent().parent().find("input[type!=hidden][id*=pr_TaxRate]").val();   
                     var qty = $(this).parent().parent().find("input[id*=qty]").val();  
                     price= (price==""||price=="NaN")? 0 : price;
+                    taxrate= (taxrate==""||qty=="NaN")? 0 : taxrate;
                     qty= (qty==""||qty=="NaN")? 0 : qty;
                     if(price!=null&&qty!="")
                     {   
                         var result = (parseFloat(price) * parseFloat(qty)) ; 
-                        $(this).parent().parent().find("input[id*=notax_targettotal]").val(result); 
+                        var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
+                        var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
+                        $(this).parent().parent().find("input[id*=targettotal]").val(result); 
+                        $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
+                        $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
                     }else{  
+                        $(this).parent().parent().find("input[id*=targettotal]").val("");
+                        $(this).parent().parent().find("input[id*=notax_targetprice]").val(""); 
                         $(this).parent().parent().find("input[id*=notax_targettotal]").val("");
                     }
                     //计算所有明细总价                                 

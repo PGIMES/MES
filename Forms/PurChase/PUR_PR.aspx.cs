@@ -32,6 +32,10 @@ public partial class PUR_PR : PGIBasePage
     string FlowID = "A";
     string StepID = "A";
 
+    //使用位置：明细税率下拉数据源、SaveData时批次更新
+    public string sql_TaxRate = @"SELECT distinct cast([tx2_tax_pct] as numeric(18,0)) TaxRate,[tx2_pt_taxc] TaxRate_Code FROM [qad].[dbo].[qad_tx2_mstr] 
+                            where tx2_exp_date is null and tx2_tax_type='VAT'and tx2_domain in('100','200') and [tx2_pt_taxc]<>'13'";
+
     /*
 protected void Page_Load(object sender, EventArgs e)
 {
@@ -623,6 +627,22 @@ protected void Page_Load(object sender, EventArgs e)
                 ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
                 ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
             }
+
+            //add 2020.09.04 15:44
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate") is ASPxComboBox)
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).Enabled = false;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).DisabledStyle.Border.BorderStyle = BorderStyle.None;
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).Width = Unit.Pixel(21);
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).DisabledStyle.BackColor = System.Drawing.Color.Transparent;
+            }
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targetprice"], "pr_targetprice")).ReadOnly = true;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targetprice"], "pr_targetprice")).BorderStyle = BorderStyle.None;
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targetprice"], "pr_targetprice")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targetprice"], "pr_targetprice")).BackColor = System.Drawing.Color.Transparent;
+
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["pr_targettotal"], "pr_targettotal")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (DevExpress.Web.GridViewDataColumn)this.gvdtl.Columns["pr_targettotal"], "pr_targettotal")).BackColor = System.Drawing.Color.Transparent;
         }
     }
 
@@ -1155,6 +1175,14 @@ protected void Page_Load(object sender, EventArgs e)
                 ls_sum.Add(lsdtl[i]);
             }
 
+            //更新税率项目号
+            Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
+            ls_taxratecode.Sql = @"update PUR_Pr_Dtl_Form set TaxRate_Code=a.TaxRate_Code
+                                    from ({1}) a
+                                    where PUR_Pr_Dtl_Form.prno='{0}' and PUR_Pr_Dtl_Form.TaxRate=a.TaxRate";
+            ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
+            ls_sum.Add(ls_taxratecode);
+
             //批量提交
             int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);
 
@@ -1375,11 +1403,11 @@ protected void Page_Load(object sender, EventArgs e)
         string formtype = prtype.SelectedValue; 
         this.gvdtl.Columns.Clear();
 
-        string formdiv = "dtl_daoju";
-        if (formtype == "刀具类") { formdiv = "dtl_daoju"; }
-        else if (formtype == "非刀具辅料类" || formtype == "原材料" || formtype == "办公用品类") { formdiv = "dtl_ndj_ycl"; }
-        else if (formtype == "费用服务类") { formdiv = "dtl_fw"; }
-        else if (formtype == "合同类") { formdiv = "dtl_ht"; }
+        string formdiv = "dtl_daoju_v1";
+        if (formtype == "刀具类") { formdiv = "dtl_daoju_v1"; }
+        else if (formtype == "非刀具辅料类" || formtype == "原材料" || formtype == "办公用品类") { formdiv = "dtl_ndj_ycl_v1"; }
+        else if (formtype == "费用服务类") { formdiv = "dtl_fw_v1"; }
+        else if (formtype == "合同类") { formdiv = "dtl_ht_v1"; }
 
         Pgi.Auto.Control.SetGrid("PUR_PR_Dtl_Form", formdiv, this.gvdtl, ldt, 2);
         GetGrid(ldt, formtype, domain_code);
@@ -1407,6 +1435,17 @@ protected void Page_Load(object sender, EventArgs e)
             {
                 ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["assetattributedesc"], "assetattributedesc")).Width = Unit.Pixel(130);
             }
+
+            if (this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate") is ASPxComboBox)
+            {
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).Width = Unit.Pixel(40);
+                ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate")).ClientSideEvents.ValueChanged = "function(s, e) {TaxRate_change(s);}";
+            }
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["notax_targetprice"], "notax_targetprice")).BackColor = System.Drawing.Color.Transparent;
+
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targettotal"], "pr_targettotal")).Style.Add("text-align", "right");
+            ((TextBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_targettotal"], "pr_targettotal")).BackColor = System.Drawing.Color.Transparent;
         }
 
     }
@@ -1579,6 +1618,7 @@ protected void Page_Load(object sender, EventArgs e)
             sql_usefor += @" union all select replace(XMBH+'/'+XMMS,' ','') from [dbo].[formtable_main_55_ZDHXM]";
         }
         DataTable ldt_usefor = DbHelperSQL.Query(sql_usefor).Tables[0];
+        DataTable ldt_TaxRate = DbHelperSQL.Query(sql_TaxRate).Tables[0];
 
         for (int i = 0; i < gvdtl.VisibleRowCount; i++)
         {
@@ -1588,6 +1628,15 @@ protected void Page_Load(object sender, EventArgs e)
             tb1.ValueField = "value";
             tb1.DataBind();
             tb1.Value = DT.Rows[i]["usefor"].ToString();
+
+            ASPxComboBox tb_TaxRate = ((ASPxComboBox)this.gvdtl.FindRowCellTemplateControl(i, (GridViewDataColumn)this.gvdtl.Columns["pr_TaxRate"], "pr_TaxRate"));
+            tb_TaxRate.DataSource = ldt_TaxRate;
+            tb_TaxRate.TextField = "TaxRate";
+            tb_TaxRate.ValueField = "TaxRate";
+            tb_TaxRate.Columns.Add("TaxRate", "税率", 15);
+            tb_TaxRate.TextFormatString = "{0}";
+            tb_TaxRate.DataBind();
+            tb_TaxRate.Value = DT.Rows[i]["pr_TaxRate"].ToString();
         }
 
 
