@@ -968,9 +968,9 @@
                 qty= (qty==""||qty=="NaN")? 0 : qty;
                 if(price!=null&&qty!="")
                 {   
-                    var pr_targettotal = fmoney((parseFloat(price) * parseFloat(qty)),4) ; 
-                    var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
-                    var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
+                    var pr_targettotal = (parseFloat(price) * parseFloat(qty)).toFixed(4) ; 
+                    var notax_targetprice = (parseFloat(price) / (1+parseFloat(taxrate)*1.0/100)).toFixed(4) ; 
+                    var notax_targettotal = (notax_targetprice * parseFloat(qty)).toFixed(4) ; 
                     $(this).parent().parent().find("input[id*=pr_targettotal]").val(pr_targettotal); 
                     $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
                     $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
@@ -998,9 +998,9 @@
                     qty= (qty==""||qty=="NaN")? 0 : qty;
                     if(price!=null&&qty!="")
                     {   
-                        var pr_targettotal = fmoney((parseFloat(price) * parseFloat(qty)),4) ; 
-                        var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
-                        var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
+                        var pr_targettotal = (parseFloat(price) * parseFloat(qty)).toFixed(4) ; 
+                        var notax_targetprice = (parseFloat(price) / (1+parseFloat(taxrate)*1.0/100)).toFixed(4) ; 
+                        var notax_targettotal = (notax_targetprice * parseFloat(qty)).toFixed(4) ; 
                         $(this).parent().parent().find("input[id*=pr_targettotal]").val(pr_targettotal); 
                         $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
                         $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
