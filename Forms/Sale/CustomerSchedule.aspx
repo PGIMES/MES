@@ -618,7 +618,7 @@
                     }
                     if(site_qr.indexOf(js_UserId)>0){// || site_qr.indexOf(js_DeptName)>0
                         if($("#MainContent_cb_site_qr").prop("checked")==false){                    
-                            msg+="地点，QAD还不存在，不能发送.<br />";
+                            msg+="分销点，QAD还不存在，不能发送.<br />";
                         }
                         i++;
                     }
