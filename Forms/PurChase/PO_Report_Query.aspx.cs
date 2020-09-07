@@ -133,7 +133,7 @@ public partial class Forms_PurChase_PO_Report_Query : System.Web.UI.Page
         }
         if (tr_effdate != "")
         {
-            if (drop_type.SelectedValue == "PO")
+            if ( (drop_type.SelectedValue == "PO") || (drop_type.SelectedValue == "合同" && e.GetValue("po_wltype").ToString() == "周转类包材") )
             {
                 DateTime tr_eff = Convert.ToDateTime(tr_effdate);
                 TimeSpan tsday = tr_eff - plan_date;
