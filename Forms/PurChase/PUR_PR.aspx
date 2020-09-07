@@ -597,13 +597,16 @@
                         return false;
                     }
                 });
-                $("#gvdtl input[id*=pr_targetprice]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【目标单价(含税)】不可为空.<br />";
-                        flag=false;
-                        return false;
-                    }
-                });
+                //申请步骤
+                if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
+                    $("#gvdtl input[id*=pr_targetprice]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【目标单价(含税)】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }
+                    });
+                }
                 $("#gvdtl input[id*=notax_targetprice]").each(function (){
                     if( $(this).val()==""){
                         msg+="【目标单价(未税)】不可为空.<br />";
@@ -611,13 +614,16 @@
                         return false;
                     }
                 });
-                $("#gvdtl input[id*=pr_TaxRate]").each(function (){
-                    if( $(this).val()==""){
-                        msg+="【税率】不可为空.<br />";
-                        flag=false;
-                        return false;
-                    }
-                });
+                //申请步骤
+                if(stepid==null || stepid.toLowerCase()==js_SQ_StepID.toLowerCase()){
+                    $("#gvdtl input[id*=pr_TaxRate]").each(function (){
+                        if( $(this).val()==""){
+                            msg+="【税率】不可为空.<br />";
+                            flag=false;
+                            return false;
+                        }
+                    });
+                }
                 //validate qty
                 $("#gvdtl input[id*=qty]").each(function (){
                     if( $(this).val()==""){
@@ -953,8 +959,8 @@
             //grid.PerformCallback("taxrate");
             
 
-            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=notax_targetprice]").each(function () { 
-                var price = $(this).parent().parent().find("input[id*=targetprice]").val();  
+            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=pr_targetprice]").each(function () { 
+                var price = $(this).parent().parent().find("input[id*=pr_targetprice]").val();  
                 var taxrate = $(this).parent().parent().find("input[type!=hidden][id*=pr_TaxRate]").val();   
                 var qty = $(this).parent().parent().find("input[id*=qty]").val();  
                 price= (price==""||price=="NaN")? 0 : price;
@@ -962,14 +968,14 @@
                 qty= (qty==""||qty=="NaN")? 0 : qty;
                 if(price!=null&&qty!="")
                 {   
-                    var result = (parseFloat(price) * parseFloat(qty)) ; 
+                    var pr_targettotal = fmoney((parseFloat(price) * parseFloat(qty)),4) ; 
                     var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
                     var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
-                    $(this).parent().parent().find("input[id*=targettotal]").val(result); 
+                    $(this).parent().parent().find("input[id*=pr_targettotal]").val(pr_targettotal); 
                     $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
                     $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
                 }else{  
-                    $(this).parent().parent().find("input[id*=targettotal]").val("");
+                    $(this).parent().parent().find("input[id*=pr_targettotal]").val("");
                     $(this).parent().parent().find("input[id*=notax_targetprice]").val(""); 
                     $(this).parent().parent().find("input[id*=notax_targettotal]").val("");
                 }
@@ -982,9 +988,9 @@
         
         //计算总价 
         function getTotalPrice(){                                                      
-            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=notax_targetprice]").each(function () { 
+            $("#gvdtl").find("tr td input[id*=qty],tr td input[id*=pr_targetprice]").each(function () { 
                 $(this).bind("change", function () {            
-                    var price = $(this).parent().parent().find("input[id*=targetprice]").val();  
+                    var price = $(this).parent().parent().find("input[id*=pr_targetprice]").val();  
                     var taxrate = $(this).parent().parent().find("input[type!=hidden][id*=pr_TaxRate]").val();   
                     var qty = $(this).parent().parent().find("input[id*=qty]").val();  
                     price= (price==""||price=="NaN")? 0 : price;
@@ -992,14 +998,14 @@
                     qty= (qty==""||qty=="NaN")? 0 : qty;
                     if(price!=null&&qty!="")
                     {   
-                        var result = (parseFloat(price) * parseFloat(qty)) ; 
+                        var pr_targettotal = fmoney((parseFloat(price) * parseFloat(qty)),4) ; 
                         var notax_targetprice = fmoney(parseFloat(price) / (1+parseFloat(taxrate)*1.0/100),4) ; 
                         var notax_targettotal = fmoney(notax_targetprice * parseFloat(qty),4) ; 
-                        $(this).parent().parent().find("input[id*=targettotal]").val(result); 
+                        $(this).parent().parent().find("input[id*=pr_targettotal]").val(pr_targettotal); 
                         $(this).parent().parent().find("input[id*=notax_targetprice]").val(notax_targetprice); 
                         $(this).parent().parent().find("input[id*=notax_targettotal]").val(notax_targettotal);
                     }else{  
-                        $(this).parent().parent().find("input[id*=targettotal]").val("");
+                        $(this).parent().parent().find("input[id*=pr_targettotal]").val("");
                         $(this).parent().parent().find("input[id*=notax_targetprice]").val(""); 
                         $(this).parent().parent().find("input[id*=notax_targettotal]").val("");
                     }
