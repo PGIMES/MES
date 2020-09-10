@@ -1175,13 +1175,16 @@ protected void Page_Load(object sender, EventArgs e)
                 ls_sum.Add(lsdtl[i]);
             }
 
-            //更新税率项目号
-            Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
-            ls_taxratecode.Sql = @"update PUR_Pr_Dtl_Form set pr_TaxRate_Code=a.TaxRate_Code
+            if (gvdtl.Visible == true)
+            {
+                //更新税率项目号
+                Pgi.Auto.Common ls_taxratecode = new Pgi.Auto.Common();
+                ls_taxratecode.Sql = @"update PUR_Pr_Dtl_Form set pr_TaxRate_Code=a.TaxRate_Code
                                     from ({1}) a
                                     where PUR_Pr_Dtl_Form.prno='{0}' and PUR_Pr_Dtl_Form.pr_TaxRate=a.TaxRate";
-            ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
-            ls_sum.Add(ls_taxratecode);
+                ls_taxratecode.Sql = string.Format(ls_taxratecode.Sql, m_sid, sql_TaxRate);
+                ls_sum.Add(ls_taxratecode);
+            }
 
             //批量提交
             int ln = Pgi.Auto.Control.UpdateListValues(ls_sum);

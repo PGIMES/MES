@@ -79,7 +79,7 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
         if (re_flag == "")
         {
             //注释 生效的日程，历史数据也可以.
-            string re_sql_2 = @"select sod.sod_domain, sod.sod_custpart, sod.sod_end_eff, sod.sod_site, sod.sod_part, so.so_ship,so.so_bill, sod.sod_pr_list 
+            /*string re_sql_2 = @"select sod.sod_domain, sod.sod_custpart, sod.sod_end_eff, sod.sod_site, sod.sod_part, so.so_ship,so.so_bill, sod.sod_pr_list 
 	                            , so.ad_sort, so.ad_name
                             from (
 	                            select sod_domain, sod_custpart, [sod_end_eff[1]]] AS sod_end_eff, sod_site, sod_part, sod_nbr, sod_pr_list
@@ -94,7 +94,8 @@ public partial class Forms_Pack_Pack_Report_Query : System.Web.UI.Page
 			                            inner join [form4_Customer_DebtorShipTo] ad on charindex(so.so_domain,ad.Debtor_Domain)>0 and ad.DebtorShipToCode=so.so_ship and ad.BusinessRelationCode=so.so_bill
 		                            ) so ON so.so_domain = sod.sod_domain AND so.so_nbr = sod.sod_nbr AND so.so_site = sod.sod_site
                             where sod.sod_domain='{0}' and sod.sod_part='{1}' and sod.sod_site='{2}' and so.so_ship='{3}'
-                            ";
+                            ";*/
+            string re_sql_2 = @"exec Report_CS_edit_report_check '{0}','{1}','{2}','{3}'";
             re_sql_2 = string.Format(re_sql_2, domain_code, part, site, ship);
             DataTable re_dt_2 = DbHelperSQL.Query(re_sql_2).Tables[0];
             if (re_dt_2.Rows.Count <= 0)
